@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@drawable/ground"
-    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -70,7 +67,6 @@
                     android:id="@+id/ol_group_b"
                     android:layout_width="@dimen/dimen_64dp"
                     android:layout_height="@dimen/dimen_45dp"
-
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/selector_ol_button"
@@ -90,6 +86,24 @@
                 android:numColumns="3" />
 
             <TextView
+                android:id="@+id/time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/ol_player_grid"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@+id/room_title"
+                android:layout_marginStart="-1dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="2dp"
+                android:layout_toEndOf="@+id/room_title"
+                android:background="@drawable/selector_list_c"
+                android:gravity="center_vertical|end"
+                android:keepScreenOn="true"
+                android:textColor="#f9f3b8"
+                android:textSize="12sp" />
+
+            <TextView
                 android:id="@+id/room_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -99,23 +113,9 @@
                 android:keepScreenOn="true"
                 android:maxLines="1"
                 android:text="@string/ol_room_view_name"
+                android:gravity="center_vertical"
                 android:textColor="@color/roomtext"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/time_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/ol_player_grid"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@+id/room_title"
-                android:background="@drawable/selector_list_c"
-                android:gravity="end"
-                android:keepScreenOn="true"
-                android:textColor="#f9f3b8"
-                android:textSize="12sp" />
+                android:textSize="20sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -328,7 +328,7 @@
                                 android:scrollHorizontally="true"
                                 android:singleLine="true"
                                 android:textColor="@color/white1"
-                                android:textSize="14sp" />
+                                android:textSize="15sp" />
 
                             <Button
                                 android:id="@+id/ol_send_b"

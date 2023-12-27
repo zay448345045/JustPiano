@@ -7,33 +7,31 @@ import java.lang.ref.SoftReference;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
-
 public final class PictureHandleThread extends Thread {
     private final PictureHandle pictureHandle;
-    private final Map<String, ImageView> map = new LinkedHashMap<>();
-    private boolean f5147c;
+    private final Map<String, ImageView> imageCacheMap = new LinkedHashMap<>();
+    private boolean handled;
 
     public PictureHandleThread(PictureHandle pictureHandle, ImageView imageView, String str) {
         this.pictureHandle = pictureHandle;
-        map.put(str, imageView);
+        imageCacheMap.put(str, imageView);
     }
 
-    public void mo3067a() {
-        pictureHandle.f5083a = false;
-        map.clear();
-        if (f5147c) {
+    public void release() {
+        pictureHandle.running = false;
+        imageCacheMap.clear();
+        if (handled) {
             synchronized (this) {
                 notify();
             }
         }
     }
 
-    public void mo3068a(ImageView imageView, String str) {
-        map.remove(imageView);
-        if (str.endsWith(pictureHandle.JPG_SUFFIX)) {
-            map.put(str, imageView);
-            if (f5147c) {
+    public void removeCache(ImageView imageView, String str) {
+        imageCacheMap.remove(imageView);
+        if (str.endsWith(PictureHandle.JPG_SUFFIX)) {
+            imageCacheMap.put(str, imageView);
+            if (handled) {
                 synchronized (this) {
                     notify();
                 }
@@ -43,20 +41,20 @@ public final class PictureHandleThread extends Thread {
 
     @Override
     public void run() {
-        while (map.size() > 0 && pictureHandle.f5083a) {
-            f5147c = false;
-            String str = map.keySet().iterator().next();
-            ImageView imageView = map.remove(str);
-            if (imageView.getTag().equals(str)) {
-                Bitmap a = pictureHandle.m3938b(str);
-                pictureHandle.map.put(str, new SoftReference<>(a));
-                if (str == imageView.getTag() && a != null) {
-                    pictureHandle.handler.post(() -> imageView.setImageBitmap(a));
+        while (imageCacheMap.size() > 0 && pictureHandle.running) {
+            handled = false;
+            String key = imageCacheMap.keySet().iterator().next();
+            ImageView imageView = imageCacheMap.remove(key);
+            if (imageView.getTag().equals(key)) {
+                Bitmap bitmap = pictureHandle.getBitmapFromRemote(key);
+                pictureHandle.bitmapMap.put(key, new SoftReference<>(bitmap));
+                if (key == imageView.getTag() && bitmap != null) {
+                    pictureHandle.handler.post(() -> imageView.setImageBitmap(bitmap));
                 }
             }
-            if (map.isEmpty() && pictureHandle.f5083a) {
+            if (imageCacheMap.isEmpty() && pictureHandle.running) {
                 try {
-                    f5147c = true;
+                    handled = true;
                     synchronized (this) {
                         wait();
                     }

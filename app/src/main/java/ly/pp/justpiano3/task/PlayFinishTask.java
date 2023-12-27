@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.PlayFinish;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.local.PlayFinish;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
@@ -16,7 +17,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public final class PlayFinishTask extends AsyncTask<String, Void, String> {
+public final class PlayFinishTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<PlayFinish> playFinish;
 
     public PlayFinishTask(PlayFinish playFinish) {
@@ -24,9 +25,9 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String str = "";
-        if (!playFinish.get().jpapplication.getAccountName().isEmpty()) {
+        if (!OLBaseActivity.getAccountName().isEmpty()) {
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
                     .host(OnlineUtil.server)
@@ -38,7 +39,7 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
             RequestBody body = new FormBody.Builder()
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("songID", playFinish.get().songID)
-                    .add("userName", playFinish.get().jpapplication.getAccountName())
+                    .add("userName", OLBaseActivity.getAccountName())
                     .add("scoreArray", playFinish.get().scoreArray)
                     .build();
             Request request = new Request.Builder()
@@ -60,17 +61,11 @@ public final class PlayFinishTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String str) {
         switch (str) {
-            case "0":
-                playFinish.get().jpprogressBar.dismiss();
-                break;
-            case "1":
-                playFinish.get().jpprogressBar.dismiss();
-                Toast.makeText(playFinish.get(), "连接出错!", Toast.LENGTH_SHORT).show();
-                break;
-            case "2":
+            case "0", "1" -> playFinish.get().jpprogressBar.dismiss();
+            case "2" -> {
                 playFinish.get().jpprogressBar.dismiss();
                 Toast.makeText(playFinish.get(), "该版本无法上传成绩，请更新版本!", Toast.LENGTH_SHORT).show();
-                break;
+            }
         }
     }
 

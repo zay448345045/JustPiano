@@ -99,22 +99,14 @@ public final class StandardMidiFileReader extends MidiFileReader {
             } else {
                 // SMPTE based timing.  first decipher the frame code.
                 int frameCode = -1 * (timing >> 8);
-                switch (frameCode) {
-                    case 24:
-                        divisionType = Sequence.SMPTE_24;
-                        break;
-                    case 25:
-                        divisionType = Sequence.SMPTE_25;
-                        break;
-                    case 29:
-                        divisionType = Sequence.SMPTE_30DROP;
-                        break;
-                    case 30:
-                        divisionType = Sequence.SMPTE_30;
-                        break;
-                    default:
-                        throw new InvalidMidiDataException("Unknown frame code: " + frameCode);
-                }
+                divisionType = switch (frameCode) {
+                    case 24 -> Sequence.SMPTE_24;
+                    case 25 -> Sequence.SMPTE_25;
+                    case 29 -> Sequence.SMPTE_30DROP;
+                    case 30 -> Sequence.SMPTE_30;
+                    default ->
+                            throw new InvalidMidiDataException("Unknown frame code: " + frameCode);
+                };
                 // now determine the timing resolution in ticks per frame.
                 resolution = timing & 0xFF;
             }
@@ -336,47 +328,38 @@ final class SMFParser {
                 }
 
                 switch (status & 0xF0) {
-                    case 0x80:
-                    case 0x90:
-                    case 0xA0:
-                    case 0xB0:
-                    case 0xE0:
+                    case 0x80, 0x90, 0xA0, 0xB0, 0xE0 -> {
                         // two data bytes
                         if (data1 == -1) {
                             data1 = readUnsigned();
                         }
                         data2 = readUnsigned();
                         message = new FastShortMessage(status | (data1 << 8) | (data2 << 16));
-                        break;
-                    case 0xC0:
-                    case 0xD0:
+                    }
+                    case 0xC0, 0xD0 -> {
                         // one data byte
                         if (data1 == -1) {
                             data1 = readUnsigned();
                         }
                         message = new FastShortMessage(status | (data1 << 8));
-                        break;
-                    case 0xF0:
+                    }
+                    case 0xF0 -> {
                         // sys-ex or meta
                         switch (status) {
-                            case 0xF0:
-                            case 0xF7:
+                            case 0xF0, 0xF7 -> {
                                 // sys ex
                                 int sysexLength = (int) readVarInt();
                                 if (sysexLength < 0 || sysexLength > trackLength - pos) {
                                     throw new InvalidMidiDataException("Message length is out of bounds: "
                                             + sysexLength);
                                 }
-
                                 byte[] sysexData = new byte[sysexLength];
                                 read(sysexData);
-
                                 SysexMessage sysexMessage = new SysexMessage();
                                 sysexMessage.setMessage(status, sysexData, sysexLength);
                                 message = sysexMessage;
-                                break;
-
-                            case 0xFF:
+                            }
+                            case 0xFF -> {
                                 // meta
                                 int metaType = readUnsigned();
                                 int metaLength = (int) readVarInt();
@@ -390,9 +373,7 @@ final class SMFParser {
                                 } catch (final OutOfMemoryError oom) {
                                     throw new IOException("Meta length too big", oom);
                                 }
-
                                 read(metaData);
-
                                 MetaMessage metaMessage = new MetaMessage();
                                 metaMessage.setMessage(metaType, metaData, metaLength);
                                 message = metaMessage;
@@ -400,13 +381,12 @@ final class SMFParser {
                                     // end of track means it!
                                     endOfTrackFound = true;
                                 }
-                                break;
-                            default:
-                                throw new InvalidMidiDataException("Invalid status byte: " + status);
+                            }
+                            default ->
+                                    throw new InvalidMidiDataException("Invalid status byte: " + status);
                         } // switch sys-ex or meta
-                        break;
-                    default:
-                        throw new InvalidMidiDataException("Invalid status byte: " + status);
+                    }
+                    default -> throw new InvalidMidiDataException("Invalid status byte: " + status);
                 } // switch
                 track.add(new MidiEvent(message, tick));
             } // while

@@ -200,11 +200,11 @@ message OnlineHallChatVO {
 
 // 房间聊天
 message OnlineRoomChatVO {
-  // 私聊用户名称
+  // 私聊用户名称 / 流消息Id
   string user_name = 1;
-  // 消息内容
+  // 消息内容 / 流消息区块内容
   string message = 2;
-  // 聊天种类（1公聊，2私聊，3系统消息，18全服广播）
+  // 聊天种类（1公聊，2私聊，3系统消息，18全服广播，19流消息）
   uint32 type = 3;
   // 消息文字颜色
   uint32 color = 4;
@@ -414,6 +414,8 @@ message OnlineLoadRoomPositionVO {
   OnlineRoomPositionCoupleVO room_position_couple = 3;
   // 用户信息
   repeated OnlineRoomPositionUserVO room_position_user = 4;
+  // 房间播放曲谱进度
+  int32 song_progress = 5;
 }
 
 // 搭档信息

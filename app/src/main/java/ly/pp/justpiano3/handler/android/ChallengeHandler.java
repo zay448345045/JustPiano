@@ -10,8 +10,10 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import ly.pp.justpiano3.activity.OLChallenge;
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLChallenge;
+import ly.pp.justpiano3.activity.local.PianoPlay;
+import ly.pp.justpiano3.adapter.ChallengeListAdapter;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class ChallengeHandler extends Handler {
@@ -39,9 +41,9 @@ public final class ChallengeHandler extends Handler {
                             hashMap.put("P", String.valueOf(i + 1));
                             challenge.scoreList.add(hashMap);
                         }
-                        challenge.mo2907b(challenge.scoreListView, challenge.scoreList);
+                        challenge.scoreListView.setAdapter(new ChallengeListAdapter(challenge.scoreList, challenge.layoutinflater));
                         StringBuilder sb = new StringBuilder();
-                        sb.append("用户名称:").append(challenge.jpapplication.getKitiName())
+                        sb.append("用户名称:").append(OLBaseActivity.getKitiName())
                                 .append("\n最高分:").append(data.getInt("S"))
                                 .append("\n今日名次:").append(data.getString("P"))
                                 .append("\n昨日名次:").append(data.getString("Z"))
@@ -58,15 +60,11 @@ public final class ChallengeHandler extends Handler {
                         String string = data.getString("I");
                         String string2 = data.getString("P");
                         String str = "提示";
-                        String str2 = null;
-                        switch (i) {
-                            case 0:
-                                str2 = "确定";
-                                break;
-                            case 1:
-                                str2 = "开始挑战";
-                                break;
-                        }
+                        String str2 = switch (i) {
+                            case 0 -> "确定";
+                            case 1 -> "开始挑战";
+                            default -> null;
+                        };
                         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(challenge);
                         jpDialogBuilder.setTitle(str);
                         jpDialogBuilder.setMessage(string);

@@ -278,7 +278,7 @@ public class Sequence {
      */
     public long getMicrosecondLength() {
 
-        return MidiUtils.tick2microsecond(this, getTickLength(), null);
+        return MidiUtil.tick2microsecond(this, getTickLength(), null);
     }
 
     /**
@@ -294,7 +294,7 @@ public class Sequence {
         synchronized (tracks) {
 
             for (int i = 0; i < tracks.size(); i++) {
-                long temp = ((Track) tracks.elementAt(i)).ticks();
+                long temp = tracks.elementAt(i).ticks();
                 if (temp > length) {
                     length = temp;
                 }

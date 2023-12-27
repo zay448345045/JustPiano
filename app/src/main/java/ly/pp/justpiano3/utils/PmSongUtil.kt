@@ -1,10 +1,11 @@
 package ly.pp.justpiano3.utils
 
 import android.content.Context
+import android.net.Uri
 import ly.pp.justpiano3.entity.OriginalNote
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.SongData
-import ly.pp.justpiano3.midi.MidiUtils
+import ly.pp.justpiano3.midi.MidiUtil
 import ly.pp.justpiano3.midi.ShortMessage
 import ly.pp.justpiano3.midi.StandardMidiFileReader
 import ly.pp.justpiano3.midi.Track
@@ -13,10 +14,17 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 object PmSongUtil {
+
+    /**
+     * 第一次曲谱同步的默认时间，为4.8版本上线时间
+     */
+    const val SONG_SYNC_DEFAULT_TIME = 1695787200000L
 
     /**
      * 决定是否为隐藏键音符的临界间隔时间，目前固定为100，单位毫秒
@@ -31,15 +39,54 @@ object PmSongUtil {
     /**
      * pm文件全局速度，目前固定值为5
      */
-    private const val PM_GLOBAL_SPEED = 5
+    const val PM_GLOBAL_SPEED = 5
 
     /**
      * pm时间间隔过长时，填充的空音符数组
      */
-    private val PM_DEFAULT_FILLED_DATA = byteArrayOf(PM_DEFAULT_FILLED_INTERVAL.toByte(), 1, 110, 3)
+    private val PM_DEFAULT_EMPTY_FILLED_DATA =
+        byteArrayOf(PM_DEFAULT_FILLED_INTERVAL.toByte(), 1, 110, 3)
+
+    /**
+     * 根据文件路径取出pm曲谱id、分类等的正则表达式pattern
+     */
+    private val pattern: Pattern = Pattern.compile("/([a-zA-Z]+)(\\d+).pm")
+
+    /**
+     * 是否为空拍时补充的延时空音符
+     */
+    fun isPmDefaultEmptyFilledData(pmSongData: PmSongData, index: Int): Boolean {
+        return pmSongData.tickArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[0]
+                && pmSongData.trackArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[1]
+                && pmSongData.pitchArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[2]
+                && pmSongData.volumeArray[index] == PM_DEFAULT_EMPTY_FILLED_DATA[3]
+    }
+
+    /**
+     * 根据pm文件路径获取曲谱分类
+     */
+    fun getPmSongCategoryByFilePath(filePath: String): String? {
+        val matcher: Matcher = pattern.matcher(filePath)
+        if (matcher.find()) {
+            return matcher.group(1)
+        }
+        return null
+    }
 
     fun parsePmDataByFilePath(context: Context, filePath: String): PmSongData? {
-        val inputStream: InputStream = try {
+        val inputStream = getPmFileInputStream(context, filePath)
+        inputStream?.let { stream ->
+            val pmData = ByteArray(stream.available())
+            stream.use {
+                it.read(pmData)
+            }
+            return parsePmDataByBytes(pmData)
+        }
+        return null
+    }
+
+    private fun getPmFileInputStream(context: Context, filePath: String): InputStream? {
+        return try {
             context.resources.assets.open(filePath)
         } catch (ignore: Exception) {
             try {
@@ -56,12 +103,7 @@ object PmSongUtil {
                     null
                 }
             }
-        } ?: return null
-        val pmData = ByteArray(inputStream.available())
-        inputStream.use {
-            it.read(pmData)
         }
-        return parsePmDataByBytes(pmData)
     }
 
     fun parsePmDataByBytes(pmData: ByteArray): PmSongData? {
@@ -135,8 +177,8 @@ object PmSongUtil {
      * @param pmFile   pm文件
      * @return 曲谱信息
      */
-    fun midiFileToPmFile(midiFile: File, pmFile: File): SongData {
-        val originalNoteList = parseMidiOriginalNote(midiFile)
+    fun midiFileToPmFile(context: Context, name: String, midiUri: Uri, pmFile: File): SongData {
+        val originalNoteList = parseMidiOriginalNote(context, midiUri)
             .sortedBy { originalNote -> originalNote.playTime }
         // 获取左手和右手的音符列表
         val leftHandNoteList: MutableList<OriginalNote> = ArrayList()
@@ -148,7 +190,7 @@ object PmSongUtil {
                 rightHandNoteList.add(originalNote)
             }
         }
-        val songName = midiFile.name.substring(0, midiFile.name.indexOf('.'))
+        val songName = name.substring(0, name.indexOf('.'))
         val rightHandDegree = calculateDegree(rightHandNoteList)
         val leftHandDegree = calculateDegree(leftHandNoteList)
         return SongData(
@@ -159,8 +201,7 @@ object PmSongUtil {
             0,
             0,
             0,
-            createPmFile(pmFile, songName, rightHandDegree, leftHandDegree, originalNoteList),
-            midiFile
+            createPmFile(pmFile, songName, rightHandDegree, leftHandDegree, originalNoteList)
         )
     }
 
@@ -186,7 +227,7 @@ object PmSongUtil {
                 var intervalTime = (playTime - lastNotePlayTime).toInt()
                 // 若时间间隔过高，防止byte字节溢出，则需进行拆解（先循环填充空音符的时间间隔，之后填充剩余的时间间隔）
                 while (intervalTime > PM_DEFAULT_FILLED_INTERVAL * PM_GLOBAL_SPEED) {
-                    fileOutputStream.write(PM_DEFAULT_FILLED_DATA)
+                    fileOutputStream.write(PM_DEFAULT_EMPTY_FILLED_DATA)
                     intervalTime -= PM_DEFAULT_FILLED_INTERVAL * PM_GLOBAL_SPEED
                 }
                 // 写入pm音符数据，元素依次为：时间间隔/全局速度、左右手、音高、力度
@@ -207,12 +248,13 @@ object PmSongUtil {
     /**
      * 解析midi，输出原始音符列表
      */
-    private fun parseMidiOriginalNote(midiFile: File): List<OriginalNote> {
+    private fun parseMidiOriginalNote(context: Context, midiUri: Uri): List<OriginalNote> {
         val originalNoteList: MutableList<OriginalNote> = ArrayList()
         // midi文件转化为midi序列，相当于解析了
-        val sequence = StandardMidiFileReader().getSequence(midiFile)
+        val sequence =
+            StandardMidiFileReader().getSequence(context.contentResolver.openInputStream(midiUri))
         // 这个缓存就在计算midi中所有的速度变化事件，计算好了之后缓存下来，传入，就不用每次都计算了，提性能用的
-        val tempoCache = MidiUtils.TempoCache(sequence)
+        val tempoCache = MidiUtil.TempoCache(sequence)
         // 提取midi的所有音轨，过滤掉无音符的音轨
         val filteredTracks: MutableList<Track> = ArrayList()
         for (track in sequence.tracks) {
@@ -235,7 +277,7 @@ object PmSongUtil {
                         val velocity = shortMessage.data2
                         if (velocity > 0) {
                             // tick换算为实际的时间，看JDK源码得知，考虑到了变速，按tick划分变速，计算没有问题
-                            val time = MidiUtils.tick2microsecond(sequence, event.tick, tempoCache)
+                            val time = MidiUtil.tick2microsecond(sequence, event.tick, tempoCache)
                             originalNoteList.add(
                                 OriginalNote(
                                     time / 1000,

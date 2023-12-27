@@ -1,5 +1,7 @@
 package ly.pp.justpiano3.adapter;
 
+import static ly.pp.justpiano3.utils.UnitConvertUtil.dp2px;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,28 +9,27 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
-import ly.pp.justpiano3.service.ConnectionService;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineHallChatDTO;
 import protobuf.dto.OnlineRoomChatDTO;
 
 public final class ExpressAdapter extends BaseAdapter {
-    public PopupWindow popupWindow;
-    public ConnectionService connectionService;
-    public int messageType;
+    private final PopupWindow popupWindow;
+    private final int messageType;
     private final Context context;
-    private final Integer[] f6033b;
+    private final Integer[] expressSeq;
 
-    public ExpressAdapter(Context context, ConnectionService connectionService, Integer[] numArr, PopupWindow popupWindow, int b) {
+    public ExpressAdapter(Context context, Integer[] expressSeq, PopupWindow popupWindow, int messageType) {
         this.context = context;
-        f6033b = numArr;
+        this.expressSeq = expressSeq;
         this.popupWindow = popupWindow;
-        this.connectionService = connectionService;
-        messageType = b;
+        this.messageType = messageType;
     }
 
     @Override
     public int getCount() {
-        return f6033b.length;
+        return expressSeq.length;
     }
 
     @Override
@@ -45,26 +46,29 @@ public final class ExpressAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         ImageView imageView = new ImageView(context);
         imageView.setPadding(0, 0, 0, 0);
-        imageView.setImageResource(f6033b[i]);
         imageView.setOnClickListener(v -> {
             if (popupWindow != null && popupWindow.isShowing()) {
                 popupWindow.dismiss();
-                if (connectionService != null) {
-                    if (messageType == 12) {
+                if (OnlineUtil.getConnectionService() != null) {
+                    if (messageType == OnlineProtocolType.HALL_CHAT) {
                         OnlineHallChatDTO.Builder builder = OnlineHallChatDTO.newBuilder();
                         builder.setMessage("//" + i);
                         builder.setUserName("");
-                        connectionService.writeData(messageType, builder.build());
-                    } else if (messageType == 13) {
+                        OnlineUtil.getConnectionService().writeData(messageType, builder.build());
+                    } else if (messageType == OnlineProtocolType.ROOM_CHAT) {
                         OnlineRoomChatDTO.Builder builder = OnlineRoomChatDTO.newBuilder();
                         builder.setMessage("//" + i);
                         builder.setUserName("");
                         builder.setColor(99);
-                        connectionService.writeData(messageType, builder.build());
+                        OnlineUtil.getConnectionService().writeData(messageType, builder.build());
                     }
                 }
             }
         });
+        imageView.setAdjustViewBounds(true);
+        imageView.setMaxHeight(dp2px(context, 48));
+        imageView.setMaxWidth(dp2px(context, 48));
+        imageView.setImageResource(expressSeq[i]);
         return imageView;
     }
 }

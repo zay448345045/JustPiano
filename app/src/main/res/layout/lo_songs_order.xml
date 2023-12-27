@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginStart="@dimen/dimen_3dp"
+    android:layout_marginEnd="@dimen/dimen_3dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/ol_rectangle_mask"
+    android:keepScreenOn="true">
+
+    <TextView
+        android:id="@+id/lo_songs_order_name_asc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:gravity="center"
+        android:background="@drawable/selector_orange_button"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="14sp"
+        android:text="@string/lo_songs_order_name_asc" />
+
+    <TextView
+        android:id="@+id/lo_songs_order_name_des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/lo_songs_order_name_asc"
+        android:layout_marginLeft="@dimen/dimen_3dp"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:gravity="center"
+        android:background="@drawable/selector_orange_button"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="14sp"
+        android:text="@string/lo_songs_order_name_des" />
+
+    <TextView
+        android:id="@+id/lo_songs_order_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lo_songs_order_name_asc"
+        android:layout_alignStart="@id/lo_songs_order_name_asc"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:gravity="center"
+        android:background="@drawable/selector_orange_button"
+        android:layout_alignEnd="@id/lo_songs_order_name_asc"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="14sp"
+        android:text="@string/lo_songs_order_new" />
+
+    <TextView
+        android:id="@+id/lo_songs_order_recent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lo_songs_order_name_des"
+        android:layout_alignStart="@id/lo_songs_order_name_des"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:gravity="center"
+        android:background="@drawable/selector_orange_button"
+        android:layout_alignEnd="@id/lo_songs_order_name_des"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="14sp"
+        android:text="@string/lo_songs_order_recent" />
+
+    <TextView
+        android:id="@+id/lo_songs_order_diff_asc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lo_songs_order_new"
+        android:layout_alignStart="@id/lo_songs_order_name_asc"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:gravity="center"
+        android:background="@drawable/selector_orange_button"
+        android:layout_alignEnd="@id/lo_songs_order_name_asc"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="14sp"
+        android:text="@string/lo_songs_order_diff_asc" />
+
+    <TextView
+        android:id="@+id/lo_songs_order_diff_des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lo_songs_order_recent"
+        android:layout_alignStart="@id/lo_songs_order_recent"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:gravity="center"
+        android:background="@drawable/selector_orange_button"
+        android:layout_alignEnd="@id/lo_songs_order_recent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="14sp"
+        android:text="@string/lo_songs_order_diff_des" />
+
+    <TextView
+        android:id="@+id/lo_songs_order_score_asc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lo_songs_order_diff_asc"
+        android:layout_alignStart="@id/lo_songs_order_diff_asc"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:gravity="center"
+        android:background="@drawable/selector_orange_button"
+        android:layout_alignEnd="@id/lo_songs_order_diff_asc"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="14sp"
+        android:text="@string/lo_songs_order_score_asc" />
+
+    <TextView
+        android:id="@+id/lo_songs_order_score_des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lo_songs_order_diff_des"
+        android:layout_alignStart="@id/lo_songs_order_diff_des"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:gravity="center"
+        android:background="@drawable/selector_orange_button"
+        android:layout_alignEnd="@id/lo_songs_order_diff_des"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="14sp"
+        android:text="@string/lo_songs_order_score_des" />
+
+    <TextView
+        android:id="@+id/lo_songs_order_length_asc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lo_songs_order_score_asc"
+        android:layout_alignStart="@id/lo_songs_order_score_asc"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:gravity="center"
+        android:background="@drawable/selector_orange_button"
+        android:layout_alignEnd="@id/lo_songs_order_score_asc"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="14sp"
+        android:text="@string/lo_songs_order_length_asc" />
+
+    <TextView
+        android:id="@+id/lo_songs_order_length_des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lo_songs_order_score_des"
+        android:layout_alignStart="@id/lo_songs_order_score_des"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:gravity="center"
+        android:background="@drawable/selector_orange_button"
+        android:layout_alignEnd="@id/lo_songs_order_score_des"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="14sp"
+        android:text="@string/lo_songs_order_length_des" />
+</RelativeLayout>

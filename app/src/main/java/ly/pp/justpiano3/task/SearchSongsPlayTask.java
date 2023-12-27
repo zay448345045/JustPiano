@@ -10,8 +10,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLMelodySelect;
-import ly.pp.justpiano3.activity.SearchSongs;
+import ly.pp.justpiano3.activity.online.OLMelodySelect;
+import ly.pp.justpiano3.activity.online.SearchSongs;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -80,10 +80,10 @@ public final class SearchSongsPlayTask {
             OLMelodySelect.songBytes = songBytes;
             intent.putExtra("head", 1);
             intent.putExtra("songBytes", songBytes);
-            intent.putExtra("songName", searchSongs.get().f4949d);
+            intent.putExtra("songName", searchSongs.get().songName);
             intent.putExtra("songID", searchSongs.get().songID);
-            intent.putExtra("topScore", searchSongs.get().f4954i);
-            intent.putExtra("degree", searchSongs.get().f4953h);
+            intent.putExtra("topScore", searchSongs.get().topScore);
+            intent.putExtra("degree", searchSongs.get().degree);
             searchSongs.get().startActivity(intent);
             searchSongs.get().jpprogressBar.cancel();
         });

@@ -32,20 +32,27 @@ class Room(b: Byte, str: String, j: Int, i2: Int, i3: Int, i4: Int, i5: Int, i6:
             isPeopleFull = true
         }
         for (i8 in 0 until i) {
-            people[i8] = 1
+            setPeopleArray(i8, 1)
         }
         while (i < notEmptyPositionNum - i6) {
-            people[i] = 0
+            setPeopleArray(i, 0)
             i++
         }
         for (i8 in CAPACITY - i6 until CAPACITY) {
-            people[i8] = 3
+            setPeopleArray(i8, 3)
         }
         if (!isPeopleFull) {
             for (i8 in notEmptyPositionNum - i6 until CAPACITY - i6) {
-                people[i8] = 2
+                setPeopleArray(i8, 2)
             }
         }
         roomColor = i5
+    }
+
+    private fun setPeopleArray(index: Int, value: Int) {
+        if (index < 0 || index >= CAPACITY) {
+            return
+        }
+        people[index] = value
     }
 }

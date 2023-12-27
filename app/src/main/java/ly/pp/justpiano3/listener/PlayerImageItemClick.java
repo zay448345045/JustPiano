@@ -5,7 +5,6 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -14,32 +13,35 @@ import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.activity.OLPlayRoom;
-import ly.pp.justpiano3.activity.OLPlayRoomActivity;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.online.OLPlayRoom;
+import ly.pp.justpiano3.activity.online.OLRoomActivity;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.OLKeyboardState;
+import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.utils.ChatBlackUserUtil;
+import ly.pp.justpiano3.utils.ChatUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.JPPopupWindow;
 import protobuf.dto.OnlineChangeRoomDoorDTO;
 import protobuf.dto.OnlineCoupleDTO;
 import protobuf.dto.OnlineKickedQuitRoomDTO;
 import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public final class PlayerImageItemClick implements OnItemClickListener {
-    private final OLPlayRoomActivity olPlayRoomActivity;
+    private final OLRoomActivity olRoomActivity;
 
-    public PlayerImageItemClick(OLPlayRoomActivity olPlayRoomActivity) {
-        this.olPlayRoomActivity = olPlayRoomActivity;
+    public PlayerImageItemClick(OLRoomActivity olRoomActivity) {
+        this.olRoomActivity = olRoomActivity;
     }
 
     @Override
     public void onItemClick(AdapterView adapterView, View view, int i, long j) {
-        User user = olPlayRoomActivity.getRoomPlayerMap().get((byte) (i + 1));
+        User user = OLBaseActivity.getRoomPlayerMap().get((byte) (i + 1));
         if (user != null) {
             PopupWindow popupWindow = buildPopupWindow(user);
             int[] iArr = new int[2];
@@ -49,9 +51,8 @@ public final class PlayerImageItemClick implements OnItemClickListener {
     }
 
     private PopupWindow buildPopupWindow(User user) {
-        ConnectionService connectionService = olPlayRoomActivity.jpapplication.getConnectionService();
-        PopupWindow popupWindow = new PopupWindow(olPlayRoomActivity);
-        View inflate = LayoutInflater.from(olPlayRoomActivity).inflate(R.layout.ol_room_user_operation, null);
+        PopupWindow popupWindow = new JPPopupWindow(olRoomActivity);
+        View inflate = LayoutInflater.from(olRoomActivity).inflate(R.layout.ol_room_user_operation, null);
         Button showUserInfoDialogButton = inflate.findViewById(R.id.ol_showinfo_b);
         Button privateChatButton = inflate.findViewById(R.id.ol_chat_b);
         Button kickOutButton = inflate.findViewById(R.id.ol_kickout_b);
@@ -59,29 +60,26 @@ public final class PlayerImageItemClick implements OnItemClickListener {
         Button showCoupleDialogButton = inflate.findViewById(R.id.ol_couple_b);
         Button chatBlackButton = inflate.findViewById(R.id.ol_chat_black);
         Button chatBlackCancelButton = inflate.findViewById(R.id.ol_chat_black_cancel);
-        if (olPlayRoomActivity instanceof OLPlayKeyboardRoom) {
-            OLPlayKeyboardRoom olPlayKeyboardRoom = ((OLPlayKeyboardRoom) olPlayRoomActivity);
+        if (olRoomActivity instanceof OLPlayKeyboardRoom olPlayKeyboardRoom) {
             Button soundMuteButton = inflate.findViewById(R.id.ol_sound_b);
             soundMuteButton.setVisibility(View.VISIBLE);
-            soundMuteButton.setText(olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted() ? "取消静音" : "静音");
-            soundMuteButton.setOnClickListener(v -> {
-                olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].setMuted(!olPlayKeyboardRoom.olKeyboardStates[user.getPosition() - 1].isMuted());
-                if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
-                    ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
-                }
-                if (popupWindow.isShowing()) {
-                    popupWindow.dismiss();
-                }
-            });
+            OLKeyboardState olKeyboardState = olPlayKeyboardRoom.olKeyboardStates.get(user.getPosition() - 1);
+            if (olKeyboardState != null) {
+                soundMuteButton.setText(olKeyboardState.getMuted() ? "取消静音" : "静音");
+                soundMuteButton.setOnClickListener(v -> {
+                    olKeyboardState.setMuted(!olKeyboardState.getMuted());
+                    if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
+                        ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
+                    }
+                    if (popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                    }
+                });
+            }
         }
         popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(olPlayRoomActivity.getResources(), R.drawable._none, olPlayRoomActivity.getTheme()));
-        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setFocusable(true);
-        popupWindow.setTouchable(true);
-        popupWindow.setOutsideTouchable(true);
-        if (!user.getPlayerName().equals(JPApplication.kitiName)) {
+        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(olRoomActivity.getResources(), R.drawable._none, olRoomActivity.getTheme()));
+        if (!user.getPlayerName().equals(OLBaseActivity.kitiName)) {
             if (user.getCpKind() <= 0 || user.getCpKind() > 3) {
                 showCoupleDialogButton.setVisibility(View.GONE);
             } else {
@@ -89,11 +87,11 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 showCoupleDialogButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (connectionService != null) {
+                        if (OnlineUtil.getConnectionService() != null) {
                             OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
                             builder.setType(4);
-                            connectionService.writeData(OnlineProtocolType.COUPLE, builder.build());
+                            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.COUPLE, builder.build());
                         }
                     }
                 });
@@ -105,23 +103,23 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         Bundle bundle = new Bundle();
-                        if (olPlayRoomActivity instanceof OLPlayKeyboardRoom) {
-                            Message obtainMessage = ((OLPlayKeyboardRoom) olPlayRoomActivity).olPlayKeyboardRoomHandler.obtainMessage();
+                        if (olRoomActivity instanceof OLPlayKeyboardRoom) {
+                            Message obtainMessage = ((OLPlayKeyboardRoom) olRoomActivity).olPlayKeyboardRoomHandler.obtainMessage();
                             obtainMessage.what = 12;
                             obtainMessage.setData(bundle);
                             bundle.putString("U", user.getPlayerName());
-                            ((OLPlayKeyboardRoom) olPlayRoomActivity).olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
-                        } else if (olPlayRoomActivity instanceof OLPlayRoom) {
-                            Message obtainMessage = ((OLPlayRoom) olPlayRoomActivity).olPlayRoomHandler.obtainMessage();
+                            ((OLPlayKeyboardRoom) olRoomActivity).olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
+                        } else if (olRoomActivity instanceof OLPlayRoom) {
+                            Message obtainMessage = ((OLPlayRoom) olRoomActivity).olPlayRoomHandler.obtainMessage();
                             obtainMessage.what = 12;
                             obtainMessage.setData(bundle);
                             bundle.putString("U", user.getPlayerName());
-                            ((OLPlayRoom) olPlayRoomActivity).olPlayRoomHandler.handleMessage(obtainMessage);
+                            ((OLPlayRoom) olRoomActivity).olPlayRoomHandler.handleMessage(obtainMessage);
                         }
                     }
                 });
             }
-            if (!olPlayRoomActivity.playerKind.equals("H")) {
+            if (!olRoomActivity.playerKind.equals("H")) {
                 kickOutButton.setVisibility(View.GONE);
                 closePositionButton.setVisibility(View.GONE);
             } else if (user.getIshost().equals("C")) {
@@ -130,10 +128,10 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 closePositionButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (olPlayRoomActivity.playerKind.equals("H") && connectionService != null) {
+                        if (olRoomActivity.playerKind.equals("H") && OnlineUtil.getConnectionService() != null) {
                             OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
-                            connectionService.writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
+                            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
                         }
                     }
                 });
@@ -143,10 +141,10 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 closePositionButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (olPlayRoomActivity.playerKind.equals("H") && connectionService != null) {
+                        if (olRoomActivity.playerKind.equals("H") && OnlineUtil.getConnectionService() != null) {
                             OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
-                            connectionService.writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
+                            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
                         }
                     }
                 });
@@ -155,35 +153,38 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 kickOutButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (olPlayRoomActivity.playerKind.equals("H") && connectionService != null) {
+                        if (olRoomActivity.playerKind.equals("H") && OnlineUtil.getConnectionService() != null) {
                             if (!user.getStatus().equals("N") && !user.getStatus().equals("F") && !user.getStatus().equals("B")) {
-                                Toast.makeText(olPlayRoomActivity, "用户当前状态不能被移出!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(olRoomActivity, "用户当前状态不能被移出!", Toast.LENGTH_SHORT).show();
                             } else {
                                 OnlineKickedQuitRoomDTO.Builder builder = OnlineKickedQuitRoomDTO.newBuilder();
                                 builder.setRoomPosition(user.getPosition());
-                                connectionService.writeData(OnlineProtocolType.KICKED_QUIT_ROOM, builder.build());
-                                if (olPlayRoomActivity instanceof OLPlayKeyboardRoom) {
-                                    ((OLPlayKeyboardRoom) olPlayRoomActivity).olKeyboardStates[user.getPosition() - 1].setMidiKeyboardOn(false);
+                                OnlineUtil.getConnectionService().writeData(OnlineProtocolType.KICKED_QUIT_ROOM, builder.build());
+                                if (olRoomActivity instanceof OLPlayKeyboardRoom && user.getPosition() > 0
+                                        && user.getPosition() - 1 < Room.CAPACITY) {
+                                    OLKeyboardState olKeyboardState = ((OLPlayKeyboardRoom) olRoomActivity).olKeyboardStates.get(user.getPosition() - 1);
+                                    if (olKeyboardState != null) {
+                                        olKeyboardState.setMidiKeyboardOn(false);
+                                    }
                                 }
                             }
                         }
                     }
                 });
             }
-
             // 屏蔽聊天按钮处理
-            ChatBlackUserUtil.chatBlackButtonHandle(olPlayRoomActivity, user, chatBlackButton, chatBlackCancelButton, popupWindow);
+            ChatUtil.chatBlackButtonHandle(olRoomActivity, user, chatBlackButton, chatBlackCancelButton, popupWindow);
         } else {
             if (user.getCpKind() > 0 && user.getCpKind() <= 3) {
                 showCoupleDialogButton.setText(Consts.coupleType[user.getCpKind() - 1]);
                 showCoupleDialogButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (connectionService != null) {
+                        if (OnlineUtil.getConnectionService() != null) {
                             OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
                             builder.setType(4);
-                            connectionService.writeData(OnlineProtocolType.COUPLE, builder.build());
+                            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.COUPLE, builder.build());
                         }
                     }
                 });
@@ -204,10 +205,10 @@ public final class PlayerImageItemClick implements OnItemClickListener {
             showUserInfoDialogButton.setOnClickListener(v -> {
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
-                    if (connectionService != null) {
+                    if (OnlineUtil.getConnectionService() != null) {
                         OnlineUserInfoDialogDTO.Builder builder = OnlineUserInfoDialogDTO.newBuilder();
                         builder.setName(user.getPlayerName());
-                        connectionService.writeData(OnlineProtocolType.USER_INFO_DIALOG, builder.build());
+                        OnlineUtil.getConnectionService().writeData(OnlineProtocolType.USER_INFO_DIALOG, builder.build());
                     }
                 }
             });

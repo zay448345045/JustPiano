@@ -1,6 +1,9 @@
 package ly.pp.justpiano3.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +11,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.listener.ChangeSkinClick;
-import ly.pp.justpiano3.view.SkinListPreference;
+import ly.pp.justpiano3.activity.local.SkinDownload;
+import ly.pp.justpiano3.task.SkinListPreferenceTask;
+import ly.pp.justpiano3.utils.FilePickerUtil;
+import ly.pp.justpiano3.view.preference.SkinListPreference;
 
 public final class SkinListAdapter extends BaseAdapter {
     public final SkinListPreference skinListPreference;
@@ -25,7 +32,7 @@ public final class SkinListAdapter extends BaseAdapter {
         this.skinKeyList = skinKeyList;
     }
 
-    public void mo3544a(CharSequence[] skinNameList, CharSequence[] skinKeyList) {
+    public void updateSkinList(CharSequence[] skinNameList, CharSequence[] skinKeyList) {
         this.skinNameList = skinNameList;
         this.skinKeyList = skinKeyList;
     }
@@ -52,21 +59,32 @@ public final class SkinListAdapter extends BaseAdapter {
         }
         String skinKey = String.valueOf(skinKeyList[i]);
         ((TextView) view.findViewById(R.id.skin_name_view)).setText(skinNameList[i]);
-        Button button = view.findViewById(R.id.skin_dele);
-        if (skinKey.equals("original") || skinKey.equals("more")) {
-            button.setVisibility(View.INVISIBLE);
+        Button deleteButton = view.findViewById(R.id.skin_dele);
+        if (skinKey.equals("original") || skinKey.equals("more") || skinKey.equals("select")) {
+            deleteButton.setVisibility(View.INVISIBLE);
         } else {
-            button.setVisibility(View.VISIBLE);
-            button.setOnClickListener(v -> skinListPreference.deleteFiles(skinKey));
+            deleteButton.setVisibility(View.VISIBLE);
+            deleteButton.setOnClickListener(v -> skinListPreference.deleteFiles(skinKey));
         }
-        button = view.findViewById(R.id.set_skin);
-        if (skinKey.equals("more")) {
-            button.setText("点击获取更多皮肤");
-        } else {
-            button.setText("设置皮肤");
+        Button setButton = view.findViewById(R.id.set);
+        switch (skinKey) {
+            case "more" -> setButton.setText("点击获取更多皮肤");
+            case "select" -> setButton.setText("点击选择皮肤");
+            default -> setButton.setText("设置皮肤");
         }
-        button.setOnClickListener(new ChangeSkinClick(this, skinKey));
-        skinListPreference.skinKey = skinKey;
+        setButton.setOnClickListener(v -> {
+            if (skinKey.equals("more")) {
+                Intent intent = new Intent();
+                intent.setClass(context, SkinDownload.class);
+                ((Activity) (context)).startActivityForResult(intent, SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE);
+            } else if (skinKey.equals("select")) {
+                FilePickerUtil.openFilePicker((Activity) context, false, "skin_select");
+            } else {
+                skinListPreference.skinKey = skinKey;
+                skinListPreference.skinFile = Objects.equals("original", skinKey) ? null : Uri.parse(skinKey);
+                new SkinListPreferenceTask(skinListPreference).execute(skinKey);
+            }
+        });
         return view;
     }
 }

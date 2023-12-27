@@ -7,7 +7,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLMelodySelect;
+import ly.pp.justpiano3.activity.online.OLMelodySelect;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -15,9 +15,9 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String> {
+public final class OLMelodySongsPlayTask extends AsyncTask<Void, Void, Void> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
-    private Intent intent;
+    private final Intent intent;
     private String str = "";
 
     public OLMelodySongsPlayTask(OLMelodySelect oLMelodySelect, Intent intent) {
@@ -26,7 +26,7 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
     }
 
     @Override
-    protected void onPostExecute(String str) {
+    protected void onPostExecute(Void v) {
         if (OLMelodySelect.songBytes == null || OLMelodySelect.songBytes.length <= 3) {
             olMelodySelect.get().jpprogressBar.cancel();
             Toast.makeText(olMelodySelect.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
@@ -43,7 +43,7 @@ public final class OLMelodySongsPlayTask extends AsyncTask<String, Void, String>
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected Void doInBackground(Void... v) {
         // 创建请求参数
         FormBody formBody = new FormBody.Builder()
                 .add("version", BuildConfig.VERSION_NAME)

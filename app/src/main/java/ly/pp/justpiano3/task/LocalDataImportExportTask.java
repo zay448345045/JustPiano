@@ -1,62 +1,60 @@
 package ly.pp.justpiano3.task;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
+import android.text.TextUtils;
 import android.widget.Toast;
 
-import java.io.File;
+import androidx.documentfile.provider.DocumentFile;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.activity.local.MelodySelect;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.LocalSongData;
 import ly.pp.justpiano3.utils.StreamUtil;
 
-public final class LocalDataImportExportTask extends AsyncTask<String, Void, String> {
+public final class LocalDataImportExportTask extends AsyncTask<Void, Void, String> {
+    public static final String EXPORT_FILE_NAME = "just_piano_local_data.db";
     private final WeakReference<Activity> weakReference;
-    private final int type;
+    private final Uri uri;
+    private final boolean export;
 
-    public LocalDataImportExportTask(Activity weakReference, int type) {
+    public LocalDataImportExportTask(Activity weakReference, Uri uri, boolean export) {
         this.weakReference = new WeakReference<>(weakReference);
-        this.type = type;
+        this.uri = uri;
+        this.export = export;
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String result;
-        File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/local_data.db");
-        if (type == 2) {
-            if (file.exists()) {
-                try {
-                    List<LocalSongData> list = StreamUtil.readObjectForList(file);
-                    if (list == null) {
-                        throw new RuntimeException();
-                    }
-                    int count = JPApplication.getSongDatabase().songDao().updateSongsInfoByPaths(list);
-                    result = "导入成功，更新" + count + "首曲谱数据";
-                } catch (Exception e) {
-                    result = "导入失败 " + e.getMessage();
-                }
-            } else {
-                result = "文件不存在，请确认SD卡\\JustPiano\\local_data.db存在";
-            }
-        } else {
+        if (export) {
             try {
+                DocumentFile directory = DocumentFile.fromTreeUri(weakReference.get(), uri);
+                if (directory == null || !directory.exists()) {
+                    throw new RuntimeException("文件夹不存在");
+                }
+                // 在目录中查找现有文件
+                DocumentFile documentFile = directory.findFile(EXPORT_FILE_NAME);
+                // 如果文件不存在，尝试创建新文件
+                if (documentFile == null || !documentFile.exists()) {
+                    documentFile = directory.createFile("*/*", EXPORT_FILE_NAME);
+                }
+                // 如果文件创建成功，或已经存在，则获取并返回输出流
+                if (documentFile == null || !documentFile.exists()) {
+                    throw new RuntimeException("文件创建失败");
+                }
                 List<LocalSongData> list = new ArrayList<>();
                 List<Song> allSongs = JPApplication.getSongDatabase().songDao().getAllSongs();
                 for (Song song : allSongs) {
                     list.add(new LocalSongData(song.getFilePath(), song.isFavorite(), song.getRightHandHighScore(), song.getLeftHandHighScore()));
                 }
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                if (!StreamUtil.writeObject(list, file)) {
-                    file.delete();
+                if (!StreamUtil.writeObject(list, weakReference.get(), documentFile.getUri())) {
                     throw new Exception();
                 }
                 result = "曲库数据导出成功，文件已保存";
@@ -64,16 +62,26 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
                 e.printStackTrace();
                 result = "导出失败 " + e.getMessage();
             }
+        } else {
+            try {
+                List<LocalSongData> list = StreamUtil.readObjectForList(weakReference.get(), uri);
+                if (list == null) {
+                    throw new RuntimeException();
+                }
+                int count = JPApplication.getSongDatabase().songDao().updateSongsInfoByPaths(list);
+                result = "导入成功，更新" + count + "首曲谱数据";
+            } catch (Exception e) {
+                result = "导入失败，" + e.getMessage();
+            }
         }
         return result;
     }
 
     @Override
     protected void onPostExecute(String str) {
-        if (weakReference.get() instanceof MelodySelect) {
-            MelodySelect melodySelect = (MelodySelect) weakReference.get();
-            melodySelect.jpprogressBar.dismiss();
-            if (!StringUtil.isNullOrEmpty(str)) {
+        if (weakReference.get() instanceof MelodySelect melodySelect) {
+            melodySelect.jpProgressBar.dismiss();
+            if (!TextUtils.isEmpty(str)) {
                 Toast.makeText(melodySelect, str, Toast.LENGTH_LONG).show();
             }
         }
@@ -81,12 +89,11 @@ public final class LocalDataImportExportTask extends AsyncTask<String, Void, Str
 
     @Override
     protected void onPreExecute() {
-        if (weakReference.get() instanceof MelodySelect) {
-            MelodySelect melodySelect = (MelodySelect) weakReference.get();
-            melodySelect.jpprogressBar.setCancelable(false);
-            melodySelect.jpprogressBar.show();
-            if (type == 2) {
-                Toast.makeText(melodySelect, "导入开始，请耐心等候...", Toast.LENGTH_SHORT).show();
+        if (weakReference.get() instanceof MelodySelect melodySelect) {
+            melodySelect.jpProgressBar.setCancelable(false);
+            melodySelect.jpProgressBar.show();
+            if (!export) {
+                Toast.makeText(melodySelect, "开始导入，请耐心等候...", Toast.LENGTH_SHORT).show();
             }
         }
     }

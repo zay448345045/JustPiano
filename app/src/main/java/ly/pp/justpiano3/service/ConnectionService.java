@@ -1,20 +1,22 @@
 package ly.pp.justpiano3.service;
 
-import android.app.*;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
-import androidx.core.app.NotificationCompat;
+
+import androidx.annotation.NonNull;
+
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.MessageLite;
-import com.king.anetty.ANetty;
-import com.king.anetty.Netty;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
@@ -26,37 +28,26 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
 import ly.pp.justpiano3.task.ReceiveTask;
-import ly.pp.justpiano3.utils.*;
+import ly.pp.justpiano3.utils.DeviceUtil;
+import ly.pp.justpiano3.utils.EncryptUtil;
+import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.NettyUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.ReceiveTasks;
 import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineDeviceDTO;
 import protobuf.dto.OnlineHeartBeatDTO;
 import protobuf.dto.OnlineLoginDTO;
 import protobuf.vo.OnlineBaseVO;
 
-import java.util.concurrent.TimeUnit;
+public final class ConnectionService extends Service {
 
-public class ConnectionService extends Service implements Runnable {
-
-    /**
-     * 对战服务端口
-     */
-    public static final Integer ONLINE_PORT = 8908;
-    /**
-     * 通知通道ID
-     */
-    public static final String CHANNEL_ID = "1";
-    public static final String CHANNEL_NAME = "service keep alive";
-    public static final String NOTIFY_CONTENT_TITLE = "JustPiano keep alive";
-    public static final String NOTIFY_CONTENT_TEXT = "在线模式已连接...";
-    public Intent thisIntent;
     private final JPBinder jpBinder = new JPBinder(this);
-    private JPApplication jpapplication;
-    private Netty mNetty;
+    private NettyUtil nettyUtil;
 
     public static class JPBinder extends Binder {
         private final ConnectionService connectionService;
@@ -70,91 +61,47 @@ public class ConnectionService extends Service implements Runnable {
         }
     }
 
-    public final void outLine() {
-        // 清除通知
-        stopForeground(true);
-        stopSelf();
-        // 断开链接
-        if (mNetty != null) {
-            mNetty.disconnect();
-        }
-    }
-
-    public final void writeData(int type, MessageLite message) {
-        OnlineBaseDTO.Builder builder = OnlineBaseDTO.newBuilder();
-        Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
-        builder.setField(fieldDescriptor, message);
-        if (mNetty != null && mNetty.isConnected()) {
-            OnlineUtil.setMsgTypeByChannel(mNetty.getChannelFuture().channel(), type);
-            mNetty.sendMessage(builder);
-        } else {
-            outLineAndDialog();
-        }
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return jpBinder;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        jpapplication = (JPApplication) getApplication();
-
-        // 创建通知通道，并绑定
-        thisIntent = new Intent(this, ConnectionService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(
-                    CHANNEL_ID,
-                    CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(serviceChannel);
-        }
-
-        // 启动前台服务
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(thisIntent);
+    public void writeData(int type, MessageLite message) {
+        Log.i("autoReconnect", "writeData: " + nettyUtil + " " + type);
+        if (nettyUtil != null && nettyUtil.isConnected()) {
+            OnlineBaseDTO.Builder builder = OnlineBaseDTO.newBuilder();
+            Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByNumber(type);
+            builder.setField(fieldDescriptor, message);
+            if (type == OnlineProtocolType.LOGIN || !OnlineUtil.autoReconnecting()) {
+                OnlineUtil.setMsgTypeByChannel(nettyUtil.getChannelFuture().channel(), type);
+                nettyUtil.sendMessage(builder);
+            }
         } else {
-            startService(thisIntent);
+            OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
         }
-
-        new Thread(this).start();
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, thisIntent, 0);
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(NOTIFY_CONTENT_TITLE)
-                .setContentText(NOTIFY_CONTENT_TEXT)
-                .setSmallIcon(R.drawable.couple_1) // 设置通知的小图标
-                .setContentIntent(pendingIntent)
-                .build();
-        startForeground(1, notification);
-        return START_STICKY;
+    public void onCreate() {
+        super.onCreate();
+        initNetty();
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         outLine();
+        super.onDestroy();
     }
 
     /**
      * 初始化Netty
      */
-    private void initNetty() {
-        mNetty = new ANetty(new ChannelInitializer<SocketChannel>() {
+    public void initNetty() {
+        nettyUtil = new NettyUtil(new ChannelInitializer<>() {
             @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
-                // 建立管道
-                ChannelPipeline channelPipeline = ch.pipeline();
+            protected void initChannel(@NonNull SocketChannel socketChannel) throws Exception {
                 // 添加相关编码器，解码器，处理器等
-                channelPipeline
+                socketChannel.pipeline()
                         // 入站处理器执行顺序是从上往下看，出站处理器执行顺序是从下往上
                         // 处理器从收到数据包到发送数据包的顺序，看注释的数字序号
                         // 1.解析服务端在包头添加的数据包长度（防止粘包）
@@ -169,11 +116,12 @@ public class ConnectionService extends Service implements Runnable {
                         // 6.将protobuf DTO对象序列化为数据包字节数组
                         .addLast(new ProtobufEncoder())
                         // 5.心跳包发送，参数writerIdleTime指空闲多少秒之后发一个心跳包给服务器
-                        .addLast(new IdleStateHandler(0, 7, 0, TimeUnit.SECONDS))
+                        .addLast(new IdleStateHandler(0, 6, 0, TimeUnit.SECONDS))
                         // 4.protobuf对象进行java代码处理，在channelRead0方法中
                         .addLast(new SimpleChannelInboundHandler<OnlineBaseVO>() {
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx, OnlineBaseVO msg) throws Exception {
+                                OnlineUtil.cancelAutoReconnect();
                                 ReceiveTask receiveTask = ReceiveTasks.receiveTaskMap.get(msg.getResponseCase().getNumber());
                                 if (receiveTask != null) {
                                     receiveTask.run(msg, JPStack.top(), Message.obtain());
@@ -185,34 +133,39 @@ public class ConnectionService extends Service implements Runnable {
                                 super.exceptionCaught(ctx, cause);
                                 cause.printStackTrace();
                                 ctx.close();
-                                outLineAndDialog();
+                                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
                             }
 
                             @Override
                             public void userEventTriggered(ChannelHandlerContext ctx, Object obj) throws Exception {
-                                if (obj instanceof IdleStateEvent) {
-                                    IdleStateEvent event = (IdleStateEvent) obj;
-                                    if (IdleState.WRITER_IDLE.equals(event.state())) {
+                                if (obj instanceof IdleStateEvent event) {
+                                    if (!OnlineUtil.autoReconnecting() && ctx.channel().isActive() && IdleState.WRITER_IDLE.equals(event.state())) {
                                         writeData(OnlineProtocolType.HEART_BEAT, OnlineHeartBeatDTO.getDefaultInstance());
                                     }
+                                } else {
+                                    super.userEventTriggered(ctx, obj);
                                 }
                             }
                         });
             }
-        }, false);
-
-        mNetty.setOnConnectListener(new Netty.OnConnectListener() {
+        });
+        nettyUtil.setOnConnectListener(new NettyUtil.OnConnectListener() {
             @Override
             public void onSuccess() {
+                if (!OnlineUtil.autoReconnecting()) {
+                    OnlineUtil.onlineSessionId = UUID.randomUUID().toString().replace("-", "");
+                }
                 OnlineLoginDTO.Builder builder = OnlineLoginDTO.newBuilder();
-                builder.setAccount(jpapplication.getAccountName());
-                builder.setPassword(jpapplication.getPassword());
+                builder.setAccount(OLBaseActivity.getAccountName());
+                builder.setPassword(OLBaseActivity.getPassword());
                 builder.setVersionCode(BuildConfig.VERSION_NAME);
-                builder.setPackageName(getPackageName());
+                builder.setPackageName(getApplication().getPackageName());
+                builder.setOnlineSessionId(OnlineUtil.onlineSessionId);
+                builder.setAutoReconnect(OnlineUtil.autoReconnecting());
                 builder.setPublicKey(EncryptUtil.generatePublicKeyString(EncryptUtil.getDeviceKeyPair().getPublic()));
                 // 设备信息
                 OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();
-                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(jpapplication.getApplicationContext()));
+                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(getApplication()));
                 deviceInfoBuilder.setVersion(DeviceUtil.getAndroidVersion());
                 deviceInfoBuilder.setModel(DeviceUtil.getDeviceBrandAndModel());
                 builder.setDeviceInfo(deviceInfoBuilder);
@@ -222,25 +175,23 @@ public class ConnectionService extends Service implements Runnable {
             @Override
             public void onFailed() {
                 // 连接失败
-                outLineAndDialog();
+                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
             }
 
             @Override
             public void onError(Exception e) {
                 // 连接异常
                 e.printStackTrace();
-                outLineAndDialog();
+                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
             }
         });
-
-        mNetty.setOnSendMessageListener(new Netty.OnSendMessageListener() {
-
+        nettyUtil.setOnSendMessageListener(new NettyUtil.OnSendMessageListener() {
             @Override
             public void onSendMessage(Object msg, boolean success) {
                 // 发送消息的回调
                 if (!success) {
-                    Log.e("anetty", msg.toString());
-                    outLineAndDialog();
+                    Log.e(getClass().getSimpleName(), "autoReconnect! onSendMessage" + msg.toString());
+                    OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
                 }
             }
 
@@ -248,27 +199,19 @@ public class ConnectionService extends Service implements Runnable {
             public void onException(Throwable e) {
                 // 异常
                 e.printStackTrace();
-                outLineAndDialog();
+                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
             }
         });
+        nettyUtil.connect(OnlineUtil.server, OnlineUtil.ONLINE_PORT);
     }
 
-    @Override
-    public void run() {
-        // 更新客户端公钥
-        EncryptUtil.updateDeviceKeyPair();
-        initNetty();
-        mNetty.connect(OnlineUtil.server, ONLINE_PORT);
-    }
-
-    private void outLineAndDialog() {
-        outLine();
-        Activity topActivity = JPStack.top();
-        if (topActivity instanceof OLBaseActivity) {
-            OLBaseActivity olBaseActivity = (OLBaseActivity) topActivity;
-            Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
-            message.what = 0;
-            olBaseActivity.olBaseActivityHandler.handleMessage(message);
+    public void outLine() {
+        Log.i("autoReconnect", "outLine: " + nettyUtil);
+        // 关闭连接
+        if (nettyUtil != null) {
+            nettyUtil.close();
+            nettyUtil.destroy();
+            nettyUtil = null;
         }
     }
 }

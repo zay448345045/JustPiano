@@ -7,8 +7,8 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLMelodySelect;
-import ly.pp.justpiano3.activity.ShowSongsInfo;
+import ly.pp.justpiano3.activity.online.OLMelodySelect;
+import ly.pp.justpiano3.activity.online.ShowSongsInfo;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -17,7 +17,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String> {
+public final class ShowSongsInfoPlayTask extends AsyncTask<Void, Void, Void> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
     private final Intent intent;
     private byte[] songBytes = null;
@@ -29,7 +29,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected Void doInBackground(Void... v) {
         if (!showSongsInfo.get().songID.isEmpty()) {
             // 创建HttpUrl.Builder对象，用于添加查询参数
             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/DownloadSong").newBuilder();
@@ -56,7 +56,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
     }
 
     @Override
-    protected void onPostExecute(String str) {
+    protected void onPostExecute(Void v) {
         if (songBytes == null || songBytes.length <= 3) {
             showSongsInfo.get().jpprogressBar.dismiss();
             Toast.makeText(showSongsInfo.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();
@@ -68,7 +68,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<String, Void, String>
         intent.putExtra("songName", showSongsInfo.get().songName);
         intent.putExtra("songID", showSongsInfo.get().songID);
         intent.putExtra("topScore", showSongsInfo.get().score);
-        intent.putExtra("degree", showSongsInfo.get().nandu);
+        intent.putExtra("degree", showSongsInfo.get().degree);
         showSongsInfo.get().startActivity(intent);
         showSongsInfo.get().jpprogressBar.dismiss();
     }

@@ -14,9 +14,11 @@ public interface Consts {
 
     String[] items = new String[]{"  收藏夹 ", "经典乐章", "流行空间", "影视剧场", "儿时回忆", "动漫原声", "游戏主题", "红色歌谣", "原创作品", "本地导入"};
     //    String[] f5601e = new String[]{"极尽琴乐", "琴心联语", "以琴会友", "高山流水", "剑胆琴心"};
-    String[] nameCL = new String[]{"", "巧遇钢琴", "黑白之梦", "钢琴学徒", "小有成就", "肖练超技", "名动一时", "顶尖琴手", "梦圆指尖", "名不虚传", "名列神迹", "超神存在", "琴键狂魔"};
+    String[] nameCL = new String[]{"", "巧遇钢琴", "黑白之梦", "钢琴学徒", "小有成就", "肖练超技", "名动一时", "顶尖琴手", "梦圆指尖", "名不虚传", "名列神迹", "超神存在", "琴键狂魔", "开挂人生"};
+    // 哦呀 ~ 像苹果这样的废柴 ~ 就算怎样努力也是考不到CL.13的吧？杂鱼 ~ 杂鱼 ~ ❤️
+    // 哈 ~ 和挂比们玩耍很恶心的啦 ~ 才不要，嘻嘻 ❤️
     String[] sortNames = new String[]{"名称升序", "名称降序", "最新曲目", "近期弹奏", "难度升序", "难度降序", "得分升序", "得分降序", "时长升序", "时长降序"};
-    String[] localMenuListNames = new String[]{"参数设置", "曲库同步", "midi导入", "录音文件"};
+    String[] localMenuListNames = new String[]{"参数设置", "曲库同步", "midi导入", "录音文件", "数据导出"};
     String[] hand = new String[]{"右手", "左手"};
     String[] groups = new String[]{"蓝队", "黄队", "红队"};
     String[] coupleType = new String[]{"情侣证书", "基友证书", "百合证书"};
@@ -38,10 +40,24 @@ public interface Consts {
             R.drawable.b141, R.drawable.b142, R.drawable.b143, R.drawable.b144, R.drawable.b145, R.drawable.b146, R.drawable.b147, R.drawable.b148, R.drawable.b149, R.drawable.b150,
             R.drawable.b151
     };
-    int[] colors = new int[]{R.color.translent, R.color.c1, R.color.c2, R.color.c3, R.color.c4, R.color.c5, R.color.c6, R.color.c7, R.color.c8, R.color.c9, R.color.c10, R.color.c11, R.color.c12};
+    int[] colors = new int[]{R.color.translent, R.color.c1, R.color.c2, R.color.c3, R.color.c4, R.color.c5, R.color.c6, R.color.c7, R.color.c8, R.color.c9, R.color.c10, R.color.c11, R.color.c12, R.color.c13};
     int[] couples = new int[]{R.drawable._none, R.drawable.couple_1, R.drawable.couple_2, R.drawable.couple_3};
     int[] sex = new int[]{R.drawable.m, R.drawable.f, R.drawable.none, R.drawable._none};
     int[] groupModeColor = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v7_name};
+
+    int[] originalRoomModeResource = new int[]{R.drawable.back_puased, R.drawable.v1_name, R.drawable.v6_name};
+
+    int[] teamRoomModeResource = new int[]{R.drawable.back_puased, R.drawable.back_puased, R.drawable.v1_name, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v6_name};
+
+    /**
+     * 私信等，限制字数
+     */
+    int MAX_MESSAGE_COUNT = 500;
+
+    /**
+     * 聊天框中的聊天记录最大条目数
+     */
+    int MAX_CHAT_SAVE_COUNT = 100;
 
     DiffUtil.ItemCallback<Song> SONG_DIFF_UTIL = new DiffUtil.ItemCallback<Song>() {
         @Override

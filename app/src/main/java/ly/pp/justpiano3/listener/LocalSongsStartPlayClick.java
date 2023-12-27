@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import ly.pp.justpiano3.activity.MelodySelect;
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.local.MelodySelect;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.enums.LocalPlayModeEnum;
 import ly.pp.justpiano3.thread.SongPlay;
 
 public final class LocalSongsStartPlayClick implements OnClickListener {
@@ -44,6 +46,11 @@ public final class LocalSongsStartPlayClick implements OnClickListener {
         String str = "hand";
         if (melodySelect.isLeftHand.isChecked()) {
             i = 1;
+        }
+        if (melodySelect.isPractise.isChecked()) {
+            GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.PRACTISE);
+        } else {
+            GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         }
         intent.putExtra(str, i);
         intent.setClass(melodySelect, PianoPlay.class);

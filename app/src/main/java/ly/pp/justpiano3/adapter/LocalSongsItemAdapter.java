@@ -6,7 +6,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.MelodySelect;
+import ly.pp.justpiano3.activity.local.MelodySelect;
 import ly.pp.justpiano3.constant.Consts;
 
 public final class LocalSongsItemAdapter extends BaseAdapter {

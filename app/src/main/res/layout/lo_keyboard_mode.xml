@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ground"
     android:orientation="vertical">
 
     <LinearLayout
@@ -177,7 +175,7 @@
                 android:layout_height="match_parent"
                 android:keepScreenOn="true"
                 app:whiteKeyNum="8"
-                app:whiteKeyOffset="21">
+                app:whiteKeyOffset="28">
             </ly.pp.justpiano3.view.KeyboardView>
         </LinearLayout>
 
@@ -194,7 +192,7 @@
                 android:layout_height="match_parent"
                 android:keepScreenOn="true"
                 app:whiteKeyNum="8"
-                app:whiteKeyOffset="14">
+                app:whiteKeyOffset="21">
             </ly.pp.justpiano3.view.KeyboardView>
         </LinearLayout>
     </LinearLayout>

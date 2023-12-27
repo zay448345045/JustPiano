@@ -3,13 +3,20 @@ package ly.pp.justpiano3.handler.android;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+
+import androidx.annotation.NonNull;
+
+import java.lang.ref.WeakReference;
+
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.entity.OLKeyboardState;
+import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
-
-import java.lang.ref.WeakReference;
 
 public final class OLPlayKeyboardRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -19,136 +26,120 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
     }
 
     @Override
-    public void handleMessage(Message message) {
+    public void handleMessage(@NonNull Message message) {
         OLPlayKeyboardRoom olPlayKeyboardRoom = (OLPlayKeyboardRoom) weakReference.get();
         try {
             switch (message.what) {
-                case 1:
-                case 7:
-                    post(() -> olPlayKeyboardRoom.initPlayer(olPlayKeyboardRoom.playerGrid, message.getData()));
-                    return;
-                case 2:
-                case 4:
-                    post(() -> olPlayKeyboardRoom.handleChat(message));
-                    return;
-                case 5:
-                    post(() -> {
-                        long[] notes = message.getData().getLongArray("NOTES");
-                        if (notes.length == 0) {
-                            return;
-                        }
-                        int roomPositionSub1 = (byte) (notes[0] & 0xF);
-                        User user = olPlayKeyboardRoom.getRoomPlayerMap().get((byte) (roomPositionSub1 + 1));
-                        if (user == null) {
-                            return;
-                        }
-                        boolean midiKeyboardOn = (notes[0] >> 4) > 0;
-                        if (olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMidiKeyboardOn() != midiKeyboardOn) {
-                            olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].setMidiKeyboardOn(midiKeyboardOn);
-                            if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
-                                ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
-                            } else {
-                                olPlayKeyboardRoom.playerGrid.setAdapter(new KeyboardPlayerImageAdapter(olPlayKeyboardRoom.playerList, olPlayKeyboardRoom));
-                            }
-                        }
-                        olPlayKeyboardRoom.blinkView(roomPositionSub1);
-                        long totalIntervalTime = 0;
-                        for (int i = 1; i < notes.length; i += 3) {
-                            totalIntervalTime += notes[i];
-                        }
-                        // 无间隔时间，不用启动子线程，提升一键一发的执行效率
-                        if (totalIntervalTime == 0) {
-                            for (int i = 1; i < notes.length; i += 3) {
-                                if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMuted()) {
-                                    SoundEngineUtil.playSound((byte) notes[i + 1], (byte) notes[i + 2]);
-                                }
-                                handleKeyboardView(olPlayKeyboardRoom, notes, user, i);
-                            }
+                case 1, 7 -> post(() -> olPlayKeyboardRoom.initPlayer(olPlayKeyboardRoom.playerGrid, message.getData()));
+                case 2, 4 -> post(() -> olPlayKeyboardRoom.handleChat(message));
+                case 5 -> post(() -> {
+                    // 1.读取键盘音符事件信息，为空或长度为零则直接结束
+                    long[] notes = message.getData().getLongArray("NOTES");
+                    if (notes == null || notes.length == 0) {
+                        return;
+                    }
+                    // 2.提取键盘音符事件的头信息，根据楼号确定用户
+                    int roomPositionSub1 = (byte) (notes[0] & 0xF);
+                    User user = OLBaseActivity.getRoomPlayerMap().get((byte) (roomPositionSub1 + 1));
+                    if (user == null) {
+                        return;
+                    }
+                    // 3.继续读头信息，根据midi键盘是否开启，更新midi键盘图标显示
+                    boolean midiKeyboardOn = ((notes[0] >> 4) & 1) == 1;
+                    OLKeyboardState olKeyboardState = olPlayKeyboardRoom.olKeyboardStates.get(roomPositionSub1);
+                    if (olKeyboardState != null && olKeyboardState.getMidiKeyboardOn() != midiKeyboardOn) {
+                        olKeyboardState.setMidiKeyboardOn(midiKeyboardOn);
+                        if (olPlayKeyboardRoom.playerGrid.getAdapter() != null) {
+                            ((KeyboardPlayerImageAdapter) (olPlayKeyboardRoom.playerGrid.getAdapter())).notifyDataSetChanged();
                         } else {
-                            olPlayKeyboardRoom.receiveThreadPool.execute(() -> {
-                                long lastTimeMillis = 0; // 初始化上一个时间戳为0
-                                for (int i = 1; i < notes.length; i += 3) {
-                                    long currentTimeMillis = notes[i]; // 当前时间戳
-                                    if (lastTimeMillis > 0 && currentTimeMillis > lastTimeMillis) {
-                                        try {
-                                            long sleepDuration = currentTimeMillis - lastTimeMillis; // 计算两个连续时间戳之间的差值
-                                            Thread.sleep(sleepDuration);
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
+                            olPlayKeyboardRoom.playerGrid.setAdapter(new KeyboardPlayerImageAdapter(
+                                    olPlayKeyboardRoom.playerList, olPlayKeyboardRoom));
+                        }
+                    }
+                    // 4.执行人物形象闪烁
+                    olPlayKeyboardRoom.blinkView(roomPositionSub1);
+                    // 5.循环计算音符事件的总持续时间，如果总持续时间为0，直接进行播放和琴键按下/抬起处理，否则启动线程进行sleep逐个处理
+                    long totalIntervalTime = 0L;
+                    for (int i = 1; i < notes.length; i += 3) {
+                        totalIntervalTime += notes[i];
+                    }
+                    boolean sustainPedalOn = ((notes[0] >> 5) & 1) == 1;
+                    if (totalIntervalTime == 0) {
+                        for (int i = 1; i < notes.length; i += 3) {
+                            handleKeyboardView(olPlayKeyboardRoom, roomPositionSub1, notes, user, i, sustainPedalOn);
+                        }
+                    } else {
+                        olPlayKeyboardRoom.receiveThreadPool.execute(() -> {
+                            long lastTimeMillis = 0; // 初始化上一个时间戳为0
+                            for (int i = 1; i < notes.length; i += 3) {
+                                long currentTimeMillis = notes[i]; // 当前时间戳
+                                if (lastTimeMillis > 0 && currentTimeMillis > lastTimeMillis) {
+                                    try {
+                                        Thread.sleep(currentTimeMillis - lastTimeMillis);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                    lastTimeMillis = currentTimeMillis;
-
-                                    if (!olPlayKeyboardRoom.olKeyboardStates[roomPositionSub1].isMuted()) {
-                                        SoundEngineUtil.playSound((byte) notes[i + 1], (byte) notes[i + 2]);
-                                    }
-                                    int finalI = i;
-                                    olPlayKeyboardRoom.runOnUiThread(() -> handleKeyboardView(olPlayKeyboardRoom, notes, user, finalI));
                                 }
-                            });
-                        }
-                    });
-                    return;
-                case 8:
-                    post(olPlayKeyboardRoom::handleKicked);
-                    return;
-                case 9:
-                    post(() -> olPlayKeyboardRoom.handleFriendRequest(message));
-                    return;
-                case 10:
-                    post(() -> {
-                        String name = message.getData().getString("R");
-                        olPlayKeyboardRoom.roomNameView.setText("[" + olPlayKeyboardRoom.roomId + "]" + name);
-                    });
-                    return;
-                case 11:
-                    post(() -> olPlayKeyboardRoom.handleRefreshFriendList(message));
-                    return;
-                case 12:
-                    post(() -> olPlayKeyboardRoom.handlePrivateChat(message));
-                    return;
-                case 13:
-                    post(() -> olPlayKeyboardRoom.handleRefreshFriendListWithoutPage(message));
-                    return;
-                case 14:
-                    post(() -> olPlayKeyboardRoom.handleDialog(message));
-                    return;
-                case 15:
-                    post(() -> olPlayKeyboardRoom.handleInvitePlayerList(message));
-                    return;
-                case 16:
-                    post(() -> olPlayKeyboardRoom.handleSetUserInfo(message));
-                    return;
-                case 21:
-                    post(olPlayKeyboardRoom::handleOffline);
-                    return;
-                case 22:
-                    post(() -> {
-                        int i = message.getData().getInt("MSG_T");
-                        int i2 = message.getData().getInt("MSG_CT");
-                        byte b = (byte) message.getData().getInt("MSG_CI");
-                        String string = message.getData().getString("MSG_C");
-                        if (i != 0) {
-                            olPlayKeyboardRoom.mo2860a(i, string, i2);
-                        }
-                    });
-                    return;
-                case 23:
-                    post(() -> olPlayKeyboardRoom.showInfoDialog(message.getData()));
-                    return;
-                default:
+                                lastTimeMillis = currentTimeMillis;
+                                int finalI = i;
+                                olPlayKeyboardRoom.runOnUiThread(() -> handleKeyboardView(olPlayKeyboardRoom,
+                                        roomPositionSub1, notes, user, finalI, sustainPedalOn));
+                            }
+                        });
+                    }
+                });
+                case 8 -> post(olPlayKeyboardRoom::handleKicked);
+                case 9 -> post(() -> olPlayKeyboardRoom.handleFriendRequest(message));
+                case 10 -> post(() -> {
+                    String name = message.getData().getString("R");
+                    olPlayKeyboardRoom.roomNameView.setText("[" + olPlayKeyboardRoom.roomId + "]" + name);
+                });
+                case 11 -> post(() -> olPlayKeyboardRoom.handleRefreshFriendList(message));
+                case 12 -> post(() -> olPlayKeyboardRoom.handlePrivateChat(message));
+                case 13 -> post(() -> olPlayKeyboardRoom.handleRefreshFriendListWithoutPage(message));
+                case 14 -> post(() -> olPlayKeyboardRoom.handleDialog(message));
+                case 15 -> post(() -> olPlayKeyboardRoom.handleInvitePlayerList(message));
+                case 16 -> post(() -> olPlayKeyboardRoom.handleSetUserInfo(message));
+                case 21 -> post(olPlayKeyboardRoom::handleOffline);
+                case 22 -> post(() -> {
+                    int i = message.getData().getInt("MSG_T");
+                    int i2 = message.getData().getInt("MSG_CT");
+                    String string = message.getData().getString("MSG_C");
+                    if (i != 0) {
+                        olPlayKeyboardRoom.buildAndShowCpDialog(i, string, i2);
+                    }
+                });
+                case 23 -> post(() -> olPlayKeyboardRoom.showInfoDialog(message.getData()));
+                default -> {
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, long[] notes, User user, int i) {
-        if (notes[i + 2] > 0) {
-            olPlayKeyboardRoom.keyboardView.fireKeyDown((byte) notes[i + 1], (byte) notes[i + 2],
-                    user.getColor() == 0 ? null : ColorUtil.getUserColorByUserColorIndex(olPlayKeyboardRoom, user.getColor()));
+    private void handleKeyboardView(OLPlayKeyboardRoom olPlayKeyboardRoom, int roomPositionSub1,
+                                    long[] notes, User user, int i, boolean sustainPedalOn) {
+        OLKeyboardState olKeyboardState = olPlayKeyboardRoom.olKeyboardStates.get(roomPositionSub1);
+        if (i + 2 >= notes.length || roomPositionSub1 < 0 || roomPositionSub1 >= Room.CAPACITY || olKeyboardState == null) {
+            return;
+        }
+        byte pitch = (byte) notes[i + 1];
+        byte volume = (byte) notes[i + 2];
+        if (volume > 0) {
+            if (!olKeyboardState.getMuted()) {
+                SoundEngineUtil.playSound(pitch, volume);
+            }
+            Integer color = user.getColor() == 0 ? null : ColorUtil.getUserColorByUserColorIndex(olPlayKeyboardRoom, user.getColor());
+            olPlayKeyboardRoom.keyboardView.fireKeyDown(pitch, volume, color);
+            olPlayKeyboardRoom.onlineWaterfallKeyDownHandle(pitch, volume, color == null ?
+                    GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : color);
         } else {
-            olPlayKeyboardRoom.keyboardView.fireKeyUp((byte) notes[i + 1]);
+            if (!sustainPedalOn && !olKeyboardState.getMuted()) {
+                SoundEngineUtil.stopPlaySound(pitch);
+            }
+            olPlayKeyboardRoom.keyboardView.fireKeyUp(pitch);
+            olPlayKeyboardRoom.onlineWaterfallKeyUpHandle(pitch);
         }
     }
 }

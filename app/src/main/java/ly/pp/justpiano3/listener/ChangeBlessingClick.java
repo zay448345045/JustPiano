@@ -10,47 +10,50 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineSendMailDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class ChangeBlessingClick implements OnClickListener {
 
     private final OLPlayHallRoom olPlayHallRoom;
-    private final TextView f5458b;
-    private final int f5459c;
-    private final String f5460d;
+    private final TextView textView;
+    private final int type;
+    private final String userName;
 
     public ChangeBlessingClick(OLPlayHallRoom olPlayHallRoom, TextView textView, int i, String str) {
         this.olPlayHallRoom = olPlayHallRoom;
-        f5458b = textView;
-        f5459c = i;
-        f5460d = str;
+        this.textView = textView;
+        type = i;
+        userName = str;
     }
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         dialogInterface.dismiss();
-        String valueOf = String.valueOf(f5458b.getText());
+        String valueOf = String.valueOf(textView.getText());
         if (valueOf.isEmpty() || valueOf.equals("'")) {
             Toast.makeText(olPlayHallRoom, "请输入内容!", Toast.LENGTH_SHORT).show();
-        } else if (valueOf.length() > 500) {
+        } else if (valueOf.length() > Consts.MAX_MESSAGE_COUNT) {
             Toast.makeText(olPlayHallRoom, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
-        } else if (f5459c == 0 && !f5460d.isEmpty()) {
+        } else if (type == 0 && !userName.isEmpty()) {
             OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
             builder.setMessage(valueOf);
-            builder.setName(f5460d);
-            olPlayHallRoom.connectionService.writeData(OnlineProtocolType.SEND_MAIL, builder.build());
+            builder.setName(userName);
+            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SEND_MAIL, builder.build());
             Toast.makeText(olPlayHallRoom, "发送成功!", Toast.LENGTH_SHORT).show();
             olPlayHallRoom.mailList.clear();
-            String format = SimpleDateFormat.getDateInstance(2, Locale.CHINESE).format(new Date());
+            String format = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, Locale.CHINESE).format(new Date());
             Bundle bundle = new Bundle();
-            bundle.putString("F", f5460d);
+            bundle.putString("F", userName);
             bundle.putString("M", valueOf);
             bundle.putString("T", format);
             bundle.putInt("type", 1);
@@ -73,14 +76,14 @@ public final class ChangeBlessingClick implements OnClickListener {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            olPlayHallRoom.mo2848c();
-            olPlayHallRoom.mo2849c(olPlayHallRoom.mailListView, olPlayHallRoom.mailList);
-        } else if (f5459c == 1) {
+            olPlayHallRoom.saveMailToLocal();
+            olPlayHallRoom.updateMailListShow(olPlayHallRoom.mailListView, olPlayHallRoom.mailList);
+        } else if (type == 1) {
             OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
             builder.setType(4);
             builder.setDeclaration(valueOf);
             olPlayHallRoom.coupleBlessView.setText("祝语:\n" + valueOf);
-            olPlayHallRoom.connectionService.writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
+            OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
         }
     }
 }

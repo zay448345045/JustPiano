@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.PopUserInfo;
-import ly.pp.justpiano3.activity.SearchSongs;
+import ly.pp.justpiano3.activity.online.PopUserInfo;
+import ly.pp.justpiano3.activity.online.SearchSongs;
 import ly.pp.justpiano3.thread.PictureHandle;
 
 public final class SearchPeopleAdapter extends BaseAdapter {
@@ -54,7 +54,7 @@ public final class SearchPeopleAdapter extends BaseAdapter {
         ImageView imageView = view.findViewById(R.id.user_face);
         ((TextView) view.findViewById(R.id.ol_position_top)).setText(String.valueOf(i));
         imageView.setTag(peopleList.get(i).get("faceID").toString());
-        searchSongs.pictureHandle.mo3027a(imageView, searchSongs.m3831a(searchSongs));
+        searchSongs.pictureHandle.setBitmap(imageView, searchSongs.loadNailFace(searchSongs));
         String str = peopleList.get(i).get("userName").toString();
         textView.setText(str);
         ImageView imageView2 = view.findViewById(R.id.ol_user_sex);

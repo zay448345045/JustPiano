@@ -12,14 +12,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.utils.OnlineUtil;
 
 public final class PictureHandle {
-    public boolean f5083a = true;
-    public Map<String, SoftReference<Bitmap>> map = new HashMap<>();
+    public boolean running = true;
+    public Map<String, SoftReference<Bitmap>> bitmapMap = new HashMap<>();
     public Handler handler;
-    public static final  String JPG_SUFFIX = ".jpg";
+    public static final String JPG_SUFFIX = ".jpg";
     private PictureHandleThread pictureHandleThread;
     private final int picType;
 
@@ -28,29 +27,20 @@ public final class PictureHandle {
         picType = i;
     }
 
-    public Bitmap m3938b(String str) {
+    public Bitmap getBitmapFromRemote(String str) {
         if (!str.endsWith(JPG_SUFFIX)) {
             return null;
         }
         try {
-            URL url;
-            switch (picType) {
-                case 0:
-                    url = new URL("http://" + OnlineUtil.server + ":8910/file/NailImage/" + str);
-                    break;
-                case 1:
-                    url = new URL("http://" + OnlineUtil.server + ":8910/file/Image/" + str);
-                    break;
-                case 2:
-                    url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSkin" + str);
-                    break;
-                case 3:
-                    url = new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSound" + str);
-                    break;
-                default:
-                    url = null;
-                    break;
-            }
+            URL url = switch (picType) {
+                case 0 -> new URL("http://" + OnlineUtil.server + ":8910/file/NailImage/" + str);
+                case 1 -> new URL("http://" + OnlineUtil.server + ":8910/file/Image/" + str);
+                case 2 ->
+                        new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSkin" + str);
+                case 3 ->
+                        new URL("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/PicSound" + str);
+                default -> null;
+            };
             if (url == null) {
                 return null;
             }
@@ -70,30 +60,30 @@ public final class PictureHandle {
         return null;
     }
 
-    public void mo3026a() {
-        if (map != null) {
-            for (Map.Entry<String, SoftReference<Bitmap>> value : map.entrySet()) {
+    public void clear() {
+        if (bitmapMap != null) {
+            for (Map.Entry<String, SoftReference<Bitmap>> value : bitmapMap.entrySet()) {
                 Bitmap bitmap = value.getValue().get();
                 if (bitmap != null) {
                     bitmap.recycle();
                 }
             }
-            map.clear();
+            bitmapMap.clear();
         }
         if (pictureHandleThread != null) {
-            pictureHandleThread.mo3067a();
+            pictureHandleThread.release();
         }
     }
 
-    public void mo3027a(ImageView imageView, Bitmap bitmap) {
+    public void setBitmap(ImageView imageView, Bitmap bitmap) {
         String str = (String) imageView.getTag();
-        if (map.containsKey(str)) {
-            Bitmap bitmap2 = map.get(str).get();
+        if (bitmapMap.containsKey(str)) {
+            Bitmap bitmap2 = bitmapMap.get(str).get();
             if (bitmap2 != null) {
                 imageView.setImageBitmap(bitmap2);
                 return;
             } else {
-                map.remove(str);
+                bitmapMap.remove(str);
             }
         }
         if (bitmap != null) {
@@ -104,6 +94,6 @@ public final class PictureHandle {
             pictureHandleThread.start();
             return;
         }
-        pictureHandleThread.mo3068a(imageView, str);
+        pictureHandleThread.removeCache(imageView, str);
     }
 }

@@ -6,7 +6,7 @@ import android.os.Message;
 
 import java.lang.ref.WeakReference;
 
-import ly.pp.justpiano3.activity.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
 
 public final class OLBaseActivityHandler extends Handler {
     private final WeakReference<Activity> weakReference;
@@ -20,7 +20,7 @@ public final class OLBaseActivityHandler extends Handler {
         final OLBaseActivity olBaseActivity = (OLBaseActivity) weakReference.get();
         if (message.what == 0) {
             post(() -> {
-                olBaseActivity.setOutline(true);
+                olBaseActivity.setOnline(false);
                 olBaseActivity.outLine();
             });
         }

@@ -2,21 +2,73 @@ package ly.pp.justpiano3.utils;
 
 import android.os.Bundle;
 import android.os.Handler;
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.*;
-import ly.pp.justpiano3.constant.OnlineProtocolType;
-import ly.pp.justpiano3.entity.Room;
-import ly.pp.justpiano3.entity.User;
-import ly.pp.justpiano3.task.ReceiveTask;
+import android.text.TextUtils;
+
 import org.json.JSONObject;
-import protobuf.vo.*;
 
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+
+import io.netty.util.internal.StringUtil;
+import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLChallenge;
+import ly.pp.justpiano3.activity.online.OLFamily;
+import ly.pp.justpiano3.activity.online.OLMainMode;
+import ly.pp.justpiano3.activity.online.OLPlayDressRoom;
+import ly.pp.justpiano3.activity.online.OLPlayHall;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.online.OLPlayRoom;
+import ly.pp.justpiano3.activity.online.OLRoomActivity;
+import ly.pp.justpiano3.activity.local.PianoPlay;
+import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.Room;
+import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.task.ReceiveTask;
+import protobuf.vo.OnlineChallengeUserVO;
+import protobuf.vo.OnlineChallengeVO;
+import protobuf.vo.OnlineChangeClothesVO;
+import protobuf.vo.OnlineChangeRoomPositionVO;
+import protobuf.vo.OnlineClTestVO;
+import protobuf.vo.OnlineCoupleVO;
+import protobuf.vo.OnlineDailyTimeUserVO;
+import protobuf.vo.OnlineDailyVO;
+import protobuf.vo.OnlineDialogVO;
+import protobuf.vo.OnlineEnterHallVO;
+import protobuf.vo.OnlineFamilyInfoVO;
+import protobuf.vo.OnlineFamilyUserVO;
+import protobuf.vo.OnlineFamilyVO;
+import protobuf.vo.OnlineFriendUserVO;
+import protobuf.vo.OnlineHallChatVO;
+import protobuf.vo.OnlineHallVO;
+import protobuf.vo.OnlineLoadPlayUserVO;
+import protobuf.vo.OnlineLoadRoomListVO;
+import protobuf.vo.OnlineLoadRoomPositionVO;
+import protobuf.vo.OnlineLoadRoomUserListVO;
+import protobuf.vo.OnlineLoadRoomUserVO;
+import protobuf.vo.OnlineLoadUserCoupleVO;
+import protobuf.vo.OnlineLoadUserInfoVO;
+import protobuf.vo.OnlineLoadUserListVO;
+import protobuf.vo.OnlineLoadUserVO;
+import protobuf.vo.OnlineMailVO;
+import protobuf.vo.OnlineMiniGradeOnVO;
+import protobuf.vo.OnlinePlayFinishVO;
+import protobuf.vo.OnlinePlayGradeVO;
+import protobuf.vo.OnlinePlayUserVO;
+import protobuf.vo.OnlineRoomChatVO;
+import protobuf.vo.OnlineRoomPositionUserVO;
+import protobuf.vo.OnlineRoomVO;
+import protobuf.vo.OnlineSetMiniGradeVO;
+import protobuf.vo.OnlineSetUserInfoVO;
+import protobuf.vo.OnlineShopProductVO;
+import protobuf.vo.OnlineShopVO;
+import protobuf.vo.OnlineUserInfoDialogVO;
+import protobuf.vo.OnlineUserVO;
 
 public final class ReceiveTasks {
 
@@ -114,31 +166,31 @@ public final class ReceiveTasks {
             if (topActivity instanceof OLPlayHall) {
                 Bundle bundle = new Bundle();
                 switch (receivedMessage.getEnterRoom().getStatus()) {
-                    case 0:
+                    case 0 -> {
                         bundle.putString("result", "该房间正在弹奏中!");
                         message.what = 4;
-                        break;
-                    case 1:
+                    }
+                    case 1 -> {
                         bundle.putString("result", "该房间人数已满!");
                         message.what = 4;
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         bundle.putString("result", "房间数已满!");
                         message.what = 4;
-                        break;
-                    case 3:
+                    }
+                    case 3 -> {
                         bundle.putString("result", "密码有误!");
                         message.what = 4;
-                        break;
-                    case 4:
+                    }
+                    case 4 -> {
                         message.what = 2;
                         bundle.putString("R", receivedMessage.getEnterRoom().getRoomName());
                         bundle.putByte("ID", (byte) receivedMessage.getEnterRoom().getRoomId());
                         bundle.putString("isHost", "G");
                         bundle.putInt("mode", receivedMessage.getEnterRoom().getRoomMode());
-                        break;
-                    default:
-                        break;
+                    }
+                    default -> {
+                    }
                 }
                 message.setData(bundle);
                 ((OLPlayHall) topActivity).olPlayHallHandler.handleMessage(message);
@@ -155,22 +207,16 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOGIN, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLMainMode) {
+            EncryptUtil.setServerTimeInterval(receivedMessage.getLogin().getTime());
+            if (Objects.equals("X", receivedMessage.getLogin().getStatus())) {
+                OnlineUtil.outLineAndDialog((JPApplication) topActivity.getApplication());
+            } else if (topActivity instanceof OLMainMode) {
                 switch (receivedMessage.getLogin().getStatus()) {
-                    case "N":
-                        message.what = 4;
-                        break;
-                    case "E":
-                        message.what = 5;
-                        break;
-                    case "V":
-                        message.what = 6;
-                        break;
-                    default:
-                        message.what = 1;
-                        break;
+                    case "N" -> message.what = 4;
+                    case "E" -> message.what = 5;
+                    case "V" -> message.what = 6;
+                    default -> message.what = 1;
                 }
-                EncryptUtil.setServerTimeInterval(receivedMessage.getLogin().getTime());
                 ((OLMainMode) topActivity).olMainModeHandler.handleMessage(message);
             }
         });
@@ -192,7 +238,7 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.ROOM_CHAT, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayRoomActivity) {
+            if (topActivity instanceof OLRoomActivity) {
                 Bundle bundle = new Bundle();
                 OnlineRoomChatVO roomChat = receivedMessage.getRoomChat();
                 message.what = 2;
@@ -201,6 +247,9 @@ public final class ReceiveTasks {
                 bundle.putInt("T", roomChat.getType());
                 if (roomChat.getType() == 1) {
                     bundle.putInt("V", roomChat.getColor());
+                } else if (roomChat.getType() == OnlineProtocolType.MsgType.STREAM_MESSAGE) {
+                    // 自定义了一个简单的协议
+                    streamMessageBundleBuild(roomChat.getMessage(), bundle);
                 }
                 message.setData(bundle);
                 if (topActivity instanceof OLPlayRoom) {
@@ -212,7 +261,7 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_ROOM_INFO, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayRoomActivity) {
+            if (topActivity instanceof OLRoomActivity) {
                 Bundle bundle = new Bundle();
                 message.what = 10;
                 bundle.putString("R", receivedMessage.getChangeRoomInfo().getRoomName());
@@ -239,7 +288,7 @@ public final class ReceiveTasks {
         receiveTaskMap.put(OnlineProtocolType.CHALLENGE, (receivedMessage, topActivity, message) -> {
             OnlineChallengeVO challenge = receivedMessage.getChallenge();
             switch (challenge.getType()) {
-                case 1:
+                case 1 -> {
                     if (topActivity instanceof OLChallenge) {
                         message.what = 1;
                         Bundle bundle = new Bundle();
@@ -257,12 +306,10 @@ public final class ReceiveTasks {
                         bundle.putString("Z", challenge.getChallengeEnter().getYesterdayPosition());
                         message.setData(bundle);
                         ((OLChallenge) topActivity).challengeHandler.handleMessage(message);
-                        return;
                     }
-                    break;
-                case 2:
-                    if (topActivity instanceof OLChallenge) {
-                        OLChallenge olChallenge = (OLChallenge) topActivity;
+                }
+                case 2 -> {
+                    if (topActivity instanceof OLChallenge olChallenge) {
                         olChallenge.jpprogressBar.dismiss();
                         message.what = 2;
                         Bundle bundle = new Bundle();
@@ -272,26 +319,24 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         olChallenge.challengeHandler.handleMessage(message);
                     }
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     if (topActivity instanceof PianoPlay) {
                         message.setData(new Bundle());
                         message.what = 5;
                         ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
-                        return;
                     }
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     if (topActivity instanceof PianoPlay) {
                         Bundle bundle = new Bundle();
                         bundle.putString("I", challenge.getChallengeFinish().getMessage());
                         message.setData(bundle);
                         message.what = 9;
                         ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
-                        return;
                     }
-                    break;
-                case 5:
+                }
+                case 5 -> {
                     if (topActivity instanceof OLChallenge) {
                         message.what = 5;
                         Bundle bundle = new Bundle();
@@ -300,9 +345,9 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         ((OLChallenge) topActivity).challengeHandler.handleMessage(message);
                     }
-                    break;
-                default:
-                    break;
+                }
+                default -> {
+                }
             }
         });
 
@@ -314,9 +359,8 @@ public final class ReceiveTasks {
             OnlineFamilyVO family = receivedMessage.getFamily();
             Bundle bundle = new Bundle();
             switch (family.getType()) {
-                case 1:
-                    if (topActivity instanceof OLFamily) {
-                        OLFamily olFamily = (OLFamily) topActivity;
+                case 1 -> {
+                    if (topActivity instanceof OLFamily olFamily) {
                         message.what = 1;
                         olFamily.jpprogressBar.dismiss();
                         for (int i = 0; i < family.getFamilyEnter().getFamilyUserList().size(); i++) {
@@ -341,10 +385,9 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         olFamily.familyHandler.handleMessage(message);
                     }
-                    break;
-                case 2:
-                    if (topActivity instanceof OLPlayHallRoom) {
-                        OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) topActivity;
+                }
+                case 2 -> {
+                    if (topActivity instanceof OLPlayHallRoom olPlayHallRoom) {
                         message.what = 2;
                         olPlayHallRoom.jpprogressBar.dismiss();
                         for (int i = 0; i < family.getFamilyList().getFamilyInfoList().size(); i++) {
@@ -368,39 +411,33 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
                     }
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     if (topActivity instanceof OLPlayHallRoom) {
                         bundle.putString("I", family.getFamilyDialog().getMessage());
                         bundle.putInt("R", family.getFamilyDialog().getAllowed() ? 1 : 0);
                         message.setData(bundle);
                         message.what = 9;
                         ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
-                        return;
                     }
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     if (topActivity instanceof OLPlayHallRoom) {
                         bundle.putInt("R", family.getFamilyCreate().getResult());
                         message.setData(bundle);
                         message.what = 10;
                         ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
-                        return;
                     }
-                    break;
-                case 5:
-                case 6:
-                case 7:
-                case 10:
+                }
+                case 5, 6, 7, 10 -> {
                     if (topActivity instanceof OLFamily) {
                         bundle.putString("I", family.getFamilyDialog().getMessage());
                         message.setData(bundle);
                         message.what = 5;
                         ((OLFamily) topActivity).familyHandler.handleMessage(message);
-                        return;
                     }
-                    break;
-                case 8:
+                }
+                case 8 -> {
                     if (topActivity instanceof OLFamily) {
                         try {
                             bundle.putString("I", family.getFamilyDialog().getMessage());
@@ -411,18 +448,16 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         message.what = 8;
                         ((OLFamily) topActivity).familyHandler.handleMessage(message);
-                        return;
                     }
-                    break;
+                }
             }
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOAD_ROOM_LIST, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayHall) {
+            if (topActivity instanceof OLPlayHall olPlayHall) {
                 Bundle bundle = new Bundle();
                 message.what = 3;
                 OnlineLoadRoomListVO loadRoomList = receivedMessage.getLoadRoomList();
-                OLPlayHall olPlayHall = (OLPlayHall) topActivity;
                 for (int i = 0; i < loadRoomList.getRoomList().size(); i++) {
                     OnlineRoomVO roomRaw = loadRoomList.getRoomList().get(i);
                     Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
@@ -446,18 +481,16 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_ROOM_POSITION, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayRoomActivity) {
+            if (topActivity instanceof OLRoomActivity olRoomActivity) {
                 OnlineChangeRoomPositionVO changeRoomPosition = receivedMessage.getChangeRoomPosition();
                 message.what = 1;
-                OLPlayRoomActivity olPlayRoomActivity = (OLPlayRoomActivity) topActivity;
                 for (OnlineRoomPositionUserVO roomPositionUser : changeRoomPosition.getRoomPositionUserList()) {
-                    buildAndPutUser(olPlayRoomActivity, roomPositionUser);
+                    buildAndPutUser(olRoomActivity, roomPositionUser);
                 }
                 Bundle bundle = new Bundle();
-                Iterator<User> it = olPlayRoomActivity.getRoomPlayerMap().values().iterator();
+                Iterator<User> it = OLBaseActivity.getRoomPlayerMap().values().iterator();
                 for (int i = 0; it.hasNext(); i++) {
-                    User user = it.next();
-                    fillUserBundle(bundle, i, user);
+                    fillUserBundle(bundle, i, it.next());
                 }
                 bundle.putString("SI", "");
                 bundle.putInt("diao", 0);
@@ -475,18 +508,19 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.LOAD_ROOM_POSITION, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayRoomActivity) {
-                OLPlayRoomActivity olPlayRoomActivity = (OLPlayRoomActivity) topActivity;
+            if (topActivity instanceof OLRoomActivity olRoomActivity) {
                 OnlineLoadRoomPositionVO loadRoomPosition = receivedMessage.getLoadRoomPosition();
                 message.what = 1;
                 Bundle bundle = new Bundle();
                 for (int i = 0; i < loadRoomPosition.getRoomPositionUserList().size(); i++) {
                     OnlineRoomPositionUserVO roomPositionUser = loadRoomPosition.getRoomPositionUserList().get(i);
-                    fillUserBundle(bundle, i, buildAndPutUser(olPlayRoomActivity, roomPositionUser));
+                    fillUserBundle(bundle, i, buildAndPutUser(olRoomActivity, roomPositionUser));
                 }
                 bundle.putString("SI", loadRoomPosition.getSongPath());
                 bundle.putInt("diao", loadRoomPosition.getTune());
                 message.setData(bundle);
+                // 兼容4.8暂时这样写
+                message.arg1 = loadRoomPosition.getSongProgress();
                 if (topActivity instanceof OLPlayRoom) {
                     bundle.putString("MSG_C", loadRoomPosition.getRoomPositionCouple().getCoupleName());
                     bundle.putInt("MSG_CI", loadRoomPosition.getRoomPositionCouple().getCouplePosition());
@@ -502,10 +536,9 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.CHANGE_ROOM_LIST, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayHall) {
+            if (topActivity instanceof OLPlayHall olPlayHall) {
                 Bundle bundle = new Bundle();
                 message.what = 3;
-                OLPlayHall olPlayHall = (OLPlayHall) topActivity;
                 OnlineRoomVO roomRaw = receivedMessage.getChangeRoomList();
                 Room room = new Room((byte) roomRaw.getRoomId(), roomRaw.getRoomName(), roomRaw.getFemaleNum(),
                         roomRaw.getMaleNum(), roomRaw.getIsPlaying() ? 1 : 0, roomRaw.getIsEncrypt() ? 1 : 0,
@@ -555,9 +588,8 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.MINI_GRADE, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof PianoPlay) {
-                PianoPlay pianoPlay = (PianoPlay) topActivity;
-                User user = pianoPlay.getRoomPlayerMap().get((byte) receivedMessage.getMiniGrade().getRoomPosition());
+            if (topActivity instanceof PianoPlay pianoPlay) {
+                User user = OLBaseActivity.getRoomPlayerMap().get((byte) receivedMessage.getMiniGrade().getRoomPosition());
                 if (user == null) {
                     return;
                 }
@@ -573,7 +605,7 @@ public final class ReceiveTasks {
                 }
                 int i = 0;
                 for (byte b = 1; b <= 6; b++) {
-                    User currentUser = pianoPlay.getRoomPlayerMap().get(b);
+                    User currentUser = OLBaseActivity.getRoomPlayerMap().get(b);
                     if (currentUser == null) {
                         continue;
                     }
@@ -582,7 +614,7 @@ public final class ReceiveTasks {
                         innerBundle.putString("G", String.valueOf(currentUser.getHand()));
                         innerBundle.putString("U", currentUser.getPlayerName());
                         innerBundle.putString("M", String.valueOf(currentUser.getScore()));
-                        innerBundle.putString("T", currentUser.getCombo() + "");
+                        innerBundle.putString("T", String.valueOf(currentUser.getCombo()));
                         bundle.putBundle(String.valueOf(i), innerBundle);
                         i++;
                     }
@@ -594,12 +626,11 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.SHOP, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayDressRoom) {
-                OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) topActivity;
+            if (topActivity instanceof OLPlayDressRoom olPlayDressRoom) {
                 OnlineShopVO shop = receivedMessage.getShop();
                 Bundle bundle = new Bundle();
                 switch (shop.getType()) {
-                    case 1:  // 加载商品
+                    case 1 -> {  // 加载商品
                         message.what = 3;
                         olPlayDressRoom.jpprogressBar.dismiss();
                         for (int i = 0; i < shop.getShopProductShow().getProductList().size(); i++) {
@@ -615,14 +646,14 @@ public final class ReceiveTasks {
                         bundle.putString("G", String.valueOf(shop.getShopProductShow().getGold()));
                         message.setData(bundle);
                         olPlayDressRoom.olPlayDressRoomHandler.handleMessage(message);
-                        break;
-                    case 2:  // 购买商品
+                    }
+                    case 2 -> {  // 购买商品
                         bundle.putString("I", shop.getShopProductBuy().getMessage());
                         bundle.putString("G", String.valueOf(shop.getShopProductBuy().getGold()));
                         message.setData(bundle);
                         message.what = 4;
                         olPlayDressRoom.olPlayDressRoomHandler.handleMessage(message);
-                        break;
+                    }
                 }
             }
         });
@@ -712,7 +743,7 @@ public final class ReceiveTasks {
             }
             Handler handler = null;
             switch (setUserInfo.getLocation()) {
-                case 0:
+                case 0 -> {
                     if (topActivity instanceof OLPlayRoom) {
                         handler = ((OLPlayRoom) topActivity).olPlayRoomHandler;
                         message.what = 9;
@@ -723,7 +754,8 @@ public final class ReceiveTasks {
                         break;
                     }
                     return;
-                case 1:
+                }
+                case 1 -> {
                     if (topActivity instanceof OLPlayHall) {
                         handler = ((OLPlayHall) topActivity).olPlayHallHandler;
                         message.what = 8;
@@ -734,6 +766,7 @@ public final class ReceiveTasks {
                         break;
                     }
                     return;
+                }
             }
             if (handler != null) {
                 String string = setUserInfo.getName();
@@ -780,20 +813,19 @@ public final class ReceiveTasks {
                 message.what = type;
                 Bundle bundle = new Bundle();
                 switch (type) {
-                    case 0:  // 保存服装
-                        bundle.putString("I", changeClothes.getMessage());
-                        break;
-                    case 1:  // 进入换衣间加载音符和解锁情况
+                    case 0 ->  // 保存服装
+                            bundle.putString("I", changeClothes.getMessage());
+                    case 1 -> {  // 进入换衣间加载音符和解锁情况
                         bundle.putString("G", String.valueOf(changeClothes.getGold()));
                         bundle.putByteArray("U", GZIPUtil.ZIPToArray(changeClothes.getUnlock()));
-                        break;
-                    case 2:  // 购买服装
+                    }
+                    case 2 -> {  // 购买服装
                         bundle.putString("I", changeClothes.getMessage());
                         bundle.putString("G", String.valueOf(changeClothes.getGold()));
                         bundle.putInt("U_T", changeClothes.getBuyClothesType());
                         bundle.putInt("U_I", changeClothes.getBuyClothesId());
-                        break;
-                    case 3:  // 服务器下发服装价格
+                    }
+                    case 3 -> {  // 服务器下发服装价格
                         message.what = 5;
                         int[] priseArr = new int[changeClothes.getBuyClothesPricesCount()];
                         for (int y = 0; y < changeClothes.getBuyClothesPricesCount(); y++) {
@@ -801,7 +833,7 @@ public final class ReceiveTasks {
                         }
                         bundle.putInt("C_T", changeClothes.getBuyClothesType());
                         bundle.putIntArray("P", priseArr);
-                        break;
+                    }
                 }
                 message.setData(bundle);
                 ((OLPlayDressRoom) topActivity).olPlayDressRoomHandler.handleMessage(message);
@@ -812,7 +844,7 @@ public final class ReceiveTasks {
             Bundle bundle = new Bundle();
             OnlineLoadUserInfoVO loadUserInfo = receivedMessage.getLoadUserInfo();
             switch (loadUserInfo.getType()) {
-                case 1:
+                case 1 -> {
                     for (int i = 0; i < loadUserInfo.getLoadUserFriend().getFriendUserList().size(); i++) {
                         OnlineFriendUserVO friendUser = loadUserInfo.getLoadUserFriend().getFriendUserList().get(i);
                         Bundle innerBundle = new Bundle();
@@ -823,39 +855,36 @@ public final class ReceiveTasks {
                         bundle.putBundle(String.valueOf(i), innerBundle);
                     }
                     switch (loadUserInfo.getLoadUserFriend().getLocation()) {
-                        case 0:
+                        case 0 -> {
                             if (topActivity instanceof OLPlayRoom) {
                                 message.what = 11;
                                 message.setData(bundle);
                                 ((OLPlayRoom) topActivity).olPlayRoomHandler.handleMessage(message);
-                                return;
                             } else if (topActivity instanceof OLPlayKeyboardRoom) {
                                 message.what = 11;
                                 message.setData(bundle);
                                 ((OLPlayKeyboardRoom) topActivity).olPlayKeyboardRoomHandler.handleMessage(message);
-                                return;
                             }
-                            return;
-                        case 1:
+                        }
+                        case 1 -> {
                             message.what = 5;
                             message.setData(bundle);
                             if (topActivity instanceof OLPlayHall) {
                                 ((OLPlayHall) topActivity).olPlayHallHandler.handleMessage(message);
-                                return;
                             }
-                            return;
-                        case 2:
+                        }
+                        case 2 -> {
                             message.what = 3;
                             message.setData(bundle);
                             if (topActivity instanceof OLPlayHallRoom) {
                                 ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
-                                return;
                             }
-                            return;
-                        default:
-                            return;
+                        }
+                        default -> {
+                        }
                     }
-                case 2:
+                }
+                case 2 -> {
                     for (int i = 0; i < loadUserInfo.getLoadUserMail().getMailList().size(); i++) {
                         OnlineMailVO mail = loadUserInfo.getLoadUserMail().getMailList().get(i);
                         Bundle innerBundle = new Bundle();
@@ -869,10 +898,9 @@ public final class ReceiveTasks {
                     message.setData(bundle);
                     if (topActivity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
-                        return;
                     }
-                    return;
-                case 3:
+                }
+                case 3 -> {
                     OnlineLoadUserCoupleVO loadUserCouple = loadUserInfo.getLoadUserCouple();
                     bundle.putString("U", loadUserCouple.getName());
                     bundle.putString("S", loadUserCouple.getGender());
@@ -890,8 +918,9 @@ public final class ReceiveTasks {
                     if (topActivity instanceof OLPlayHallRoom) {
                         ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler.handleMessage(message);
                     }
-                    return;
-                default:
+                }
+                default -> {
+                }
             }
         });
 
@@ -929,7 +958,7 @@ public final class ReceiveTasks {
             int type = dialog.getType();
             Handler handler = null;
             switch (dialog.getLocation()) {
-                case 0:
+                case 0 -> {
                     if (topActivity instanceof OLPlayRoom) {
                         handler = ((OLPlayRoom) topActivity).olPlayRoomHandler;
                         message.what = 14;
@@ -940,20 +969,23 @@ public final class ReceiveTasks {
                         break;
                     }
                     return;
-                case 1:
+                }
+                case 1 -> {
                     if (topActivity instanceof OLPlayHall) {
                         handler = ((OLPlayHall) topActivity).olPlayHallHandler;
                         message.what = 9;
                         break;
                     }
                     return;
-                case 2:
+                }
+                case 2 -> {
                     if (topActivity instanceof OLPlayHallRoom) {
                         handler = ((OLPlayHallRoom) topActivity).olPlayHallRoomHandler;
                         message.what = 5;
                         break;
                     }
                     return;
+                }
             }
             if (handler != null) {
                 String string = dialog.getMessage();
@@ -967,7 +999,7 @@ public final class ReceiveTasks {
                     bundle.putInt("H", dialog.getHallId());
                     bundle.putInt("R", dialog.getRoomId());
                     bundle.putString("N", dialog.getName());
-                    if (!StringUtil.isNullOrEmpty(dialog.getBizData())) {
+                    if (!TextUtils.isEmpty(dialog.getBizData())) {
                         bundle.putString("F", new JSONObject(dialog.getBizData()).getString("handlingFee"));
                     }
                     message.setData(bundle);
@@ -977,12 +1009,11 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.DAILY, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayHallRoom) {
-                OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) topActivity;
+            if (topActivity instanceof OLPlayHallRoom olPlayHallRoom) {
                 Bundle bundle = new Bundle();
                 OnlineDailyVO daily = receivedMessage.getDaily();
                 switch (daily.getType()) {
-                    case 1:
+                    case 1 -> {
                         message.what = 11;
                         olPlayHallRoom.jpprogressBar.dismiss();
                         for (int i = 0; i < daily.getDailyTimeList().getDailyTimeUserList().size(); i++) {
@@ -998,14 +1029,14 @@ public final class ReceiveTasks {
                         bundle.putString("T", String.valueOf(daily.getDailyTimeList().getTodayOnlineTime()));
                         message.setData(bundle);
                         olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         bundle.putString("M", daily.getDailyPrizeGet().getMessage());
                         message.setData(bundle);
                         message.what = 12;
                         olPlayHallRoom.jpprogressBar.dismiss();
                         olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
-                        break;
+                    }
                 }
             }
         });
@@ -1028,21 +1059,18 @@ public final class ReceiveTasks {
             OnlineClTestVO clTest = receivedMessage.getClTest();
             Bundle bundle = new Bundle();
             switch (clTest.getType()) {
-                case 0:
-                    if (topActivity instanceof OLPlayHall) {
-                        OLPlayHall olPlayHall = (OLPlayHall) topActivity;
+                case 0 -> {
+                    if (topActivity instanceof OLPlayHall olPlayHall) {
                         olPlayHall.jpprogressBar.dismiss();
                         bundle.putInt("result", clTest.getClTestDialog().getAllowed() ? 1 : 0);
                         bundle.putString("info", clTest.getClTestDialog().getMessage());
                         message.setData(bundle);
                         message.what = 11;
                         olPlayHall.olPlayHallHandler.handleMessage(message);
-                        return;
                     }
-                    return;
-                case 1:
-                    if (topActivity instanceof OLPlayHall) {
-                        OLPlayHall olPlayHall = (OLPlayHall) topActivity;
+                }
+                case 1 -> {
+                    if (topActivity instanceof OLPlayHall olPlayHall) {
                         olPlayHall.jpprogressBar.dismiss();
                         bundle.putInt("songsID", clTest.getClTestSong().getCl());
                         bundle.putString("songBytes", GZIPUtil.ZIPTo(clTest.getClTestSong().getSongContent()));
@@ -1050,18 +1078,16 @@ public final class ReceiveTasks {
                         message.setData(bundle);
                         message.what = 13;
                         olPlayHall.olPlayHallHandler.handleMessage(message);
-                        return;
                     }
-                    return;
-                case 2:
+                }
+                case 2 -> {
                     if (topActivity instanceof PianoPlay) {
                         message.setData(bundle);
                         message.what = 5;
                         ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
-                        return;
                     }
-                    return;
-                case 3:
+                }
+                case 3 -> {
                     if (topActivity instanceof PianoPlay) {
                         bundle.putInt("R", clTest.getClTestFinish().getStatus());
                         bundle.putInt("G", clTest.getClTestFinish().getTargetScore());
@@ -1071,6 +1097,7 @@ public final class ReceiveTasks {
                         message.what = 6;
                         ((PianoPlay) topActivity).pianoPlayHandler.handleMessage(message);
                     }
+                }
             }
         });
 
@@ -1100,20 +1127,18 @@ public final class ReceiveTasks {
         });
 
         receiveTaskMap.put(OnlineProtocolType.COUPLE, (receivedMessage, topActivity, message) -> {
-            if (topActivity instanceof OLPlayRoomActivity) {
+            if (topActivity instanceof OLRoomActivity) {
                 Bundle bundle = new Bundle();
                 message.what = 22;
                 OnlineCoupleVO couple = receivedMessage.getCouple();
                 switch (couple.getType()) {
-                    case 2:
-                    case 3:
-                    case 5:
+                    case 2, 3, 5 -> {
                         bundle.putString("MSG_C", couple.getContent());
                         bundle.putInt("MSG_CI", couple.getCoupleRoomPosition());
                         bundle.putInt("MSG_CT", couple.getCoupleType());
                         bundle.putInt("MSG_T", couple.getType());
-                        break;
-                    case 4:
+                    }
+                    case 4 -> {
                         JSONObject jsonObject = new JSONObject();
                         JSONObject jsonObjectP = new JSONObject();
                         JSONObject jsonObjectC = new JSONObject();
@@ -1147,7 +1172,7 @@ public final class ReceiveTasks {
                         bundle.putInt("MSG_CI", couple.getCoupleRoomPosition());
                         bundle.putInt("MSG_CT", couple.getCoupleType());
                         bundle.putInt("MSG_T", couple.getType());
-                        break;
+                    }
                 }
                 message.setData(bundle);
                 if (topActivity instanceof OLPlayRoom) {
@@ -1159,7 +1184,35 @@ public final class ReceiveTasks {
         });
     }
 
-    private static User buildAndPutUser(OLPlayRoomActivity olPlayRoomActivity, OnlineRoomPositionUserVO roomPositionUser) {
+    /**
+     * 设置流消息的 bundle
+     *
+     * @param message 当前事件消息
+     * @param bundle  当前消息的bundle
+     */
+    private static void streamMessageBundleBuild(String message, Bundle bundle) {
+        // 流消息开始
+        if (message.startsWith(OnlineProtocolType.MsgType.StreamMsg.START)) {
+            bundle.putString(OnlineProtocolType.MsgType.StreamMsg.PARAM_ID, message.substring(OnlineProtocolType.MsgType.StreamMsg.START.length()));
+            bundle.putBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS, true);
+            bundle.putString("M", StringUtil.EMPTY_STRING);
+        }
+        // 流消息数据传输
+        else if (message.startsWith(OnlineProtocolType.MsgType.StreamMsg.DATA)) {
+            String[] split = message.split(String.valueOf(StringUtil.LINE_FEED));
+            bundle.putString(OnlineProtocolType.MsgType.StreamMsg.PARAM_ID, split[0].substring(OnlineProtocolType.MsgType.StreamMsg.DATA.length()));
+            bundle.putBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS, true);
+            bundle.putString("M", message.substring((split[0] + StringUtil.LINE_FEED).length()));
+        }
+        // 流消息结束
+        else if (message.startsWith(OnlineProtocolType.MsgType.StreamMsg.END)) {
+            bundle.putString(OnlineProtocolType.MsgType.StreamMsg.PARAM_ID, message.substring(OnlineProtocolType.MsgType.StreamMsg.END.length()));
+            bundle.putBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS, false);
+            bundle.putString("M", StringUtil.EMPTY_STRING);
+        }
+    }
+
+    private static User buildAndPutUser(OLRoomActivity olRoomActivity, OnlineRoomPositionUserVO roomPositionUser) {
         User user = new User((byte) roomPositionUser.getPosition(),
                 roomPositionUser.getName(),
                 roomPositionUser.getClothes().getHair(),
@@ -1176,7 +1229,7 @@ public final class ReceiveTasks {
                 roomPositionUser.getHand(),
                 roomPositionUser.getCoupleType(),
                 String.valueOf(roomPositionUser.getFamily()));
-        olPlayRoomActivity.getRoomPlayerMap().put(user.getPosition(), user);
+        OLBaseActivity.getRoomPlayerMap().put(user.getPosition(), user);
         return user;
     }
 

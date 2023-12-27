@@ -1,12 +1,14 @@
 package ly.pp.justpiano3.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
-import android.os.Environment;
 import android.view.View;
+
+import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,12 +27,12 @@ public class ShareUtil {
         Canvas canvas = new Canvas(bitmap);
         rootView.draw(canvas);
         String fileName = DateUtil.format(DateUtil.now(), DateUtil.TEMPLATE_DEFAULT_CHINESE) + JPG_SUFFIX;
-        saveBitmapToJPG(bitmap, fileName);
+        saveBitmapToJPG(activity, bitmap, fileName);
         shareImage(activity, fileName);
     }
 
-    private static void saveBitmapToJPG(Bitmap bitmap, String filename) {
-        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/JustPiano/share/"); // 替换为你自己的目录
+    private static void saveBitmapToJPG(Context context, Bitmap bitmap, String filename) {
+        File dir = new File(context.getCacheDir(), "Share");
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -46,12 +48,18 @@ public class ShareUtil {
     }
 
     private static void shareImage(Activity activity, String filename) {
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/JustPiano/share/", filename); // 同上
-        Uri uri = Uri.fromFile(file);
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        activity.startActivity(Intent.createChooser(intent, "😘分享给小伙伴们吧~"));
+        File dir = new File(activity.getCacheDir(), "Share");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        File file = new File(dir, filename);
+        if (file.exists()) {
+            Uri uri = FileProvider.getUriForFile(activity, activity.getPackageName() + ".fileProvider", file);
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            activity.startActivity(Intent.createChooser(intent, "😘分享给小伙伴们吧~"));
+        }
     }
 }

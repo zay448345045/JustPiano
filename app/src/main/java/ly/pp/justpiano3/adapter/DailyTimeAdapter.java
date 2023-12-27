@@ -11,9 +11,9 @@ import androidx.core.content.ContextCompat;
 import java.util.List;
 import java.util.Map;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 
 public final class DailyTimeAdapter extends BaseAdapter {
     OLPlayHallRoom olPlayHallRoom;
@@ -70,31 +70,32 @@ public final class DailyTimeAdapter extends BaseAdapter {
             bonusGetText.setText("已领");
             bonusGetText.setBackgroundColor(ContextCompat.getColor(olPlayHallRoom, R.color.online));
         }
-        if (JPApplication.kitiName.equals(name)) {
+        if (OLBaseActivity.kitiName.equals(name)) {
             view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.drawable.selector_list_a);
         } else {
             view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.drawable.selector_list_c);
         }
         switch (i) {
-            case 0:
+            case 0 -> {
                 nameText.setTextColor(0xFFFFD700);
                 onlineTimeText.setTextColor(0xFFFFD700);
                 dailyTimeBonusText.setTextColor(0xFFFFD700);
-                break;
-            case 1:
+            }
+            case 1 -> {
                 nameText.setTextColor(0xFFC0C0C0);
                 onlineTimeText.setTextColor(0xFFC0C0C0);
                 dailyTimeBonusText.setTextColor(0xFFC0C0C0);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 nameText.setTextColor(0xFFD2B48C);
                 onlineTimeText.setTextColor(0xFFD2B48C);
                 dailyTimeBonusText.setTextColor(0xFFD2B48C);
-                break;
-            default:
+            }
+            default -> {
                 nameText.setTextColor(0xFFFFFFFF);
                 onlineTimeText.setTextColor(0xFFFFFFFF);
                 dailyTimeBonusText.setTextColor(0xFFFFFFFF);
+            }
         }
         return view;
     }

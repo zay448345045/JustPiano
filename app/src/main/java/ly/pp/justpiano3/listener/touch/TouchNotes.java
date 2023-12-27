@@ -5,11 +5,15 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import ly.pp.justpiano3.utils.MidiDeviceUtil;
-import ly.pp.justpiano3.view.PlayView;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.VibrationUtil;
+import ly.pp.justpiano3.view.PlayView;
 
 public final class TouchNotes implements OnTouchListener {
     private final PlayView playView;
@@ -18,8 +22,7 @@ public final class TouchNotes implements OnTouchListener {
     public TouchNotes(PlayView playView) {
         this.playView = playView;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && playView.pianoPlay.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-            playView.pianoPlay.buildAndConnectMidiReceiver();
-            MidiDeviceUtil.addMidiConnectionListener(playView.pianoPlay);
+            MidiDeviceUtil.setMidiConnectionListener(playView.pianoPlay);
         }
     }
 
@@ -37,11 +40,9 @@ public final class TouchNotes implements OnTouchListener {
             x = Math.max(x, 0.0f);
             y = Math.max(y, 0.0f);
             switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                case MotionEvent.ACTION_POINTER_DOWN:
-                    onFingerDown(id, x, y);
-                    break;
-                case MotionEvent.ACTION_MOVE:
+                case MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN ->
+                        onFingerDown(id, x, y);
+                case MotionEvent.ACTION_MOVE -> {
                     int pointerCount = event.getPointerCount();
                     for (int i = 0; i < pointerCount; i++) {
                         id = event.getPointerId(i);
@@ -51,16 +52,11 @@ public final class TouchNotes implements OnTouchListener {
                         y = Math.max(y, 0.0f);
                         onFingerMove(id, x, y);
                     }
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_POINTER_UP:
-                    onFingerUp(id, x, y);
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                    onAllFingersUp();
-                    break;
-                default:
-                    break;
+                }
+                case MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP -> onFingerUp(id, x, y);
+                case MotionEvent.ACTION_CANCEL -> onAllFingersUp();
+                default -> {
+                }
             }
         }
         return true;
@@ -111,15 +107,20 @@ public final class TouchNotes implements OnTouchListener {
     }
 
     public void fireKeyDown(int touchNoteNum) {
-        if (touchNoteNum != -1 && !playView.pianoPlay.keyboardview.touchNoteSet.containsKey(touchNoteNum)) {
-            playView.pianoPlay.keyboardview.touchNoteSet.put(touchNoteNum, 0);
-            playView.judgeAndPlaySound(touchNoteNum);
+        if (touchNoteNum != -1 && !playView.pianoPlay.playKeyBoardView.touchNoteMap.containsKey(touchNoteNum)) {
+            SoundEngineUtil.playSound((byte) (touchNoteNum + playView.noteMod12 * 12), playView.volume0);
+            if (GlobalSetting.INSTANCE.getSoundVibration()) {
+                VibrationUtil.vibrateOnce(playView.pianoPlay, GlobalSetting.INSTANCE.getSoundVibrationTime());
+            }
+            playView.judgeTouchNote(touchNoteNum + playView.noteMod12 * 12, false);
+            playView.pianoPlay.playKeyBoardView.touchNoteMap.put(touchNoteNum, 0);
             playView.pianoPlay.updateKeyboardPrefer();
         }
     }
 
     public void fireKeyUp(int touchNoteNum) {
-        playView.pianoPlay.keyboardview.touchNoteSet.remove(touchNoteNum);
+        SoundEngineUtil.stopPlaySound((byte) (touchNoteNum + playView.noteMod12 * 12));
+        playView.pianoPlay.playKeyBoardView.touchNoteMap.remove(touchNoteNum);
         playView.pianoPlay.updateKeyboardPrefer();
     }
 }

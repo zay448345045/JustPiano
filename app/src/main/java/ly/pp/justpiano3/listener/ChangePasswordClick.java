@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ly.pp.justpiano3.activity.UsersInfo;
+import ly.pp.justpiano3.activity.online.UsersInfo;
 import ly.pp.justpiano3.task.UserInfoChangeTask;
 
 public final class ChangePasswordClick implements OnClickListener {
@@ -18,7 +18,7 @@ public final class ChangePasswordClick implements OnClickListener {
     private final CheckBox remNewPasswordCheckBox;
 
     public ChangePasswordClick(UsersInfo userInfo, TextView originalPasswordTextView, TextView newPasswordTextView,
-                        TextView confirmPasswordTextView, CheckBox autoLoginCheckBox, CheckBox remNewPasswordCheckBox) {
+                               TextView confirmPasswordTextView, CheckBox autoLoginCheckBox, CheckBox remNewPasswordCheckBox) {
         this.userInfo = userInfo;
         this.originalPasswordTextView = originalPasswordTextView;
         this.newPasswordTextView = newPasswordTextView;

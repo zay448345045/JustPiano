@@ -217,4 +217,71 @@ public class OnlineProtocolType {
      * 搭档、祝福
      */
     public static final int COUPLE = 45;
+
+    /**
+     * 聊天消息类型
+     */
+    public static class MsgType {
+
+        /**
+         * 曲谱推荐消息
+         */
+        public static final int SONG_RECOMMEND_MESSAGE = 0;
+
+        /**
+         * 公聊消息
+         */
+        public static final int PUBLIC_MESSAGE = 1;
+
+        /**
+         * 私聊消息
+         */
+        public static final int PRIVATE_MESSAGE = 2;
+
+        /**
+         * 系统消息
+         */
+        public static final int SYSTEM_MESSAGE = 3;
+
+        /**
+         * 全服消息
+         */
+        public static final int ALL_SERVER_MESSAGE = 18;
+
+        /**
+         * 流消息
+         */
+        public static final int STREAM_MESSAGE = 19;
+
+        /**
+         * 流消息协议
+         */
+        public static class StreamMsg {
+
+            /**
+             * 协议：开始
+             */
+            public static final String START = "S:";
+
+            /**
+             * 协议：数据
+             */
+            public static final String DATA = "D:";
+
+            /**
+             * 协议：结束
+             */
+            public static final String END = "E:";
+
+            /**
+             * 参数名字 消息id
+             */
+            public static final String PARAM_ID = "STREAM_ID";
+
+            /**
+             * 参数名字 消息状态
+             */
+            public static final String PARAM_STATUS = "STREAM_STATUS";
+        }
+    }
 }

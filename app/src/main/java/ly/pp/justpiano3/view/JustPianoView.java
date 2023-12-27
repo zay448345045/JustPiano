@@ -13,13 +13,11 @@ import android.view.View;
 
 import java.io.IOException;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public class JustPianoView extends View {
-    public JPApplication jpapplication;
-    private final RectF allScreenRect;
-    private final RectF progressBarRect;
+    private RectF allScreenRect;
+    private RectF progressBarRect;
     private Bitmap logoBitmap;
     private Bitmap progressBarBitmap;
     private Bitmap progressBarBaseBitmap;
@@ -40,19 +38,21 @@ public class JustPianoView extends View {
         paint.setTypeface(Typeface.DEFAULT_BOLD);
     }
 
-    public JustPianoView(Context context, JPApplication jPApplication) {
+    public JustPianoView(Context context) {
         super(context);
-        jpapplication = jPApplication;
-        allScreenRect = new RectF(0, 0, jpapplication.getWidthPixels(), jpapplication.getHeightPixels());
+    }
+
+    private void init() {
+        allScreenRect = new RectF(0, 0, getWidth(), getHeight());
         try {
-            logoBitmap = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.jpg"));
-            progressBarBitmap = ImageLoadUtil.loadSkinImage(context, "progress_bar");
-            progressBarBaseBitmap = ImageLoadUtil.loadSkinImage(context, "progress_bar_base");
+            logoBitmap = BitmapFactory.decodeStream(getResources().getAssets().open("drawable/logopiano.webp"));
+            progressBarBitmap = ImageLoadUtil.loadSkinImage(getContext(), "progress_bar");
+            progressBarBaseBitmap = ImageLoadUtil.loadSkinImage(getContext(), "progress_bar_base");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        progressBarRect = new RectF(0, jpapplication.getHeightPixels() - ((float) progressBarBitmap.getHeight()),
-                jPApplication.getWidthPixels(), jpapplication.getHeightPixels());
+        progressBarRect = new RectF(0, getHeight() - ((float) progressBarBitmap.getHeight()),
+                getWidth(), getHeight());
     }
 
     public final void destroy() {
@@ -78,16 +78,24 @@ public class JustPianoView extends View {
     }
 
     @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (w != oldw || h != oldh) {
+            init();
+        }
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        int progressOne = (jpapplication.getWidthPixels() * progress) / 85;
+        if (allScreenRect == null) {
+            init();
+        }
+        int progressOne = (getWidth() * progress) / 88;
         canvas.drawBitmap(logoBitmap, null, allScreenRect, null);
         canvas.drawBitmap(progressBarBaseBitmap, null, progressBarRect, null);
-
-        progressBarDynamicRect.set(progressOne - jpapplication.getWidthPixels(), jpapplication.getHeightPixels() - progressBarBitmap.getHeight(), progressOne, jpapplication.getHeightPixels());
+        progressBarDynamicRect.set(progressOne - getWidth(), getHeight() - progressBarBitmap.getHeight(), progressOne, getHeight());
         canvas.drawBitmap(progressBarBitmap, null, progressBarDynamicRect, null);
-
-        canvas.drawText(loading + info, (float) jpapplication.getWidthPixels(), (float) (jpapplication.getHeightPixels() - progressBarBitmap.getHeight()), paint);
+        canvas.drawText(loading + info, (float) getWidth(), (float) (getHeight() - progressBarBitmap.getHeight()), paint);
     }
 }

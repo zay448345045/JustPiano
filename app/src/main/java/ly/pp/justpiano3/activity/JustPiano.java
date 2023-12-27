@@ -1,12 +1,14 @@
 package ly.pp.justpiano3.activity;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Handler.Callback;
-import android.os.Message;
+import android.preference.PreferenceManager;
+import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,17 +17,19 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.local.MainMode;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.PmSongData;
-import ly.pp.justpiano3.utils.ThreadPoolUtil;
+import ly.pp.justpiano3.midi.MidiUtil;
+import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.JustPianoView;
 
-public class JustPiano extends Activity implements Callback, Runnable {
+public final class JustPiano extends BaseActivity implements Runnable {
     public static boolean updateSQL = false;
-    public Handler handler;
     private boolean isPause;
     private boolean loadFinish;
     private int songCount;
@@ -69,7 +73,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
                             float leftDegree = pmSongData.getLeftHandDegree();
                             int songTime = pmSongData.getSongTime();
                             songCount++;
-                            // 由于分类可能被修改，更新时文件名必须去除分类（首字母）
                             Song currentSong = pmPathMap.get(pmFileName.substring(1));
                             if (currentSong != null) {
                                 info = "更新曲目:" + songName + "..." + songCount;
@@ -89,9 +92,7 @@ public class JustPiano extends Activity implements Callback, Runnable {
                                         0, 0, "", 0, 0,
                                         originalPmVersion + 1, rightDegree, 1, leftDegree, songTime, 0));
                             }
-                            Message obtainMessage = handler.obtainMessage();
-                            obtainMessage.what = 0;
-                            handler.sendMessage(obtainMessage);
+                            runOnUiThread(() -> justpianoview.updateProgressAndInfo(progress, info, loading));
                         }
                     }
                 }
@@ -122,35 +123,13 @@ public class JustPiano extends Activity implements Callback, Runnable {
     }
 
     @Override
-    public boolean handleMessage(Message message) {
-        switch (message.what) {
-            case 0:
-                justpianoview.updateProgressAndInfo(progress, info, loading);
-                break;
-            case 1:
-                loadFinish = true;
-                if (!isPause) {
-                    Intent intent = new Intent();
-                    intent.setClass(this, MainMode.class);
-                    startActivity(intent);
-                    finish();
-                    break;
-                }
-                break;
-        }
-        return false;
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        handler = new Handler(this);
-        ((JPApplication) getApplication()).updateWidthAndHeightPixels(this);
-        justpianoview = new JustPianoView(this, (JPApplication) getApplication());
+        justpianoview = new JustPianoView(this);
+        justpianoview.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(justpianoview);
-        Message obtainMessage = handler.obtainMessage();
-        obtainMessage.what = 0;
-        handler.sendMessage(obtainMessage);
+        runOnUiThread(() -> justpianoview.updateProgressAndInfo(progress, info, loading));
         ThreadPoolUtil.execute(this);
     }
 
@@ -182,11 +161,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
     }
 
     @Override
-    public void onWindowFocusChanged(boolean z) {
-        super.onWindowFocusChanged(z);
-    }
-
-    @Override
     public void run() {
         File file = new File(getFilesDir().getAbsolutePath() + "/Sounds");
         if (!file.exists()) {
@@ -200,7 +174,6 @@ public class JustPiano extends Activity implements Callback, Runnable {
         if (!file.exists()) {
             file.mkdirs();
         }
-        Message obtainMessage;
         try {
             List<Song> songList = JPApplication.getSongDatabase().songDao().getAllSongs();
             if (songList.isEmpty() || updateSQL) {
@@ -209,22 +182,35 @@ public class JustPiano extends Activity implements Callback, Runnable {
             }
         } catch (Exception e5) {
             e5.printStackTrace();
-            Toast.makeText(getApplicationContext(), "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> Toast.makeText(getApplicationContext(),
+                    "曲谱数据库初始化错误，请尝试卸载重装应用", Toast.LENGTH_SHORT).show());
             System.exit(-1);
         }
-        // 载入音源
-        for (int i = 108; i >= 24; i--) {
-            SoundEngineUtil.preloadSounds(getApplicationContext(), i);
+        SoundEngineUtil.setupAudioStreamNative();
+        for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
+            SoundEngineUtil.loadSoundAssetsNative(getApplicationContext(), i);
             progress++;
-            loading = "正在载入声音资源..." + progress + "/85";
-            Message obtainMessage2 = handler.obtainMessage();
-            obtainMessage2.what = 0;
-            handler.sendMessage(obtainMessage2);
+            loading = "正在载入声音资源..." + progress + "/88";
+            runOnUiThread(() -> justpianoview.updateProgressAndInfo(progress, info, loading));
         }
-
-        SoundEngineUtil.afterLoadSounds(getApplicationContext());
-        obtainMessage = handler.obtainMessage();
-        obtainMessage.what = 1;
-        handler.sendMessage(obtainMessage);
+        SoundEngineUtil.openFluidSynth();
+        SoundEngineUtil.startAudioStreamNative();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String soundUri = sharedPreferences.getString("sound_select", "original");
+        DocumentFile soundFile = FileUtil.INSTANCE.uriToDocumentFile(this, Uri.parse(soundUri));
+        if (soundFile != null && soundFile.getName() != null && soundFile.getName().endsWith(".sf2")) {
+            loading = "正在载入sf2声音资源...";
+            runOnUiThread(() -> justpianoview.updateProgressAndInfo(progress, info, loading));
+            SoundEngineUtil.loadSf2(FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(this, soundFile));
+        }
+        runOnUiThread(() -> {
+            loadFinish = true;
+            if (!isPause) {
+                Intent intent = new Intent();
+                intent.setClass(this, MainMode.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.listener;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
@@ -8,10 +7,9 @@ import android.preference.PreferenceManager;
 
 import java.io.File;
 
-import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.SkinDownload;
-import ly.pp.justpiano3.utils.ThreadPoolUtil;
+import ly.pp.justpiano3.activity.local.SkinDownload;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 
 public final class SkinDownloadClick implements OnClickListener {
     private final SkinDownload skinDownload;
@@ -31,28 +29,23 @@ public final class SkinDownloadClick implements OnClickListener {
         int i2 = 0;
         dialogInterface.dismiss();
         switch (type) {
-            case 0:
-                ThreadPoolUtil.execute(() -> SkinDownload.downloadPS(skinDownload, url, name));
-                break;
-            case 1:
-                ThreadPoolUtil.execute(() -> skinDownload.changeSkin(name + ".ps"));
-                break;
-            case 2:
+            case 0 -> ThreadPoolUtil.execute(() -> skinDownload.downloadSkin(url, name));
+            case 1 -> ThreadPoolUtil.execute(() -> skinDownload.changeSkin(name + ".ps"));
+            case 2 -> {
                 Editor edit = PreferenceManager.getDefaultSharedPreferences(skinDownload).edit();
-                edit.putString("skin_list", "original");
+                edit.putString("skin_select", "original");
                 edit.apply();
-                File dir = skinDownload.getDir("Skin", Context.MODE_PRIVATE);
+                File dir = new File(skinDownload.getFilesDir(), "Skins");
                 if (dir.isDirectory()) {
                     File[] listFiles = dir.listFiles();
-                    if (listFiles != null && listFiles.length > 0) {
-                        while (i2 < listFiles.length) {
-                            listFiles[i2].delete();
-                            i2++;
+                    if (listFiles != null) {
+                        for (File file : listFiles) {
+                            file.delete();
                         }
                     }
                 }
-                ImageLoadUtil.setBackGround(skinDownload, "ground", skinDownload.findViewById(R.id.layout));
-                break;
+                ImageLoadUtil.setBackground(skinDownload);
+            }
         }
     }
 }

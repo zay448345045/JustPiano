@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import ly.pp.justpiano3.activity.OLMelodySelect;
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.online.OLMelodySelect;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.adapter.OLMelodySelectAdapter;
 import ly.pp.justpiano3.task.OLMelodySongsPlayTask;
 

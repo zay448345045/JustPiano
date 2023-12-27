@@ -1,0 +1,342 @@
+2023-12-10 20:18:00  info:  Task optimizeDebug begin:
+----------------------------------------
+2023-12-10 20:18:00  info:  167 images need to be optimized.
+----------------------------------------
+2023-12-10 20:18:01  info:  Succeed! 49312B-->13308B, 73.01266% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable/icon.png
+----------------------------------------
+2023-12-10 20:18:01  info:  Succeed! 49312B-->13308B, 73.01266% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-xhdpi-v4/icon.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 5645B-->2893B, 48.751106% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b113.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6194B-->3011B, 51.38844% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b84.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6901B-->3158B, 54.238518% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b90.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 9322B-->3062B, 67.15297% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b47.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 8491B-->3219B, 62.08927% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b53.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 10068B-->3437B, 65.86214% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b52.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 8675B-->3070B, 64.610954% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b46.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6420B-->3081B, 52.009346% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b91.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6364B-->3067B, 51.80704% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b85.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6519B-->3145B, 51.756405% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b112.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 5328B-->2936B, 44.894894% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b104.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 5400B-->2850B, 47.22222% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b138.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 49312B-->13308B, 73.01266% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/icon.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 5819B-->3191B, 45.1624% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b93.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6760B-->3107B, 54.03846% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b87.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 9615B-->3316B, 65.51222% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b50.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 8867B-->3229B, 63.584076% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b44.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6204B-->3064B, 50.612507% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b78.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6585B-->3137B, 52.361427% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b79.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 9872B-->3305B, 66.52148% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b45.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 8897B-->3311B, 62.78521% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b51.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 5941B-->3068B, 48.358864% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b86.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6603B-->3246B, 50.840527% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b92.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 5577B-->2900B, 48.000717% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b139.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6108B-->3191B, 47.75704% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b105.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 5635B-->2962B, 47.43567% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b111.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 5720B-->2868B, 49.86014% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b115.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6900B-->3184B, 53.855072% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b101.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 5970B-->3060B, 48.743717% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b96.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 6235B-->3021B, 51.547714% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b82.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 5865B-->3383B, 42.31884% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b69.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 10058B-->3398B, 66.21595% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b55.png
+----------------------------------------
+2023-12-10 20:18:02  info:  Succeed! 8777B-->3150B, 64.11074% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b41.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 8879B-->3179B, 64.19642% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b40.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 9011B-->3398B, 62.290535% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b54.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 6391B-->3113B, 51.29088% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b68.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 5935B-->2860B, 51.81129% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b83.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 7298B-->3209B, 56.02905% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b97.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 7157B-->3285B, 54.10088% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b100.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 5150B-->2826B, 45.126213% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b114.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 8059B-->3477B, 56.85569% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b102.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 139994B-->60482B, 56.79672% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/waku.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 9765B-->3341B, 65.78597% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b9.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 6631B-->3013B, 54.561905% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b81.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 6319B-->2983B, 52.793163% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b95.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 8827B-->3183B, 63.94018% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b42.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 8832B-->3109B, 64.79846% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b56.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 9016B-->3172B, 64.8181% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b57.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 80141B-->33202B, 58.57052% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/sleep.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 8530B-->3132B, 63.28253% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b43.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 6668B-->3086B, 53.719257% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b94.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 6610B-->3400B, 48.562782% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b80.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 9294B-->3190B, 65.67678% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b8.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 5504B-->2896B, 47.38372% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b117.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 6805B-->3250B, 52.241% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b103.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 9456B-->3314B, 64.95347% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b24.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 8667B-->3048B, 64.83212% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b30.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 9442B-->3154B, 66.59606% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b18.png
+----------------------------------------
+2023-12-10 20:18:03  info:  Succeed! 10059B-->3279B, 67.40233% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b19.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 8487B-->3149B, 62.896194% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b31.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 10609B-->3555B, 66.490715% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b25.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 9503B-->3253B, 65.76871% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b33.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 8954B-->3353B, 62.553047% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b27.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 8659B-->3259B, 62.362858% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b26.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 8865B-->3177B, 64.16244% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b32.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 15765B-->8433B, 46.508087% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/_self.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 8890B-->3108B, 65.03937% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b36.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 9164B-->3184B, 65.25535% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b22.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 8774B-->3057B, 65.158424% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b23.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 8885B-->3136B, 64.70456% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b37.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 15085B-->244B, 98.3825% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/pointer.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 117898B-->41718B, 64.61517% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/duili.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 5228B-->2938B, 43.8026% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b149.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 10749B-->3312B, 69.18783% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b21.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 9106B-->3204B, 64.81441% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b35.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 9056B-->3260B, 64.00177% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b34.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 8288B-->2904B, 64.96139% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b20.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 5132B-->3037B, 40.822292% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b148.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 8597B-->3030B, 64.75515% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b11.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 8951B-->3117B, 65.17708% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b39.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 9017B-->3282B, 63.602085% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b38.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 7749B-->3155B, 59.28507% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b10.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 5702B-->3222B, 43.49351% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/yingyingying.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 5144B-->2768B, 46.189735% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b150.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 5432B-->3000B, 44.771725% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b144.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 5703B-->2942B, 48.413116% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b146.png
+----------------------------------------
+2023-12-10 20:18:04  info:  Succeed! 9197B-->3084B, 66.46732% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b12.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 82233B-->61154B, 25.63326% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/shimamura.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 9458B-->3309B, 65.01375% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b13.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 5364B-->2906B, 45.824013% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b147.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 5690B-->2860B, 49.736378% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b143.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 112314B-->37221B, 66.85988% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/bailan.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 10048B-->3370B, 66.46099% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b17.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 9028B-->3056B, 66.14976% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b16.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 67342B-->47034B, 30.156515% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/adachi.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 5750B-->3002B, 47.791306% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b142.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 19204B-->2386B, 87.57551% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/changecolor.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 5519B-->2846B, 48.432686% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b140.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 10165B-->3435B, 66.20757% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b28.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 8446B-->2950B, 65.07222% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b14.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 8735B-->3123B, 64.247284% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b15.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 8779B-->3178B, 63.799976% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b29.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 6346B-->3027B, 52.300663% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b141.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 5372B-->3092B, 42.442295% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b126.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 5721B-->2976B, 47.98112% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b132.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 9127B-->3090B, 66.14441% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b5.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 5978B-->3068B, 48.67849% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b99.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 6316B-->3039B, 51.884106% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b66.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 6462B-->3105B, 51.94986% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b72.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 7064B-->3411B, 51.71291% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b73.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 6460B-->3169B, 50.94427% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b67.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 6717B-->3186B, 52.56811% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b98.png
+----------------------------------------
+2023-12-10 20:18:05  info:  Succeed! 8397B-->3111B, 62.951054% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b4.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 23551B-->5912B, 74.89703% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/couple_1.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 5179B-->2889B, 44.21703% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b133.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 5536B-->2932B, 47.03757% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b127.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 5224B-->2834B, 45.75038% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b131.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 5776B-->2952B, 48.891968% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b125.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 5959B-->2959B, 50.344017% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b119.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 22834B-->5968B, 73.86353% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/couple_3.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 7542B-->3022B, 59.931053% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b6.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 6429B-->3049B, 52.574272% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b71.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 6057B-->3082B, 49.116726% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b65.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 10224B-->3597B, 64.81808% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b59.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 9996B-->3222B, 67.767105% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b58.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 5461B-->2813B, 48.48929% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b64.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 6823B-->3143B, 53.93522% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b70.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 9104B-->3205B, 64.79569% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b7.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 23627B-->5968B, 74.74076% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/couple_2.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 5794B-->2962B, 48.87815% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b124.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 5710B-->2932B, 48.65149% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b130.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 5621B-->2855B, 49.208324% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b108.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 5425B-->2875B, 47.00461% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b134.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 10699B-->3764B, 64.819145% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b3.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 8382B-->3078B, 63.278454% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b48.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 6850B-->3218B, 53.021896% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b74.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 9576B-->3563B, 62.792397% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b60.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 10088B-->3239B, 67.89255% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b61.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 7177B-->3403B, 52.584644% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b75.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 113885B-->37688B, 66.90697% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/chigua.png
+----------------------------------------
+2023-12-10 20:18:06  info:  Succeed! 9059B-->3152B, 65.20587% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b49.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 9751B-->3210B, 67.0803% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b2.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 5624B-->2901B, 48.417496% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b121.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 5181B-->2862B, 44.7597% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b135.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 5297B-->2921B, 44.85558% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b109.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 5632B-->2453B, 56.445312% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/horn.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 5303B-->2846B, 46.332264% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b123.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 5173B-->2836B, 45.17688% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b137.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 9680B-->3369B, 65.19628% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b0.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 6403B-->3067B, 52.10058% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b88.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 8679B-->3096B, 64.32769% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b63.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 6362B-->3075B, 51.66614% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b77.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 6299B-->3094B, 50.881092% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b76.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 9560B-->3365B, 64.801254% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b62.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 6666B-->3092B, 53.61536% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b89.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 21327B-->2235B, 89.520325% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/gold.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 9244B-->3163B, 65.78321% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b1.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 5871B-->3381B, 42.411854% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/gender.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 5278B-->3058B, 42.061386% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b136.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 6030B-->3099B, 48.606964% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-mdpi-v4/b122.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 49312B-->13308B, 73.01266% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-hdpi-v4/icon.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 5453B-->3088B, 43.37062% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-hdpi-v4/music.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 18379B-->2768B, 84.93933% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-hdpi-v4/comment.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 20662B-->2107B, 89.802536% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-hdpi-v4/convert.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Succeed! 49312B-->13308B, 73.01266% saved! /Users/lolykat/Documents/GitHub/JustPiano/app/src/main/res/drawable-ldpi-v4/icon.png
+----------------------------------------
+2023-12-10 20:18:07  info:  Total: 167, Succeed: 167, Skipped: 0, Failed: 0, Saved: 1314.3681640625KB
+----------------------------------------
+2023-12-10 20:18:07  info:  Task optimizeDebug executed successfully.
+----------------------------------------

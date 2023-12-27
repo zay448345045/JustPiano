@@ -12,10 +12,11 @@ import androidx.core.content.ContextCompat;
 
 import java.util.List;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.entity.OLKeyboardState;
 import ly.pp.justpiano3.utils.ColorUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
@@ -60,18 +61,22 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         String familyID = playerList.get(i).getString("I");
         ImageView imageView = view.findViewById(R.id.ol_player_mod);
         ImageView imageView8 = view.findViewById(R.id.ol_player_sound);
-        imageView8.setImageResource(olPlayKeyboardRoom.olKeyboardStates[i].isMuted() ? R.drawable.stop : R.drawable.null_pic);
+        OLKeyboardState olKeyboardState = olPlayKeyboardRoom.olKeyboardStates.get(i);
+        if (olKeyboardState != null) {
+            imageView8.setImageResource(olKeyboardState.getMuted() ? R.drawable.stop : R.drawable.null_pic);
+        }
         if (string4.equals("O")) {
-            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.png"));
+            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.webp"));
             return view;
         } else if (string4.equals("C")) {
-            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_close.png"));
+            imageView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_close.webp"));
             return view;
         }
         TextView textView2 = view.findViewById(R.id.ol_ready_text);
         TextView textView3 = view.findViewById(R.id.ol_player_level);
         TextView textView4 = view.findViewById(R.id.ol_player_class);
         TextView textView5 = view.findViewById(R.id.ol_player_clname);
+        TextView autoConnectWaitView = view.findViewById(R.id.ol_player_wait);
         ImageView imageView2 = view.findViewById(R.id.ol_player_trousers);
         ImageView imageView3 = view.findViewById(R.id.ol_player_jacket);
         ImageView imageView4 = view.findViewById(R.id.ol_player_shoes);
@@ -81,7 +86,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         ImageView imageView7 = view.findViewById(R.id.ol_player_family);
         int lv = playerList.get(i).getInt("LV");
         int cl = playerList.get(i).getInt("CL");
-        if (JPApplication.kitiName.equals(userName)) {
+        if (OLBaseActivity.kitiName.equals(userName)) {
             olPlayKeyboardRoom.lv = lv;
             olPlayKeyboardRoom.cl = cl;
             olPlayKeyboardRoom.playerKind = string4;
@@ -91,6 +96,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
             imageView6.setImageResource(Consts.couples[cpKind]);
         }
         ImageLoadUtil.setFamilyImageBitmap(olPlayKeyboardRoom, familyID, imageView7);
+        autoConnectWaitView.setVisibility("W".equals(string3) ? View.VISIBLE : View.INVISIBLE);
         if (!"H".equals(string4)) {
             if ("R".equals(string3)) {
                 textView2.setText("准备");
@@ -122,7 +128,9 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         textView2 = view.findViewById(R.id.ol_player_name);
         textView2.setText(userName);
         ImageView imageView1 = view.findViewById(R.id.ol_player_midi);
-        imageView1.setVisibility(olPlayKeyboardRoom.olKeyboardStates[i].isMidiKeyboardOn() ? View.VISIBLE : View.INVISIBLE);
+        if (olKeyboardState != null) {
+            imageView1.setVisibility(olKeyboardState.getMidiKeyboardOn() ? View.VISIBLE : View.INVISIBLE);
+        }
         textView2.setBackgroundResource(i2 == 0 ? R.drawable.back_puased : ColorUtil.userColor[i2]);
         imageView.setBackgroundResource(ColorUtil.filledUserColor[i2]);
         return view;

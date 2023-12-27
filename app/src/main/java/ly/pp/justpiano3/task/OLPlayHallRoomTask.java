@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
@@ -49,6 +49,7 @@ public final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String str) {
+        // TODO 响应str有什么用？能否判断结果成功还是失败
         olPlayHallRoom.get().jpprogressBar.cancel();
     }
 

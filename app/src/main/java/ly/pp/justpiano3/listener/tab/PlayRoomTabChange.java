@@ -1,49 +1,55 @@
 package ly.pp.justpiano3.listener.tab;
 
+import android.view.View;
 import android.widget.TabHost.OnTabChangeListener;
-
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayKeyboardRoom;
-import ly.pp.justpiano3.activity.OLPlayRoomActivity;
+import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
+import ly.pp.justpiano3.activity.online.OLRoomActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineLoadUserListDTO;
 
 public final class PlayRoomTabChange implements OnTabChangeListener {
-    private final OLPlayRoomActivity olPlayRoomActivity;
+    private final OLRoomActivity olRoomActivity;
 
-    public PlayRoomTabChange(OLPlayRoomActivity olPlayRoomActivity) {
-        this.olPlayRoomActivity = olPlayRoomActivity;
+    public PlayRoomTabChange(OLRoomActivity olRoomActivity) {
+        this.olRoomActivity = olRoomActivity;
     }
 
     @Override
     public void onTabChanged(String str) {
         int intValue = Integer.parseInt(str.substring(str.length() - 1)) - 1;
-        int childCount = olPlayRoomActivity.roomTabs.getTabWidget().getChildCount();
+        int childCount = olRoomActivity.roomTabs.getTabWidget().getChildCount();
         for (int i = 0; i < childCount; i++) {
-            olPlayRoomActivity.roomTabs.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
+            olRoomActivity.roomTabs.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
                     intValue == i ? R.drawable.selector_ol_orange : R.drawable.selector_ol_blue);
         }
+        if (olRoomActivity instanceof OLPlayKeyboardRoom) {
+            ((OLPlayKeyboardRoom) olRoomActivity).waterfallView.setVisibility(View.INVISIBLE);
+        }
         switch (str) {
-            case "tab1":
+            case "tab1" -> {
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(1);
-                builder.setPage(olPlayRoomActivity.page);
-                olPlayRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                break;
-            case "tab2":
-                if (olPlayRoomActivity.msgListView != null && olPlayRoomActivity.msgListView.getAdapter() != null) {
-                    olPlayRoomActivity.msgListView.setSelection(olPlayRoomActivity.msgListView.getAdapter().getCount() - 1);
+                builder.setPage(olRoomActivity.page);
+                olRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
+            }
+            case "tab2" -> {
+                if (olRoomActivity.msgListView != null && olRoomActivity.msgListView.getAdapter() != null) {
+                    olRoomActivity.msgListView.smoothScrollToPositionFromTop(olRoomActivity.msgListView.getAdapter().getCount() - 1, -10000);
                 }
-                break;
-            case "tab3":
-                if (olPlayRoomActivity instanceof OLPlayKeyboardRoom) {
-                    olPlayRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
+            }
+            case "tab3" -> {
+                if (olRoomActivity instanceof OLPlayKeyboardRoom) {
+                    if (olRoomActivity.msgListView != null && olRoomActivity.msgListView.getAdapter() != null) {
+                        olRoomActivity.msgListView.smoothScrollToPositionFromTop(olRoomActivity.msgListView.getAdapter().getCount() - 1, -10000);
+                    }
+                    ((OLPlayKeyboardRoom) olRoomActivity).waterfallView.setVisibility(View.VISIBLE);
+                    ((OLPlayKeyboardRoom) olRoomActivity).onlineWaterfallViewNoteWidthUpdateHandle();
                 }
-                break;
-            case "tab4":
-                olPlayRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
-                break;
+            }
+            case "tab4" ->
+                    olRoomActivity.sendMsg(OnlineProtocolType.LOAD_USER_LIST, OnlineLoadUserListDTO.getDefaultInstance());
         }
     }
 }

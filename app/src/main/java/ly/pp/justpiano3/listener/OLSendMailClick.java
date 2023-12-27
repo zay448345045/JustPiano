@@ -3,7 +3,7 @@ package ly.pp.justpiano3.listener;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 import ly.pp.justpiano3.adapter.MainGameAdapter;
 
 public final class OLSendMailClick implements OnClickListener {
@@ -19,20 +19,19 @@ public final class OLSendMailClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (!(mainGameAdapter.activity instanceof OLPlayHallRoom)) {
+        if (!(mainGameAdapter.activity instanceof OLPlayHallRoom olPlayHallRoom)) {
             return;
         }
-        OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) mainGameAdapter.activity;
         switch (message) {
-            case "":
+            case "" -> {
                 olPlayHallRoom.addFriends(to);
                 return;
-            case "'":
+            }
+            case "'" -> {
                 olPlayHallRoom.deleteCp(true);
                 return;
-            case "''":
-                olPlayHallRoom.letInFamily(to);
-                break;
+            }
+            case "''" -> olPlayHallRoom.letInFamily(to);
         }
         olPlayHallRoom.sendMail(to, 0);
     }

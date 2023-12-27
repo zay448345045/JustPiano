@@ -1,333 +1,385 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="null0">
+	<string name="null0">
     </string>
-    <string name="app_name">极品钢琴</string>
-    <string name="about">更新日志：\n
-        1、新增瀑布流播放功能，支持本地midi文件导入\n
-        2、弹奏功能改善，音块速率支持任意调整\n
-        3、支持在线房间对战弹奏成绩计入本地\n
-        4、音频播放、MIDI设备弹奏性能优化\n
-        5、联网模式支持长按发送全服消息\n
-        6、优化挑战、选曲等界面，添加服装，修复已知问题\n
-        感谢各位新老用户的支持！\n\n
-        鸣谢所有参与开发合作的朋友们：\n
-        程序启发与数据传输协议解读：喵喵\n
-        服务器提供及运维：苹果箭\n
-        服务器数据迁移与清洗：SEA深海人鱼、漫步月球的小鹿的搭档\n
-        UI界面制作：敏儿\n
-        图片素材设计及制作：暖暖、油炸白米饭\n
-        程序图标设计及制作：NEW YORK YANKEES、敏儿\n
-        新考级曲目制定：CWZ、七叶星果\n
-        安卓端协助开发(2020)：林间阳光\n
-        新曲谱整理与收录(2020)：NEW YORK YANKEES\n
-        曲谱上传与官网制作(2020)：雨霁\n
-        服务器管理(2020)：ミク欧内酱\n
-        感谢所有参与制作、支持、贡献或提供建议的朋友们\n\n
-        有意向锻炼技术，一起学习成长的计算机相关专业大佬，欢迎协助软件开发！
-        联系人QQ：2431548195(as2134u)，安卓/官网/后台管理，前后端开发均可\n
-        【此版本为个人自制，仅做学习研究软件开发使用，如您发现软件中的曲谱、皮肤等对您构成侵权，请联系开发者进行删除】\n\n
-        京ICP备2020039885号-3A
+	<string name="app_name">极品钢琴</string>
+	<string name="update_log">更新日志</string>
+	<string name="about">
+		2023-12-27 极品钢琴V4.9版本更新日志：\n
+		1.支持加载sf2音源，支持调整延音、混响及按键震动\n
+		2.键盘模式新增自由演奏瀑布流功能，优化绘制性能\n
+		3.钢琴键盘拓展至88键，支持MIDI设备延音踏板信号\n
+		4.对战支持断线自动重连，优化琴娘GPT聊天效果\n
+		5.增加全面屏适配、MIDI设备管理、背景图等设置\n
+		6.恢复本地连续播放功能，修复部分APP崩溃问题\n
+		\n
+		2023-09-27 极品钢琴V4.8版本更新日志：\n
+		1.新增瀑布流播放功能，支持本地midi文件导入\n
+		2.弹奏功能改善，音块速率支持任意调整\n
+		3.支持在线房间对战弹奏成绩计入本地\n
+		4.音频播放、MIDI设备弹奏性能优化\n
+		5.联网模式支持长按发送全服消息\n
+		6.优化挑战、选曲等界面，添加服装，修复已知问题\n
+		\n
+		2023-08-12 极品钢琴V4.7版本更新日志：\n
+		1.界面UI修改优化，房间聊天页面支持横竖屏切换(听闻提供)\n
+		2.增加好友赠送音符功能，家族成员支持展示最近登录日期\n
+		3.支持设置接收聊天提示音，支持设置屏蔽指定用户聊天\n
+		4.联网键盘模式增加协奏同步，修复已知问题\n
+		\n
+		2022-03-22 极品钢琴V4.6版本更新日志：\n
+		1.联网键盘模式优化、降低延迟、房间扩容至6人\n
+		2.网络传输性能优化，录音功能修复\n
+		3.在线聊天支持开启时间显示，服装增加试穿功能\n
+		4.增加曲谱、服装、表情，修复若干问题\n
+		\n
+		2022-02-18 极品钢琴V4.5版本更新日志：\n
+		1.本地键盘模式重制，支持USB连接MIDI键盘设备弹奏\n
+		2.录音功能重制，功能修改为内录弹奏音频，无环境杂音（录音功能暂不支持Android 11及以上版本）\n
+		3.对战房间新增在线键盘模式，音符可兑换部分随机商品\n
+		4.增加服装、表情，优化多处功能及界面，修复若干问题\n
+		\n
+		2022-01-28 极品钢琴V4.4版本更新日志：\n
+		1.本地曲库预置曲谱≥6300首，新增曲库同步功能，实时同步在线曲库最新曲谱至本地、对战\n
+		2.优化音频混音播放算法，解决播放杂音问题，减小音源及安装包体积\n
+		3.新增本地数据导入导出功能、主界面提交反馈功能、对战在线时长奖励功能\n
+		4.增加服装，优化多处功能及界面，修复若干问题\n
+		\n
+		2020-07-24 极品钢琴V4.34版本更新日志：\n
+		1.优化底层音频播放，进一步解决新旧设备弹奏的卡顿问题\n
+		2.本地曲库总数增加至5517首，在线曲库持续增加中\n
+		3.联网对战模式考级调整为曲目自选\n
+		4.增加若干服装、表情，增加服装解锁系统，修复一些已知的bug\n
+		\n
+		2020-03-20 极品钢琴V4.33版本更新日志：\n
+		1.增加新机兼容模式(设置中开启)，解决近年来新设备(尤其Android 10)的弹奏卡顿问题\n
+		2.弹奏界面判定线优化，支持多点触控与击中音块消失，本地模式支持后台播放音乐\n
+		3.修复皮肤下载、音源下载功能，皮肤与音源持续更新中\n
+		4.修复账号切换、音源切换、键盘模式等问题，优化服务器数据传输\n
+		\n
+		2020-01-28 极品钢琴V4.32版本更新日志：\n
+		1.界面更换为旧版，重新加入原曲谱分类，曲谱总数增加至5218首\n
+		2.联网对战新增挑战模式与家族系统\n
+		3.修复联网模式的一些问题\n
+		\n
+		2019-08-17 极品钢琴V4.31版本更新日志：\n
+		1.5162首曲谱按照新规范重新转换并生成，解决若干曲谱遗留问题\n
+		2.全新编写联网对战服务器代码，保留并转移所有360万官方服账号数据\n
+		3.新增聊天记录导出、判断线加粗、改变房名等实用小功能，力求增加极品钢琴2元素\n
+		4.其他更新优化的细节大佬们自行摸索(^o^)/\n
+		\n
+		2019-04-04 极品钢琴V4.302版本更新日志：\n
+		1.曲谱总数超过5000首\n
+		2.设置中新增“音块大小”设定，解决高分辨率音块过小问题\n
+		3.增加“套装”板块，内含若千男女新服装\n
+		4.音源扩增，低音低至C0，高音高至#F8，由原来76音变为90音\n
+		5.联网对战增加移调功能和停止播放功能\n
+		6.新增表情，新增彩色消息，改善房间布局\n
+		7.修复录音功能和录音管理功能\n
+		\n
+		2019-03-16 极品钢琴V4.301版本更新日志：\n
+		1.全部曲谱总数达到4927首\n
+		2.设置中新增若干档位，细化“音块速率”\n
+		3.融合叠人功能，开启1级换装功能\n
+		4.可注册一字ID，“祝语”和“私信”去除一百字限制\n
+		5.修复双击聊天文字和搜索输入单引号引发异常的问题\n
+		6.增加分类“新增曲谱”备用，此分类内储存新曲\n
+		7.此版本去除所有广告，并可与4.3版本共存\n
+		8.修复4.3版本曲库中6首乱码名称曲\n
+	</string>
+	<string name="settings_name">设置</string>
+	<string name="login_subtitle">浴火重生版</string>
+	<string name="login_acc_label">账号:</string>
+	<string name="login_pwd_label">密码:</string>
+	<string name="login_rem_acc">记住账号</string>
+	<string name="login_rem_pwd">记住密码</string>
+	<string name="login_auto">自动登录</string>
+	<string name="login_button">登录</string>
+	<string name="reg_button">注册</string>
+	<string name="login_sw_acc">切换账号</string>
+	<string name="account_name_del">删除</string>
+	<string name="c_view_name">曲名</string>
+	<string name="c_view_length">00:00</string>
+	<string name="c_view_rdiff">右手难度:</string>
+	<string name="c_view_ldiff">左手难度:</string>
+	<string name="c_view_score">得分:</string>
+	<string name="challenge_title">每日挑战</string>
+	<string name="challenge_today">今日挑战曲目</string>
+	<string name="challenge_inf">个人信息</string>
+	<string name="challenge_prize">获取奖励</string>
+	<string name="challenge_start">开始挑战</string>
+	<string name="main_mode_null">
     </string>
-    <string name="settings_name">设置</string>
-    <string name="b_s_sum">减小和弦音量,突出主旋律</string>
-    <string name="b_s_open">打开和弦</string>
-    <string name="b_s_open_1">和弦已打开</string>
-    <string name="b_s_open_2">和弦已关闭</string>
-    <string name="b_s_key">sound_check_box</string>
-    <string name="b_s_vol">sound_vol</string>
-    <string name="b_s_vol_title">和弦音量</string>
-    <string name="b_s_vol_sum">减小和弦音量可以突出乐谱的主弦弹奏效果</string>
-    <string name="login_title">极品钢琴</string>
-    <string name="login_subtitle">浴火重生版</string>
-    <string name="login_acc_label">账号:</string>
-    <string name="login_pwd_label">密码:</string>
-    <string name="login_rem_acc">记住账号</string>
-    <string name="login_rem_pwd">记住密码</string>
-    <string name="login_auto">自动登录</string>
-    <string name="login_button">登录</string>
-    <string name="reg_button">注册</string>
-    <string name="login_sw_acc">切换账号</string>
-    <string name="account_name_del">删除</string>
-    <string name="c_view_name">曲名</string>
-    <string name="c_view_length">00:00</string>
-    <string name="c_view_rdiff">右手难度:</string>
-    <string name="c_view_ldiff">左手难度:</string>
-    <string name="c_view_score">得分:</string>
-    <string name="challenge_title">每日挑战</string>
-    <string name="challenge_today">今日挑战曲目</string>
-    <string name="challenge_inf">个人信息</string>
-    <string name="challenge_prize">获取奖励</string>
-    <string name="challenge_start">开始挑战</string>
-    <string name="main_mode_null">
-    </string>
-    <string name="main_mode_local">本地弹奏</string>
-    <string name="main_mode_ol">联网模式</string>
-    <string name="main_mode_set">参数设置</string>
-    <string name="main_mode_skin">皮肤下载</string>
-    <string name="main_mode_about">软件说明</string>
-    <string name="main_mode_rec">录音文件</string>
-    <string name="main_mode_hlp">软件帮助</string>
-    <string name="main_mode_chat">聊天记录</string>
-    <string name="main_mode_fb">问题反馈</string>
-    <string name="main_mode_sound">音源下载</string>
-    <string name="main_mode_wrn">此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除</string>
-    <string name="msg_this_is_what">这是什么</string>
-    <string name="create_room_n">普通</string>
-    <string name="create_room_g">组队</string>
-    <string name="create_room_k">键盘</string>
-    <string name="create_room_c">双人</string>
-    <string name="f_view">分类</string>
-    <string name="family_name">家族名称：</string>
-    <string name="family_declaration">家族宣言</string>
-    <string name="family_manage">族长入口</string>
-    <string name="family_io">申请加入</string>
-    <string name="file_name">Medium Text</string>
-    <string name="file_date">2000–01–01</string>
-    <string name="finish">完 成</string>
-    <string name="finish_cat">类别</string>
-    <string name="finish_count">个数</string>
-    <string name="finish_score">分数</string>
-    <string name="finish_perfect">暴击</string>
-    <string name="finish_zero">0</string>
-    <string name="finish_infinity">∞</string>
-    <string name="finish_cool">很棒</string>
-    <string name="finish_great">完美</string>
-    <string name="finish_bad">一般</string>
-    <string name="finish_miss">失误</string>
-    <string name="finish_total">总分</string>
-    <string name="finish_combo">连击</string>
-    <string name="finish_uget">你的分数:</string>
-    <string name="finish_hscore">最高分:</string>
-    <string name="finish_win">祝贺你,夺得此曲的冠军！</string>
-    <string name="finish_share">分享</string>
-    <string name="finish_retry">重试</string>
-    <string name="finish_back">返回</string>
-    <string name="friend_view_pm">私信</string>
-    <string name="friend_view_info">资料</string>
-    <string name="friend_view_lv">LV.36</string>
-    <string name="friendmailpage_title">-好友列表-</string>
-    <string name="mydialog_cancel">取消</string>
-    <string name="mydialog_ok">确定</string>
-    <string name="keyboard_mode_minus">—</string>
-    <string name="keyboard_mode_arrow_left">←</string>
-    <string name="keyboard_mode_arrow_right">→</string>
-    <string name="keyboard_mode_plus">＋</string>
-    <string name="keyboard_mode_rec">●</string>
-    <string name="keyboard_mode_title">键盘模式</string>
-    <string name="melodylist1_total_score_all">总分</string>
-    <string name="melodylist1_all_mel">曲谱数</string>
-    <string name="melodylist1_sort_b">排序方式</string>
-    <string name="melodylist1_export">数据导出</string>
-    <string name="melodylist1_rec">录音</string>
-    <string name="melodylist1_hand">左手</string>
-    <string name="message_send_name">房名:</string>
-    <string name="ol_btn_lv_info">查看资料</string>
-    <string name="ol_btn_lv_pm">私聊</string>
-    <string name="ol_btn_lv_gold_send">赠送</string>
-    <string name="ol_btn_lv_cp">搭档信息</string>
-    <string name="ol_btn_lv_kick">移出房间</string>
-    <string name="ol_btn_lv_cls">关闭空位</string>
-    <string name="ol_btn_lv_mute">静音</string>
-    <string name="ol_btn_chat_b">屏蔽聊天</string>
-    <string name="ol_btn_chat_b_c">取消屏蔽</string>
-    <string name="ol_c_challenge_view">(空)</string>
-    <string name="ol_c_finish_view">用户</string>
-    <string name="ol_c_view_name">曲目名称</string>
-    <string name="ol_c_view_winner">冠军:</string>
-    <string name="ol_c_view_hs">高分:</string>
-    <string name="ol_c_view_d">难度</string>
-    <string name="ol_c_view_item">分类</string>
-    <string name="ol_c_view_length">长度</string>
-    <string name="ol_c_view_count">播放量</string>
-    <string name="ol_c_view_time">冠军时间</string>
-    <string name="ol_cp_list_bl">蓝队左手</string>
-    <string name="ol_cp_list_br">蓝队右手</string>
-    <string name="ol_cp_list_rl">红队右手</string>
-    <string name="ol_cp_list_rr">红队左手</string>
-    <string name="ol_cp_list_yl">黄队左手</string>
-    <string name="ol_cp_list_yr">黄队右手</string>
-    <string name="ol_draw_prize_result">奖励</string>
-    <string name="ol_findpass_diag_acc">注册账号</string>
-    <string name="ol_findpass_diag_email">邮箱地址</string>
-    <string name="ol_findpass_diag_what">邮箱地址</string>
-    <string name="ol_finish_view_ok">完成</string>
-    <string name="ol_finish_view_user">用户</string>
-    <string name="ol_finish_view_exp">经验奖励</string>
-    <string name="ol_friend_view_location">大厅</string>
-    <string name="ol_friend_view_find">找Ta</string>
-    <string name="ol_group_list_b">蓝队</string>
-    <string name="ol_group_list_y">黄队</string>
-    <string name="ol_group_list_r">红队</string>
-    <string name="ol_hall_view_enter">进入</string>
-    <string name="ol_hand_list_r">右手</string>
-    <string name="ol_hand_list_flat">降调</string>
-    <string name="ol_hand_list_sharp">升调</string>
-    <string name="ol_hand_list_rotate">旋转屏幕</string>
-    <string name="ol_hand_list_medium">中</string>
-    <string name="ol_kb_set_midi_down">MIDI键盘降调</string>
-    <string name="ol_kb_set_midi_up">MIDI键盘升调</string>
-    <string name="ol_kb_set_sound_down">声音降调</string>
-    <string name="ol_kb_set_sound_up">声音升调</string>
-    <string name="ol_kb_set_skin">皮肤设置</string>
-    <string name="ol_kb_set_sound">音源设置</string>
-    <string name="ol_mail_view_from">From:</string>
-    <string name="ol_mail_view_re">回复</string>
-    <string name="ol_mail_view_time">Small Text</string>
-    <string name="ol_family_ma_up_ti">家族升级</string>
-    <string name="ol_family_ma_up_info">升级信息</string>
-    <string name="ol_family_ma_up">升级</string>
-    <string name="ol_family_ma_de">更改家族宣言</string>
-    <string name="ol_family_ma_ex">家族考核曲</string>
-    <string name="ol_family_ma_ex_info">申请者进入家族需要通过考核曲目(此功能暂未开放)</string>
-    <string name="ol_family_ma_ex_song">考核曲目：</string>
-    <string name="ol_family_ma_ex_target">目标分数：</string>
-    <string name="ol_family_ma_ex_c">更改考核曲信息</string>
-    <string name="ol_family_ma_logo">家族徽章</string>
-    <string name="ol_family_ma_logo_info">当前版本不支持家族族徽上传，可至官网上传</string>
-    <string name="ol_family_ma_logo_c">修改家族徽章(从本地上传)</string>
-    <string name="ol_msg_view_usr">用户</string>
-    <string name="ol_msg_view_mao">:</string>
-    <string name="ol_playsongs_single">单次播放</string>
-    <string name="ol_playsongs_cycle">单曲循环</string>
-    <string name="ol_playsongs_rand">曲库随机</string>
-    <string name="ol_playsongs_rand_fa">收藏随机</string>
-    <string name="ol_playsongs_rand_fa_list">收藏顺序</string>
-    <string name="ol_room_view_name">房间名称</string>
-    <string name="ol_room_view_no">100</string>
-    <string name="ol_room_view_ent">进入</string>
-    <string name="ol_room_view_grp">团队</string>
-    <string name="ol_score_view_hide">隐藏成绩</string>
-    <string name="ol_shop_item_view_name">商品名称</string>
-    <string name="ol_shop_item_view_intro">商品简介</string>
-    <string name="ol_shop_item_view_buy">购买</string>
-    <string name="ol_skin_view_set">设置</string>
-    <string name="ol_skin_view_del">删除</string>
-    <string name="ol_songpop_list_rand_2">二星随机</string>
-    <string name="ol_songpop_list_rand_4">四星随机</string>
-    <string name="ol_songpop_list_rand_5">五星随机</string>
-    <string name="ol_songpop_list_rand_1">一星随机</string>
-    <string name="ol_songpop_list_rand_3">三星随机</string>
-    <string name="ol_songpop_list_add_fa">加入收藏</string>
-    <string name="ol_songpop_list_pop">流行影视</string>
-    <string name="ol_songpop_list_red">红歌儿歌</string>
-    <string name="ol_songpop_list_ori">原创作品</string>
-    <string name="ol_songpop_list_classic">经典乐章</string>
-    <string name="ol_songpop_list_game">动漫游戏</string>
-    <string name="ol_songpop_list_local_fa">本地收藏</string>
-    <string name="ol_songs_page_title">在线曲库</string>
-    <string name="ol_songs_page_hot">最热</string>
-    <string name="ol_songs_page_new">最新</string>
-    <string name="ol_songs_page_fa">收藏</string>
-    <string name="ol_songs_page_test">测试</string>
-    <string name="ol_songs_page_search">搜索</string>
-    <string name="ol_songs_page_winner">冠军</string>
-    <string name="ol_top_usr_title">排行榜</string>
-    <string name="ol_top_usr_cl">考级榜</string>
-    <string name="ol_top_usr_lv">等级榜</string>
-    <string name="ol_top_usr_w">冠军榜</string>
-    <string name="ol_top_usr_s">总分榜</string>
-    <string name="ol_top_usr_p">祝福榜</string>
-    <string name="ol_top_usr_c">贡献榜</string>
-    <string name="ol_top_view_no">NO.</string>
-    <string name="ol_top_view_i">1</string>
-    <string name="olmainmode_about">官网</string>
-    <string name="olmainmode_songs">曲库</string>
-    <string name="olmainmode_ol">对战</string>
-    <string name="olmainmode_li">排行</string>
-    <string name="olmainmode_bi">聊天屏蔽</string>
-    <string name="olmainmode_fi">查找用户</string>
-    <string name="olmelodylist_update">更新</string>
-    <string name="olmelodylist_d">难度</string>
-    <string name="olmelodylist_s">歌名</string>
-    <string name="olmelodylist_a">歌手</string>
-    <string name="olmelodylist_h">热度</string>
-    <string name="olmelodylist_search">搜索</string>
-    <string name="olmelodylist_page">第1页</string>
-    <string name="olplaydressroom_save">保存</string>
-    <string name="olplayhall_ti">大厅:</string>
-    <string name="olplayhall_cr">创建房间</string>
-    <string name="olplayhall_cl">考级</string>
-    <string name="olplayhall_ch">挑战</string>
-    <string name="olplayhall_b">上一页</string>
-    <string name="olplayhall_o">显示在线</string>
-    <string name="olplayhall_n">下一页</string>
-    <string name="olplayhall_s">发送</string>
-    <string name="olplayhallroom_ti">大厅列表</string>
-    <string name="olplayhallroom_name">安达樱</string>
-    <string name="olplayhallroom_lv">LV.25</string>
-    <string name="olplayhallroom_exp">1024/20310</string>
-    <string name="olplayhallroom_dress">换衣间</string>
-    <string name="olplayhallroom_olprize">在线奖励</string>
-    <string name="olplayhallroom_cl">CL.5</string>
-    <string name="olplayhallroom_cp">祝福点:9999</string>
-    <string name="olplayhallroom_bl">想钓到美好的未来。为此得先垂下钓线才行</string>
-    <string name="olplayhallroom_br">解除搭档</string>
-    <string name="olplayhallroom_set_bl">设置祝语</string>
-    <string name="olplayhallroom_family">我的家族：</string>
-    <string name="olplayhallroom_cr">创建家族</string>
-    <string name="olplayhallroom_rank">名次</string>
-    <string name="olplayhallroom_fam_name">家族名称</string>
-    <string name="olplayhallroom_pn">人数</string>
-    <string name="olplayhallroom_co">贡献度</string>
-    <string name="ol_kbr_ha">↕</string>
-    <string name="olplayroom_begin">开始</string>
-    <string name="olplayroom_ra">点此随机选择歌曲</string>
-    <string name="olplayroom_team">队伍</string>
-    <string name="olplayroom_mode">模式</string>
-    <string name="play_select_normal">普通模式</string>
-    <string name="play_select_prac">练习模式</string>
-    <string name="play_select_lis">欣赏模式</string>
-    <string name="popuserinfo_add">加为好友</string>
-    <string name="popuserinfo_pm">私信Ta</string>
-    <string name="popuserinfo_si">该用户暂未设置个性签名</string>
-    <string name="register_ti">注册账号</string>
-    <string name="register_name">昵称:</string>
-    <string name="register_confirm">确认:</string>
-    <string name="register_sex">性别:</string>
-    <string name="register_back">返回</string>
-    <string name="searchsongs_label">曲谱搜索:</string>
-    <string name="showtopinfo_label">Large</string>
-    <string name="showtopinfo_n">下一页</string>
-    <string name="showtopinfo_p">-1-</string>
-    <string name="showtopinfo_b">上一页</string>
-    <string name="skin_list_downloading">正在下载,请稍后…</string>
-    <string name="skin_list_connecting">连接服务器ing…</string>
-    <string name="skin_view_name">名称</string>
-    <string name="skin_view_size">大小</string>
-    <string name="skin_view_dc">下载</string>
-    <string name="skin_view_au">作者</string>
-    <string name="user_info_title">-用户资料-</string>
-    <string name="user_info_birth">生年:</string>
-    <string name="user_info_ts">总得分:</string>
-    <string name="user_info_w">冠军数:</string>
-    <string name="user_info_si">个性签名:</string>
-    <string name="user_info_1990">1990</string>
-    <string name="user_info_year">年</string>
-    <string name="user_info_mod_pass">修改密码</string>
-    <string name="original_pwd">输入原密码</string>
-    <string name="new_pwd">输入新密码</string>
-    <string name="confirm_pwd">确认新密码</string>
-    <string name="user_info_confirm">信息保存</string>
-    <string name="user_msg_title">设置签名</string>
-    <string name="user_msg_set">确定</string>
-    <string name="family_position">职位</string>
-    <string name="family_player">名称</string>
-    <string name="family_date">最后登录日期</string>
-    <string name="family_lv">等级</string>
-    <string name="family_co">贡献</string>
-    <string name="ol_keyboard_sync_mode_orchestrate">编排同步</string>
-    <string name="ol_keyboard_sync_mode_concerto">协奏同步</string>
-    <string name="ol_keyboard_sync_mode_text">编排</string>
-    <string name="ol_keyboard_sync_mode_help">
-        编排同步：\n
-        \t\t在一个周期内弹奏的音符会被排列，固定延迟同步给大家\n
-        \t\t适用于保证演奏效果或弱网络下，大部分音符不会被网络所耽误\n
-        \t\t总结：延迟高，同步效率低，不会被延迟打乱演奏效果，适合单人演奏\n
-        协奏同步：\n
-        \t\t当键盘被按下或放开时，立即同步给大家，不做任何处理\n
-        \t\t适用于网络效率好的情况下，保证超高的同步率\n
-        \t\t总结：延迟低，同步效率高，耗电，容易受到网络效率影响，适合多人协奏
-    </string>
-    <string name="change_password_text">(!) 修改密码后需要重新登录,请牢记新密码</string>
+	<string name="main_mode_local">本地弹奏</string>
+	<string name="main_mode_ol">联网模式</string>
+	<string name="main_mode_set">参数设置</string>
+	<string name="main_mode_skin">皮肤下载</string>
+	<string name="main_mode_about">更新日志</string>
+	<string name="main_mode_rec">录音文件</string>
+	<string name="main_mode_hlp">软件帮助</string>
+	<string name="main_mode_chat">聊天记录</string>
+	<string name="main_mode_fb">问题反馈</string>
+	<string name="main_mode_sound">音源下载</string>
+	<string name="main_mode_wrn">此版本仅做学习研究使用,如发现曲谱皮肤等对您构成侵权,请联系开发者修改或删除</string>
+	<string name="create_room_n">普通</string>
+	<string name="create_room_g">组队</string>
+	<string name="create_room_k">键盘</string>
+	<string name="create_room_c">双人</string>
+	<string name="f_view">分类</string>
+	<string name="family_name">家族名称：</string>
+	<string name="family_declaration">家族宣言</string>
+	<string name="family_manage">族长入口</string>
+	<string name="family_io">申请加入</string>
+	<string name="file_name">Medium Text</string>
+	<string name="file_date">2000–01–01</string>
+	<string name="finish">完 成</string>
+	<string name="finish_cat">类别</string>
+	<string name="finish_count">个数</string>
+	<string name="finish_score">分数</string>
+	<string name="finish_perfect">暴击</string>
+	<string name="finish_zero">0</string>
+	<string name="finish_infinity">∞</string>
+	<string name="finish_cool">很棒</string>
+	<string name="finish_great">完美</string>
+	<string name="finish_bad">一般</string>
+	<string name="finish_miss">失误</string>
+	<string name="finish_total">总分</string>
+	<string name="finish_combo">连击</string>
+	<string name="finish_uget">你的分数:</string>
+	<string name="finish_hscore">最高分:</string>
+	<string name="finish_win">祝贺你,夺得此曲的冠军！</string>
+	<string name="finish_share">分享</string>
+	<string name="finish_retry">重试</string>
+	<string name="finish_back">返回</string>
+	<string name="friend_view_pm">私信</string>
+	<string name="friend_view_info">资料</string>
+	<string name="friend_view_lv">LV.36</string>
+	<string name="friendmailpage_title">-好友列表-</string>
+	<string name="mydialog_cancel">取消</string>
+	<string name="mydialog_ok">确定</string>
+	<string name="keyboard_mode_minus">—</string>
+	<string name="keyboard_mode_arrow_left">←</string>
+	<string name="keyboard_mode_arrow_right">→</string>
+	<string name="keyboard_mode_plus">＋</string>
+	<string name="keyboard_mode_rec">●</string>
+	<string name="keyboard_mode_title">键盘模式</string>
+	<string name="melodylist1_total_score_all">总分</string>
+	<string name="melodylist1_all_mel">曲谱数</string>
+	<string name="melodylist1_sort_b">排序方式</string>
+	<string name="melodylist1_export">数据导出</string>
+	<string name="melodylist1_rec">录音</string>
+	<string name="melodylist1_hand">左手</string>
+	<string name="melodylist1_auto_next">连续</string>
+	<string name="melodylist1_practise">练习</string>
+	<string name="lo_extra_func_settings">参数设置</string>
+	<string name="lo_extra_func_sync">曲库同步</string>
+	<string name="lo_extra_func_midi_import">MID导入</string>
+	<string name="lo_extra_func_data_export">数据导出</string>
+	<string name="message_send_name">房名:</string>
+	<string name="ol_btn_lv_info">查看资料</string>
+	<string name="ol_btn_lv_pm">私聊</string>
+	<string name="ol_btn_lv_gold_send">赠送</string>
+	<string name="ol_btn_lv_cp">搭档信息</string>
+	<string name="ol_btn_lv_kick">移出房间</string>
+	<string name="ol_btn_lv_cls">关闭空位</string>
+	<string name="ol_btn_lv_mute">静音</string>
+	<string name="ol_btn_chat_b">屏蔽聊天</string>
+	<string name="ol_btn_chat_b_c">取消屏蔽</string>
+	<string name="ol_c_challenge_view">(空)</string>
+	<string name="ol_c_finish_view">用户</string>
+	<string name="ol_c_view_name">曲目名称</string>
+	<string name="ol_c_view_winner">冠军:</string>
+	<string name="ol_c_view_hs">高分:</string>
+	<string name="ol_c_view_d">难度</string>
+	<string name="ol_c_view_item">分类</string>
+	<string name="ol_c_view_length">长度</string>
+	<string name="ol_c_view_count">播放量</string>
+	<string name="ol_c_view_time">冠军时间</string>
+	<string name="ol_cp_list_bl">蓝队左手</string>
+	<string name="ol_cp_list_br">蓝队右手</string>
+	<string name="ol_cp_list_rl">红队右手</string>
+	<string name="ol_cp_list_rr">红队左手</string>
+	<string name="ol_cp_list_yl">黄队左手</string>
+	<string name="ol_cp_list_yr">黄队右手</string>
+	<string name="ol_draw_prize_result">奖励</string>
+	<string name="ol_findpass_diag_acc">注册账号</string>
+	<string name="ol_findpass_diag_email">邮箱地址</string>
+	<string name="ol_findpass_diag_what">邮箱地址</string>
+	<string name="ol_finish_view_ok">完成</string>
+	<string name="ol_finish_view_user">用户</string>
+	<string name="ol_finish_view_exp">经验奖励</string>
+	<string name="ol_friend_view_location">大厅</string>
+	<string name="ol_friend_view_find">找Ta</string>
+	<string name="ol_group_list_b">蓝队</string>
+	<string name="ol_group_list_y">黄队</string>
+	<string name="ol_group_list_r">红队</string>
+	<string name="ol_hall_view_enter">进入</string>
+	<string name="ol_hand_list_r">右手</string>
+	<string name="ol_hand_list_flat">降调</string>
+	<string name="ol_hand_list_sharp">升调</string>
+	<string name="ol_hand_list_rotate">旋转屏幕</string>
+	<string name="ol_more_settings">更多设置</string>
+	<string name="ol_hand_list_medium">中</string>
+	<string name="ol_kb_set_midi_down">MIDI键盘降调</string>
+	<string name="ol_kb_set_midi_up">MIDI键盘升调</string>
+	<string name="ol_kb_set_sound_down">声音降调</string>
+	<string name="ol_kb_set_sound_up">声音升调</string>
+	<string name="ol_kb_set_skin">皮肤设置</string>
+	<string name="ol_kb_set_sound">音源设置</string>
+	<string name="ol_mail_view_from">From:</string>
+	<string name="ol_mail_view_re">回复</string>
+	<string name="ol_mail_view_time">Small Text</string>
+	<string name="ol_family_ma_up_ti">家族升级</string>
+	<string name="ol_family_ma_up_info">升级信息</string>
+	<string name="ol_family_ma_up">升级</string>
+	<string name="ol_family_ma_de">更改家族宣言</string>
+	<string name="ol_family_ma_ex">家族考核曲</string>
+	<string name="ol_family_ma_ex_info">申请者进入家族需要通过考核曲目(此功能暂未开放)</string>
+	<string name="ol_family_ma_ex_song">考核曲目：</string>
+	<string name="ol_family_ma_ex_target">目标分数：</string>
+	<string name="ol_family_ma_ex_c">更改考核曲信息</string>
+	<string name="ol_family_ma_logo">家族徽章</string>
+	<string name="ol_family_ma_logo_info">当前版本不支持家族族徽上传，可至官网上传</string>
+	<string name="ol_family_ma_logo_c">修改家族徽章(从本地上传)</string>
+	<string name="ol_msg_view_usr">用户</string>
+	<string name="ol_msg_view_mao">:</string>
+	<string name="ol_playsongs_single">单次播放</string>
+	<string name="ol_playsongs_cycle">单曲循环</string>
+	<string name="ol_playsongs_rand">曲库随机</string>
+	<string name="ol_playsongs_rand_fa">收藏随机</string>
+	<string name="ol_playsongs_rand_fa_list">收藏顺序</string>
+	<string name="ol_room_view_name">房间名称</string>
+	<string name="ol_room_view_no">100</string>
+	<string name="ol_room_view_ent">进入</string>
+	<string name="ol_room_view_grp">团队</string>
+	<string name="ol_score_view_hide">隐藏成绩</string>
+	<string name="ol_shop_item_view_name">商品名称</string>
+	<string name="ol_shop_item_view_intro">商品简介</string>
+	<string name="ol_shop_item_view_buy">购买</string>
+	<string name="ol_skin_view_set">设置</string>
+	<string name="ol_skin_view_del">删除</string>
+	<string name="ol_songpop_list_rand_2">二星随机</string>
+	<string name="ol_songpop_list_rand_4">四星随机</string>
+	<string name="ol_songpop_list_rand_5">五星随机</string>
+	<string name="ol_songpop_list_rand_1">一星随机</string>
+	<string name="ol_songpop_list_rand_3">三星随机</string>
+	<string name="ol_songpop_list_add_fa">加入收藏</string>
+	<string name="ol_songpop_list_pop">流行影视</string>
+	<string name="ol_songpop_list_red">红歌儿歌</string>
+	<string name="ol_songpop_list_ori">原创作品</string>
+	<string name="ol_songpop_list_classic">经典乐章</string>
+	<string name="ol_songpop_list_game">动漫游戏</string>
+	<string name="ol_songpop_list_local_fa">本地收藏</string>
+	<string name="ol_songs_page_title">在线曲库</string>
+	<string name="ol_songs_page_hot">最热</string>
+	<string name="ol_songs_page_new">最新</string>
+	<string name="ol_songs_page_fa">收藏</string>
+	<string name="ol_songs_page_test">测试</string>
+	<string name="ol_songs_page_search">搜索</string>
+	<string name="ol_songs_page_winner">冠军</string>
+	<string name="ol_top_usr_title">排行榜</string>
+	<string name="ol_top_usr_cl">考级榜</string>
+	<string name="ol_top_usr_lv">等级榜</string>
+	<string name="ol_top_usr_w">冠军榜</string>
+	<string name="ol_top_usr_s">总分榜</string>
+	<string name="ol_top_usr_p">祝福榜</string>
+	<string name="ol_top_usr_c">贡献榜</string>
+	<string name="ol_top_view_no">NO.</string>
+	<string name="ol_top_view_i">1</string>
+	<string name="olmainmode_about">官网</string>
+	<string name="olmainmode_songs">曲库</string>
+	<string name="olmainmode_ol">对战</string>
+	<string name="olmainmode_li">排行</string>
+	<string name="olmainmode_bi">聊天屏蔽</string>
+	<string name="olmainmode_fi">查找用户</string>
+	<string name="olmelodylist_update">更新</string>
+	<string name="olmelodylist_d">难度</string>
+	<string name="olmelodylist_s">歌名</string>
+	<string name="olmelodylist_a">歌手</string>
+	<string name="olmelodylist_h">热度</string>
+	<string name="olmelodylist_search">搜索</string>
+	<string name="olmelodylist_page">第1页</string>
+	<string name="olplaydressroom_save">保存</string>
+	<string name="olplayhall_ti">大厅:</string>
+	<string name="olplayhall_cr">创建房间</string>
+	<string name="olplayhall_cl">考级</string>
+	<string name="olplayhall_ch">挑战</string>
+	<string name="olplayhall_b">上一页</string>
+	<string name="olplayhall_o">显示在线</string>
+	<string name="olplayhall_n">下一页</string>
+	<string name="olplayhall_s">发送</string>
+	<string name="olplayhallroom_ti">大厅列表</string>
+	<string name="olplayhallroom_name">安达樱</string>
+	<string name="olplayhallroom_lv">LV.25</string>
+	<string name="olplayhallroom_exp">1024/20310</string>
+	<string name="olplayhallroom_dress">换衣间</string>
+	<string name="olplayhallroom_olprize">在线奖励</string>
+	<string name="olplayhallroom_cl">CL.5</string>
+	<string name="olplayhallroom_cp">祝福点:9999</string>
+	<string name="olplayhallroom_bl">想钓到美好的未来。为此得先垂下钓线才行</string>
+	<string name="olplayhallroom_br">解除搭档</string>
+	<string name="olplayhallroom_set_bl">设置祝语</string>
+	<string name="olplayhallroom_family">我的家族：</string>
+	<string name="olplayhallroom_cr">创建家族</string>
+	<string name="olplayhallroom_rank">名次</string>
+	<string name="olplayhallroom_fam_name">家族名称</string>
+	<string name="olplayhallroom_pn">人数</string>
+	<string name="olplayhallroom_co">贡献度</string>
+	<string name="ol_kbr_ha">↕</string>
+	<string name="olplayroom_begin">开始</string>
+	<string name="olplayroom_ra">点此随机选择歌曲</string>
+	<string name="olplayroom_team">队伍</string>
+	<string name="olplayroom_mode">模式</string>
+	<string name="play_select_normal">普通模式</string>
+	<string name="play_select_free">自由演奏</string>
+	<string name="popuserinfo_add">加为好友</string>
+	<string name="popuserinfo_pm">私信Ta</string>
+	<string name="popuserinfo_si">该用户暂未设置个性签名</string>
+	<string name="register_ti">注册账号</string>
+	<string name="register_name">昵称:</string>
+	<string name="register_confirm">确认:</string>
+	<string name="register_sex">性别:</string>
+	<string name="register_back">返回</string>
+	<string name="searchsongs_label">曲谱搜索:</string>
+	<string name="showtopinfo_label">Large</string>
+	<string name="showtopinfo_n">下一页</string>
+	<string name="showtopinfo_p">-1-</string>
+	<string name="showtopinfo_b">上一页</string>
+	<string name="skin_list_downloading">正在下载,请稍后…</string>
+	<string name="skin_list_connecting">连接服务器ing…</string>
+	<string name="skin_view_name">名称</string>
+	<string name="skin_view_size">大小</string>
+	<string name="skin_view_dc">下载</string>
+	<string name="skin_view_au">作者</string>
+	<string name="user_info_title">-用户资料-</string>
+	<string name="user_info_birth">生年:</string>
+	<string name="user_info_ts">总得分:</string>
+	<string name="user_info_w">冠军数:</string>
+	<string name="user_info_si">个性签名:</string>
+	<string name="user_info_1990">1990</string>
+	<string name="user_info_year">年</string>
+	<string name="user_info_mod_pass">修改密码</string>
+	<string name="original_pwd">输入原密码</string>
+	<string name="new_pwd">输入新密码</string>
+	<string name="confirm_pwd">确认新密码</string>
+	<string name="user_info_confirm">信息保存</string>
+	<string name="user_msg_title">设置签名</string>
+	<string name="user_msg_set">确定</string>
+	<string name="family_position">职位</string>
+	<string name="family_player">名称</string>
+	<string name="family_date">最后登录日期</string>
+	<string name="family_lv">等级</string>
+	<string name="family_co">贡献</string>
+	<string name="change_password_text">(!) 修改密码后需要重新登录,请牢记新密码</string>
+	<string name="lo_songs_order_name_asc">名称升序</string>
+	<string name="lo_songs_order_name_des">名称降序</string>
+	<string name="lo_songs_order_new">最新曲目</string>
+	<string name="lo_songs_order_recent">近期弹奏</string>
+	<string name="lo_songs_order_diff_asc">难度升序</string>
+	<string name="lo_songs_order_diff_des">难度降序</string>
+	<string name="lo_songs_order_score_asc">得分升序</string>
+	<string name="lo_songs_order_score_des">得分降序</string>
+	<string name="lo_songs_order_length_asc">时长升序</string>
+	<string name="lo_songs_order_length_des">时长降序</string>
+	<string name="font_opt">1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm极品钢琴浴火重生版.每日挑战-好友列表+键盘模式在线曲库排行榜用户资料设置签名联网年月本地弹奏</string>
 </resources>

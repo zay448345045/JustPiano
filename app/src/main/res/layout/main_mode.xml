@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ground"
     android:gravity="center"
     android:keepScreenOn="true"
     android:orientation="vertical">
@@ -467,7 +465,6 @@
             android:layout_marginStart="@dimen/dimen_15dp"
             android:layout_marginEnd="@dimen/dimen_5dp"
             android:layout_marginBottom="@dimen/dimen_10dp"
-            android:fontFamily="@font/title"
             android:text="@string/main_mode_wrn"
             android:textColor="@color/white1"
             android:textSize="12sp" />

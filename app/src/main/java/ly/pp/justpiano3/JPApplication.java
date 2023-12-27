@@ -1,40 +1,40 @@
 package ly.pp.justpiano3;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.*;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Process;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.multidex.MultiDex;
 import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.activity.JustPiano;
-import ly.pp.justpiano3.database.SongDatabase;
-import ly.pp.justpiano3.entity.GlobalSetting;
-import ly.pp.justpiano3.service.ConnectionService;
-import ly.pp.justpiano3.task.FeedbackTask;
-import ly.pp.justpiano3.utils.ThreadPoolUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import com.babyte.breakpad.BaByteBreakpad;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.PrintStream;
+
+import kotlin.Unit;
+import ly.pp.justpiano3.activity.JustPiano;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.database.SongDatabase;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.task.FeedbackTask;
+import ly.pp.justpiano3.utils.DeviceUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.MidiDeviceUtil;
+import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
 
 public final class JPApplication extends Application {
 
@@ -46,78 +46,24 @@ public final class JPApplication extends Application {
 
     private static SongDatabase songDatabase;
 
-    public static String kitiName = "";
-    public static SharedPreferences accountListSharedPreferences;
-
-    public String loginResultTitle = "";
-    public String loginResultMessage = "";
-    private ConnectionService connectionService;
-    private boolean bindService;
-
-    private String accountName = "";
-    private String password = "";
-    private int widthPixels;
-    private int heightPixels;
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            setConnectionService(((ConnectionService.JPBinder) service).getConnectionService());
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            setConnectionService(null);
-        }
-    };
-
-
-    public String getAccountName() {
-        if (accountName.isEmpty()) {
-            accountName = accountListSharedPreferences.getString("name", "");
-        }
-        return accountName;
-    }
-
-    public void setAccountName(String str) {
-        accountName = str;
-    }
-
-    public String getPassword() {
-        if (password.isEmpty()) {
-            password = accountListSharedPreferences.getString("password", "");
-        }
-        return password;
-    }
-
-    public void setPassword(String str) {
-        password = str;
-    }
-
-    public String getKitiName() {
-        if (StringUtil.isNullOrEmpty(kitiName)) {
-            kitiName = accountListSharedPreferences.getString("userKitiName", "");
-        }
-        return kitiName;
-    }
-
-    public void setKitiName(String str) {
-        kitiName = str;
-    }
+    private boolean appInException;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        // 严苛模式开启
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
+        // debug下，严苛模式开启
+        if (BuildConfig.DEBUG) {
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
+        }
         // 设置拦截app中未捕获的异常
-        CrashHandler crashHandler = new CrashHandler();
-        crashHandler.init();
+        new CrashHandler().init();
+        // 从app应用数据中加载设置
+        SoundEngineUtil.init(this);
+        GlobalSetting.INSTANCE.loadSettings(this, false);
         // 初始化一些图像缓存
         ImageLoadUtil.init(this);
-        // 从app应用数据中加载设置
-        GlobalSetting.INSTANCE.loadSettings(this, false);
         // 从app应用数据中加载账号信息
-        accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
+        OLBaseActivity.accountListSharedPreferences = getSharedPreferences("account_list", MODE_PRIVATE);
         // 初始化数据库
         songDatabase = Room.databaseBuilder(this, SongDatabase.class, "data")
                 .addMigrations(generateMigrations()).allowMainThreadQueries().build();
@@ -167,24 +113,8 @@ public final class JPApplication extends Application {
             editor.putString("note_size", "1");
             editor.putString("b_s_vol", "0.8");
             editor.putString("temp_speed", "1.0");
-            editor.putString("sound_list", "original");
+            editor.putString("sound_select", "original");
             editor.apply();
-
-            // 4.33版本的音源为wav格式，不兼容后续的mp3格式，需要删掉4.33版本存储的音源
-            File file = new File(Environment.getExternalStorageDirectory() + "/JustPiano/Sounds");
-            if (file.isDirectory()) {
-                File[] files = file.listFiles(pathname -> {
-                    String filename = pathname.getName().toLowerCase();
-                    return filename.endsWith(".ss");
-                });
-                if (files != null) {
-                    for (File fileTemp : files) {
-                        if (fileTemp.exists()) {
-                            fileTemp.delete();
-                        }
-                    }
-                }
-            }
         }
         // 4.6版本 数据库版本号为44
         // 4.7版本后，数据库的版本号为app的versionCode
@@ -204,34 +134,38 @@ public final class JPApplication extends Application {
 
         void init() {
             Thread.setDefaultUncaughtExceptionHandler(this);
+            // 监听native异常
+            BaByteBreakpad.INSTANCE.initBreakpad(crashInfo -> {
+                uncaughtException(Thread.currentThread(), new Throwable(crashInfo.toString()));
+                return Unit.INSTANCE;
+            });
         }
 
         @Override
-        public void uncaughtException(@NotNull Thread thread, Throwable throwable) {
-            ThreadPoolUtil.execute(() -> {
-                Looper.prepare();
-                Toast.makeText(getApplicationContext(), "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show();
-                Looper.loop();
-            });
+        public void uncaughtException(@NotNull Thread thread, @NonNull Throwable throwable) {
+            if (appInException) {
+                return;
+            }
+            appInException = true;
+            new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplicationContext(),
+                    "很抱歉，极品钢琴出现异常，可至主界面提交问题反馈", Toast.LENGTH_LONG).show());
+            // 上传崩溃日志
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            throwable.printStackTrace();
             throwable.printStackTrace(new PrintStream(byteArrayOutputStream));
             new FeedbackTask(getApplicationContext(),
-                    StringUtil.isNullOrEmpty(kitiName) ? "未知用户" : kitiName,
-                    BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-'
-                            + BuildConfig.BUILD_TYPE + '\n' + byteArrayOutputStream).execute();
-
-            if (connectionService != null) {
-                connectionService.outLine();
-            }
-            if (bindService) {
-                unbindService(serviceConnection);
-                bindService = false;
-            }
+                    TextUtils.isEmpty(OLBaseActivity.kitiName) ? "未知用户" : OLBaseActivity.kitiName,
+                    DeviceUtil.getAppAndDeviceInfo() + '\n' + byteArrayOutputStream).execute();
+            // 关闭网络连接服务，退出进程
+            OnlineUtil.outlineConnectionService(JPApplication.this);
+            // 关闭fluidsynth
+            SoundEngineUtil.closeFluidSynth();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            Process.killProcess(Process.myPid());
             System.exit(1);
         }
     }
@@ -239,82 +173,17 @@ public final class JPApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        if (connectionService != null) {
-            connectionService.outLine();
-        }
         // 在应用程序终止时关闭数据库连接
         if (songDatabase != null) {
             songDatabase.close();
         }
-        if (bindService) {
-            unbindService(serviceConnection);
-            bindService = false;
-        }
-    }
-
-    @Override
-    protected void attachBaseContext(Context context) {
-        super.attachBaseContext(context);
-        MultiDex.install(this);
-    }
-
-    /**
-     * 重写 getResource 方法，防止系统字体影响
-     */
-    @Override
-    public Resources getResources() {
-        // 禁止app字体大小跟随系统字体大小调节
-        Resources resources = super.getResources();
-        if (resources != null && resources.getConfiguration().fontScale != 1.0f) {
-            android.content.res.Configuration configuration = resources.getConfiguration();
-            configuration.fontScale = 1.0f;
-            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-        }
-        return resources;
+        // 关闭网络连接服务
+        OnlineUtil.outlineConnectionService(this);
+        // 关闭fluidsynth
+        SoundEngineUtil.closeFluidSynth();
     }
 
     public static SongDatabase getSongDatabase() {
         return songDatabase;
-    }
-
-    public ConnectionService getConnectionService() {
-        return connectionService;
-    }
-
-    public void setConnectionService(ConnectionService connectionService) {
-        this.connectionService = connectionService;
-    }
-
-    public boolean isBindService() {
-        return bindService;
-    }
-
-    public void setBindService(boolean bindService) {
-        this.bindService = bindService;
-    }
-
-    public void updateWidthAndHeightPixels(Activity activity) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        Configuration configuration = getResources().getConfiguration();
-        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            this.heightPixels = displayMetrics.heightPixels;
-            this.widthPixels = displayMetrics.widthPixels;
-        } else {
-            this.heightPixels = displayMetrics.widthPixels;
-            this.widthPixels = displayMetrics.heightPixels;
-        }
-    }
-
-    public int getWidthPixels() {
-        return widthPixels;
-    }
-
-    public int getHeightPixels() {
-        return heightPixels;
-    }
-
-    public ServiceConnection getServiceConnection() {
-        return serviceConnection;
     }
 }

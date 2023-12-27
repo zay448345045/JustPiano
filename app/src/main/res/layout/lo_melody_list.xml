@@ -1,39 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/ground"
-              android:keepScreenOn="true"
-              android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/linearLayout9"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/linearLayout11"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal" />
-    </LinearLayout>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue_d"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_marginStart="@dimen/dimen_4dp"
+        android:gravity="center_horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="0.15"
+            android:layout_marginStart="@dimen/dimen_4dp"
+            android:layout_weight="1.4"
             android:orientation="vertical">
 
             <TextView
@@ -55,54 +38,35 @@
 
         <Button
             android:id="@+id/list_sort_b"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="0.1"
+            android:layout_weight="1.1"
             android:background="@drawable/selector_orange_button"
-            android:layout_marginEnd="10dp"
             android:gravity="center"
             android:maxLines="1"
             android:text="@string/melodylist1_sort_b"
             android:textColor="@color/white1"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/data_export"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.1"
-            android:background="@drawable/selector_orange_button"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="@string/melodylist1_export"
-            android:textColor="@color/white1"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <LinearLayout
             style="@style/InputBoxStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_weight="2"
             android:gravity="center">
 
             <EditText
                 android:id="@+id/search_edit"
-                style="@style/AutoCompleteStyle"
-                android:layout_width="0dp"
+                style="@style/EditTextStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
-                android:completionThreshold="1"
-                android:configChanges="keyboard"
-                android:dropDownWidth="@dimen/dimen_320dp"
-                android:dropDownHeight="@dimen/dimen_240dp"
                 android:ems="10"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
+                android:imeOptions="actionDone"
+                android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:maxLines="1"
                 android:textColor="#ffffffff"
                 android:textColorHint="#90ffffff"
                 android:textSize="14sp" />
@@ -111,50 +75,68 @@
         <ImageView
             android:id="@+id/search_fast"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"
+            android:layout_height="@dimen/dimen_32dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="@dimen/dimen_8dp"
             android:layout_marginBottom="10dp"
+            android:layout_weight="0.5"
             android:background="@drawable/selector_ol_button"
             android:src="@drawable/search" />
 
         <CheckBox
             android:id="@+id/check_record"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_32dp"
             android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/dimen_8dp"
+            android:layout_marginEnd="@dimen/dimen_4dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/melodylist1_rec"
-            android:textSize="16sp" />
+            android:textSize="12sp" />
 
         <CheckBox
             android:id="@+id/check_hand"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_32dp"
             android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_4dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/melodylist1_hand"
-            android:textSize="16sp" />
+            android:textSize="12sp" />
 
-        <LinearLayout
-            android:layout_width="@dimen/dimen_0dp"
-            android:layout_height="@dimen/dimen_55dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.45"
-            android:orientation="vertical">
+        <CheckBox
+            android:id="@+id/check_play_next"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_32dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_4dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/melodylist1_auto_next"
+            android:textSize="12sp" />
 
-            <ImageView
-                android:id="@+id/menu_list_fast"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="0.3"
-                android:src="@drawable/list_icon" />
+        <CheckBox
+            android:id="@+id/check_practise"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_32dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/dimen_4dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/melodylist1_practise"
+            android:textSize="12sp" />
 
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/menu_list_fast"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_32dp"
+            android:layout_marginStart="@dimen/dimen_4dp"
+            android:layout_marginEnd="@dimen/dimen_8dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:src="@drawable/list_icon" />
     </LinearLayout>
 
     <LinearLayout

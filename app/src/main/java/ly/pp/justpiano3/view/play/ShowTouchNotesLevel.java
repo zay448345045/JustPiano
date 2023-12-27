@@ -17,22 +17,13 @@ public final class ShowTouchNotesLevel {
         this.playView = playView;
         comboNum = i2;
         switch (i) {
-            case -1:
-                levelImage = playView.missImage;
-                return;
-            case 1:
-                levelImage = playView.perfectImage;
-                return;
-            case 2:
-                levelImage = playView.coolImage;
-                return;
-            case 3:
-                levelImage = playView.greatImage;
-                return;
-            case 5:
-                levelImage = playView.badImage;
-                return;
-            default:
+            case -1 -> levelImage = playView.missImage;
+            case 1 -> levelImage = playView.perfectImage;
+            case 2 -> levelImage = playView.coolImage;
+            case 3 -> levelImage = playView.greatImage;
+            case 5 -> levelImage = playView.badImage;
+            default -> {
+            }
         }
     }
 }

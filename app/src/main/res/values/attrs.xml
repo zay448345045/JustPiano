@@ -29,6 +29,8 @@
     <declare-styleable name="SeekBarPreference">
         <attr name="minValue" format="float" />
         <attr name="maxValue" format="float" />
+        <attr name="critValue" format="float" />
         <attr name="floatNumber" format="boolean" />
+        <attr name="maxSteps" format="integer" />
     </declare-styleable>
 </resources>

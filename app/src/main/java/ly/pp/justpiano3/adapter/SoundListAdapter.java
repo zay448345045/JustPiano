@@ -1,6 +1,8 @@
 package ly.pp.justpiano3.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.listener.ChangeSoundClick;
-import ly.pp.justpiano3.view.SoundListPreference;
+import ly.pp.justpiano3.activity.local.SoundDownload;
+import ly.pp.justpiano3.task.SoundListPreferenceTask;
+import ly.pp.justpiano3.utils.FilePickerUtil;
+import ly.pp.justpiano3.view.preference.SoundListPreference;
 
 public final class SoundListAdapter extends BaseAdapter {
     public final SoundListPreference soundListPreference;
@@ -25,7 +29,7 @@ public final class SoundListAdapter extends BaseAdapter {
         this.soundKeyList = soundKeyList;
     }
 
-    public void mo3583a(CharSequence[] soundNameList, CharSequence[] soundKeyList) {
+    public void updateSoundList(CharSequence[] soundNameList, CharSequence[] soundKeyList) {
         this.soundNameList = soundNameList;
         this.soundKeyList = soundKeyList;
     }
@@ -52,21 +56,31 @@ public final class SoundListAdapter extends BaseAdapter {
         }
         String soundKey = String.valueOf(soundKeyList[i]);
         ((TextView) view.findViewById(R.id.skin_name_view)).setText(soundNameList[i]);
-        Button button = view.findViewById(R.id.skin_dele);
-        if (soundKey.equals("original") || soundKey.equals("more")) {
-            button.setVisibility(View.INVISIBLE);
+        Button deleteButton = view.findViewById(R.id.skin_dele);
+        if (soundKey.equals("original") || soundKey.equals("more") || soundKey.equals("select")) {
+            deleteButton.setVisibility(View.INVISIBLE);
         } else {
-            button.setVisibility(View.VISIBLE);
-            button.setOnClickListener(v -> soundListPreference.deleteFiles(soundKey));
+            deleteButton.setVisibility(View.VISIBLE);
+            deleteButton.setOnClickListener(v -> soundListPreference.deleteFiles(soundKey));
         }
-        button = view.findViewById(R.id.set_skin);
-        if (soundKey.equals("more")) {
-            button.setText("点击获取更多音源");
-        } else {
-            button.setText("设置音源");
+        Button setButton = view.findViewById(R.id.set);
+        switch (soundKey) {
+            case "more" -> setButton.setText("点击获取更多音源");
+            case "select" -> setButton.setText("点击选择音源");
+            default -> setButton.setText("设置音源");
         }
-        button.setOnClickListener(new ChangeSoundClick(this, soundKey, i));
-        soundListPreference.soundKey = soundKey;
+        setButton.setOnClickListener(v -> {
+            if (soundKey.equals("more")) {
+                Intent intent = new Intent();
+                intent.setClass(context, SoundDownload.class);
+                ((Activity) (context)).startActivityForResult(intent, SoundDownload.SOUND_DOWNLOAD_REQUEST_CODE);
+            } else if (soundKey.equals("select")) {
+                FilePickerUtil.openFilePicker((Activity) context, false, "sound_select");
+            } else {
+                soundListPreference.soundKey = soundKey;
+                new SoundListPreferenceTask(soundListPreference).execute(soundKey);
+            }
+        });
         return view;
     }
 }

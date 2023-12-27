@@ -1,12 +1,14 @@
 package ly.pp.justpiano3.task;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.ShowSongsInfo;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.ShowSongsInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
@@ -29,7 +31,7 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("head", showSongsInfo.get().head)
                     .add("keywords", showSongsInfo.get().keywords)
-                    .add("user", showSongsInfo.get().jpapplication.getAccountName())
+                    .add("user", OLBaseActivity.getAccountName())
                     .add("page", String.valueOf(showSongsInfo.get().page))
                     .build();
             // 创建一个Request对象，设置请求URL和请求体
@@ -53,8 +55,8 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
-            showSongsInfo.get().mo2977a(str, showSongsInfo.get().songsListView);
-            showSongsInfo.get().songsListView.setCacheColorHint(0);
+            showSongsInfo.get().handleResultAndBindAdapter(str, showSongsInfo.get().songsListView);
+            showSongsInfo.get().songsListView.setCacheColorHint(Color.TRANSPARENT);
             showSongsInfo.get().jpprogressBar.cancel();
         } else if (str.equals("[]")) {
             showSongsInfo.get().jpprogressBar.cancel();

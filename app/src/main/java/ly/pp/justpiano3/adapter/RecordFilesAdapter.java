@@ -7,22 +7,24 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.documentfile.provider.DocumentFile;
+
 import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.RecordFiles;
+import ly.pp.justpiano3.activity.local.RecordFiles;
 
 public final class RecordFilesAdapter extends BaseAdapter {
     private List<Map<String, Object>> list;
-    private final RecordFiles recordfiles;
+    private final RecordFiles recordFiles;
 
-    public RecordFilesAdapter(List<Map<String, Object>> list, RecordFiles rs) {
+    public RecordFilesAdapter(List<Map<String, Object>> list, RecordFiles recordFiles) {
         this.list = list;
-        recordfiles = rs;
+        this.recordFiles = recordFiles;
     }
 
-    public void mo3422a(List<Map<String, Object>> list) {
+    public void setDataList(List<Map<String, Object>> list) {
         this.list = list;
     }
 
@@ -42,20 +44,19 @@ public final class RecordFilesAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int index, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(recordfiles).inflate(R.layout.chat_record_file_list, null);
+            view = LayoutInflater.from(recordFiles).inflate(R.layout.chat_record_file_list, null);
         }
-        view.setKeepScreenOn(true);
-        String str = (String) list.get(i).get("filenames");
-        String str2 = (String) list.get(i).get("time");
-        String str3 = (String) list.get(i).get("path");
+        String fileName = (String) list.get(index).get("filenames");
+        String fileTime = (String) list.get(index).get("time");
+        DocumentFile filePath = (DocumentFile) list.get(index).get("path");
         ImageView imageView = view.findViewById(R.id.deleteview);
         view.findViewById(R.id.showtxt).setVisibility(View.GONE);
-        ((TextView) view.findViewById(R.id.txtview)).setText(str);
-        ((TextView) view.findViewById(R.id.timeview)).setText(str2);
-        view.findViewById(R.id.playview).setOnClickListener(v -> recordfiles.play(str3));
-        imageView.setOnClickListener(v -> recordfiles.delete(i, str, str3));
+        ((TextView) view.findViewById(R.id.txtview)).setText(fileName);
+        ((TextView) view.findViewById(R.id.timeview)).setText(fileTime);
+        view.findViewById(R.id.playview).setOnClickListener(v -> recordFiles.play(filePath));
+        imageView.setOnClickListener(v -> recordFiles.delete(index, fileName, filePath));
         return view;
     }
 }

@@ -40,15 +40,13 @@ public class EncryptUtil {
 
     /**
      * 获取客户端密钥
-     *
-     * @return
      */
     public static KeyPair getDeviceKeyPair() {
         return keyPair;
     }
 
     /**
-     * 更新客户端密钥
+     * 更新客户端公钥
      */
     public static void updateDeviceKeyPair() {
         keyPair = EncryptUtil.generateRSAKeyPair();
@@ -72,8 +70,6 @@ public class EncryptUtil {
 
     /**
      * 生成RSA公私钥对
-     *
-     * @return
      */
     public static KeyPair generateRSAKeyPair() {
         try {
@@ -89,9 +85,6 @@ public class EncryptUtil {
 
     /**
      * 根据公钥字符串生成公钥对象
-     *
-     * @param publicKeyStr
-     * @return
      */
     public static PublicKey generatePublicKey(String publicKeyStr) {
         try {
@@ -107,9 +100,6 @@ public class EncryptUtil {
 
     /**
      * 根据公钥对象生成公钥字符串
-     *
-     * @param publicKey
-     * @return
      */
     public static String generatePublicKeyString(PublicKey publicKey) {
         return Base64.encodeToString(publicKey.getEncoded(), Base64.NO_WRAP);

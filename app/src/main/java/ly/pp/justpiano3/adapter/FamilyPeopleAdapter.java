@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.adapter;
 
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,23 +16,19 @@ import androidx.core.content.ContextCompat;
 import java.util.List;
 import java.util.Map;
 
-import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLFamily;
+import ly.pp.justpiano3.activity.online.OLFamily;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
 
 public final class FamilyPeopleAdapter extends BaseAdapter {
     private final List<Map<String, String>> list;
-    private final JPApplication jpApplication;
     private final LayoutInflater layoutInflater;
-    private final OLFamily family;
+    private final OLFamily olFamily;
 
-    public FamilyPeopleAdapter(List<Map<String, String>> list, JPApplication jpApplication, LayoutInflater layoutInflater, OLFamily olFamily) {
-        this.jpApplication = jpApplication;
+    public FamilyPeopleAdapter(List<Map<String, String>> list, LayoutInflater layoutInflater, OLFamily olFamily) {
         this.list = list;
         this.layoutInflater = layoutInflater;
-        family = olFamily;
+        this.olFamily = olFamily;
     }
 
     @Override
@@ -61,7 +58,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         String loginDate = list.get(i).get("D");
         String contribution = list.get(i).get("C");
         String lv = list.get(i).get("L");
-        if (!StringUtil.isNullOrEmpty(lv)) {
+        if (!TextUtils.isEmpty(lv)) {
             lv = "Lv." + lv;
         }
         TextView positionText = view.findViewById(R.id.ol_family_position);
@@ -84,41 +81,31 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
 
         FamilyPositionEnum userPosition = FamilyPositionEnum.ofCode(list.get(i).get("P"), FamilyPositionEnum.NOT_IN_FAMILY);
         switch (userPosition) {
-            case LEADER:
-                positionText.setText("族长");
-                break;
-            case VICE_LEADER:
-                positionText.setText("副族长");
-                break;
-            case MEMBER:
-                positionText.setText("族员");
-                break;
-            default:
-                positionText.setText("");
-                break;
+            case LEADER -> positionText.setText("族长");
+            case VICE_LEADER -> positionText.setText("副族长");
+            case MEMBER -> positionText.setText("族员");
+            default -> positionText.setText("");
         }
         if (list.get(i).get("O").equals("0")) {
-            nameText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
-            positionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
-            contributionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
-            lvText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
-            dateText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white));
+            nameText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
+            positionText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
+            contributionText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
+            lvText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
+            dateText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
         } else {
-            nameText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
-            positionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
-            contributionText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
-            lvText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
-            dateText.setTextColor(ContextCompat.getColor(jpApplication, R.color.white1));
+            nameText.setTextColor(ContextCompat.getColor(olFamily, R.color.white1));
+            positionText.setTextColor(ContextCompat.getColor(olFamily, R.color.white1));
+            contributionText.setTextColor(ContextCompat.getColor(olFamily, R.color.white1));
+            lvText.setTextColor(ContextCompat.getColor(olFamily, R.color.white1));
+            dateText.setTextColor(ContextCompat.getColor(olFamily, R.color.white1));
         }
 
         final LinearLayout linearLayout = view.findViewById(R.id.ol_family_people);
         linearLayout.setOnClickListener(v -> {
-            PopupWindow a = family.loadInfoPopupWindow(name, userPosition);
-            if (a != null) {
-                int[] iArr = new int[2];
-                linearLayout.getLocationOnScreen(iArr);
-                a.showAtLocation(linearLayout, Gravity.TOP | Gravity.START, iArr[0] + linearLayout.getWidth(), iArr[1]);
-            }
+            PopupWindow popupWindow = olFamily.loadInfoPopupWindow(name, userPosition);
+            int[] iArr = new int[2];
+            linearLayout.getLocationOnScreen(iArr);
+            popupWindow.showAtLocation(linearLayout, Gravity.TOP | Gravity.START, iArr[0] + linearLayout.getWidth(), iArr[1]);
         });
         return view;
     }

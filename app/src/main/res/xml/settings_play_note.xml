@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="音块">
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
+            android:defaultValue="1"
+            android:dialogTitle="音块速率"
+            android:key="down_speed"
+            android:summary="设置音块的滑落速度，会影响弹奏难度，值越大，速度越快，可根据个人习惯进行调整"
+            android:dialogMessage="       中：0.5，快：0.75，很快(默认)：1，超快：1.5，神快：3"
+            android:title="音块速率"
+            app:floatNumber="true"
+            app:maxValue="1.5"
+            app:minValue="0.5"
+            app:critValue="4.0"
+            app:maxSteps="450"/>
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
+            android:defaultValue="1"
+            android:dialogTitle="音块大小"
+            android:key="note_size"
+            android:summary="设置音块大小，可根据个人习惯进行调整"
+            android:title="音块大小"
+            app:floatNumber="true"
+            app:maxValue="1.5"
+            app:minValue="0.5"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="note_dismiss"
+            android:summaryOff="&lt;关闭&gt;击中音块后音块不会立即消失"
+            android:summaryOn="&lt;打开&gt;击中音块后音块立即消失"
+            android:title="击中音块消失" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="change_color"
+            android:summaryOff="&lt;关闭&gt;首音块不变色"
+            android:summaryOn="&lt;打开&gt;首音块变色"
+            android:title="音块变色" />
+    </PreferenceCategory>
+</PreferenceScreen>

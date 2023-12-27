@@ -3,13 +3,13 @@
 #include <string>
 #include <unistd.h>
 #include "RecordingIO.h"
-#include "utils/Utils.h"
 #include <mutex>
 #include <cstdlib>
 #include <fcntl.h>
 #include <condition_variable>
 #include <sys/stat.h>
 
+using namespace std;
 mutex RecordingIO::flushMtx;
 condition_variable RecordingIO::flushed;
 bool RecordingIO::ongoing_flush_completed = true;
@@ -67,7 +67,7 @@ void RecordingIO::write_buffer(float *sourceData, size_t numSamples) {
         ongoing_flush_completed = false;
         copy(mRecordData.begin(), mRecordData.end(), mRecordBuff);
         size_t writeSize = mRecordData.size() * sizeof(float);
-        mThreadPool.enqueue([&]() {
+        mThreadPool.enqueue([this, writeSize]() {
             if (mRecordingFile == -1) {
                 mRecordingFile = open(mRecordingFilePath, O_CREAT | O_APPEND | O_RDWR, S_IRWXU);
             }

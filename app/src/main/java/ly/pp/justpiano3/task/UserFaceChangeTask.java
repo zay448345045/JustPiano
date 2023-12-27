@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
-import ly.pp.justpiano3.activity.UsersInfo;
+import ly.pp.justpiano3.activity.online.UsersInfo;
 
 public final class UserFaceChangeTask extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> userInfo;
@@ -16,7 +16,7 @@ public final class UserFaceChangeTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... strArr) {
-        return UsersInfo.m3931b(strArr[0], strArr[1], strArr[2]);
+        return UsersInfo.uploadPic(strArr[0], strArr[1], strArr[2]);
     }
 
     @Override

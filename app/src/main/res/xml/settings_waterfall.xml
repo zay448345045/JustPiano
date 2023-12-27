@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="瀑布流">
+        <ly.pp.justpiano3.view.preference.FilePickerPreference
+            android:defaultValue=""
+            android:key="waterfall_background_pic"
+            android:summary="默认背景图"
+            android:title="背景图片" />
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
+            android:defaultValue="1"
+            android:dialogTitle="曲谱播放速度"
+            android:key="waterfall_song_speed"
+            android:summary="值越小，曲谱整体播放速度越慢，持续时间越长"
+            android:title="曲谱播放速度"
+            app:floatNumber="true"
+            app:maxValue="1.5"
+            app:minValue="0.5" />
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
+            android:defaultValue="0.8"
+            android:dialogTitle="音块移动速度"
+            android:key="waterfall_down_speed"
+            android:summary="设置音块的移动速度，值越小，音块越矮，移动速度越慢"
+            android:title="音块移动速度"
+            app:floatNumber="true"
+            app:maxValue="1.5"
+            app:minValue="0.1"/>
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
+            android:defaultValue="0"
+            android:dialogTitle="曲谱播放移调"
+            android:key="waterfall_tune"
+            android:summary="设置瀑布流曲谱整体播放移调数值"
+            android:title="曲谱播放移调"
+            app:floatNumber="false"
+            app:maxValue="6"
+            app:minValue="-6" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="waterfall_octave_line"
+            android:summaryOff="&lt;关闭&gt;隐藏八度虚线"
+            android:summaryOn="&lt;打开&gt;显示八度虚线"
+            android:title="显示八度虚线" />
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            alphaSlider="false"
+            hexValue="true"
+            android:defaultValue="0xFF2BBBFB"
+            android:key="waterfall_left_hand_color"
+            android:summary="左手音块颜色"
+            android:title="左手音块颜色" />
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            alphaSlider="false"
+            hexValue="true"
+            android:defaultValue="0xFFFF802D"
+            android:key="waterfall_right_hand_color"
+            android:summary="右手音块颜色"
+            android:title="右手音块颜色" />
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            alphaSlider="false"
+            hexValue="true"
+            android:defaultValue="0xFFFFFF00"
+            android:key="waterfall_free_style_color"
+            android:summary="自由演奏音块颜色"
+            android:title="自由演奏音块颜色" />
+        <ly.pp.justpiano3.view.preference.SeekBarPreference
+            android:defaultValue="100"
+            android:dialogTitle="联网模式瀑布流背景透明度"
+            android:key="online_waterfall_alpha"
+            android:summary="设置联网模式瀑布流背景透明度，值越小，越趋向于透明"
+            android:title="联网模式瀑布流背景透明度"
+            app:floatNumber="false"
+            app:maxValue="150"
+            app:minValue="50" />
+    </PreferenceCategory>
+</PreferenceScreen>

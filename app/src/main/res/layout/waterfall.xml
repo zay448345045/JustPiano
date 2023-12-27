@@ -4,6 +4,7 @@
               android:id="@+id/layout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/black"
               android:orientation="vertical"
               android:gravity="center">
 
@@ -107,8 +108,8 @@
             android:id="@+id/waterfall_keyboard"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:whiteKeyNum="49"
-            app:whiteKeyOffset="0"
+            app:whiteKeyNum="52"
+            app:whiteKeyOffset="5"
             android:layout_weight="1">
     </ly.pp.justpiano3.view.KeyboardView>
 </LinearLayout>

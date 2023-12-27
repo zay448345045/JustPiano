@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,18 +11,19 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 
-import io.netty.util.internal.StringUtil;
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.LoginActivity;
+import ly.pp.justpiano3.activity.online.LoginActivity;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.view.JPDialogBuilder;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class LoginTask extends AsyncTask<String, Void, String> {
+public final class LoginTask extends AsyncTask<Void, Void, Void> {
     private final WeakReference<LoginActivity> activity;
     private String loginResponse = "";
     private String message = "";
@@ -32,8 +34,7 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
-        String f5140b = "";
+    protected Void doInBackground(Void... v) {
         LoginActivity loginActivity = activity.get();
         loginActivity.accountX = loginActivity.accountTextView.getText().toString();
         loginActivity.password = loginActivity.passwordTextView.getText().toString();
@@ -61,18 +62,16 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
                         loginResponse = line;
                     }
                     response.body().close();
-                    return f5140b;
                 }
             } catch (Exception e) {
-                f5140b = "";
                 e.printStackTrace();
             }
         }
-        return f5140b;
+        return null;
     }
 
     @Override
-    protected void onPostExecute(String str) {
+    protected void onPostExecute(Void v) {
         LoginActivity loginActivity = activity.get();
         int i = 3;
         String newVersion = null;
@@ -91,41 +90,47 @@ public final class LoginTask extends AsyncTask<String, Void, String> {
                 message = jSONObject.getString("msg");
                 loginActivity.kitiName = jSONObject.getString("ukn");
                 title = jSONObject.getString("title");
-                loginActivity.jpapplication.loginResultTitle = jSONObject.getString("T1");
-                loginActivity.jpapplication.loginResultMessage = jSONObject.getString("M1");
+                OLBaseActivity.loginResultTitle = jSONObject.getString("T1");
+                OLBaseActivity.loginResultMessage = jSONObject.getString("M1");
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        loginActivity.jpprogressBar.dismiss();
+        if (loginActivity.jpProgressBar.isShowing()) {
+            loginActivity.jpProgressBar.dismiss();
+        }
         switch (i) {
-            case 0:
-            case 4:
-            case 5:
-                loginActivity.loginSuccess(i, message, title);
-                return;
-            case 1:
-            case 2:
-                if (!StringUtil.isNullOrEmpty(newVersion)) {
+            case 0, 4, 5 -> loginActivity.loginSuccess(i, message, title);
+            case 1, 2 -> {
+                if (!TextUtils.isEmpty(newVersion)) {
                     loginActivity.addVersionUpdateDialog(message, newVersion);
                 } else {
-                    loginActivity.addDialog("提示", "确定", message);
+                    JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(loginActivity);
+                    jpDialogBuilder.setTitle("提示");
+                    jpDialogBuilder.setMessage(message);
+                    jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                    jpDialogBuilder.buildAndShowDialog();
                 }
-                return;
-            case 3:
-                loginActivity.addDialog("提示", "确定", "网络错误!");
-                return;
-            default:
+            }
+            case 3 -> {
+                JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(loginActivity);
+                jpDialogBuilder.setTitle("提示");
+                jpDialogBuilder.setMessage("网络错误!");
+                jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
+                jpDialogBuilder.buildAndShowDialog();
+            }
+            default -> {
+            }
         }
     }
 
     @Override
     protected void onPreExecute() {
         LoginActivity loginActivity = activity.get();
-        loginActivity.jpprogressBar.setCancelable(true);
-        loginActivity.jpprogressBar.setOnCancelListener(dialog -> cancel(true));
-        loginActivity.jpprogressBar.show();
+        loginActivity.jpProgressBar.setCancelable(true);
+        loginActivity.jpProgressBar.setOnCancelListener(dialog -> cancel(true));
+        loginActivity.jpProgressBar.show();
     }
 }

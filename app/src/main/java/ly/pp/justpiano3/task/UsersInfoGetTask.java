@@ -6,14 +6,15 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.UsersInfo;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.UsersInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class UsersInfoGetTask extends AsyncTask<String, Void, String> {
+public final class UsersInfoGetTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<UsersInfo> userInfo;
 
     public UsersInfoGetTask(UsersInfo usersInfo) {
@@ -21,15 +22,15 @@ public final class UsersInfoGetTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String str = "";
-        if (!userInfo.get().jpapplication.getAccountName().isEmpty()) {
+        if (!OLBaseActivity.getAccountName().isEmpty()) {
             // 创建FormBody对象，添加请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("head", "0")
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("keywords", "0")
-                    .add("userName", userInfo.get().jpapplication.getAccountName())
+                    .add("userName", OLBaseActivity.getAccountName())
                     .build();
             // 创建Request对象，设置URL和请求体
             Request request = new Request.Builder()
@@ -52,7 +53,7 @@ public final class UsersInfoGetTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
-            UsersInfo.m3930a(userInfo.get(), str);
+            UsersInfo.updateUserInfo(userInfo.get(), str);
             userInfo.get().jpprogressBar.cancel();
         } else if (str.equals("{}")) {
             userInfo.get().jpprogressBar.cancel();

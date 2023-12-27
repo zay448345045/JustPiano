@@ -1,8 +1,11 @@
 package ly.pp.justpiano3.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
+
+import ly.pp.justpiano3.BuildConfig;
 
 /**
  * DeviceUtils
@@ -18,6 +21,7 @@ public class DeviceUtil {
      * @param context 上下文
      * @return AndroidId
      */
+    @SuppressLint("HardwareIds")
     public static String getAndroidId(Context context) {
         String androidId;
         try {
@@ -44,5 +48,13 @@ public class DeviceUtil {
      */
     public static String getDeviceBrandAndModel() {
         return Build.MANUFACTURER + "." + Build.MODEL;
+    }
+
+    /**
+     * 获取app与设备信息，用于异常&反馈上报时使用
+     */
+    public static String getAppAndDeviceInfo() {
+        return BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-'
+                + BuildConfig.BUILD_TYPE + ' ' + getDeviceBrandAndModel() + ' ' + getAndroidVersion();
     }
 }

@@ -12,8 +12,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayHall;
+import ly.pp.justpiano3.activity.online.OLPlayHall;
 import ly.pp.justpiano3.constant.Consts;
+import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.utils.ColorUtil;
 
 public final class RoomTitleAdapter extends BaseAdapter {
@@ -52,24 +53,26 @@ public final class RoomTitleAdapter extends BaseAdapter {
             view = layoutInflater.inflate(R.layout.ol_room_view, null);
         }
         view.setKeepScreenOn(true);
-        CharSequence string = list.get(i).getString("N");
+        String name = list.get(i).getString("N");
         int i2 = list.get(i).getInt("V");
         byte b = list.get(i).getByte("I");
         ((TextView) view.findViewById(R.id.ol_room_id)).setText(String.valueOf(b));
-        boolean valueOf = list.get(i).getBoolean("IF");
+        boolean isFull = list.get(i).getBoolean("IF");
         int i3 = list.get(i).getInt("IP");
         int i4 = list.get(i).getInt("D");
         int i5 = list.get(i).getInt("PA");
         ((GridView) view.findViewById(R.id.ol_player_grid)).setAdapter(new RoomMiniPeopleAdapter(olPlayHall, list.get(i).getIntArray("UA")));
         TextView textView = view.findViewById(R.id.ol_room_name);
-        textView.setText(string);
+        textView.setText(name);
         textView.setBackgroundResource(ColorUtil.userColor[i2]);
         textView.setOnClickListener(v -> olPlayHall.loadInRoomUserInfo(b));
         Button button = view.findViewById(R.id.ol_getin_button);
         if (i3 == 1) {
             button.setText("弹奏中");
-        } else if (valueOf) {
+            button.setOnClickListener(null);
+        } else if (isFull) {
             button.setText("已满");
+            button.setOnClickListener(null);
         } else if (i5 == 1) {
             button.setText("加密");
             button.setOnClickListener(v -> olPlayHall.enterRoomHandle(i5, b));
@@ -77,26 +80,10 @@ public final class RoomTitleAdapter extends BaseAdapter {
             button.setText("进入");
             button.setOnClickListener(v -> olPlayHall.enterRoomHandle(i5, b));
         }
-        textView = view.findViewById(R.id.ol_room_mode);
-        string = "普通";
-        switch (i4) {
-            case 0:
-                string = "普通";
-                break;
-            case 1:
-                string = "组队";
-                break;
-            case 2:
-                string = "双人";
-                break;
-            case 3:
-                string = "键盘";
-                break;
-        }
-        if (i4 >= 0 && i4 <= 3) {
-            textView.setBackgroundResource(Consts.groupModeColor[i4]);
-        }
-        textView.setText(string);
+        TextView roomModeTextView = view.findViewById(R.id.ol_room_mode);
+        RoomModeEnum roomMode = RoomModeEnum.ofCode(i4, RoomModeEnum.NORMAL);
+        roomModeTextView.setBackgroundResource(Consts.groupModeColor[roomMode.getCode()]);
+        roomModeTextView.setText(roomMode.getSimpleName());
         return view;
     }
 }

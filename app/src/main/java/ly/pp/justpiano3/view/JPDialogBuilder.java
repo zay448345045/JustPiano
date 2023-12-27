@@ -4,11 +4,33 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.view.*;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.*;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
+import ly.pp.justpiano3.utils.WindowUtil;
 
 public final class JPDialogBuilder {
     private EditText editText;
@@ -17,7 +39,7 @@ public final class JPDialogBuilder {
     private View inflate;
     private int width = 360;
     private final Context context;
-    private OnClickListener listener2;
+    private OnClickListener firstButtonOnClickListener;
     private String title;
     private String message;
     private String positiveText;
@@ -25,6 +47,7 @@ public final class JPDialogBuilder {
     private boolean positiveButtonDisabled;
     private View view;
     private boolean cancelable = true;
+    private boolean checkMessageUrl;
     private OnClickListener listener;
 
     public JPDialogBuilder(Context context) {
@@ -48,7 +71,7 @@ public final class JPDialogBuilder {
 
     public JPDialogBuilder setFirstButton(String str, OnClickListener onClickListener) {
         positiveText = str;
-        listener2 = onClickListener;
+        firstButtonOnClickListener = onClickListener;
         return this;
     }
 
@@ -57,8 +80,14 @@ public final class JPDialogBuilder {
         return this;
     }
 
-    public void setCancelableFalse() {
+    public JPDialogBuilder setCheckMessageUrl(boolean checkMessageUrl) {
+        this.checkMessageUrl = checkMessageUrl;
+        return this;
+    }
+
+    public JPDialogBuilder setCancelableFalse() {
         cancelable = false;
+        return this;
     }
 
     public JPDialog createJPDialog() {
@@ -72,8 +101,8 @@ public final class JPDialogBuilder {
         if (positiveText != null) {
             ((Button) inflate.findViewById(R.id.positiveButton)).setText(positiveText);
             inflate.findViewById(R.id.positiveButton).setEnabled(!positiveButtonDisabled);
-            if (listener2 != null) {
-                inflate.findViewById(R.id.positiveButton).setOnClickListener(v -> listener2.onClick(jpDialog, DialogInterface.BUTTON_POSITIVE));
+            if (firstButtonOnClickListener != null) {
+                inflate.findViewById(R.id.positiveButton).setOnClickListener(v -> firstButtonOnClickListener.onClick(jpDialog, DialogInterface.BUTTON_POSITIVE));
             }
         } else {
             inflate.findViewById(R.id.positiveButton).setVisibility(View.GONE);
@@ -87,7 +116,35 @@ public final class JPDialogBuilder {
             inflate.findViewById(R.id.negativeButton).setVisibility(View.GONE);
         }
         if (message != null) {
-            ((TextView) inflate.findViewById(R.id.message)).setText(message);
+            TextView messageTextView = inflate.findViewById(R.id.message);
+            if (checkMessageUrl) {
+                messageTextView.setAutoLinkMask(Linkify.WEB_URLS);
+                messageTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                messageTextView.setLinksClickable(true);
+                messageTextView.setLinkTextColor(Color.YELLOW);
+                ClickableSpan clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void onClick(@NonNull View textView) {
+                        // 获取点击的URL链接
+                        TextView tv = (TextView) textView;
+                        Spanned spanned = (Spanned) tv.getText();
+                        int start = spanned.getSpanStart(this);
+                        int end = spanned.getSpanEnd(this);
+                        CharSequence url = spanned.subSequence(start, end);
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString())));
+                    }
+                };
+                SpannableString spannableString = new SpannableString(message);
+                URLSpan[] urlSpans = spannableString.getSpans(0, spannableString.length(), URLSpan.class);
+                for (URLSpan urlSpan : urlSpans) {
+                    int start = spannableString.getSpanStart(urlSpan);
+                    int end = spannableString.getSpanEnd(urlSpan);
+                    spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                messageTextView.setText(spannableString);
+            } else {
+                messageTextView.setText(message);
+            }
         }
         if (view != null) {
             ((LinearLayout) inflate.findViewById(R.id.content)).removeAllViews();
@@ -105,7 +162,7 @@ public final class JPDialogBuilder {
         return this;
     }
 
-    public void setVisibleEditText(boolean visibleEditText, String hint) {
+    public JPDialogBuilder setVisibleEditText(boolean visibleEditText, String hint) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         if (visibleEditText) {
@@ -113,19 +170,22 @@ public final class JPDialogBuilder {
             editText.setVisibility(View.VISIBLE);
             editText.setHint(hint);
         }
+        return this;
     }
 
-    public void setVisibleRadioGroup(boolean visibleRadioGroup) {
+    public JPDialogBuilder setVisibleRadioGroup(boolean visibleRadioGroup) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         if (visibleRadioGroup) {
             radioGroup = (inflate.findViewById(R.id.Rgroup));
             radioGroup.setVisibility(View.VISIBLE);
         }
+        return this;
     }
 
-    public void addRadioButton(RadioButton radioButton) {
+    public JPDialogBuilder addRadioButton(RadioButton radioButton) {
         radioGroup.addView(radioButton);
+        return this;
     }
 
     public int getRadioGroupCheckedId() {
@@ -159,29 +219,31 @@ public final class JPDialogBuilder {
         try {
             JPDialog dialog = createJPDialog();
             if (!dialog.isShowing()) {
-                Window window = dialog.getWindow();
                 Context context = dialog.getContext();
-                window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                focusNotAle(window);
                 dialog.show();
+                Window window = dialog.getWindow();
+                if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+                    WindowUtil.fullScreenHandle(window);
+                } else {
+                    WindowUtil.exitFullScreenHandle(window);
+                }
                 WindowManager.LayoutParams layoutParams = window.getAttributes();
                 layoutParams.width = UnitConvertUtil.dp2px(context, this.width);
                 window.setAttributes(layoutParams);
-                hideNavigationBar(window);
-                clearFocusNotAle(window);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setVisibleGoldConvertView(boolean visible) {
+    public JPDialogBuilder setVisibleGoldConvertView(boolean visible) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflate = layoutInflater.inflate(R.layout.jpdialog, null);
         if (visible) {
             goldConvertView = (inflate.findViewById(R.id.gold_convert));
             goldConvertView.setVisibility(View.VISIBLE);
         }
+        return this;
     }
 
     public static class JPDialog extends Dialog {
@@ -189,33 +251,5 @@ public final class JPDialogBuilder {
         JPDialog(Context context) {
             super(context, R.style.Dialog);
         }
-    }
-
-    public void hideNavigationBar(Window window) {
-        // window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        window.getDecorView().setOnSystemUiVisibilityChangeListener(visibility -> {
-            try {
-                int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                        //布局位于状态栏下方
-                        //                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-                        //全屏
-                        View.SYSTEM_UI_FLAG_FULLSCREEN |
-                        //隐藏导航栏
-                        //                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-                uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-                window.getDecorView().setSystemUiVisibility(uiOptions);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public void focusNotAle(Window window) {
-        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-    }
-
-    public void clearFocusNotAle(Window window) {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
     }
 }

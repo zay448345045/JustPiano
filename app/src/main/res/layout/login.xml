@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ground"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -20,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_5dp"
             android:fontFamily="@font/title"
-            android:text="@string/login_title"
+            android:text="@string/app_name"
             android:textColor="@color/white1"
             android:textSize="34sp" />
 
@@ -203,6 +201,21 @@
             android:layout_alignBottom="@+id/ol_change_account"
             android:layout_toEndOf="@+id/ol_change_account"
             android:text="测试服"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/ol_debug_server_ip"
+            style="@style/EditTextStyle"
+            android:layout_width="@dimen/dimen_200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_5dp"
+            android:layout_alignBaseline="@+id/ol_change_server"
+            android:layout_alignBottom="@+id/ol_change_server"
+            android:layout_toEndOf="@+id/ol_change_server"
+            android:visibility="gone"
+            android:hint="服务器ip"
+            android:maxLines="1"
+            android:textColor="@color/white1"
             android:textSize="14sp" />
     </RelativeLayout>
 </LinearLayout>

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/port"
     android:keepScreenOn="true"
     android:orientation="vertical">
 
@@ -21,6 +19,15 @@
             android:layout_height="@dimen/dimen_235dp"
             android:background="@drawable/filled_bar"
             android:orientation="horizontal">
+
+            <GridView
+                android:id="@id/ol_player_grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/room_title"
+                android:layout_alignParentEnd="true"
+                android:listSelector="@color/translent"
+                android:numColumns="3" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -40,7 +47,6 @@
                     android:text="@string/olplayroom_begin"
                     android:textColor="@color/white1"
                     android:textSize="14sp" />
-
 
                 <LinearLayout
                     android:id="@+id/LinearLayout01"
@@ -78,14 +84,20 @@
                     android:textSize="15sp" />
             </RelativeLayout>
 
-            <GridView
-                android:id="@id/ol_player_grid"
+            <TextView
+                android:id="@id/time_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/room_title"
+                android:layout_alignStart="@id/ol_player_grid"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:listSelector="@color/translent"
-                android:numColumns="3" />
+                android:layout_alignBottom="@+id/room_title"
+                android:layout_toEndOf="@id/room_title"
+                android:background="@drawable/selector_list_c"
+                android:gravity="end"
+                android:keepScreenOn="true"
+                android:textColor="#fff9f3b8"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@id/room_title"
@@ -99,20 +111,6 @@
                 android:text="@string/ol_room_view_name"
                 android:textColor="@color/roomtext"
                 android:textSize="20sp" />
-
-            <TextView
-                android:id="@id/time_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@id/ol_player_grid"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@id/room_title"
-                android:background="@drawable/selector_list_c"
-                android:gravity="end"
-                android:keepScreenOn="true"
-                android:textColor="#fff9f3b8"
-                android:textSize="12sp" />
         </RelativeLayout>
 
         <RelativeLayout

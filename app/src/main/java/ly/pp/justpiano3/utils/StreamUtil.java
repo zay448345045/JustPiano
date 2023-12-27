@@ -1,8 +1,8 @@
 package ly.pp.justpiano3.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import android.content.Context;
+import android.net.Uri;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,11 +13,11 @@ import java.util.List;
 public class StreamUtil {
 
     /**
-     * 序列化,List
+     * 序列化List
      */
-    public static <T> boolean writeObject(List<T> list, File file) {
+    public static <T> boolean writeObject(List<T> list, Context context, Uri uri) {
         T[] array = (T[]) list.toArray();
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(context.getContentResolver().openOutputStream(uri, "w"))) {
             out.writeObject(array);
             out.flush();
             return true;
@@ -28,12 +28,12 @@ public class StreamUtil {
     }
 
     /**
-     * 反序列化,List
+     * 反序列化List
      */
-    public static <E> List<E> readObjectForList(File file) {
-        E[] object;
-        try (ObjectInputStream out = new ObjectInputStream(new FileInputStream(file))) {
-            object = (E[]) out.readObject();
+    public static <T> List<T> readObjectForList(Context context, Uri uri) {
+        T[] object;
+        try (ObjectInputStream out = new ObjectInputStream(context.getContentResolver().openInputStream(uri))) {
+            object = (T[]) out.readObject();
             return Arrays.asList(object);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

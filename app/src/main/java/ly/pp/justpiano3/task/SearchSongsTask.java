@@ -8,7 +8,8 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.SearchSongs;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.SearchSongs;
 import ly.pp.justpiano3.adapter.SearchPeopleAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
@@ -27,7 +28,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         String s = "";
-        if (!searchSongs.get().f4948c.isEmpty()) {
+        if (!searchSongs.get().keywords.isEmpty()) {
             String str;
             String str2;
             if (searchSongs.get().headType == 6) {
@@ -41,8 +42,8 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
             FormBody formBody = new FormBody.Builder()
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("head", str2)
-                    .add("keywords", searchSongs.get().f4948c)
-                    .add("user", searchSongs.get().jpapplication.getAccountName())
+                    .add("keywords", searchSongs.get().keywords)
+                    .add("user", OLBaseActivity.getAccountName())
                     .build();
             // 创建Request对象，设置URL和请求体
             Request request = new Request.Builder()
@@ -63,19 +64,15 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected void onCancelled() {
-    }
-
-    @Override
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
             if (searchSongs.get().headType < 2) {
-                searchSongs.get().mo2963a(str, searchSongs.get().songsListView);
+                searchSongs.get().bindAdapter(str, searchSongs.get().songsListView);
                 searchSongs.get().songsListView.setCacheColorHint(0x00000000);
             } else if (searchSongs.get().headType == 6) {
                 try {
                     if (searchSongs.get().songsListView != null) {
-                        searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(searchSongs.get(), searchSongs.get().m3841b(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
+                        searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(searchSongs.get(), searchSongs.get().userListHandle(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
                         searchSongs.get().songsListView.setCacheColorHint(0x00000000);
                     }
                 } catch (Exception e) {
@@ -85,7 +82,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
             searchSongs.get().jpprogressBar.cancel();
         } else if (str.equals("[]")) {
             searchSongs.get().jpprogressBar.cancel();
-            Toast.makeText(searchSongs.get(), "没有找到与[" + searchSongs.get().f4948c + "]相关的信息", Toast.LENGTH_SHORT).show();
+            Toast.makeText(searchSongs.get(), "没有找到与[" + searchSongs.get().keywords + "]相关的信息", Toast.LENGTH_SHORT).show();
         } else {
             searchSongs.get().jpprogressBar.cancel();
             Toast.makeText(searchSongs.get(), "连接有错，请尝试重新登录", Toast.LENGTH_SHORT).show();

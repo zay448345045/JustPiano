@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.task;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.activity.OLMelodySelect;
+import ly.pp.justpiano3.activity.online.OLMelodySelect;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -18,7 +19,7 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
+public final class OLMelodySelectTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<OLMelodySelect> olMelodySelect;
 
     public OLMelodySelectTask(OLMelodySelect oLMelodySelect) {
@@ -26,14 +27,14 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String string = "";
-        if (!olMelodySelect.get().f4317e.isEmpty()) {
+        if (!olMelodySelect.get().type.isEmpty()) {
             // 创建请求参数
             FormBody formBody = new FormBody.Builder()
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("page", String.valueOf(olMelodySelect.get().index))
-                    .add("type", olMelodySelect.get().f4317e)
+                    .add("type", olMelodySelect.get().type)
                     .build();
             // 创建请求对象
             Request request = new Request.Builder()
@@ -70,11 +71,11 @@ public final class OLMelodySelectTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String str) {
         if (str.length() > 4) {
-            olMelodySelect.get().m3643a(olMelodySelect.get().pageNum);
+            olMelodySelect.get().fillPageList(olMelodySelect.get().pageNum);
             olMelodySelect.get().popupWindowSelectAdapter.notifyDataSetChanged();
-            olMelodySelect.get().mo2809a(str);
-            olMelodySelect.get().mo2808a(olMelodySelect.get().f4327p, olMelodySelect.get().f4316c, olMelodySelect.get().f4322k);
-            olMelodySelect.get().f4327p.setCacheColorHint(0);
+            olMelodySelect.get().songList = olMelodySelect.get().songListHandle(str);
+            olMelodySelect.get().bindAdapter(olMelodySelect.get().itemListView, olMelodySelect.get().orderByType, olMelodySelect.get().songCount);
+            olMelodySelect.get().itemListView.setCacheColorHint(Color.TRANSPARENT);
             olMelodySelect.get().jpprogressBar.cancel();
             return;
         }

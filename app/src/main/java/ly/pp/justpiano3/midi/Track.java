@@ -116,7 +116,7 @@ public class Track {
 
                 // first see if we are trying to add
                 // and endorse event.
-                if (MidiUtils.isMetaEndOfTrack(event.getMessage())) {
+                if (MidiUtil.isMetaEndOfTrack(event.getMessage())) {
                     // since end of track event is useful
                     // for delays at the end of a track, we want to keep
                     // the tick value requested here if it is greater
@@ -247,7 +247,7 @@ public class Track {
         private ImmutableEndOfTrack() {
             super(new byte[3]);
             data[0] = (byte) META;
-            data[1] = MidiUtils.META_END_OF_TRACK_TYPE;
+            data[1] = MidiUtil.META_END_OF_TRACK_TYPE;
             data[2] = 0;
         }
 

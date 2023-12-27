@@ -5,7 +5,7 @@ import android.widget.TabHost.OnTabChangeListener;
 import java.util.ArrayList;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.OLPlayHallRoom;
+import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import protobuf.dto.OnlineFamilyDTO;
@@ -26,25 +26,25 @@ public final class PlayHallRoomTabChange implements OnTabChangeListener {
             olPlayHallRoom.tabHost.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
                     intValue == i ? R.drawable.selector_ol_orange : R.drawable.selector_ol_blue);
         }
+        OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
         switch (str) {
-            case "tab1":
-                OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
+            case "tab1" -> {
                 builder.setType(1);
                 builder.setPage(olPlayHallRoom.pageNum);
                 olPlayHallRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                break;
-            case "tab4":
+            }
+            case "tab4" -> {
                 olPlayHallRoom.mailCountsView.setText("");
                 builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(2);
                 olPlayHallRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                break;
-            case "tab3":
+            }
+            case "tab3" -> {
                 builder = OnlineLoadUserInfoDTO.newBuilder();
                 builder.setType(3);
                 olPlayHallRoom.sendMsg(OnlineProtocolType.LOAD_USER_INFO, builder.build());
-                break;
-            case "tab5":
+            }
+            case "tab5" -> {
                 if (olPlayHallRoom.familyList == null) {
                     olPlayHallRoom.familyList = new ArrayList<>();
                 }
@@ -57,13 +57,13 @@ public final class PlayHallRoomTabChange implements OnTabChangeListener {
                 } else {
                     FamilyAdapter familyAdapter = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
                     if (familyAdapter == null) {
-                        olPlayHallRoom.mo2907b(olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
+                        olPlayHallRoom.bindAdapter(olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                     } else {
-                        olPlayHallRoom.mo2905a(familyAdapter, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
+                        olPlayHallRoom.updateFamilyListShow(familyAdapter, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                     }
                     olPlayHallRoom.familyListView.post(() -> olPlayHallRoom.familyListView.setSelection(olPlayHallRoom.familyListPosition));
                 }
-                break;
+            }
         }
     }
 }

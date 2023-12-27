@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.JPApplication;
-import ly.pp.justpiano3.activity.ShowTopInfo;
+import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.online.ShowTopInfo;
 import ly.pp.justpiano3.adapter.TopUserAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
@@ -20,7 +20,7 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
+public final class ShowTopInfoTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<ShowTopInfo> showTopInfo;
 
     public ShowTopInfoTask(ShowTopInfo showTopInfo) {
@@ -28,37 +28,34 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(Void... v) {
         String str = "";
-        if (!showTopInfo.get().f4988d.isEmpty()) {
-            // 创建请求参数
-            FormBody formBody = new FormBody.Builder()
-                    .add("head", String.valueOf(showTopInfo.get().head))
-                    .add("version", BuildConfig.VERSION_NAME)
-                    .add("keywords", showTopInfo.get().f4988d)
-                    .add("page", String.valueOf(showTopInfo.get().f4996l))
-                    .add("P", showTopInfo.get().f4999o)
-                    .add("K", JPApplication.kitiName)
-                    .add("N", showTopInfo.get().jpapplication.getAccountName())
-                    .build();
-            // 创建请求对象
-            Request request = new Request.Builder()
-                    .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetTopListByKeywords")
-                    .post(formBody) // 设置请求方式为POST
-                    .build();
-            try {
-                // 发送请求并获取响应
-                Response response = OkHttpUtil.client().newCall(request).execute();
-                if (response.isSuccessful()) { // 判断响应是否成功
-                    try {
-                        str = response.body().string(); // 获取响应内容
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        // 创建请求参数
+        FormBody formBody = new FormBody.Builder()
+                .add("head", String.valueOf(showTopInfo.get().head))
+                .add("version", BuildConfig.VERSION_NAME)
+                .add("keywords", "C")
+                .add("page", String.valueOf(showTopInfo.get().pageNum))
+                .add("K", OLBaseActivity.kitiName)
+                .add("N", OLBaseActivity.getAccountName())
+                .build();
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetTopListByKeywords")
+                .post(formBody) // 设置请求方式为POST
+                .build();
+        try {
+            // 发送请求并获取响应
+            Response response = OkHttpUtil.client().newCall(request).execute();
+            if (response.isSuccessful()) { // 判断响应是否成功
+                try {
+                    str = response.body().string(); // 获取响应内容
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return str;
     }
@@ -67,12 +64,12 @@ public final class ShowTopInfoTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String str) {
         if (str.length() > 3) {
             try {
-                showTopInfo.get().dataList = showTopInfo.get().m3877a(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
-                ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().f4987c, showTopInfo.get().dataList);
-                if (showTopInfo.get().f4989e != null) {
-                    showTopInfo.get().f4989e.setAdapter(topUserAdapter);
+                showTopInfo.get().dataList = showTopInfo.get().userListHandle(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
+                ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().size, showTopInfo.get().dataList);
+                if (showTopInfo.get().listView != null) {
+                    showTopInfo.get().listView.setAdapter(topUserAdapter);
                 }
-                showTopInfo.get().f4989e.setCacheColorHint(0x0);
+                showTopInfo.get().listView.setCacheColorHint(0x0);
             } catch (Exception e) {
                 e.printStackTrace();
             }

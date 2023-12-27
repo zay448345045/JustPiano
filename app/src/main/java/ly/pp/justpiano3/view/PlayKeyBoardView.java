@@ -6,12 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayKeyBoardView extends View {
-    public Map<Integer, Integer> touchNoteSet = new ConcurrentHashMap<>(16);
+    public Map<Integer, Integer> touchNoteMap = new ConcurrentHashMap<>(16);
     public PlayView playView;
     private Bitmap keyBoardImage;
     private Rect keyBoardRect;
@@ -26,7 +28,7 @@ public class PlayKeyBoardView extends View {
         super(context);
         this.playView = playView;
         keyBoardImage = playView.keyboardImage;
-        keyBoardRect = new Rect(0, playView.whiteKeyHeight, playView.jpapplication.getWidthPixels(), playView.jpapplication.getHeightPixels());
+        keyBoardRect = new Rect(0, playView.whiteKeyHeight, playView.getWidth(), playView.getHeight());
         fireRectArray = playView.getFireRectArray();
         keyRectArray = playView.getKeyRectArray();
     }
@@ -36,42 +38,34 @@ public class PlayKeyBoardView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(keyBoardImage, null, keyBoardRect, null);
-        for (int i : touchNoteSet.keySet()) {
+        for (int i : touchNoteMap.keySet()) {
             drawKeyboardFire(canvas, fireRectArray.get(i), keyRectArray.get(i), playView, i);
         }
     }
 
     private void drawKeyboardFire(Canvas canvas, Rect rect, Rect rect2, PlayView playView, int i) {
         switch (i) {
-            case 0:
-            case 12:
-            case 5:
+            case 0, 12, 5 -> {
                 canvas.drawBitmap(playView.fireImage, null, rect, null);
                 canvas.drawBitmap(playView.whiteKeyRightImage, null, rect2, null);
-                return;
-            case 1:
-            case 10:
-            case 8:
-            case 6:
-            case 3:
+            }
+            case 1, 10, 8, 6, 3 -> {
                 canvas.drawBitmap(playView.fireImage, null, rect, null);
                 canvas.drawBitmap(playView.blackKeyImage, null, rect2, null);
-                return;
-            case 2:
-            case 9:
-            case 7:
+            }
+            case 2, 9, 7 -> {
                 canvas.drawBitmap(playView.fireImage, null, rect, null);
                 canvas.drawBitmap(playView.whiteKeyMiddleImage, null, rect2, null);
-                return;
-            case 4:
-            case 11:
+            }
+            case 4, 11 -> {
                 canvas.drawBitmap(playView.fireImage, null, rect, null);
                 canvas.drawBitmap(playView.whiteKeyLeftImage, null, rect2, null);
-                return;
-            default:
+            }
+            default -> {
+            }
         }
     }
 }

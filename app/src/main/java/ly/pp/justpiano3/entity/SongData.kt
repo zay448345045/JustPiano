@@ -46,9 +46,4 @@ data class SongData(
      * 曲谱pm文件
      */
     var pmFile: File,
-
-    /**
-     * 曲谱midi文件
-     */
-    var midiFile: File,
 )

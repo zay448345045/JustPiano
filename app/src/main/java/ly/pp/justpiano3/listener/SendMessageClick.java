@@ -8,20 +8,21 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ly.pp.justpiano3.activity.PopUserInfo;
+import ly.pp.justpiano3.activity.online.PopUserInfo;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.task.PopUserInfoTask;
 
 public final class SendMessageClick implements OnClickListener {
     private final PopUserInfo popUserInfo;
     private final TextView textView;
-    private final String f5775c;
-    private final String f5776d;
+    private final String userName;
+    private final String account;
 
     public SendMessageClick(PopUserInfo popUserInfo, TextView textView, String str, String str2) {
         this.popUserInfo = popUserInfo;
         this.textView = textView;
-        f5775c = str;
-        f5776d = str2;
+        userName = str;
+        account = str2;
     }
 
     @Override
@@ -31,15 +32,15 @@ public final class SendMessageClick implements OnClickListener {
         try {
             if (valueOf.isEmpty() || valueOf.equals("'")) {
                 Toast.makeText(popUserInfo, "请输入消息内容!", Toast.LENGTH_SHORT).show();
-            } else if (valueOf.length() > 500) {
+            } else if (valueOf.length() > Consts.MAX_MESSAGE_COUNT) {
                 Toast.makeText(popUserInfo, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
             } else {
                 jSONObject.put("H", 0);
-                jSONObject.put("T", f5775c);
-                jSONObject.put("F", f5776d);
+                jSONObject.put("T", userName);
+                jSONObject.put("F", account);
                 jSONObject.put("M", valueOf);
-                if (!f5775c.isEmpty() && !f5776d.isEmpty()) {
-                    popUserInfo.f4830d = jSONObject.toString();
+                if (!userName.isEmpty() && !account.isEmpty()) {
+                    popUserInfo.keywords = jSONObject.toString();
                     new PopUserInfoTask(popUserInfo).execute();
                 }
             }

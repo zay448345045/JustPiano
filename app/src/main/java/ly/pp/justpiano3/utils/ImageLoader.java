@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,7 +31,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -331,35 +331,26 @@ public class ImageLoader {
      * @param outputStream 输出流
      */
     private boolean downloadUrlToStream(String urlString, OutputStream outputStream) {
-        String response = "";
         // 创建请求对象
-        Request request = new Request.Builder()
-                .url(urlString)
-                .post(new FormBody.Builder().build()) // 空的表单参数
-                .build();
-        BufferedOutputStream out = null;
+        Request request = new Request.Builder().url(urlString).build();
         try {
             // 发送请求并获取响应
-            Response execute = OkHttpUtil.client().newCall(request).execute();
-            if (execute.isSuccessful()) {
-                response = execute.body().string();
-                out = new BufferedOutputStream(outputStream, 8 * 1024);
-                byte[] array = GZIPUtil.ZIPToArray(response);
-                if (array != null && array.length > 0) {
-                    out.write(array);
+            Response response = OkHttpUtil.client().newCall(request).execute();
+            if (response.isSuccessful()) {
+                try (InputStream inputStream = response.body().byteStream();
+                     OutputStream out = new BufferedOutputStream(outputStream, 8 * 1024)) {
+                    byte[] buf = new byte[100 * 1024];
+                    int len;
+                    while ((len = inputStream.read(buf)) != -1) {
+                        out.write(buf, 0, len);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         return false;
     }
@@ -368,23 +359,18 @@ public class ImageLoader {
      * @function 从网络获得位图
      */
     private Bitmap downloadBitmapFromUrl(String urlString) {
-        String response = "";
         // 创建请求对象
-        Request request = new Request.Builder()
-                .url(urlString)
-                .post(new FormBody.Builder().build()) // 空的表单参数
-                .build();
+        Request request = new Request.Builder().url(urlString).build();
         try {
             // 发送请求并获取响应
             Response execute = OkHttpUtil.client().newCall(request).execute();
             if (execute.isSuccessful()) {
-                response = execute.body().string();
+                byte[] array = execute.body().bytes();
+                return BitmapFactory.decodeByteArray(array, 0, array.length);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        byte[] array = GZIPUtil.ZIPToArray(response);
-        return BitmapFactory.decodeByteArray(array, 0, array.length);
+        return null;
     }
-
 }

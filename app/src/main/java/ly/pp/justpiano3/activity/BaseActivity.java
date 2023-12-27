@@ -1,0 +1,56 @@
+package ly.pp.justpiano3.activity;
+
+import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Bundle;
+
+import androidx.activity.ComponentActivity;
+
+import ly.pp.justpiano3.activity.local.SoundDownload;
+import ly.pp.justpiano3.entity.GlobalSetting;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.WindowUtil;
+
+public class BaseActivity extends ComponentActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ImageLoadUtil.setBackground(this);
+        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+            WindowUtil.fullScreenHandle(getWindow());
+        } else {
+            WindowUtil.exitFullScreenHandle(getWindow());
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!(this instanceof JustPiano) && !(this instanceof SoundDownload)
+                && !SoundEngineUtil.isAudioStreamStart()) {
+            SoundEngineUtil.restartStream();
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+                WindowUtil.fullScreenHandle(getWindow());
+            } else {
+                WindowUtil.exitFullScreenHandle(getWindow());
+            }
+        }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        Configuration override = new Configuration(newBase.getResources().getConfiguration());
+        override.fontScale = 1.0f;
+        Context context = newBase.createConfigurationContext(override);
+        super.attachBaseContext(context);
+    }
+}

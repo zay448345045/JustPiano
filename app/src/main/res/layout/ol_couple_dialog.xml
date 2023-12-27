@@ -226,7 +226,7 @@
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_105dp"
+        android:layout_height="@dimen/dimen_100dp"
         android:background="@drawable/ol_rectangle_mask"
         android:scrollbars="none">
 

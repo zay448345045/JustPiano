@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import ly.pp.justpiano3.activity.SoundDownload;
+import ly.pp.justpiano3.activity.local.SoundDownload;
 import ly.pp.justpiano3.adapter.SoundDownloadAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
@@ -20,7 +20,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class SoundDownloadTask {
+public final class SoundDownloadTask {
     private final WeakReference<SoundDownload> soundDownload;
     private Future<?> future;
 
@@ -28,33 +28,29 @@ public class SoundDownloadTask {
         this.soundDownload = new WeakReference<>(soundDownload);
     }
 
-    public void execute(String... strArr) {
+    public void execute() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-
         onPreExecute();
-
         future = executor.submit(() -> {
-            final String result = doInBackground(strArr);
-
+            final String result = doInBackground();
             new Handler(Looper.getMainLooper()).post(() -> onPostExecute(result));
         });
     }
 
-    private String doInBackground(String... strArr) {
+    private String doInBackground() {
         try {
-            soundDownload.get().getLocalSoundList();
             Request request = new Request.Builder()
                     .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetSoundList")
                     .post(RequestBody.create("", null))
                     .build();
             Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.code() != 200) {
-                return "err001";
+                return "";
             }
             return response.body().string();
         } catch (Exception e) {
             e.printStackTrace();
-            return "err001";
+            return "";
         }
     }
 
@@ -64,8 +60,9 @@ public class SoundDownloadTask {
             soundDownload.get().gridView.setAdapter(new SoundDownloadAdapter(soundDownload.get(), new JSONArray(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            soundDownload.get().jpProgressBar.dismiss();
         }
-        soundDownload.get().jpProgressBar.dismiss();
     }
 
     private void onPreExecute() {

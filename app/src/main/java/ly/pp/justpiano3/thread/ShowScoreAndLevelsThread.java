@@ -2,7 +2,7 @@ package ly.pp.justpiano3.thread;
 
 import java.util.List;
 
-import ly.pp.justpiano3.activity.PianoPlay;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.view.play.ShowTouchNotesLevel;
 
 public final class ShowScoreAndLevelsThread extends Thread {
