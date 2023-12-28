@@ -98,7 +98,7 @@ object FileUtil {
     private fun getUriInfoFromContent(context: Context, uri: Uri): UriInfo {
         try {
             if (!checkUriPermission(context, uri)) {
-                return UriInfo(uri, null, null, null)
+                return UriInfo(null, null, null, null)
             }
             val contentResolver = context.contentResolver
             val queryCursor = contentResolver.query(
@@ -143,7 +143,7 @@ object FileUtil {
             }
             return UriInfo(uri, displayName, fileSize, modifiedTime)
         } catch (e: Exception) {
-            return UriInfo(uri, null, null, null)
+            return UriInfo(null, null, null, null)
         }
     }
 
