@@ -357,7 +357,7 @@ class WaterfallView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent): Boolean {
         super.onTouchEvent(event)
         // 不存在音符时，屏蔽所有事件
-        if (waterfallNotes.isEmpty()) {
+        if (!this::waterfallNotes.isInitialized || waterfallNotes.isEmpty()) {
             return false
         }
         when (event.actionMasked) {
