@@ -106,6 +106,7 @@ public final class OLPlayRoomHandler extends Handler {
                     } else if (!songFilePath.isEmpty()) {
                         if (OnlineUtil.isX86()) {
                             Toast.makeText(olPlayRoom, "您的设备不支持弹奏", Toast.LENGTH_SHORT).show();
+                            return;
                         }
                         olPlayRoom.setTune(message.getData().getInt("D"));
                         songFilePath = "songs/" + songFilePath + ".pm";
