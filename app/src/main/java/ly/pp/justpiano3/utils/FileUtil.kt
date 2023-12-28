@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.utils
 
 import android.content.Context
+import android.content.UriPermission
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
@@ -95,48 +96,65 @@ object FileUtil {
     }
 
     private fun getUriInfoFromContent(context: Context, uri: Uri): UriInfo {
-        val contentResolver = context.contentResolver
-        val queryCursor = contentResolver.query(
-            uri,
-            arrayOf(
-                OpenableColumns.DISPLAY_NAME,
-                OpenableColumns.SIZE,
-                DocumentsContract.Document.COLUMN_MIME_TYPE,
-                DocumentsContract.Document.COLUMN_LAST_MODIFIED
-            ),
-            null,
-            null,
-            null
-        )
-        var displayName: String? = null
-        var fileSize: Long? = null
-        var modifiedTime: Long? = null
-        queryCursor.use { cursor ->
-            if (cursor != null && cursor.moveToFirst()) {
-                val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-                val mimeTypeIndex =
-                    cursor.getColumnIndex(DocumentsContract.Document.COLUMN_MIME_TYPE)
-                if (nameIndex != -1) {
-                    displayName = cursor.getString(nameIndex)
-                }
-                // Check if the document is a directory by MIME type
-                if (mimeTypeIndex != -1 && DocumentsContract.Document.MIME_TYPE_DIR == cursor.getString(
-                        mimeTypeIndex
-                    )
-                ) {
-                    fileSize = 0L
-                } else if (sizeIndex != -1 && !cursor.isNull(sizeIndex)) {
-                    fileSize = cursor.getLong(sizeIndex)
-                }
-                val modifiedIndex =
-                    cursor.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED)
-                if (modifiedIndex != -1) {
-                    modifiedTime = cursor.getLong(modifiedIndex)
+        try {
+            if (!checkUriPermission(context, uri)) {
+                return UriInfo(null, null, null, null)
+            }
+            val contentResolver = context.contentResolver
+            val queryCursor = contentResolver.query(
+                uri,
+                arrayOf(
+                    OpenableColumns.DISPLAY_NAME,
+                    OpenableColumns.SIZE,
+                    DocumentsContract.Document.COLUMN_MIME_TYPE,
+                    DocumentsContract.Document.COLUMN_LAST_MODIFIED
+                ),
+                null,
+                null,
+                null
+            )
+            var displayName: String? = null
+            var fileSize: Long? = null
+            var modifiedTime: Long? = null
+            queryCursor.use { cursor ->
+                if (cursor != null && cursor.moveToFirst()) {
+                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+                    val mimeTypeIndex =
+                        cursor.getColumnIndex(DocumentsContract.Document.COLUMN_MIME_TYPE)
+                    if (nameIndex != -1) {
+                        displayName = cursor.getString(nameIndex)
+                    }
+                    // Check if the document is a directory by MIME type
+                    if (mimeTypeIndex != -1 && DocumentsContract.Document.MIME_TYPE_DIR == cursor.getString(
+                            mimeTypeIndex
+                        )
+                    ) {
+                        fileSize = 0L
+                    } else if (sizeIndex != -1 && !cursor.isNull(sizeIndex)) {
+                        fileSize = cursor.getLong(sizeIndex)
+                    }
+                    val modifiedIndex =
+                        cursor.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED)
+                    if (modifiedIndex != -1) {
+                        modifiedTime = cursor.getLong(modifiedIndex)
+                    }
                 }
             }
+            return UriInfo(uri, displayName, fileSize, modifiedTime)
+        } catch (e: Exception) {
+            return UriInfo(null, null, null, null)
         }
-        return UriInfo(uri, displayName, fileSize, modifiedTime)
+    }
+
+    private fun checkUriPermission(context: Context, uri: Uri): Boolean {
+        val uriPermissions: List<UriPermission> = context.contentResolver.persistedUriPermissions
+        for (permission in uriPermissions) {
+            if (permission.uri == uri) {
+                return true
+            }
+        }
+        return false
     }
 
     fun getFolderUriInfo(context: Context, uri: Uri?): UriInfo {
