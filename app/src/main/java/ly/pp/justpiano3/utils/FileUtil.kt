@@ -1,7 +1,6 @@
 package ly.pp.justpiano3.utils
 
 import android.content.Context
-import android.content.UriPermission
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
@@ -97,9 +96,6 @@ object FileUtil {
 
     private fun getUriInfoFromContent(context: Context, uri: Uri): UriInfo {
         try {
-            if (!checkUriPermission(context, uri)) {
-                return UriInfo(null, null, null, null)
-            }
             val contentResolver = context.contentResolver
             val queryCursor = contentResolver.query(
                 uri,
@@ -145,16 +141,6 @@ object FileUtil {
         } catch (e: Exception) {
             return UriInfo(null, null, null, null)
         }
-    }
-
-    private fun checkUriPermission(context: Context, uri: Uri): Boolean {
-        val uriPermissions: List<UriPermission> = context.contentResolver.persistedUriPermissions
-        for (permission in uriPermissions) {
-            if (permission.uri == uri) {
-                return true
-            }
-        }
-        return false
     }
 
     fun getFolderUriInfo(context: Context, uri: Uri?): UriInfo {
