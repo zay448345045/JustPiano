@@ -19,6 +19,7 @@ import ly.pp.justpiano3.activity.online.SearchSongs;
 import ly.pp.justpiano3.activity.local.WaterfallActivity;
 import ly.pp.justpiano3.listener.SearchSongsPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
+import ly.pp.justpiano3.utils.OnlineUtil;
 
 public final class SearchSongsAdapter extends BaseAdapter {
     public final SearchSongs searchSongs;
@@ -84,8 +85,10 @@ public final class SearchSongsAdapter extends BaseAdapter {
         String str2 = songsTime % 60 >= 10 ? "" + songsTime % 60 : "0" + songsTime % 60;
         ((TextView) view.findViewById(R.id.ol_length)).setText("时长:" + str1 + ":" + str2);
         ((TextView) view.findViewById(R.id.ol_update)).setText("冠军时间:" + songsList.get(i).get("update"));
-        view.findViewById(R.id.ol_play_button).setOnClickListener(new SearchSongsPlayClick(
-                this, trim, songId, Integer.parseInt((String) songsList.get(i).get("topScore")), d));
+        if (!OnlineUtil.isX86()) {
+            view.findViewById(R.id.ol_play_button).setOnClickListener(new SearchSongsPlayClick(
+                    this, trim, songId, Integer.parseInt((String) songsList.get(i).get("topScore")), d));
+        }
         ImageView waterFallImageView = view.findViewById(R.id.ol_play_waterfall);
         waterFallImageView.setOnClickListener(new SearchSongsPlayClick(this, songId, new Intent().setClass(searchSongs, WaterfallActivity.class)));
         return view;

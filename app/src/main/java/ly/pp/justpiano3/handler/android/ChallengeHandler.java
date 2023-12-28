@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.activity.online.OLChallenge;
 import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.adapter.ChallengeListAdapter;
+import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class ChallengeHandler extends Handler {
@@ -70,6 +72,10 @@ public final class ChallengeHandler extends Handler {
                         jpDialogBuilder.setMessage(string);
                         jpDialogBuilder.setFirstButton(str2, (dialog, which) -> {
                             dialog.dismiss();
+                            if (OnlineUtil.isX86()) {
+                                Toast.makeText(challenge, "您的设备不支持弹奏", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             if (i == 1) {
                                 Intent intent = new Intent(challenge, PianoPlay.class);
                                 intent.putExtra("head", 4);

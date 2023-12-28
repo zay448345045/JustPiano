@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -103,6 +104,9 @@ public final class OLPlayRoomHandler extends Handler {
                         olPlayRoom.startActivity(intent);
                         olPlayRoom.finish();
                     } else if (!songFilePath.isEmpty()) {
+                        if (OnlineUtil.isX86()) {
+                            Toast.makeText(olPlayRoom, "您的设备不支持弹奏", Toast.LENGTH_SHORT).show();
+                        }
                         olPlayRoom.setTune(message.getData().getInt("D"));
                         songFilePath = "songs/" + songFilePath + ".pm";
                         String songName = olPlayRoom.querySongNameAndDiffByPath(songFilePath)[0];
