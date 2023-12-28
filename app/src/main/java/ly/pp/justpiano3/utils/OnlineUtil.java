@@ -249,8 +249,7 @@ public class OnlineUtil {
     }
 
     public static boolean isX86() {
-        String[] supportedAbis = Build.SUPPORTED_ABIS;
-        for (String abi : supportedAbis) {
+        for (String abi : Build.SUPPORTED_ABIS) {
             if ("x86".equals(abi) || "x86_64".equals(abi)) {
                 return true;
             }
