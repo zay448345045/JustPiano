@@ -148,6 +148,10 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                     "默认存储位置(SD卡/Android/data/ly.pp.justpiano3/files/Records)",
                     GlobalSetting.INSTANCE.getRecordsSavePath(), uriInfo -> true);
             // 电池优化白名单添加
+            batteryKeepAliveHandle();
+        }
+
+        private void batteryKeepAliveHandle() {
             Preference batteryPreference = findPreference("battery_keep_alive");
             if (batteryPreference instanceof SwitchPreference batteryKeepAlivePreference) {
                 PowerManager powerManager = (PowerManager) getActivity().getSystemService(POWER_SERVICE);
@@ -167,6 +171,12 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                     });
                 }
             }
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            batteryKeepAliveHandle();
         }
     }
 
