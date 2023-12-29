@@ -144,7 +144,7 @@ public final class ConnectionService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override

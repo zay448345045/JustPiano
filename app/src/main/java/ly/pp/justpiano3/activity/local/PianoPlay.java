@@ -532,9 +532,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                         bundle.putByte("hallID", hallBundle.getByte("hallID"));
                         intent.putExtras(bundle);
                         startActivity(intent);
-                        return;
                     }
-                    return;
                 }
             }
             case 3 -> {
@@ -550,7 +548,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     bundle.putByte("hallID", hallBundle.getByte("hallID"));
                     intent.putExtras(bundle);
                     startActivity(intent);
-                    return;
                 }
             }
             case 4 -> {
@@ -566,7 +563,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     bundle.putByte("hallID", hallBundle.getByte("hallID"));
                     intent.putExtras(bundle);
                     startActivity(intent);
-                    return;
                 }
             }
             default -> {
