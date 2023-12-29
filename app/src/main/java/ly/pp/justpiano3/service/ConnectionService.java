@@ -35,7 +35,6 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import ly.pp.justpiano3.BuildConfig;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
@@ -89,7 +88,7 @@ public final class ConnectionService extends Service {
                 nettyUtil.sendMessage(builder);
             }
         } else {
-            OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
+            OnlineUtil.outLineAndDialogWithAutoReconnect(getApplicationContext());
         }
     }
 
@@ -193,7 +192,7 @@ public final class ConnectionService extends Service {
                                 super.exceptionCaught(ctx, cause);
                                 cause.printStackTrace();
                                 ctx.close();
-                                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
+                                OnlineUtil.outLineAndDialogWithAutoReconnect(getApplicationContext());
                             }
 
                             @Override
@@ -219,13 +218,13 @@ public final class ConnectionService extends Service {
                 builder.setAccount(OLBaseActivity.getAccountName());
                 builder.setPassword(OLBaseActivity.getPassword());
                 builder.setVersionCode(BuildConfig.VERSION_NAME);
-                builder.setPackageName(getApplication().getPackageName());
+                builder.setPackageName(getApplicationContext().getPackageName());
                 builder.setOnlineSessionId(OnlineUtil.onlineSessionId);
                 builder.setAutoReconnect(OnlineUtil.autoReconnecting());
                 builder.setPublicKey(EncryptUtil.generatePublicKeyString(EncryptUtil.getDeviceKeyPair().getPublic()));
                 // 设备信息
                 OnlineDeviceDTO.Builder deviceInfoBuilder = OnlineDeviceDTO.newBuilder();
-                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(getApplication()));
+                deviceInfoBuilder.setAndroidId(DeviceUtil.getAndroidId(getApplicationContext()));
                 deviceInfoBuilder.setVersion(DeviceUtil.getAndroidVersion());
                 deviceInfoBuilder.setModel(DeviceUtil.getDeviceBrandAndModel());
                 builder.setDeviceInfo(deviceInfoBuilder);
@@ -235,14 +234,14 @@ public final class ConnectionService extends Service {
             @Override
             public void onFailed() {
                 // 连接失败
-                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
+                OnlineUtil.outLineAndDialogWithAutoReconnect(getApplicationContext());
             }
 
             @Override
             public void onError(Exception e) {
                 // 连接异常
                 e.printStackTrace();
-                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
+                OnlineUtil.outLineAndDialogWithAutoReconnect(getApplicationContext());
             }
         });
         nettyUtil.setOnSendMessageListener(new NettyUtil.OnSendMessageListener() {
@@ -251,7 +250,7 @@ public final class ConnectionService extends Service {
                 // 发送消息的回调
                 if (!success) {
                     Log.e(getClass().getSimpleName(), "autoReconnect! onSendMessage" + msg.toString());
-                    OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
+                    OnlineUtil.outLineAndDialogWithAutoReconnect(getApplicationContext());
                 }
             }
 
@@ -259,7 +258,7 @@ public final class ConnectionService extends Service {
             public void onException(Throwable e) {
                 // 异常
                 e.printStackTrace();
-                OnlineUtil.outLineAndDialogWithAutoReconnect((JPApplication) getApplication());
+                OnlineUtil.outLineAndDialogWithAutoReconnect(getApplicationContext());
             }
         });
         nettyUtil.connect(OnlineUtil.server, OnlineUtil.ONLINE_PORT);

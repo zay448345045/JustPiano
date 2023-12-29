@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.util.internal.StringUtil;
-import ly.pp.justpiano3.JPApplication;
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.activity.online.OLChallenge;
 import ly.pp.justpiano3.activity.online.OLFamily;
@@ -25,7 +25,6 @@ import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
 import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.online.OLPlayRoom;
 import ly.pp.justpiano3.activity.online.OLRoomActivity;
-import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.Room;
 import ly.pp.justpiano3.entity.User;
@@ -209,7 +208,7 @@ public final class ReceiveTasks {
         receiveTaskMap.put(OnlineProtocolType.LOGIN, (receivedMessage, topActivity, message) -> {
             EncryptUtil.setServerTimeInterval(receivedMessage.getLogin().getTime());
             if (Objects.equals("X", receivedMessage.getLogin().getStatus())) {
-                OnlineUtil.outLineAndDialog((JPApplication) topActivity.getApplication());
+                OnlineUtil.outLineAndDialog(topActivity.getApplicationContext());
             } else if (topActivity instanceof OLMainMode olMainMode) {
                 switch (receivedMessage.getLogin().getStatus()) {
                     case "N" -> message.what = 4;

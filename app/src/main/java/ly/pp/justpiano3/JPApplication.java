@@ -157,7 +157,7 @@ public final class JPApplication extends Application {
                     TextUtils.isEmpty(OLBaseActivity.kitiName) ? "未知用户" : OLBaseActivity.kitiName,
                     DeviceUtil.getAppAndDeviceInfo() + '\n' + byteArrayOutputStream).execute();
             // 关闭网络连接服务，退出进程
-            OnlineUtil.outlineConnectionService(JPApplication.this);
+            OnlineUtil.outlineConnectionService(getApplicationContext());
             // 关闭fluidsynth
             SoundEngineUtil.closeFluidSynth();
             try {

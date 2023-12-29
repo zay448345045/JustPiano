@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
@@ -89,7 +88,7 @@ public final class OLMainMode extends OLBaseActivity implements OnClickListener 
         findViewById(R.id.ol_web_b).setOnClickListener(this);
         findViewById(R.id.ol_chatblack_b).setOnClickListener(this);
         findViewById(R.id.ol_finduser_b).setOnClickListener(this);
-        OnlineUtil.outlineConnectionService((JPApplication) getApplication());
+        OnlineUtil.outlineConnectionService(getApplicationContext());
         if (OLBaseActivity.loginResultTitle != null && OLBaseActivity.loginResultMessage != null
                 && !OLBaseActivity.loginResultTitle.isEmpty() && !OLBaseActivity.loginResultMessage.isEmpty()) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
