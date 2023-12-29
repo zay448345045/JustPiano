@@ -160,22 +160,21 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        if (weakReference.get() instanceof OLMainMode) {
+        if (weakReference.get() instanceof OLMainMode olMainMode) {
             if (Objects.equals("error", result)) {
-                Toast.makeText(weakReference.get(), "曲库同步失败，请尝试卸载重装app或联系开发者", Toast.LENGTH_SHORT).show();
-                ((OLMainMode) weakReference.get()).jpProgressBar.dismiss();
+                Toast.makeText(olMainMode, "曲库同步失败，请尝试卸载重装app或联系开发者", Toast.LENGTH_SHORT).show();
+                olMainMode.jpProgressBar.dismiss();
             } else {
-                Toast.makeText(weakReference.get(), "曲库同步成功，已处理曲谱" + count + "首", Toast.LENGTH_SHORT).show();
-                ((OLMainMode) weakReference.get()).jpProgressBar.show();
+                Toast.makeText(olMainMode, "曲库同步成功，已处理曲谱" + count + "首", Toast.LENGTH_SHORT).show();
+                olMainMode.jpProgressBar.show();
                 OnlineUtil.cancelAutoReconnect();
-                OnlineUtil.onlineConnectionService((JPApplication) weakReference.get().getApplication());
+                OnlineUtil.onlineConnectionService((JPApplication) olMainMode.getApplication());
             }
-        } else if (weakReference.get() instanceof MelodySelect) {
+        } else if (weakReference.get() instanceof MelodySelect melodySelect) {
             if (Objects.equals("error", result)) {
-                Toast.makeText(weakReference.get(), "曲库同步失败，请尝试卸载重装app或联系开发者", Toast.LENGTH_SHORT).show();
-                ((MelodySelect) weakReference.get()).jpProgressBar.dismiss();
+                Toast.makeText(melodySelect, "曲库同步失败，请尝试卸载重装app或联系开发者", Toast.LENGTH_SHORT).show();
+                melodySelect.jpProgressBar.dismiss();
             } else {
-                MelodySelect melodySelect = (MelodySelect) weakReference.get();
                 melodySelect.jpProgressBar.dismiss();
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(melodySelect);
                 jpDialogBuilder.setTitle("曲库同步");

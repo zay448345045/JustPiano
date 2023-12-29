@@ -287,15 +287,15 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 Toast.makeText(this, "获取文件访问权限出错", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (value.first instanceof FilePickerPreference) {
-                ((FilePickerPreference) value.first).persist(uriInfo.getDisplayName(), uriInfo.getUri().toString());
-            } else if (value.first instanceof SkinListPreference) {
-                ((SkinListPreference) value.first).skinKey = uriInfo.getUri().toString();
-                ((SkinListPreference) value.first).skinFile = uriInfo.getUri();
-                new SkinListPreferenceTask(((SkinListPreference) value.first)).execute(uriInfo.getUri().toString());
-            } else if (value.first instanceof SoundListPreference) {
-                ((SoundListPreference) value.first).soundKey = uriInfo.getUri().toString();
-                new SoundListPreferenceTask(((SoundListPreference) value.first)).execute(uriInfo.getUri().toString());
+            if (value.first instanceof FilePickerPreference filePickerPreference) {
+                filePickerPreference.persist(uriInfo.getDisplayName(), uriInfo.getUri().toString());
+            } else if (value.first instanceof SkinListPreference skinListPreference) {
+                skinListPreference.skinKey = uriInfo.getUri().toString();
+                skinListPreference.skinFile = uriInfo.getUri();
+                new SkinListPreferenceTask(skinListPreference).execute(uriInfo.getUri().toString());
+            } else if (value.first instanceof SoundListPreference soundListPreference) {
+                soundListPreference.soundKey = uriInfo.getUri().toString();
+                new SoundListPreferenceTask(soundListPreference).execute(uriInfo.getUri().toString());
             }
             if (Objects.equals(value.first.getKey(), "background_pic")) {
                 GlobalSetting.INSTANCE.setBackgroundPic(uriInfo.getUri().toString());
@@ -303,16 +303,16 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             }
         } else if (requestCode == SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE) {
             Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("skin_select");
-            if (value != null && value.first instanceof SkinListPreference) {
-                ((SkinListPreference) value.first).skinKey = ((SkinListPreference) value.first).getPersistedString();
-                ((SkinListPreference) value.first).closeDialog();
+            if (value != null && value.first instanceof SkinListPreference skinListPreference) {
+                skinListPreference.skinKey = skinListPreference.getPersistedString();
+                skinListPreference.closeDialog();
             }
             ImageLoadUtil.setBackground(this);
         } else if (requestCode == SoundDownload.SOUND_DOWNLOAD_REQUEST_CODE) {
             Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("sound_select");
-            if (value != null && value.first instanceof SoundListPreference) {
-                ((SoundListPreference) value.first).soundKey = ((SoundListPreference) value.first).getPersistedString();
-                ((SoundListPreference) value.first).closeDialog();
+            if (value != null && value.first instanceof SoundListPreference soundListPreference) {
+                soundListPreference.soundKey = soundListPreference.getPersistedString();
+                soundListPreference.closeDialog();
             }
             ImageLoadUtil.setBackground(this);
         }

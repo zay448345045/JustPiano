@@ -103,18 +103,18 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
                         Bundle bundle = new Bundle();
-                        if (olRoomActivity instanceof OLPlayKeyboardRoom) {
-                            Message obtainMessage = ((OLPlayKeyboardRoom) olRoomActivity).olPlayKeyboardRoomHandler.obtainMessage();
+                        if (olRoomActivity instanceof OLPlayKeyboardRoom olPlayKeyboardRoom) {
+                            Message obtainMessage = olPlayKeyboardRoom.olPlayKeyboardRoomHandler.obtainMessage();
                             obtainMessage.what = 12;
                             obtainMessage.setData(bundle);
                             bundle.putString("U", user.getPlayerName());
-                            ((OLPlayKeyboardRoom) olRoomActivity).olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
-                        } else if (olRoomActivity instanceof OLPlayRoom) {
-                            Message obtainMessage = ((OLPlayRoom) olRoomActivity).olPlayRoomHandler.obtainMessage();
+                            olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
+                        } else if (olRoomActivity instanceof OLPlayRoom olPlayRoom) {
+                            Message obtainMessage = olPlayRoom.olPlayRoomHandler.obtainMessage();
                             obtainMessage.what = 12;
                             obtainMessage.setData(bundle);
                             bundle.putString("U", user.getPlayerName());
-                            ((OLPlayRoom) olRoomActivity).olPlayRoomHandler.handleMessage(obtainMessage);
+                            olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage);
                         }
                     }
                 });
@@ -160,9 +160,9 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                                 OnlineKickedQuitRoomDTO.Builder builder = OnlineKickedQuitRoomDTO.newBuilder();
                                 builder.setRoomPosition(user.getPosition());
                                 OnlineUtil.getConnectionService().writeData(OnlineProtocolType.KICKED_QUIT_ROOM, builder.build());
-                                if (olRoomActivity instanceof OLPlayKeyboardRoom && user.getPosition() > 0
+                                if (olRoomActivity instanceof OLPlayKeyboardRoom olPlayKeyboardRoom && user.getPosition() > 0
                                         && user.getPosition() - 1 < Room.CAPACITY) {
-                                    OLKeyboardState olKeyboardState = ((OLPlayKeyboardRoom) olRoomActivity).olKeyboardStates.get(user.getPosition() - 1);
+                                    OLKeyboardState olKeyboardState = olPlayKeyboardRoom.olKeyboardStates.get(user.getPosition() - 1);
                                     if (olKeyboardState != null) {
                                         olKeyboardState.setMidiKeyboardOn(false);
                                     }

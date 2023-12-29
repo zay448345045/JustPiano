@@ -242,15 +242,14 @@ public class OnlineUtil {
     }
 
     public static void handleOnTopBaseActivity(OLBaseActivityRunner consumer, long delayMillis) {
-        Activity topActivity = JPStack.top();
-        if (topActivity instanceof OLBaseActivity olBaseActivity) {
+        if (JPStack.top() instanceof OLBaseActivity olBaseActivity) {
             olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.run(olBaseActivity), delayMillis);
         }
     }
 
     public static boolean isX86() {
         for (String abi : Build.SUPPORTED_ABIS) {
-            if ("x86".equals(abi) || "x86_64".equals(abi)) {
+            if ("x86".equalsIgnoreCase(abi) || "x86_64".equalsIgnoreCase(abi)) {
                 return true;
             }
         }

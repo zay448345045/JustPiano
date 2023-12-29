@@ -93,8 +93,8 @@ public final class SkinListPreference extends DialogPreference {
         if (!TextUtils.isEmpty(skinKey)) {
             persistString(skinKey);
         }
-        if (context instanceof PreferenceActivity) {
-            ImageLoadUtil.setBackground(((PreferenceActivity) context));
+        if (context instanceof PreferenceActivity preferenceActivity) {
+            ImageLoadUtil.setBackground(preferenceActivity);
         }
         GlobalSetting.INSTANCE.loadSettings(context, false);
         FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(context, Uri.parse(skinKey));

@@ -75,10 +75,10 @@ public final class ChattingAdapter extends BaseAdapter {
         // 投递通知到房间内处理
         if (i2 != 3 && userText != null) {
             userText.setOnClickListener(v -> {
-                if (activity instanceof OLRoomActivity && string != null) {
-                    ((OLRoomActivity) activity).setPrivateChatUserName(string);
-                } else if (activity instanceof OLPlayHall && string != null) {
-                    ((OLPlayHall) activity).setPrivateChatUserName(string);
+                if (activity instanceof OLRoomActivity olRoomActivity && string != null) {
+                    olRoomActivity.setPrivateChatUserName(string);
+                } else if (activity instanceof OLPlayHall olPlayHall && string != null) {
+                    olPlayHall.setPrivateChatUserName(string);
                 }
             });
         }

@@ -186,26 +186,26 @@ public final class MainGameAdapter extends BaseAdapter {
                         if (i3 == 1) {
                             Bundle bundle = new Bundle();
                             Message obtainMessage;
-                            if (activity instanceof OLPlayHall) {
-                                obtainMessage = ((OLPlayHall) activity).olPlayHallHandler.obtainMessage();
+                            if (activity instanceof OLPlayHall olPlayHall) {
+                                obtainMessage = olPlayHall.olPlayHallHandler.obtainMessage();
                                 obtainMessage.what = 6;
                                 bundle.putString("U", userName);
                                 obtainMessage.setData(bundle);
-                                ((OLPlayHall) activity).olPlayHallHandler.handleMessage(obtainMessage);
+                                olPlayHall.olPlayHallHandler.handleMessage(obtainMessage);
                                 return;
-                            } else if (activity instanceof OLPlayRoom) {
-                                obtainMessage = ((OLPlayRoom) activity).olPlayRoomHandler.obtainMessage();
+                            } else if (activity instanceof OLPlayRoom olPlayRoom) {
+                                obtainMessage = olPlayRoom.olPlayRoomHandler.obtainMessage();
                                 obtainMessage.what = 12;
                                 obtainMessage.setData(bundle);
                                 bundle.putString("U", userName);
-                                ((OLPlayRoom) activity).olPlayRoomHandler.handleMessage(obtainMessage);
+                                olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage);
                                 return;
-                            } else if (activity instanceof OLPlayKeyboardRoom) {
-                                obtainMessage = ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.obtainMessage();
+                            } else if (activity instanceof OLPlayKeyboardRoom olPlayKeyboardRoom) {
+                                obtainMessage = olPlayKeyboardRoom.olPlayKeyboardRoomHandler.obtainMessage();
                                 obtainMessage.what = 12;
                                 obtainMessage.setData(bundle);
                                 bundle.putString("U", userName);
-                                ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
+                                olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
                                 return;
                             } else {
                                 return;
@@ -216,41 +216,41 @@ public final class MainGameAdapter extends BaseAdapter {
                 }
                 view.findViewById(R.id.ol_friend_send).setOnClickListener(v -> {
                     relativeLayout2.setVisibility(View.GONE);
-                    if (activity instanceof OLPlayHall) {
-                        ((OLPlayHall) activity).sendMail(userName);
-                    } else if (activity instanceof OLPlayHallRoom) {
-                        ((OLPlayHallRoom) activity).sendMail(userName, 0);
-                    } else if (activity instanceof OLRoomActivity) {
-                        ((OLRoomActivity) activity).sendMail(userName);
+                    if (activity instanceof OLPlayHall olPlayHall) {
+                        olPlayHall.sendMail(userName);
+                    } else if (activity instanceof OLPlayHallRoom olPlayHallRoom) {
+                        olPlayHallRoom.sendMail(userName, 0);
+                    } else if (activity instanceof OLRoomActivity olRoomActivity) {
+                        olRoomActivity.sendMail(userName);
                     }
                 });
                 view.findViewById(R.id.ol_friend_dele).setOnClickListener(v -> {
                     relativeLayout2.setVisibility(View.GONE);
                     Message obtainMessage;
-                    if (activity instanceof OLPlayHallRoom) {
-                        obtainMessage = ((OLPlayHallRoom) activity).olPlayHallRoomHandler.obtainMessage();
+                    if (activity instanceof OLPlayHallRoom olPlayHallRoom) {
+                        obtainMessage = olPlayHallRoom.olPlayHallRoomHandler.obtainMessage();
                         obtainMessage.what = 7;
                         obtainMessage.arg1 = i;
                         obtainMessage.getData().putString("F", userName);
-                        ((OLPlayHallRoom) activity).olPlayHallRoomHandler.handleMessage(obtainMessage);
-                    } else if (activity instanceof OLPlayHall) {
-                        obtainMessage = ((OLPlayHall) activity).olPlayHallHandler.obtainMessage();
+                        olPlayHallRoom.olPlayHallRoomHandler.handleMessage(obtainMessage);
+                    } else if (activity instanceof OLPlayHall olPlayHall) {
+                        obtainMessage = olPlayHall.olPlayHallHandler.obtainMessage();
                         obtainMessage.what = 10;
                         obtainMessage.arg1 = i;
                         obtainMessage.getData().putString("F", userName);
-                        ((OLPlayHall) activity).olPlayHallHandler.handleMessage(obtainMessage);
-                    } else if (activity instanceof OLPlayRoom) {
-                        obtainMessage = ((OLPlayRoom) activity).olPlayRoomHandler.obtainMessage();
+                        olPlayHall.olPlayHallHandler.handleMessage(obtainMessage);
+                    } else if (activity instanceof OLPlayRoom olPlayRoom) {
+                        obtainMessage = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage.what = 16;
                         obtainMessage.arg1 = i;
                         obtainMessage.getData().putString("F", userName);
-                        ((OLPlayRoom) activity).olPlayRoomHandler.handleMessage(obtainMessage);
-                    } else if (activity instanceof OLPlayKeyboardRoom) {
-                        obtainMessage = ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.obtainMessage();
+                        olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage);
+                    } else if (activity instanceof OLPlayKeyboardRoom olPlayKeyboardRoom) {
+                        obtainMessage = olPlayKeyboardRoom.olPlayKeyboardRoomHandler.obtainMessage();
                         obtainMessage.what = 16;
                         obtainMessage.arg1 = i;
                         obtainMessage.getData().putString("F", userName);
-                        ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
+                        olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
                     }
                 });
             }
@@ -345,24 +345,24 @@ public final class MainGameAdapter extends BaseAdapter {
                     relativeLayout2.setVisibility(View.GONE);
                     Bundle bundle = new Bundle();
                     Message obtainMessage;
-                    if (activity instanceof OLPlayHall) {
-                        obtainMessage = ((OLPlayHall) activity).olPlayHallHandler.obtainMessage();
+                    if (activity instanceof OLPlayHall olPlayHall) {
+                        obtainMessage = olPlayHall.olPlayHallHandler.obtainMessage();
                         obtainMessage.what = 6;
                         bundle.putString("U", userName);
                         obtainMessage.setData(bundle);
-                        ((OLPlayHall) activity).olPlayHallHandler.handleMessage(obtainMessage);
-                    } else if (activity instanceof OLPlayRoom) {
-                        obtainMessage = ((OLPlayRoom) activity).olPlayRoomHandler.obtainMessage();
+                        olPlayHall.olPlayHallHandler.handleMessage(obtainMessage);
+                    } else if (activity instanceof OLPlayRoom olPlayRoom) {
+                        obtainMessage = olPlayRoom.olPlayRoomHandler.obtainMessage();
                         obtainMessage.what = 12;
                         obtainMessage.setData(bundle);
                         bundle.putString("U", userName);
-                        ((OLPlayRoom) activity).olPlayRoomHandler.handleMessage(obtainMessage);
-                    } else if (activity instanceof OLPlayKeyboardRoom) {
-                        obtainMessage = ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.obtainMessage();
+                        olPlayRoom.olPlayRoomHandler.handleMessage(obtainMessage);
+                    } else if (activity instanceof OLPlayKeyboardRoom olPlayKeyboardRoom) {
+                        obtainMessage = olPlayKeyboardRoom.olPlayKeyboardRoomHandler.obtainMessage();
                         obtainMessage.what = 12;
                         obtainMessage.setData(bundle);
                         bundle.putString("U", userName);
-                        ((OLPlayKeyboardRoom) activity).olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
+                        olPlayKeyboardRoom.olPlayKeyboardRoomHandler.handleMessage(obtainMessage);
                     }
                 });
                 fromToTextView = view.findViewById(R.id.ol_friend_game);
@@ -391,12 +391,12 @@ public final class MainGameAdapter extends BaseAdapter {
                 }
                 view.findViewById(R.id.ol_friend_send).setOnClickListener(v -> {
                     relativeLayout2.setVisibility(View.GONE);
-                    if (activity instanceof OLPlayHall) {
-                        ((OLPlayHall) activity).sendMail(userName);
-                    } else if (activity instanceof OLPlayHallRoom) {
-                        ((OLPlayHallRoom) activity).sendMail(userName, 0);
-                    } else if (activity instanceof OLRoomActivity) {
-                        ((OLRoomActivity) activity).sendMail(userName);
+                    if (activity instanceof OLPlayHall olPlayHall) {
+                        olPlayHall.sendMail(userName);
+                    } else if (activity instanceof OLPlayHallRoom olPlayHallRoom) {
+                        olPlayHallRoom.sendMail(userName, 0);
+                    } else if (activity instanceof OLRoomActivity olRoomActivity) {
+                        olRoomActivity.sendMail(userName);
                     }
                 });
                 sendButton = view.findViewById(R.id.ol_friend_dele);

@@ -55,12 +55,12 @@ public final class FeedbackTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String responseStr) {
-        if (weakReference.get() instanceof Activity) {
+        if (weakReference.get() instanceof Activity activity) {
             if (Objects.equals("invalid", responseStr)) {
-                ((Activity) weakReference.get()).runOnUiThread(() -> Toast.makeText(weakReference.get(),
+                activity.runOnUiThread(() -> Toast.makeText(activity,
                         "反馈内容过长，无法提交", Toast.LENGTH_SHORT).show());
             } else {
-                ((Activity) weakReference.get()).runOnUiThread(() -> Toast.makeText(weakReference.get(),
+                activity.runOnUiThread(() -> Toast.makeText(activity,
                         TextUtils.isEmpty(responseStr) ? "反馈提交出错" : "反馈提交成功", Toast.LENGTH_SHORT).show());
             }
         }

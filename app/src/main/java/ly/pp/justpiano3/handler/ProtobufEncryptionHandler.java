@@ -75,8 +75,7 @@ public class ProtobufEncryptionHandler extends ChannelDuplexHandler {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        if (msg instanceof ByteBuf) {
-            ByteBuf byteBuf = (ByteBuf) msg;
+        if (msg instanceof ByteBuf byteBuf) {
             // 使用CompositeByteBuf进行组装，减少内存拷贝，提升性能
             CompositeByteBuf compositeByteBuf = Unpooled.compositeBuffer(2);
             // 判断消息是否需要加密
