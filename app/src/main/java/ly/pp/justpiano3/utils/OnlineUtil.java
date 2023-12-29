@@ -10,6 +10,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
+import androidx.core.util.Consumer;
+
 import java.util.UUID;
 
 import io.netty.channel.Channel;
@@ -234,16 +236,9 @@ public class OnlineUtil {
         }
     }
 
-    /**
-     * 安卓低版本无法使用Consumer，暂时使用私有接口，配合下面方法入参使用
-     */
-    public interface OLBaseActivityRunner {
-        void run(OLBaseActivity olBaseActivity);
-    }
-
-    public static void handleOnTopBaseActivity(OLBaseActivityRunner consumer, long delayMillis) {
+    public static void handleOnTopBaseActivity(Consumer<OLBaseActivity> consumer, long delayMillis) {
         if (JPStack.top() instanceof OLBaseActivity olBaseActivity) {
-            olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.run(olBaseActivity), delayMillis);
+            olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.accept(olBaseActivity), delayMillis);
         }
     }
 
