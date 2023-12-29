@@ -54,14 +54,10 @@ import protobuf.dto.OnlineLoginDTO;
 import protobuf.vo.OnlineBaseVO;
 
 public final class ConnectionService extends Service {
-    /**
-     * 通知通道ID
-     */
     public static final String CHANNEL_ID = "1";
-    public static final String CHANNEL_NAME = "service keep alive";
+    public static final String CHANNEL_NAME = "联网模式";
     public static final String NOTIFY_CONTENT_TITLE = "JustPiano keep alive";
-    public static final String NOTIFY_CONTENT_TEXT = "在线模式已连接...";
-    public Intent thisIntent;
+    public static final String NOTIFY_CONTENT_TEXT = "联网模式已连接...";
     private final JPBinder jpBinder = new JPBinder(this);
     private NettyUtil nettyUtil;
 
@@ -100,30 +96,25 @@ public final class ConnectionService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        thisIntent = new Intent(this, ConnectionService.class);
         foregroundServiceHandle();
         initNetty();
     }
 
     private void foregroundServiceHandle() {
         try {
-            // 创建通知通道，并绑定
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel serviceChannel = new NotificationChannel(
-                        CHANNEL_ID,
-                        CHANNEL_NAME,
-                        NotificationManager.IMPORTANCE_DEFAULT
+                        CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
                 );
                 NotificationManager manager = getSystemService(NotificationManager.class);
                 if (manager != null) {
                     manager.createNotificationChannel(serviceChannel);
                 }
             }
-            // 启动前台服务
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(thisIntent);
+                startForegroundService(new Intent(this, ConnectionService.class));
             } else {
-                startService(thisIntent);
+                startService(new Intent(this, ConnectionService.class));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,7 +124,12 @@ public final class ConnectionService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, thisIntent, PendingIntent.FLAG_IMMUTABLE);
+            Intent bringToFrontIntent = new Intent(Intent.ACTION_MAIN);
+            bringToFrontIntent.setPackage(getPackageName());
+            bringToFrontIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            bringToFrontIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, bringToFrontIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle(NOTIFY_CONTENT_TITLE)
                     .setContentText(NOTIFY_CONTENT_TEXT)
@@ -142,7 +138,7 @@ public final class ConnectionService extends Service {
                     .build();
             int type = 0;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                type = ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING;
+                type = ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
             }
             ServiceCompat.startForeground(this, 1, notification, type);
         } catch (Exception e) {
