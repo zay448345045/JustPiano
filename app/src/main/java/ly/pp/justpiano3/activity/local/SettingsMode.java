@@ -7,9 +7,12 @@ import android.media.midi.MidiDeviceInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.SwitchPreference;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -144,6 +147,26 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             registerFilePickerPreference(this, "records_save_path", true,
                     "默认存储位置(SD卡/Android/data/ly.pp.justpiano3/files/Records)",
                     GlobalSetting.INSTANCE.getRecordsSavePath(), uriInfo -> true);
+            // 电池优化白名单添加
+            Preference batteryPreference = findPreference("battery_keep_alive");
+            if (batteryPreference instanceof SwitchPreference batteryKeepAlivePreference) {
+                PowerManager powerManager = (PowerManager) getActivity().getSystemService(POWER_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && powerManager != null) {
+                    batteryKeepAlivePreference.setEnabled(true);
+                    batteryKeepAlivePreference.setChecked(powerManager.isIgnoringBatteryOptimizations(getActivity().getPackageName()));
+                    batteryKeepAlivePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                        Intent intent;
+                        if ((Boolean) newValue) {
+                            intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                            intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+                        } else {
+                            intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                        }
+                        getActivity().startActivity(intent);
+                        return true;
+                    });
+                }
+            }
         }
     }
 

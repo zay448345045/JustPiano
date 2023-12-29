@@ -88,8 +88,12 @@
                 android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
-        <Preference
+        <SwitchPreference
+            android:defaultValue="false"
             android:title="后台网络连接保持"
+            android:enabled="false"
+            android:summaryOff="&lt;关闭&gt;未开启后台网络连接保持，开启后会增加电量消耗！点击授权开启"
+            android:summaryOn="&lt;打开&gt;已开启后台网络连接保持，点击手动操作移除"
             android:key="battery_keep_alive" />
         <SwitchPreference
             android:defaultValue="true"
