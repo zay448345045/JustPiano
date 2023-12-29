@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity.local;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -147,10 +148,43 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             registerFilePickerPreference(this, "records_save_path", true,
                     "默认存储位置(SD卡/Android/data/ly.pp.justpiano3/files/Records)",
                     GlobalSetting.INSTANCE.getRecordsSavePath(), uriInfo -> true);
-            // 电池优化白名单添加
+            // 保持后台网络连接点击事件处理
+            Preference appInfoPreference = findPreference("background_keep_alive");
+            if (appInfoPreference != null) {
+                appInfoPreference.setOnPreferenceClickListener(preference -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(Uri.fromParts("package", getActivity().getPackageName(), null));
+                    getActivity().startActivity(intent);
+                    return true;
+                });
+            }
+            // 电池优化白名单检查
             batteryKeepAliveHandle();
+            // 保持唤醒状态处理
+            wakeLockHandle();
         }
 
+        @SuppressLint("WakelockTimeout")
+        private void wakeLockHandle() {
+            Preference wakeLockPreference = findPreference("wake_lock");
+            if (wakeLockPreference instanceof SwitchPreference wakeLockSwitchPreference) {
+                PowerManager powerManager = (PowerManager) getActivity().getSystemService(POWER_SERVICE);
+                if (powerManager != null) {
+                    PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "JustPiano:JPWakelockTag");
+                    wakeLockSwitchPreference.setChecked(wakeLock.isHeld());
+                    wakeLockSwitchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                        if ((Boolean) newValue) {
+                            wakeLock.acquire();
+                        } else if (wakeLock.isHeld()) {
+                            wakeLock.release();
+                        }
+                        return true;
+                    });
+                }
+            }
+        }
+
+        @SuppressLint("BatteryLife")
         private void batteryKeepAliveHandle() {
             Preference batteryPreference = findPreference("battery_keep_alive");
             if (batteryPreference instanceof SwitchPreference batteryKeepAlivePreference) {
@@ -159,12 +193,12 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                     batteryKeepAlivePreference.setEnabled(true);
                     batteryKeepAlivePreference.setChecked(powerManager.isIgnoringBatteryOptimizations(getActivity().getPackageName()));
                     batteryKeepAlivePreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                        Intent intent;
+                        Intent intent = new Intent();
                         if ((Boolean) newValue) {
-                            intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                             intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
                         } else {
-                            intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                            intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
                         }
                         getActivity().startActivity(intent);
                         return true;
