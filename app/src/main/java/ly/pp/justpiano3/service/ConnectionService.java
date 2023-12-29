@@ -123,11 +123,7 @@ public final class ConnectionService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
-            Intent bringToFrontIntent = new Intent(Intent.ACTION_MAIN);
-            bringToFrontIntent.setPackage(getPackageName());
-            bringToFrontIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            bringToFrontIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, bringToFrontIntent,
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle(NOTIFY_CONTENT_TITLE)
