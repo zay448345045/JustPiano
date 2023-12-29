@@ -35,6 +35,7 @@ import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.MidiDeviceUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.WakeLockUtil;
 import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.FilePickerPreference;
@@ -84,6 +85,11 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings);
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
             Preference versionPreference = findPreference("app_version");
             if (versionPreference != null) {
                 versionPreference.setSummary(BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-' + BuildConfig.BUILD_TYPE);
@@ -160,27 +166,17 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             }
             // 电池优化白名单检查
             batteryKeepAliveHandle();
-            // 保持唤醒状态处理
-            wakeLockHandle();
-        }
-
-        @SuppressLint("WakelockTimeout")
-        private void wakeLockHandle() {
+            // 唤醒锁处理
             Preference wakeLockPreference = findPreference("wake_lock");
             if (wakeLockPreference instanceof SwitchPreference wakeLockSwitchPreference) {
-                PowerManager powerManager = (PowerManager) getActivity().getSystemService(POWER_SERVICE);
-                if (powerManager != null) {
-                    PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "JustPiano:JPWakelockTag");
-                    wakeLockSwitchPreference.setChecked(wakeLock.isHeld());
-                    wakeLockSwitchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                        if ((Boolean) newValue) {
-                            wakeLock.acquire();
-                        } else if (wakeLock.isHeld()) {
-                            wakeLock.release();
-                        }
-                        return true;
-                    });
-                }
+                wakeLockSwitchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    if (!(Boolean) newValue) {
+                        WakeLockUtil.acquireWakeLock(getActivity(), "JustPiano:JPWakeLock");
+                    } else {
+                        WakeLockUtil.releaseWakeLock();
+                    }
+                    return true;
+                });
             }
         }
 
@@ -235,6 +231,11 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_waterfall);
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
             registerFilePickerPreference(this, "waterfall_background_pic", false,
                     "默认背景图", GlobalSetting.INSTANCE.getWaterfallBackgroundPic(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".jpg")
@@ -252,6 +253,11 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_sound);
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
             Preference soundDelayPreference = findPreference("sound_delay");
             if (soundDelayPreference != null) {
                 soundDelayPreference.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -289,6 +295,11 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_online_chat);
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
             registerFilePickerPreference(this, "chats_sound_file", false,
                     "默认音效", GlobalSetting.INSTANCE.getChatsSoundFile(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".wav") && !uriInfo.getDisplayName().endsWith(".mp3"))) {

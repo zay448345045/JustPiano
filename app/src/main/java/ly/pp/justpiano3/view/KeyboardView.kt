@@ -583,41 +583,46 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun fireKeyDown(pitch: Byte, volume: Byte, color: Int?) {
-        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
-            return
-        }
-        val pitchInScreen = getPitchInScreen(pitch)
-        if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
-            return
-        }
-        if (notesOnArray[pitchInScreen]) {
-            return
-        }
-        notesOnArray[pitchInScreen] = true
-        if (notesOnPaintArray[pitchInScreen] == null) {
-            notesOnPaintArray[pitchInScreen] = Paint(Paint.ANTI_ALIAS_FLAG)
-        }
-        val blackKey = isBlackKey(pitch)
-        notesOnPaintArray[pitchInScreen]!!.alpha = volume.coerceAtMost(Byte.MAX_VALUE).toInt() shl 1
-        if (color != null) {
-            // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
-            // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实
-            val handledColor = if (blackKey) Color.argb(
-                128, Color.red(color), Color.green(color), Color.blue(color)
-            ) else Color.argb(255, Color.red(color), Color.green(color), Color.blue(color))
-            var porterDuffColorFilter = colorFilterMap[color.toString() + blackKey]
-            if (porterDuffColorFilter == null) {
-                porterDuffColorFilter = PorterDuffColorFilter(
-                    handledColor,
-                    if (blackKey) PorterDuff.Mode.ADD else PorterDuff.Mode.MULTIPLY
-                )
-                colorFilterMap[color.toString() + blackKey] = porterDuffColorFilter
+        try {
+            if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+                return
             }
-            notesOnPaintArray[pitchInScreen]!!.colorFilter = porterDuffColorFilter
-        } else {
-            notesOnPaintArray[pitchInScreen]!!.colorFilter = null
+            val pitchInScreen = getPitchInScreen(pitch)
+            if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
+                return
+            }
+            if (notesOnArray[pitchInScreen]) {
+                return
+            }
+            notesOnArray[pitchInScreen] = true
+            if (notesOnPaintArray[pitchInScreen] == null) {
+                notesOnPaintArray[pitchInScreen] = Paint(Paint.ANTI_ALIAS_FLAG)
+            }
+            val blackKey = isBlackKey(pitch)
+            notesOnPaintArray[pitchInScreen]!!.alpha =
+                volume.coerceAtMost(Byte.MAX_VALUE).toInt() shl 1
+            if (color != null) {
+                // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
+                // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实
+                val handledColor = if (blackKey) Color.argb(
+                    128, Color.red(color), Color.green(color), Color.blue(color)
+                ) else Color.argb(255, Color.red(color), Color.green(color), Color.blue(color))
+                var porterDuffColorFilter = colorFilterMap[color.toString() + blackKey]
+                if (porterDuffColorFilter == null) {
+                    porterDuffColorFilter = PorterDuffColorFilter(
+                        handledColor,
+                        if (blackKey) PorterDuff.Mode.ADD else PorterDuff.Mode.MULTIPLY
+                    )
+                    colorFilterMap[color.toString() + blackKey] = porterDuffColorFilter
+                }
+                notesOnPaintArray[pitchInScreen]!!.colorFilter = porterDuffColorFilter
+            } else {
+                notesOnPaintArray[pitchInScreen]!!.colorFilter = null
+            }
+            postInvalidate()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        postInvalidate()
     }
 
     private fun fireKeyUpAndHandleListener(pitch: Byte) {
@@ -628,18 +633,22 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun fireKeyUp(pitch: Byte) {
-        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
-            return
+        try {
+            if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+                return
+            }
+            val pitchInScreen = getPitchInScreen(pitch)
+            if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
+                return
+            }
+            if (!notesOnArray[pitchInScreen]) {
+                return
+            }
+            notesOnArray[pitchInScreen] = false
+            postInvalidate()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        val pitchInScreen = getPitchInScreen(pitch)
-        if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
-            return
-        }
-        if (!notesOnArray[pitchInScreen]) {
-            return
-        }
-        notesOnArray[pitchInScreen] = false
-        postInvalidate()
     }
 
     /**

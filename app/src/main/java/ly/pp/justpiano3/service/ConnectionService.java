@@ -38,6 +38,7 @@ import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.handler.ProtobufEncryptionHandler;
 import ly.pp.justpiano3.task.ReceiveTask;
 import ly.pp.justpiano3.utils.DeviceUtil;
@@ -46,6 +47,7 @@ import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.NettyUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.ReceiveTasks;
+import ly.pp.justpiano3.utils.WakeLockUtil;
 import protobuf.dto.OnlineBaseDTO;
 import protobuf.dto.OnlineDeviceDTO;
 import protobuf.dto.OnlineHeartBeatDTO;
@@ -97,6 +99,9 @@ public final class ConnectionService extends Service {
         super.onCreate();
         foregroundServiceHandle();
         initNetty();
+        if (GlobalSetting.INSTANCE.getWakeLock()) {
+            WakeLockUtil.acquireWakeLock(this, "JustPiano:JPWakeLock");
+        }
     }
 
     private void foregroundServiceHandle() {
@@ -145,6 +150,9 @@ public final class ConnectionService extends Service {
     @Override
     public void onDestroy() {
         outLine();
+        if (GlobalSetting.INSTANCE.getWakeLock()) {
+            WakeLockUtil.releaseWakeLock();
+        }
         super.onDestroy();
     }
 

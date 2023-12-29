@@ -263,6 +263,12 @@ object GlobalSetting {
         private set
 
     /**
+     * 唤醒锁
+     */
+    var wakeLock: Boolean = false
+        private set
+
+    /**
      * 从sharedPreferences获取设置
      */
     fun loadSettings(context: Context, online: Boolean) {
@@ -320,18 +326,6 @@ object GlobalSetting {
         forceEnableSustainPedal = sharedPreferences.getBoolean("force_enable_sustain_pedal", false)
         waterfallOctaveLine = sharedPreferences.getBoolean("waterfall_octave_line", true)
         waterfallBackgroundPic = sharedPreferences.getString("waterfall_background_pic", "")!!
-        wakeLockHandle(sharedPreferences, context)
-    }
-
-    @SuppressLint("WakelockTimeout")
-    private fun wakeLockHandle(sharedPreferences: SharedPreferences, context: Context) {
-        if (sharedPreferences.getBoolean("wake_lock", false)) {
-            val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-            val wakeLock = powerManager.newWakeLock(
-                PowerManager.PARTIAL_WAKE_LOCK,
-                "JustPiano:JPWakelockTag"
-            )
-            wakeLock.acquire()
-        }
+        wakeLock = sharedPreferences.getBoolean("wake_lock", false)
     }
 }
