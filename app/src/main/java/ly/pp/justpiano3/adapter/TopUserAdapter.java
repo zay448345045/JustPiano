@@ -89,7 +89,7 @@ public final class TopUserAdapter extends BaseAdapter {
             }
             case 10 -> {
                 textView4.setText("等级:" + peopleList.get(i).get("userNuns"));
-                textView3.setText("" + intValue / 10 + "级" + ((intValue % 10)) + "阶");
+                textView3.setText(String.valueOf(intValue / 10) + "级" + ((intValue % 10)) + "阶");
             }
         }
         view.setOnClickListener(v -> {

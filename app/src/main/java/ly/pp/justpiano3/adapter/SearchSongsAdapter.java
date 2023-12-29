@@ -81,8 +81,8 @@ public final class SearchSongsAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.ol_topscore)).setText("高分:" + songsList.get(i).get("topScore"));
         ((TextView) view.findViewById(R.id.ol_playcount)).setText("播放量:" + songsList.get(i).get("playCount"));
         int songsTime = Integer.parseInt(songsList.get(i).get("length").toString());
-        String str1 = songsTime / 60 >= 10 ? "" + songsTime / 60 : "0" + songsTime / 60;
-        String str2 = songsTime % 60 >= 10 ? "" + songsTime % 60 : "0" + songsTime % 60;
+        String str1 = songsTime / 60 >= 10 ? String.valueOf(songsTime / 60) : "0" + songsTime / 60;
+        String str2 = songsTime % 60 >= 10 ? String.valueOf(songsTime % 60) : "0" + songsTime % 60;
         ((TextView) view.findViewById(R.id.ol_length)).setText("时长:" + str1 + ":" + str2);
         ((TextView) view.findViewById(R.id.ol_update)).setText("冠军时间:" + songsList.get(i).get("update"));
         if (!OnlineUtil.isX86()) {
