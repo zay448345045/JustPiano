@@ -88,6 +88,9 @@
                 android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
+        <Preference
+            android:title="后台网络连接保持"
+            android:key="battery_keep_alive" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="keyboard_realtime"
