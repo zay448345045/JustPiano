@@ -220,7 +220,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 for (int i = freeStyleNoteList.size() - 1; i >= 0; i--) {
                     WaterfallNote waterfallNote = freeStyleNoteList.get(i);
                     if (waterfallNote != null) {
-                        Pair<Float, Float> result = WaterfallUtil.Companion.convertToWaterfallWidth(
+                        Pair<Float, Float> result = WaterfallUtil.convertToWaterfallWidth(
                                 keyboardView, waterfallNote.getPitch());
                         waterfallNote.setLeft(result.getFirst());
                         waterfallNote.setRight(result.getSecond());
@@ -388,7 +388,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     public void onlineWaterfallKeyDownHandle(byte pitch, byte volume, int color) {
         if (waterfallView != null) {
-            Pair<Float, Float> result = WaterfallUtil.Companion.convertToWaterfallWidth(
+            Pair<Float, Float> result = WaterfallUtil.convertToWaterfallWidth(
                     keyboardView, pitch);
             waterfallView.addFreeStyleWaterfallNote(
                     result.getFirst(),
