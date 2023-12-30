@@ -82,7 +82,7 @@
     <PreferenceCategory android:title="联网模式">
         <Preference
             android:title="保持后台网络连接"
-            android:summary="点击手动操作，在极品钢琴的“耗电详情”中取消“自动管理”，并开启“允许后台活动”，尽可能维持后台网络连接"
+            android:summary="点击手动操作，在系统应用设置中取消极品钢琴的耗电自动管理，允许后台启动，尽可能维持后台网络连接【这可能非常耗电】"
             android:key="background_keep_alive" />
         <SwitchPreference
             android:defaultValue="false"

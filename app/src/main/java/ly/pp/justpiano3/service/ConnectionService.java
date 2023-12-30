@@ -286,6 +286,6 @@ public final class ConnectionService extends Service {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        outLine();
+        getApplication().onTerminate();
     }
 }
