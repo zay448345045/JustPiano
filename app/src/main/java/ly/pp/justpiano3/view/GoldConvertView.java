@@ -244,7 +244,7 @@ public class GoldConvertView extends LinearLayout {
         }
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.GoldConvertView);
         setStepChangeValue(typedArray.getFloat(R.styleable.GoldConvertView_stepChangeValue, 1));
-        setDefaultActualValue(typedArray.getFloat(R.styleable.GoldConvertView_defaultValue, 0));
+        setDefaultActualValue(typedArray.getFloat(R.styleable.GoldConvertView_defaultActualValue, 0));
         setGoldConvertText(typedArray.getString(R.styleable.GoldConvertView_topGoldConvertText),
                 typedArray.getString(R.styleable.GoldConvertView_bottomGoldConvertText));
         int textBackgroundResId = typedArray.getResourceId(R.styleable.GoldConvertView_textBackground, -1);
