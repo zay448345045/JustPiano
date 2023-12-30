@@ -283,4 +283,9 @@ public final class ConnectionService extends Service {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        outLine();
+    }
 }
