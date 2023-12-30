@@ -9,17 +9,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 import androidx.core.util.Predicate;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,11 +44,13 @@ import ly.pp.justpiano3.view.preference.FilePickerPreference;
 import ly.pp.justpiano3.view.preference.SkinListPreference;
 import ly.pp.justpiano3.view.preference.SoundListPreference;
 
-public final class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.MidiDeviceListener {
+public final class SettingsMode extends AppCompatActivity implements MidiDeviceUtil.MidiDeviceListener {
 
     public static final int SETTING_MODE_CODE = 122;
 
-    private static final Map<String, PreferenceFragment> preferenceFragmentMap = new HashMap<>();
+    private static final SettingsFragment settingFragment = new SettingsFragment();
+
+    private static final Map<String, PreferenceFragmentCompat> preferenceFragmentMap = new HashMap<>();
     private static final Map<String, Pair<Preference, Predicate<FileUtil.UriInfo>>> filePickerPreferenceMap = new HashMap<>();
 
     static {
@@ -70,9 +74,9 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         super.onCreate(savedInstanceState);
         ImageLoadUtil.setBackground(this);
         getWindow().getDecorView().findViewById(android.R.id.content).setBackgroundResource(R.color.black);
-        PreferenceFragment preferenceFragment = preferenceFragmentMap.get(getIntent().getDataString());
-        getFragmentManager().beginTransaction().replace(android.R.id.content,
-                preferenceFragment == null ? new SettingsFragment() : preferenceFragment).commit();
+        PreferenceFragmentCompat preferenceFragmentCompat = preferenceFragmentMap.get(getIntent().getDataString());
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content,
+                preferenceFragmentCompat == null ? settingFragment : preferenceFragmentCompat).commit();
         if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(getWindow());
         } else {
@@ -80,16 +84,11 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         }
     }
 
-    public static class SettingsFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings);
-        }
+    public static class SettingsFragment extends PreferenceFragmentCompat {
 
         @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+            setPreferencesFromResource(R.xml.settings, rootKey);
             Preference versionPreference = findPreference("app_version");
             if (versionPreference != null) {
                 versionPreference.setSummary(BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-' + BuildConfig.BUILD_TYPE);
@@ -103,7 +102,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 soundPreference.setSummary(GlobalSetting.INSTANCE.getSound());
             }
             // 检测是否支持midi功能，支持midi功能时，midi设备相关的设置才允许点击
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getContext() != null
                     && getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
                 Preference midiDevicePreference = findPreference("midi_device_list");
                 if (midiDevicePreference != null) {
@@ -125,10 +124,12 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             Preference allFullScreenShowPreference = findPreference("all_full_screen_show");
             if (allFullScreenShowPreference != null) {
                 allFullScreenShowPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                    if ((Boolean) newValue) {
-                        WindowUtil.fullScreenHandle((SettingsFragment.this.getActivity()).getWindow());
-                    } else {
-                        WindowUtil.exitFullScreenHandle((SettingsFragment.this.getActivity()).getWindow());
+                    if (getActivity() != null) {
+                        if ((Boolean) newValue) {
+                            WindowUtil.fullScreenHandle(getActivity().getWindow());
+                        } else {
+                            WindowUtil.exitFullScreenHandle(getActivity().getWindow());
+                        }
                     }
                     return true;
                 });
@@ -158,9 +159,11 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             Preference appInfoPreference = findPreference("background_keep_alive");
             if (appInfoPreference != null) {
                 appInfoPreference.setOnPreferenceClickListener(preference -> {
-                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.setData(Uri.fromParts("package", getActivity().getPackageName(), null));
-                    getActivity().startActivity(intent);
+                    if (getActivity() != null) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.fromParts("package", getActivity().getPackageName(), null));
+                        getActivity().startActivity(intent);
+                    }
                     return true;
                 });
             }
@@ -183,7 +186,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         @SuppressLint("BatteryLife")
         private void batteryKeepAliveHandle() {
             Preference batteryPreference = findPreference("battery_keep_alive");
-            if (batteryPreference instanceof SwitchPreference batteryKeepAlivePreference) {
+            if (batteryPreference instanceof SwitchPreference batteryKeepAlivePreference && getActivity() != null) {
                 PowerManager powerManager = (PowerManager) getActivity().getSystemService(POWER_SERVICE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && powerManager != null) {
                     batteryKeepAlivePreference.setEnabled(true);
@@ -208,34 +211,40 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             super.onResume();
             batteryKeepAliveHandle();
         }
-    }
 
-    public static class PianoPlaySettingsFragment extends PreferenceFragment {
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings_piano_play);
+        public void onDisplayPreferenceDialog(@NonNull Preference preference) {
+            if (preference instanceof SkinListPreference skinListPreference) {
+                SkinListPreference.DialogFragmentCompat dialogFragmentCompat = skinListPreference.newDialogFragmentCompatInstance();
+                dialogFragmentCompat.setTargetFragment(this, 0);
+                dialogFragmentCompat.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
+            } else {
+                super.onDisplayPreferenceDialog(preference);
+            }
         }
     }
 
-    public static class PlayNoteSettingsFragment extends PreferenceFragment {
+    public static class PianoPlaySettingsFragment extends PreferenceFragmentCompat {
+
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings_play_note);
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.settings_piano_play, rootKey);
         }
     }
 
-    public static class WaterfallSettingsFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings_waterfall);
-        }
+    public static class PlayNoteSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+            setPreferencesFromResource(R.xml.settings_play_note, rootKey);
+        }
+    }
+
+    public static class WaterfallSettingsFragment extends PreferenceFragmentCompat {
+
+        @Override
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+            setPreferencesFromResource(R.xml.settings_waterfall, rootKey);
             registerFilePickerPreference(this, "waterfall_background_pic", false,
                     "默认背景图", GlobalSetting.INSTANCE.getWaterfallBackgroundPic(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".jpg")
@@ -248,16 +257,11 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         }
     }
 
-    public static class SoundSettingsFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings_sound);
-        }
+    public static class SoundSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+            setPreferencesFromResource(R.xml.settings_sound, rootKey);
             Preference soundDelayPreference = findPreference("sound_delay");
             if (soundDelayPreference != null) {
                 soundDelayPreference.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -282,24 +286,19 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         }
     }
 
-    public static class KeyboardSettingsFragment extends PreferenceFragment {
+    public static class KeyboardSettingsFragment extends PreferenceFragmentCompat {
+
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings_keyboard);
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+            setPreferencesFromResource(R.xml.settings_keyboard, rootKey);
         }
     }
 
-    public static class OnlineChatSettingsFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings_online_chat);
-        }
+    public static class OnlineChatSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+            setPreferencesFromResource(R.xml.settings_online_chat, rootKey);
             registerFilePickerPreference(this, "chats_sound_file", false,
                     "默认音效", GlobalSetting.INSTANCE.getChatsSoundFile(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".wav") && !uriInfo.getDisplayName().endsWith(".mp3"))) {
@@ -314,24 +313,24 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         }
     }
 
-    public static class EasterEggFragment extends PreferenceFragment {
+    public static class EasterEggFragment extends PreferenceFragmentCompat {
+
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings_easter_egg);
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+            setPreferencesFromResource(R.xml.settings_easter_egg, rootKey);
         }
     }
 
     /**
      * 注册filePickerPreference行为
      */
-    private static void registerFilePickerPreference(PreferenceFragment preferenceFragment, String key, boolean folderPicker,
+    private static void registerFilePickerPreference(PreferenceFragmentCompat preferenceFragment, String key, boolean folderPicker,
                                                      String defaultSummary, String uri, Predicate<FileUtil.UriInfo> predicate) {
         Preference preference = preferenceFragment.findPreference(key);
         if (preference != null) {
             if (TextUtils.isEmpty(uri)) {
                 preference.setSummary(defaultSummary);
-            } else {
+            } else if (preferenceFragment.getActivity() != null) {
                 FileUtil.UriInfo uriInfo = folderPicker ? FileUtil.INSTANCE.getFolderUriInfo(preferenceFragment.getActivity(), Uri.parse(uri))
                         : FileUtil.INSTANCE.getUriInfo(preferenceFragment.getActivity(), Uri.parse(uri));
                 preference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? defaultSummary : uriInfo.getDisplayName());
@@ -399,7 +398,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect(MidiDeviceInfo midiDeviceInfo) {
-        Preference midiDevicePreference = findPreference("midi_device_list");
+        Preference midiDevicePreference = settingFragment.findPreference("midi_device_list");
         if (midiDevicePreference != null) {
             ((MidiDeviceListPreference) midiDevicePreference).midiDeviceListRefresh();
         }
@@ -408,7 +407,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiDisconnect(MidiDeviceInfo midiDeviceInfo) {
-        Preference midiDevicePreference = findPreference("midi_device_list");
+        Preference midiDevicePreference = settingFragment.findPreference("midi_device_list");
         if (midiDevicePreference != null) {
             ((MidiDeviceListPreference) midiDevicePreference).midiDeviceListRefresh();
         }

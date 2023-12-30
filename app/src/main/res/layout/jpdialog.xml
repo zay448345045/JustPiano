@@ -61,7 +61,7 @@
                 android:visibility="gone"
                 app:textBackground="@drawable/border_input_box"
                 app:stepChangeValue="1"
-                app:defaultValue="0"
+                app:defaultActualValue="0"
                 app:topGoldConvertText="消耗音符:"
                 app:bottomGoldConvertText="好友获得:"/>
 

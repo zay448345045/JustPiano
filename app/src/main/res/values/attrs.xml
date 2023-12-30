@@ -23,7 +23,7 @@
         <attr name="stepChangeValue" format="float" />
         <attr name="topGoldConvertText" format="string" />
         <attr name="bottomGoldConvertText" format="string" />
-        <attr name="defaultValue" format="float" />
+        <attr name="defaultActualValue" format="float" />
     </declare-styleable>
 
     <declare-styleable name="SeekBarPreference">

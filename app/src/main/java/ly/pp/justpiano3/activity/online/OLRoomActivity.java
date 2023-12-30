@@ -687,7 +687,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     protected void changeScreenOrientation() {
         isChangeScreen = true;
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
