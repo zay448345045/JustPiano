@@ -207,9 +207,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 }
                 addContentView(miniScoreView, layoutparams);
                 miniScoreView.setVisibility(View.VISIBLE);
-                OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
-                builder.setType(2);
-                sendMsg(OnlineProtocolType.CL_TEST, builder.build());
+                OnlineClTestDTO.Builder clTextBuilder = OnlineClTestDTO.newBuilder();
+                clTextBuilder.setType(2);
+                sendMsg(OnlineProtocolType.CL_TEST, clTextBuilder.build());
             }
             case 4 -> {    // 挑战
                 songNameTextView.setText("请稍后...");
@@ -224,9 +224,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 }
                 addContentView(miniScoreView, layoutparams);
                 miniScoreView.setVisibility(View.VISIBLE);
-                OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
-                builder1.setType(3);
-                sendMsg(OnlineProtocolType.CHALLENGE, builder1.build());
+                OnlineChallengeDTO.Builder challengeBuilder = OnlineChallengeDTO.newBuilder();
+                challengeBuilder.setType(3);
+                sendMsg(OnlineProtocolType.CHALLENGE, challengeBuilder.build());
             }
             default -> {
             }
@@ -311,23 +311,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     public void onBackPressed() {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         switch (playType) {
-            case 0 -> {
-                playTypeAndShowHandle(playType, true);
-                if (!isShowingSongsInfo) {
-                    playView.startFirstNoteTouching = false;
-                    isShowingSongsInfo = true;
-                    pausedPlay.setVisibility(View.VISIBLE);
-                    return;
-                } else {
-                    isShowingSongsInfo = false;
-                    pausedPlay.setVisibility(View.GONE);
-                    playView.startFirstNoteTouching = false;
-                    isPlayingStart = false;
-                    isBack = true;
-                    finish();
-                }
-            }
-            case 1 -> {
+            case 0, 1 -> {
                 playTypeAndShowHandle(playType, true);
                 if (!isShowingSongsInfo) {
                     playView.startFirstNoteTouching = false;
@@ -366,6 +350,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     isPlayingStart = false;
                     isBack = true;
                     dialog.dismiss();
+                    OnlineClTestDTO.Builder clTextBuilder = OnlineClTestDTO.newBuilder();
+                    clTextBuilder.setType(4);
+                    sendMsg(OnlineProtocolType.CL_TEST, clTextBuilder.build());
                     finish();
                 });
                 jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
