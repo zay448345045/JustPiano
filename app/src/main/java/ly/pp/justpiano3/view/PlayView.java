@@ -107,7 +107,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private boolean hasTouched;
     private int progressBarHeight;
     private int progressBarWidth;
-    private String songID;
+    private String songId;
     private float perfectStandard;
     private float coolStandard;
     private float greatStandard;
@@ -192,7 +192,7 @@ public final class PlayView extends SurfaceView implements Callback {
         this.pianoPlay = pianoPlay;
         handValue = (i3 + 20) % 2;
         gameType = kind;
-        songID = songId;
+        this.songId = songId;
         rightHandDegree = d;
         score = i;
         try {
@@ -386,7 +386,7 @@ public final class PlayView extends SurfaceView implements Callback {
         }
         pianoPlay.playKeyBoardView = new PlayKeyBoardView(pianoPlay, this);
         pianoPlay.addContentView(pianoPlay.playKeyBoardView, pianoPlay.layoutParams2);
-        pianoPlay.playTypeAndShowHandle(pianoPlay.playKind, false);
+        pianoPlay.playTypeAndShowHandle(pianoPlay.playType, false);
         pianoPlay.isPlayingStart = true;
         if (surfaceholder == null) {
             surfaceholder = getHolder();
@@ -673,11 +673,11 @@ public final class PlayView extends SurfaceView implements Callback {
                     intent.putExtra("bad", badNum);
                     intent.putExtra("miss", missNum);
                     intent.putExtra("name", songsName);
-                    intent.putExtra("songID", songID);
+                    intent.putExtra("songID", songId);
                     intent.putExtra("path", songsPath);
-                    intent.putExtra("nandu", rightHandDegree);
-                    intent.putExtra("leftnandu", leftHandDegree);
-                    intent.putExtra("songstime", songsTime);
+                    intent.putExtra("rightHandDegree", rightHandDegree);
+                    intent.putExtra("leftHandDegree", leftHandDegree);
+                    intent.putExtra("songsTime", songsTime);
                     intent.putExtra("hand", handValue);
                     intent.putExtra("top_combo", topComboNum);
                     pianoPlay.startActivityForResult(intent, size2);

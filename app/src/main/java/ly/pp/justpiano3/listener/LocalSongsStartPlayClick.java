@@ -32,27 +32,19 @@ public final class LocalSongsStartPlayClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        int i = 0;
         SongPlay.INSTANCE.stopPlay();
         Intent intent = new Intent(melodySelect, PianoPlay.class);
         intent.putExtra("head", 0);
         intent.putExtra("path", path);
         intent.putExtra("name", name);
-        intent.putExtra("nandu", rightHandDegree);
-        intent.putExtra("leftnandu", leftHandDegree);
-        intent.putExtra("songstime", songsTime);
+        intent.putExtra("rightHandDegree", rightHandDegree);
+        intent.putExtra("leftHandDegree", leftHandDegree);
+        intent.putExtra("songsTime", songsTime);
         intent.putExtra("score", score);
-        intent.putExtra("isrecord", melodySelect.isRecord.isChecked());
-        String str = "hand";
-        if (melodySelect.isLeftHand.isChecked()) {
-            i = 1;
-        }
-        if (melodySelect.isPractise.isChecked()) {
-            GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.PRACTISE);
-        } else {
-            GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
-        }
-        intent.putExtra(str, i);
+        intent.putExtra("isOpenRecord", melodySelect.isRecord.isChecked());
+        GlobalSetting.INSTANCE.setLocalPlayMode(melodySelect.isPractise.isChecked()
+                ? LocalPlayModeEnum.PRACTISE : LocalPlayModeEnum.NORMAL);
+        intent.putExtra("hand", melodySelect.isLeftHand.isChecked() ? 1 : 0);
         melodySelect.startActivity(intent);
     }
 }

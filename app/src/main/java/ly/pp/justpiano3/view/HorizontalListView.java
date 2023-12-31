@@ -3,7 +3,6 @@ package ly.pp.justpiano3.view;
 /*
  * HorizontalListView.java v1.5
  *
- *
  * The MIT License
  * Copyright (c) 2011 Paul Soucy (paul@dev-smart.com)
  *
@@ -24,9 +23,7 @@ package ly.pp.justpiano3.view;
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- *
  */
-
 
 import android.content.Context;
 import android.database.DataSetObserver;

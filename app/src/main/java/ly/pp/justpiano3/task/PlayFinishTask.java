@@ -38,7 +38,7 @@ public final class PlayFinishTask extends AsyncTask<Void, Void, String> {
                     .build();
             RequestBody body = new FormBody.Builder()
                     .add("version", BuildConfig.VERSION_NAME)
-                    .add("songID", playFinish.get().songID)
+                    .add("songID", playFinish.get().songId)
                     .add("userName", OLBaseActivity.getAccountName())
                     .add("scoreArray", playFinish.get().scoreArray)
                     .build();

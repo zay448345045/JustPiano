@@ -107,14 +107,14 @@ public final class PianoPlayHandler extends Handler {
                     pianoPlay.rightHandDegreeTextView.setVisibility(View.VISIBLE);
                     pianoPlay.highScoreTextView.setVisibility(View.VISIBLE);
                     pianoPlay.startPlayButton.setVisibility(View.VISIBLE);
-                    pianoPlay.songName.setText(pianoPlay.songsName);
+                    pianoPlay.songNameTextView.setText(pianoPlay.songsName);
                     pianoPlay.isShowingSongsInfo = false;
                     pianoPlay.playView.startFirstNoteTouching = true;
-                    pianoPlay.songName.setEnabled(true);
+                    pianoPlay.songNameTextView.setEnabled(true);
                     return;
                 }
-                pianoPlay.songName.setText(String.valueOf(message.arg1));
-                pianoPlay.songName.setEnabled(false);
+                pianoPlay.songNameTextView.setText(String.valueOf(message.arg1));
+                pianoPlay.songNameTextView.setEnabled(false);
             });
             case 8 -> post(() -> {
                 pianoPlay.finishView.setVisibility(View.VISIBLE);

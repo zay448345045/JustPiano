@@ -67,6 +67,21 @@ class LocalSongsAdapter(
         private val leftHandDegreeRatingBar: RatingBar
         private val songNameScrollText: ScrollText
 
+        init {
+            listenImageView = songView.findViewById(R.id.play_image)
+            waterFallImageView = songView.findViewById(R.id.play_waterfall)
+            favorImageView = songView.findViewById(R.id.favor)
+            isNewImageView = songView.findViewById(R.id.is_new)
+            playImageView = songView.findViewById(R.id.play)
+            highScoreTextView = songView.findViewById(R.id.highscore)
+            soundTimeTextView = songView.findViewById(R.id.sound_time)
+            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1)
+            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2)
+            rightHandDegreeRatingBar = songView.findViewById(R.id.nandu)
+            leftHandDegreeRatingBar = songView.findViewById(R.id.leftnandu)
+            songNameScrollText = songView.findViewById(R.id.s_n)
+        }
+
         fun bindData(position: Int, song: Song) {
             playImageView.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
             listenImageView.setOnClickListener {
@@ -83,9 +98,10 @@ class LocalSongsAdapter(
             }
             waterFallImageView.setOnClickListener {
                 SongPlay.stopPlay()
-                val intent = Intent()
+                val intent = Intent(melodySelect, WaterfallActivity::class.java)
                 intent.putExtra("songPath", song.filePath)
-                intent.setClass(melodySelect, WaterfallActivity::class.java)
+                intent.putExtra("songName", song.name)
+                intent.putExtra("isOpenRecord", melodySelect.isRecord.isChecked)
                 melodySelect.startActivity(intent)
             }
             if (song.category == Consts.items[Consts.items.size - 1]) {
@@ -142,21 +158,6 @@ class LocalSongsAdapter(
             leftHandDegreeRatingBar.isClickable = false
             leftHandDegreeRatingBar.rating = leftHandDegree / 2
             isNewImageView.setImageResource(if (song.isNew == 1) R.drawable.s_new else R.drawable.null_pic)
-        }
-
-        init {
-            listenImageView = songView.findViewById(R.id.play_image)
-            waterFallImageView = songView.findViewById(R.id.play_waterfall)
-            favorImageView = songView.findViewById(R.id.favor)
-            isNewImageView = songView.findViewById(R.id.is_new)
-            playImageView = songView.findViewById(R.id.play)
-            highScoreTextView = songView.findViewById(R.id.highscore)
-            soundTimeTextView = songView.findViewById(R.id.sound_time)
-            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1)
-            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2)
-            rightHandDegreeRatingBar = songView.findViewById(R.id.nandu)
-            leftHandDegreeRatingBar = songView.findViewById(R.id.leftnandu)
-            songNameScrollText = songView.findViewById(R.id.s_n)
         }
     }
 }

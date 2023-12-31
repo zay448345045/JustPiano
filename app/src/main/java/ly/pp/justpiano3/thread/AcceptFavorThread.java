@@ -13,11 +13,11 @@ import okhttp3.RequestBody;
 
 public final class AcceptFavorThread extends Thread {
     private final String type;
-    private final String songID;
+    private final String songId;
     private final String userName;
 
     public AcceptFavorThread(String l, String str, String str2) {
-        songID = l;
+        songId = l;
         userName = str2;
         type = str;
     }
@@ -30,7 +30,7 @@ public final class AcceptFavorThread extends Thread {
             FormBody.Builder formBuilder = new FormBody.Builder();
             formBuilder.add("version", BuildConfig.VERSION_NAME);
             formBuilder.add("type", type);
-            formBuilder.add("songID", songID);
+            formBuilder.add("songID", songId);
             formBuilder.add("user", userName);
             RequestBody requestBody = formBuilder.build();
 
