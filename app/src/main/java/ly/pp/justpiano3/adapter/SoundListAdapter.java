@@ -71,9 +71,7 @@ public final class SoundListAdapter extends BaseAdapter {
         }
         setButton.setOnClickListener(v -> {
             if (soundKey.equals("more")) {
-                Intent intent = new Intent();
-                intent.setClass(context, SoundDownload.class);
-                ((Activity) (context)).startActivityForResult(intent, SoundDownload.SOUND_DOWNLOAD_REQUEST_CODE);
+                ((Activity) (context)).startActivityForResult(new Intent(context, SoundDownload.class), SoundDownload.SOUND_DOWNLOAD_REQUEST_CODE);
             } else if (soundKey.equals("select")) {
                 FilePickerUtil.openFilePicker((Activity) context, false, "sound_select");
             } else {

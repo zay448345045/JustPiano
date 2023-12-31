@@ -23,8 +23,7 @@ public final class SearchSongsPlayClick implements OnClickListener {
         songID = l;
         topScore = i;
         degree = d;
-        this.intent = new Intent();
-        intent.setClass(searchSongsAdapter.searchSongs, PianoPlay.class);
+        intent = new Intent(searchSongsAdapter.searchSongs, PianoPlay.class);
     }
 
     public SearchSongsPlayClick(SearchSongsAdapter searchSongsAdapter, String songId, Intent intent) {

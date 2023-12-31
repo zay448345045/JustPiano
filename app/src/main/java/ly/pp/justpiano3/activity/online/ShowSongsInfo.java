@@ -95,9 +95,7 @@ public final class ShowSongsInfo extends BaseActivity implements OnClickListener
         if (jpprogressBar != null) {
             jpprogressBar.dismiss();
         }
-        Intent intent = new Intent();
-        intent.setClass(this, OLSongsPage.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLSongsPage.class));
         finish();
     }
 

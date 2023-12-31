@@ -656,8 +656,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     pianoPlay.sendMsg(OnlineProtocolType.PLAY_FINISH, builder2.build());
                 }
                 default -> {
-                    Intent intent = new Intent();
-                    intent.setClass(pianoPlay, PlayFinish.class);
+                    Intent intent = new Intent(pianoPlay, PlayFinish.class);
                     intent.putExtra("head", gameType);
                     intent.putExtra("topScore", score);
                     intent.putExtra("perf", perfectNum);

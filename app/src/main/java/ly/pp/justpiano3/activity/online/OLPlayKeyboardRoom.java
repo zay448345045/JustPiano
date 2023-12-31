@@ -235,9 +235,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         super.onClick(view);
         int id = view.getId();
         if (id == R.id.keyboard_setting) {
-            Intent intent = new Intent();
-            intent.setClass(this, SettingsMode.class);
-            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+            startActivityForResult(new Intent(this, SettingsMode.class), SettingsMode.SETTING_MODE_CODE);
         } else if (id == R.id.keyboard_record) {
             try {
                 Button recordButton = (Button) view;

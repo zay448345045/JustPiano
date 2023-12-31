@@ -119,7 +119,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                     }
                 });
             }
-            if (!olRoomActivity.playerKind.equals("H")) {
+            if (!olRoomActivity.positionStatus.equals("H")) {
                 kickOutButton.setVisibility(View.GONE);
                 closePositionButton.setVisibility(View.GONE);
             } else if (user.getIshost().equals("C")) {
@@ -128,7 +128,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 closePositionButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (olRoomActivity.playerKind.equals("H") && OnlineUtil.getConnectionService() != null) {
+                        if (olRoomActivity.positionStatus.equals("H") && OnlineUtil.getConnectionService() != null) {
                             OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
                             OnlineUtil.getConnectionService().writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
@@ -141,7 +141,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 closePositionButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (olRoomActivity.playerKind.equals("H") && OnlineUtil.getConnectionService() != null) {
+                        if (olRoomActivity.positionStatus.equals("H") && OnlineUtil.getConnectionService() != null) {
                             OnlineChangeRoomDoorDTO.Builder builder = OnlineChangeRoomDoorDTO.newBuilder();
                             builder.setRoomPosition(user.getPosition());
                             OnlineUtil.getConnectionService().writeData(OnlineProtocolType.CHANGE_ROOM_DOOR, builder.build());
@@ -153,7 +153,7 @@ public final class PlayerImageItemClick implements OnItemClickListener {
                 kickOutButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
-                        if (olRoomActivity.playerKind.equals("H") && OnlineUtil.getConnectionService() != null) {
+                        if (olRoomActivity.positionStatus.equals("H") && OnlineUtil.getConnectionService() != null) {
                             if (!user.getStatus().equals("N") && !user.getStatus().equals("F") && !user.getStatus().equals("B")) {
                                 Toast.makeText(olRoomActivity, "用户当前状态不能被移出!", Toast.LENGTH_SHORT).show();
                             } else {

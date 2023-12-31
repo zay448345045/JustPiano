@@ -26,7 +26,6 @@ import java.util.Map;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
-import ly.pp.justpiano3.activity.online.OLTopUser;
 import ly.pp.justpiano3.task.ShowTopInfoTask;
 import ly.pp.justpiano3.thread.PictureHandle;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -87,9 +86,7 @@ public final class ShowTopInfo extends BaseActivity implements Handler.Callback,
     @Override
     public void onBackPressed() {
         jpprogressBar.dismiss();
-        Intent intent = new Intent();
-        intent.setClass(this, OLTopUser.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLTopUser.class));
         finish();
     }
 

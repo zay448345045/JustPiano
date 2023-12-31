@@ -86,10 +86,9 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
         String str = (String) (songsList.get(i).get("topUser"));
         if (!str.equals("(暂无冠军)")) {
             textView.setOnClickListener(v -> {
-                Intent intent = new Intent();
+                Intent intent = new Intent(showSongsInfo, PopUserInfo.class);
                 intent.putExtra("head", 1);
                 intent.putExtra("userKitiName", str);
-                intent.setClass(showSongsInfo, PopUserInfo.class);
                 showSongsInfo.startActivity(intent);
             });
         } else {
@@ -108,7 +107,7 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
                     this, trim, songId, Integer.parseInt((String) songsList.get(i).get("topScore")), d));
         }
         ImageView waterFallImageView = view.findViewById(R.id.ol_play_waterfall);
-        waterFallImageView.setOnClickListener(new ShowSongsInfoPlayClick(this, songId, new Intent().setClass(showSongsInfo, WaterfallActivity.class)));
+        waterFallImageView.setOnClickListener(new ShowSongsInfoPlayClick(this, songId, new Intent(showSongsInfo, WaterfallActivity.class)));
         return view;
     }
 }

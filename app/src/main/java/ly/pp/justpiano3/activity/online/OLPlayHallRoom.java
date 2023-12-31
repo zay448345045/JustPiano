@@ -331,14 +331,13 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent();
         int id = view.getId();
         if (id == R.id.ol_player_mod || id == R.id.ol_dress_button) {
             if (lv < 8) {
                 Toast.makeText(this, "您的等级未达到8级，不能进入换衣间", Toast.LENGTH_SHORT).show();
                 return;
             }
-            intent.setClass(this, OLPlayDressRoom.class);
+            Intent intent = new Intent(this, OLPlayDressRoom.class);
             intent.putExtra("T", userTrousersIndex - 1);
             intent.putExtra("J", userJacketIndex - 1);
             intent.putExtra("H", userHairIndex - 1);
@@ -391,8 +390,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             }
         } else if (id == R.id.ol_myfamily_button) {
             if (familyID != null && !familyID.equals("0")) {
-                intent = new Intent();
-                intent.setClass(this, OLFamily.class);
+                Intent intent = new Intent(this, OLFamily.class);
                 intent.putExtra("familyID", familyID);
                 intent.putExtra("pageNum", familyPageNum);
                 intent.putExtra("position", 0);

@@ -72,8 +72,7 @@ public final class OLPlayHallHandler extends Handler {
                 Bundle data = message.getData();
                 data.putBundle("bundle", olPlayHall.hallInfoBundle);
                 int mode = data.getInt("mode");
-                Intent intent;
-                intent = new Intent(olPlayHall, mode == RoomModeEnum.KEYBOARD.getCode() ? OLPlayKeyboardRoom.class : OLPlayRoom.class);
+                Intent intent = new Intent(olPlayHall, mode == RoomModeEnum.KEYBOARD.getCode() ? OLPlayKeyboardRoom.class : OLPlayRoom.class);
                 intent.putExtras(data);
                 olPlayHall.startActivity(intent);
                 olPlayHall.finish();
@@ -276,22 +275,20 @@ public final class OLPlayHallHandler extends Handler {
                     return;
                 }
                 Bundle data15 = message.getData();
-                Intent intent12 = new Intent(olPlayHall, PianoPlay.class);
-                intent12.putExtra("head", 3);
-                intent12.putExtra("songBytes", data15.getString("songBytes"));
-                intent12.putExtra("times", data15.getInt("songsID"));
-                intent12.putExtra("hand", data15.getInt("hand"));
-                intent12.putExtra("name", "");
-                intent12.putExtra("bundle", olPlayHall.hallInfoBundle);
-                intent12.putExtra("bundleHall", olPlayHall.hallInfoBundle);
-                olPlayHall.startActivity(intent12);
+                Intent intent = new Intent(olPlayHall, PianoPlay.class);
+                intent.putExtra("head", 3);
+                intent.putExtra("songBytes", data15.getString("songBytes"));
+                intent.putExtra("times", data15.getInt("songsID"));
+                intent.putExtra("hand", data15.getInt("hand"));
+                intent.putExtra("name", "");
+                intent.putExtra("bundle", olPlayHall.hallInfoBundle);
+                intent.putExtra("bundleHall", olPlayHall.hallInfoBundle);
+                olPlayHall.startActivity(intent);
                 olPlayHall.finish();
             });
             case 21 -> post(() -> {
                 Toast.makeText(olPlayHall, "您已掉线，请检查您的网络再重新登录", Toast.LENGTH_SHORT).show();
-                Intent intent1 = new Intent();
-                intent1.setClass(olPlayHall, OLMainMode.class);
-                olPlayHall.startActivity(intent1);
+                olPlayHall.startActivity(new Intent(olPlayHall, OLMainMode.class));
                 olPlayHall.finish();
             });
             case 23 -> post(() -> olPlayHall.showInfoDialog(message.getData()));

@@ -23,8 +23,7 @@ public final class ShowSongsInfoPlayClick implements OnClickListener {
         songID = l;
         score = i;
         degree = d;
-        this.intent = new Intent();
-        intent.setClass(showSongsInfoAdapter.showSongsInfo, PianoPlay.class);
+        intent = new Intent(showSongsInfoAdapter.showSongsInfo, PianoPlay.class);
     }
 
     public ShowSongsInfoPlayClick(ShowSongsInfoAdapter showSongsInfoAdapter, String songId, Intent intent) {

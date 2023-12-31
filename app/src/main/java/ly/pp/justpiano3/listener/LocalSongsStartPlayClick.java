@@ -34,7 +34,7 @@ public final class LocalSongsStartPlayClick implements OnClickListener {
     public void onClick(View view) {
         int i = 0;
         SongPlay.INSTANCE.stopPlay();
-        Intent intent = new Intent();
+        Intent intent = new Intent(melodySelect, PianoPlay.class);
         intent.putExtra("head", 0);
         intent.putExtra("path", path);
         intent.putExtra("name", name);
@@ -53,7 +53,6 @@ public final class LocalSongsStartPlayClick implements OnClickListener {
             GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         }
         intent.putExtra(str, i);
-        intent.setClass(melodySelect, PianoPlay.class);
         melodySelect.startActivity(intent);
     }
 }

@@ -74,9 +74,7 @@ public final class SkinListAdapter extends BaseAdapter {
         }
         setButton.setOnClickListener(v -> {
             if (skinKey.equals("more")) {
-                Intent intent = new Intent();
-                intent.setClass(context, SkinDownload.class);
-                ((Activity) (context)).startActivityForResult(intent, SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE);
+                ((Activity) (context)).startActivityForResult(new Intent(context, SkinDownload.class), SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE);
             } else if (skinKey.equals("select")) {
                 FilePickerUtil.openFilePicker((Activity) context, false, "skin_select");
             } else {

@@ -89,7 +89,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         if (OLBaseActivity.kitiName.equals(userName)) {
             olPlayKeyboardRoom.lv = lv;
             olPlayKeyboardRoom.cl = cl;
-            olPlayKeyboardRoom.playerKind = string4;
+            olPlayKeyboardRoom.positionStatus = string4;
         }
         int cpKind = playerList.get(i).getInt("CP");
         if (cpKind >= 0 && cpKind <= 3) {

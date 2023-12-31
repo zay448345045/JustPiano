@@ -93,10 +93,9 @@ public final class TopUserAdapter extends BaseAdapter {
             }
         }
         view.setOnClickListener(v -> {
-            Intent intent = new Intent();
+            Intent intent = new Intent(showTopInfo, PopUserInfo.class);
             intent.putExtra("head", 1);
             intent.putExtra("userKitiName", obj2);
-            intent.setClass(showTopInfo, PopUserInfo.class);
             showTopInfo.startActivity(intent);
         });
         return view;

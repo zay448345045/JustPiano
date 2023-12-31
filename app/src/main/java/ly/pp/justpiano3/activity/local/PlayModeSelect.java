@@ -14,31 +14,23 @@ public final class PlayModeSelect extends BaseActivity implements OnClickListene
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.setClass(this, MainMode.class);
-        startActivity(intent);
+        startActivity(new Intent(this, MainMode.class));
         finish();
     }
 
     @Override
     public void onClick(View view) {
-        Intent intent;
         int id = view.getId();
         if (id == R.id.game_mode) {
-            intent = new Intent();
-            intent.setClass(this, MelodySelect.class);
             GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
-            startActivity(intent);
+            startActivity(new Intent(this, MelodySelect.class));
             finish();
         } else if (id == R.id.freestyle_mode) {
-            intent = new Intent();
-            intent.setClass(this, WaterfallActivity.class);
+            Intent intent = new Intent(this, WaterfallActivity.class);
             intent.putExtra("freeStyle", true);
             startActivity(intent);
         } else if (id == R.id.keyboard) {
-            intent = new Intent();
-            intent.setClass(this, KeyBoard.class);
-            startActivity(intent);
+            startActivity(new Intent(this, KeyBoard.class));
             finish();
         }
     }

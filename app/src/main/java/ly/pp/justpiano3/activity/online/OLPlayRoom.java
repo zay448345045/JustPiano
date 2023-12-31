@@ -195,7 +195,7 @@ public final class OLPlayRoom extends OLRoomActivity {
     }
 
     public String getPlayerKind() {
-        return playerKind;
+        return positionStatus;
     }
 
     public int getMode() {
@@ -269,9 +269,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             if (normalModePopupWindow != null) {
                 normalModePopupWindow.dismiss();
             }
-            Intent intent = new Intent();
-            intent.setClass(this, SettingsMode.class);
-            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+            startActivityForResult(new Intent(this, SettingsMode.class), SettingsMode.SETTING_MODE_CODE);
         } else if (id == R.id.rand_0) {
             playSongByDegreeRandom(2, 4);
         } else if (id == R.id.rand_all) {
@@ -317,7 +315,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         } else if (id == R.id.ol_soundstop) {
             SongPlay.INSTANCE.stopPlay();
         } else if (id == R.id.onetimeplay) {
-            if (playerKind.equals("H")) {
+            if (positionStatus.equals("H")) {
                 SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
                 Toast.makeText(this, PlaySongsModeEnum.ONCE.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
@@ -325,7 +323,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             }
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.circulateplay) {
-            if (playerKind.equals("H")) {
+            if (positionStatus.equals("H")) {
                 SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RECYCLE);
                 Toast.makeText(this, PlaySongsModeEnum.RECYCLE.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
@@ -333,7 +331,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             }
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.randomplay) {
-            if (playerKind.equals("H")) {
+            if (positionStatus.equals("H")) {
                 SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RANDOM);
                 Toast.makeText(this, PlaySongsModeEnum.RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
@@ -341,7 +339,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             }
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.favorplay) {
-            if (playerKind.equals("H")) {
+            if (positionStatus.equals("H")) {
                 SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR_RANDOM);
                 Toast.makeText(this, PlaySongsModeEnum.FAVOR_RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
@@ -349,7 +347,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             }
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.favorlist) {
-            if (playerKind.equals("H")) {
+            if (positionStatus.equals("H")) {
                 SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR);
                 Toast.makeText(this, PlaySongsModeEnum.FAVOR.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
@@ -357,7 +355,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             }
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.ol_ready_b) {
-            if (playerKind.equals("G")) {
+            if (positionStatus.equals("G")) {
                 String status = Objects.equals("准备", playButton.getText().toString()) ? "N" : "R";
                 sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus(status).build());
             } else {
@@ -391,7 +389,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 playSongsModePopupWindow.showAtLocation(songNameScrollText, Gravity.TOP | Gravity.START, iArr[0], (int) (iArr[1] * 0.43f));
             }
         } else if (id == R.id.shengdiao) {
-            if (playerKind.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
+            if (positionStatus.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
                 tune = Math.min(6, tune + 1);
                 updateNewSongPlay(currentPlaySongPath);
             } else {
@@ -401,7 +399,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 normalModePopupWindow.dismiss();
             }
         } else if (id == R.id.jiangdiao) {
-            if (playerKind.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
+            if (positionStatus.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
                 tune = Math.max(-6, tune - 1);
                 updateNewSongPlay(currentPlaySongPath);
             } else {
@@ -435,7 +433,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         playSongsModeButton.setOnClickListener(this);
         settingButton = findViewById(R.id.ol_group_b);
         settingButton.setOnClickListener(this);
-        playButton.setText(playerKind.equals("H") ? "开始" : "准备");
+        playButton.setText(positionStatus.equals("H") ? "开始" : "准备");
         searchTextView = findViewById(R.id.ol_search_text);
         findViewById(R.id.ol_soundstop).setOnClickListener(this);
         songsRecyclerView = findViewById(R.id.ol_song_list);

@@ -74,10 +74,9 @@ public final class OLMelodySelectAdapter extends BaseAdapter {
         String topUserKitiName = songsList.get(i).get("topUser").toString();
         if (!topUserKitiName.equals("(暂无冠军)")) {
             textView.setOnClickListener(v -> {
-                Intent intent = new Intent();
+                Intent intent = new Intent(olMelodySelect, PopUserInfo.class);
                 intent.putExtra("head", 1);
                 intent.putExtra("userKitiName", topUserKitiName);
-                intent.setClass(olMelodySelect, PopUserInfo.class);
                 olMelodySelect.startActivity(intent);
             });
         } else {
@@ -96,7 +95,7 @@ public final class OLMelodySelectAdapter extends BaseAdapter {
                     this, trim, songId, (Integer) songsList.get(i).get("topScore"), d));
         }
         ImageView waterFallImageView = view.findViewById(R.id.ol_play_waterfall);
-        waterFallImageView.setOnClickListener(new OLMelodySongsPlayClick(this, songId, new Intent().setClass(olMelodySelect, WaterfallActivity.class)));
+        waterFallImageView.setOnClickListener(new OLMelodySongsPlayClick(this, songId, new Intent(olMelodySelect, WaterfallActivity.class)));
         return view;
     }
 }

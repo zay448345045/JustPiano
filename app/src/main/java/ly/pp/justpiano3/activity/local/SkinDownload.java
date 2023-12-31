@@ -171,9 +171,7 @@ public final class SkinDownload extends BaseActivity implements Callback {
             jpProgressBar.dismiss();
         }
         if (getIntent().getFlags() == Intent.FLAG_GRANT_READ_URI_PERMISSION) {
-            Intent intent = new Intent();
-            intent.setClass(this, MainMode.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MainMode.class));
         }
         finish();
     }

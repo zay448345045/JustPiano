@@ -40,9 +40,7 @@ public class OLBaseActivity extends BaseActivity {
     }
 
     public static void returnMainMode(Activity activity) {
-        Intent intent = new Intent();
-        intent.setClass(activity, LoginActivity.class);
-        activity.startActivity(intent);
+        activity.startActivity(new Intent(activity, LoginActivity.class));
         activity.finish();
     }
 

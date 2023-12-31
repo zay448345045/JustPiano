@@ -167,9 +167,7 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
     @Override
     public void onBackPressed() {
         jpprogressBar.dismiss();
-        Intent intent = new Intent();
-        intent.setClass(this, OLSongsPage.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLSongsPage.class));
         finish();
     }
 
@@ -214,9 +212,8 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
             orderByType = 4;
             bindAdapter(itemListView, orderByType, songCount);
         } else if (id == R.id.ol_search_button) {
-            Intent intent = new Intent();
+            Intent intent = new Intent(this, SearchSongs.class);
             intent.putExtra("head", 1);
-            intent.setClass(this, SearchSongs.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.ol_top_next) {

@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
@@ -303,8 +302,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             jpprogressBar.show();
             sendMsg(OnlineProtocolType.CL_TEST, builder2.build());
         } else if (id == R.id.ol_challenge_b) {
-            Intent intent = new Intent();
-            intent.setClass(this, OLChallenge.class);
+            Intent intent = new Intent(this, OLChallenge.class);
             intent.putExtra("hallID", hallID);
             intent.putExtra("hallName", hallName);
             startActivity(intent);

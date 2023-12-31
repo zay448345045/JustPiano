@@ -23,9 +23,8 @@ public final class OLMainMode extends OLBaseActivity implements OnClickListener 
         if (jpProgressBar != null) {
             jpProgressBar.dismiss();
         }
-        Intent intent = new Intent();
+        Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("no_auto", true);
-        intent.setClass(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

@@ -200,9 +200,7 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
         if (jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        Intent intent = new Intent();
-        intent.setClass(this, OLMainMode.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLMainMode.class));
         finish();
     }
 

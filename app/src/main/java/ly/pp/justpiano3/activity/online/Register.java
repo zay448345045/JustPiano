@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
-import ly.pp.justpiano3.activity.online.LoginActivity;
 import ly.pp.justpiano3.task.RegisterTask;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -36,9 +35,8 @@ public final class Register extends BaseActivity implements OnClickListener {
     @Override
     public void onBackPressed() {
         jpprogressBar.dismiss();
-        Intent intent = new Intent();
+        Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("no_auto", true);
-        intent.setClass(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -46,9 +44,8 @@ public final class Register extends BaseActivity implements OnClickListener {
     @Override
     public void onClick(View view) {
         if (view == backButton) {
-            Intent intent = new Intent();
+            Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra("no_auto", true);
-            intent.setClass(this, LoginActivity.class);
             startActivity(intent);
             finish();
         } else if (view == registerButton) {

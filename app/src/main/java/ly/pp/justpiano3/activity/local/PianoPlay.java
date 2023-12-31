@@ -477,8 +477,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
 
     private void checkAnJian() {
         final PackageManager packageManager = getPackageManager();
-        final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER);
         final List<ResolveInfo> apps = packageManager.queryIntentActivities(mainIntent, 0);
         for (ResolveInfo app : apps) {
             String name = app.activityInfo.packageName;

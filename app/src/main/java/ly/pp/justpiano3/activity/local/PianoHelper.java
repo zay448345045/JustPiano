@@ -22,9 +22,7 @@ public final class PianoHelper extends BaseActivity implements OnGestureListener
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.setClass(this, MainMode.class);
-        startActivity(intent);
+        startActivity(new Intent(this, MainMode.class));
         finish();
     }
 

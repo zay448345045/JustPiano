@@ -14,7 +14,6 @@ import java.util.List;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
-import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.activity.online.OLMelodySelect;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.task.PlayFinishTask;
@@ -55,9 +54,8 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, PianoPlay.class);
         OLMelodySelect.songBytes = null;
-        setResult(-1, intent);
+        setResult(-1, new Intent(this, PianoPlay.class));
         finish();
     }
 
@@ -73,8 +71,7 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
             switch (head) {
                 case 0 -> {
                     setResult(-1, intent);
-                    intent = new Intent();
-                    intent.setClass(this, PianoPlay.class);
+                    intent = new Intent(this, PianoPlay.class);
                     intent.putExtra("head", head);
                     intent.putExtra("hand", hand);
                     intent.putExtra("name", name);
@@ -90,8 +87,7 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
                 case 1 -> {
                     if (OLMelodySelect.songBytes != null) {
                         setResult(-1, intent);
-                        intent = new Intent();
-                        intent.setClass(this, PianoPlay.class);
+                        intent = new Intent(this, PianoPlay.class);
                         intent.putExtra("head", head);
                         intent.putExtra("songName", name);
                         intent.putExtra("degree", nandu);

@@ -12,9 +12,7 @@ public final class OLTopUser extends BaseActivity implements OnClickListener {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.setClass(this, OLMainMode.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLMainMode.class));
         finish();
     }
 

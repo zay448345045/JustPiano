@@ -63,8 +63,7 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
     private EditText debugIpEditText;
 
     public void loginSuccess(int i, String message, String title) {
-        Intent intent = new Intent();
-        intent.setClass(this, OLMainMode.class);
+        Intent intent = new Intent(this, OLMainMode.class);
         String string = sharedPreferences.getString("accountList", "");
         try {
             Editor edit = sharedPreferences.edit();
@@ -137,9 +136,7 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
             edit.putString("current_password", passwordTextView.getText().toString());
             edit.apply();
         }
-        Intent intent = new Intent();
-        intent.setClass(this, MainMode.class);
-        startActivity(intent);
+        startActivity(new Intent(this, MainMode.class));
         finish();
     }
 
@@ -159,9 +156,7 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
             }
             new LoginTask(this).execute();
         } else if (id == R.id.ol_register) {
-            Intent intent = new Intent();
-            intent.setClass(this, Register.class);
-            startActivity(intent);
+            startActivity(new Intent(this, Register.class));
             finish();
         } else if (id == R.id.ol_change_account) {
             String string = sharedPreferences.getString("accountList", "");

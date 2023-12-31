@@ -151,9 +151,7 @@ public final class JustPiano extends BaseActivity implements Runnable {
     public void onResume() {
         super.onResume();
         if (isPause && loadFinish) {
-            Intent intent = new Intent();
-            intent.setClass(this, MainMode.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MainMode.class));
             finish();
         } else {
             isPause = false;
@@ -206,9 +204,7 @@ public final class JustPiano extends BaseActivity implements Runnable {
         runOnUiThread(() -> {
             loadFinish = true;
             if (!isPause) {
-                Intent intent = new Intent();
-                intent.setClass(this, MainMode.class);
-                startActivity(intent);
+                startActivity(new Intent(this, MainMode.class));
                 finish();
             }
         });

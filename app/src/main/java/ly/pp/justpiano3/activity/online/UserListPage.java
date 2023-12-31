@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
-import ly.pp.justpiano3.activity.online.OLMainMode;
 import ly.pp.justpiano3.adapter.UserListPageAdapter;
 import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
@@ -21,9 +20,7 @@ public final class UserListPage extends BaseActivity {
     @Override
     public void onBackPressed() {
         jpProgressBar.dismiss();
-        Intent intent = new Intent();
-        intent.setClass(this, OLMainMode.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLMainMode.class));
         finish();
     }
 

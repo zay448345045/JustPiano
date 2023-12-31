@@ -23,8 +23,7 @@ public final class OLMelodySongsPlayClick implements OnClickListener {
         songID = l;
         topScore = i;
         degree = d;
-        this.intent = new Intent();
-        intent.setClass(this.olMelodySelectAdapter.olMelodySelect, PianoPlay.class);
+        intent = new Intent(this.olMelodySelectAdapter.olMelodySelect, PianoPlay.class);
     }
 
     public OLMelodySongsPlayClick(OLMelodySelectAdapter olMelodySelectAdapter, String songId, Intent intent) {

@@ -53,9 +53,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.setClass(this, PlayModeSelect.class);
-        startActivity(intent);
+        startActivity(new Intent(this, PlayModeSelect.class));
         finish();
     }
 
@@ -276,9 +274,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.keyboard_setting) {
-            Intent intent = new Intent();
-            intent.setClass(this, SettingsMode.class);
-            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+            startActivityForResult(new Intent(this, SettingsMode.class), SettingsMode.SETTING_MODE_CODE);
         } else if (id == R.id.keyboard_record) {
             try {
                 Button recordButton = (Button) view;

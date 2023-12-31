@@ -82,8 +82,7 @@ public final class FamilyAdapter extends BaseAdapter {
             img.setImageResource(R.drawable.null_pic);
         }
         view.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setClass(olPlayHallRoom, OLFamily.class);
+            Intent intent = new Intent(olPlayHallRoom, OLFamily.class);
             intent.putExtra("familyID", id);
             intent.putExtra("position", i);
             intent.putExtra("pageNum", olPlayHallRoom.familyPageNum);

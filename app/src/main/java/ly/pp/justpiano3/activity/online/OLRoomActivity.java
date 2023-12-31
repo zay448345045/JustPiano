@@ -101,7 +101,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public int roomMode;
     public TextView roomNameView;
     public String roomName;
-    public String playerKind = "";
+    public String positionStatus = "";
     public Bundle roomInfoBundle;
     public Bundle hallInfoBundle;
     private boolean timeUpdateRunning;
@@ -306,7 +306,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     protected void changeRoomTitleClick() {
-        if (!playerKind.equals("G")) {
+        if (!positionStatus.equals("G")) {
             View inflate = getLayoutInflater().inflate(R.layout.ol_room_title_change, findViewById(R.id.dialog));
             EditText text1 = inflate.findViewById(R.id.text_1);
             // 填充当前房间名称
@@ -511,9 +511,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     public void handleOffline() {
         Toast.makeText(this, "您已掉线，请检查您的网络再重新登录", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent();
-        intent.setClass(this, OLMainMode.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLMainMode.class));
         finish();
     }
 
@@ -595,7 +593,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         hallName = hallInfoBundle.getString("hallName");
         roomId = roomInfoBundle.getByte("ID");
         roomName = roomInfoBundle.getString("R");
-        playerKind = roomInfoBundle.getString("isHost");
+        positionStatus = roomInfoBundle.getString("isHost");
         roomMode = roomInfoBundle.getInt("mode");
         roomNameView.setText("[" + roomId + "]" + roomName);
         roomNameView.setOnClickListener(this);

@@ -67,11 +67,10 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
         switch (Integer.parseInt(str)) {
             case 0 -> {
                 Toast.makeText(register.get(), "注册成功", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
+                Intent intent = new Intent(register.get(), LoginActivity.class);
                 intent.putExtra("name", register.get().account);
                 intent.putExtra("password", register.get().password);
                 intent.putExtra("no_auto", true);
-                intent.setClass(register.get(), LoginActivity.class);
                 register.get().startActivity(intent);
                 register.get().finish();
             }
