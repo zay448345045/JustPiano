@@ -106,6 +106,10 @@ class KeyboardView @JvmOverloads constructor(
 
     // 按键标签种类
     var octaveTagType = OctaveTagType.NONE
+        set(value) {
+            field = value
+            makeDraw()
+        }
 
     // 按键标签种类枚举
     enum class OctaveTagType {
