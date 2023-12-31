@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
+import androidx.core.content.FileProvider
 import androidx.core.util.Consumer
 import androidx.documentfile.provider.DocumentFile
 import okhttp3.Request
@@ -27,6 +28,7 @@ object FileUtil {
     /**
      * 复制文件到应用目录
      */
+    @JvmStatic
     fun copyDocumentFileToAppFilesDir(context: Context, sf2DocumentFile: DocumentFile): String? {
         val cacheFile = File(context.filesDir, sf2DocumentFile.name ?: return null)
         try {
@@ -46,6 +48,7 @@ object FileUtil {
         return cacheFile.absolutePath
     }
 
+    @JvmStatic
     fun moveFileToUri(context: Context, sourceFile: File, destinationUri: Uri?): Boolean {
         if (destinationUri == null) {
             return false
@@ -74,6 +77,7 @@ object FileUtil {
         return moveSuccess
     }
 
+    @JvmStatic
     fun getUriInfo(context: Context, uri: Uri?): UriInfo {
         return if (uri == null) {
             UriInfo(null, null, null, null)
@@ -143,6 +147,7 @@ object FileUtil {
         }
     }
 
+    @JvmStatic
     fun getFolderUriInfo(context: Context, uri: Uri?): UriInfo {
         if (uri == null) {
             return UriInfo(null, null, null, null)
@@ -154,6 +159,7 @@ object FileUtil {
         return UriInfo(null, null, null, null)
     }
 
+    @JvmStatic
     fun downloadFile(
         url: String,
         file: File?,
@@ -203,6 +209,7 @@ object FileUtil {
         }
     }
 
+    @JvmStatic
     fun getOrCreateFileByUriFolder(
         context: Context,
         directoryUriString: String?,
@@ -265,6 +272,7 @@ object FileUtil {
         }
     }
 
+    @JvmStatic
     fun getDirectoryDocumentFile(
         context: Context,
         directoryUriString: String?,
@@ -315,6 +323,7 @@ object FileUtil {
             ?.let { DocumentFile.fromFile(File(it, defaultFolder)) }
     }
 
+    @JvmStatic
     fun deleteFileUsingUri(context: Context, uri: Uri): Boolean {
         return when (uri.scheme) {
             "file" -> {
@@ -341,6 +350,7 @@ object FileUtil {
         }
     }
 
+    @JvmStatic
     fun uriToDocumentFile(context: Context, uri: Uri): DocumentFile? {
         return when (uri.scheme) {
             "content" -> {
@@ -357,6 +367,26 @@ object FileUtil {
             }
 
             else -> null
+        }
+    }
+
+    @JvmStatic
+    fun getContentUriFromDocumentFile(context: Context, documentFile: DocumentFile): Uri? {
+        if (documentFile.uri.scheme == "content") {
+            return documentFile.uri
+        } else {
+            return try {
+                documentFile.uri.path?.let { File(it) }?.let {
+                    FileProvider.getUriForFile(
+                        context,
+                        "${context.applicationContext.packageName}.fileProvider",
+                        it
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
     }
 }

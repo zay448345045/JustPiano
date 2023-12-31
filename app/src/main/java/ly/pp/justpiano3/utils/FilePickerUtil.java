@@ -54,11 +54,11 @@ public class FilePickerUtil {
         List<FileUtil.UriInfo> uriInfoList = new ArrayList<>();
         if (intent != null) {
             if (intent.getData() != null) {
-                uriInfoList.add(FileUtil.INSTANCE.getUriInfo(context, intent.getData()));
+                uriInfoList.add(FileUtil.getUriInfo(context, intent.getData()));
             } else if (intent.getClipData() != null) {
                 int count = intent.getClipData().getItemCount();
                 for (int i = 0; i < count; i++) {
-                    uriInfoList.add(FileUtil.INSTANCE.getUriInfo(context, intent.getClipData().getItemAt(i).getUri()));
+                    uriInfoList.add(FileUtil.getUriInfo(context, intent.getClipData().getItemAt(i).getUri()));
                 }
             }
         }

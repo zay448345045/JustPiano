@@ -32,7 +32,7 @@ public final class ChatFiles extends BaseActivity {
     private ChatFilesAdapter chatFilesAdapter;
 
     private void loadChatFiles(String chatsSaveUri) {
-        Pair<DocumentFile, String> documentFile = FileUtil.INSTANCE.getDirectoryDocumentFile(this,
+        Pair<DocumentFile, String> documentFile = FileUtil.getDirectoryDocumentFile(this,
                 chatsSaveUri, "Chats", "（默认）SD卡/Android/data/ly.pp.justpiano3/files/Chats\n【警告】您未设置其他存储位置，使用默认位置存储的文件将在APP卸载时删除");
         DocumentFile[] chatFiles = documentFile.component1().listFiles();
         tipsTextView.setText("聊天记录存储文件夹：" + documentFile.component2());
@@ -82,7 +82,7 @@ public final class ChatFiles extends BaseActivity {
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.setDataAndType(documentFile.getUri(), "text/plain");
+            intent.setDataAndType(FileUtil.getContentUriFromDocumentFile(this, documentFile), "text/plain");
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(this, "打开文件失败，请使用系统文件管理器打开", Toast.LENGTH_SHORT).show();

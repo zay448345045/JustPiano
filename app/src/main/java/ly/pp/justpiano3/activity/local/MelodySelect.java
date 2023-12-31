@@ -172,7 +172,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             new LocalDataImportExportTask(this, uriInfo.getUri(), false).execute();
         } else if (requestCode == FilePickerUtil.PICK_FOLDER_REQUEST_CODE && resultCode == Activity.RESULT_OK
                 && Objects.equals(FilePickerUtil.extra, "db_export")) {
-            FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getFolderUriInfo(this, data.getData());
+            FileUtil.UriInfo uriInfo = FileUtil.getFolderUriInfo(this, data.getData());
             if (uriInfo.getUri() == null) {
                 Toast.makeText(this, "导出错误，请提交反馈或联系开发者", Toast.LENGTH_SHORT).show();
                 return;

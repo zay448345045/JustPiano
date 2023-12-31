@@ -195,11 +195,11 @@ public final class JustPiano extends BaseActivity implements Runnable {
         SoundEngineUtil.startAudioStreamNative();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String soundUri = sharedPreferences.getString("sound_select", "original");
-        DocumentFile soundFile = FileUtil.INSTANCE.uriToDocumentFile(this, Uri.parse(soundUri));
+        DocumentFile soundFile = FileUtil.uriToDocumentFile(this, Uri.parse(soundUri));
         if (soundFile != null && soundFile.getName() != null && soundFile.getName().endsWith(".sf2")) {
             loading = "正在载入sf2声音资源...";
             runOnUiThread(() -> justpianoview.updateProgressAndInfo(progress, info, loading));
-            SoundEngineUtil.loadSf2(FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(this, soundFile));
+            SoundEngineUtil.loadSf2(FileUtil.copyDocumentFileToAppFilesDir(this, soundFile));
         }
         runOnUiThread(() -> {
             loadFinish = true;

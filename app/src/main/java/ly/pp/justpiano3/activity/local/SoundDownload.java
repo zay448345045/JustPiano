@@ -56,7 +56,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
         if (handler != null) {
             handler.sendMessage(message);
         }
-        FileUtil.INSTANCE.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + soundType,
+        FileUtil.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + soundType,
                 file, progress -> {
                     this.progress = progress;
                     Message message1 = Message.obtain(handler);
@@ -143,7 +143,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
                 }
                 SoundEngineUtil.startAudioStreamNative();
             } else if (soundFileName.endsWith(".sf2")) {
-                String newSf2Path = FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(this, DocumentFile.fromFile(soundFile));
+                String newSf2Path = FileUtil.copyDocumentFileToAppFilesDir(this, DocumentFile.fromFile(soundFile));
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadSf2();
                 SoundEngineUtil.setupAudioStreamNative();

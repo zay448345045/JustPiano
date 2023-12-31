@@ -155,7 +155,7 @@ public class ChatUtil {
     public static void chatsSaveHandle(Message message, Context context, String time) {
         if (GlobalSetting.INSTANCE.getSaveChatRecord()) {
             String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
-            Uri fileUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(context,
+            Uri fileUri = FileUtil.getOrCreateFileByUriFolder(context,
                     GlobalSetting.INSTANCE.getChatsSavePath(), "Chats", date + ".txt");
             if (fileUri == null) {
                 Toast.makeText(context, "聊天记录文件获取失败", Toast.LENGTH_SHORT).show();

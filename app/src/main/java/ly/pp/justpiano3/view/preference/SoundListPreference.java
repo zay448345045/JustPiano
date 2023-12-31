@@ -78,7 +78,7 @@ public final class SoundListPreference extends DialogPreference {
     }
 
     public void deleteFiles(String str) {
-        FileUtil.INSTANCE.deleteFileUsingUri(context, Uri.parse(str));
+        FileUtil.deleteFileUsingUri(context, Uri.parse(str));
         loadSoundList();
         soundListAdapter.updateSoundList(soundNameList, soundKeyList);
         soundListAdapter.notifyDataSetChanged();
@@ -91,7 +91,7 @@ public final class SoundListPreference extends DialogPreference {
             persistString(soundKey);
         }
         GlobalSetting.INSTANCE.loadSettings(context, false);
-        FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(context, Uri.parse(soundKey));
+        FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(context, Uri.parse(soundKey));
         setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认音源" : uriInfo.getDisplayName());
     }
 

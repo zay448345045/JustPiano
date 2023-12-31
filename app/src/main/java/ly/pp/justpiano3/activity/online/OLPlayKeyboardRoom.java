@@ -265,9 +265,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     recordStart = false;
                     SoundEngineUtil.setRecord(false);
                     File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-                    Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
+                    Uri desUri = FileUtil.getOrCreateFileByUriFolder(this,
                             GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
-                    if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
+                    if (FileUtil.moveFileToUri(this, srcFile, desUri)) {
                         Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
@@ -413,9 +413,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             recordStart = false;
             SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-            Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
+            Uri desUri = FileUtil.getOrCreateFileByUriFolder(this,
                     GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
-            if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
+            if (FileUtil.moveFileToUri(this, srcFile, desUri)) {
                 Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();

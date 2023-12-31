@@ -81,7 +81,7 @@ public final class SkinListPreference extends DialogPreference {
     }
 
     public void deleteFiles(String str) {
-        FileUtil.INSTANCE.deleteFileUsingUri(context, Uri.parse(str));
+        FileUtil.deleteFileUsingUri(context, Uri.parse(str));
         loadSkinList();
         skinListAdapter.updateSkinList(skinNameList, skinKeyList);
         skinListAdapter.notifyDataSetChanged();
@@ -97,7 +97,7 @@ public final class SkinListPreference extends DialogPreference {
             ImageLoadUtil.setBackground(preferenceActivity);
         }
         GlobalSetting.INSTANCE.loadSettings(context, false);
-        FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(context, Uri.parse(skinKey));
+        FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(context, Uri.parse(skinKey));
         setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认皮肤" : uriInfo.getDisplayName());
     }
 

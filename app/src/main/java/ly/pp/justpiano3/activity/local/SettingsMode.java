@@ -332,8 +332,8 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
             if (TextUtils.isEmpty(uri)) {
                 preference.setSummary(defaultSummary);
             } else {
-                FileUtil.UriInfo uriInfo = folderPicker ? FileUtil.INSTANCE.getFolderUriInfo(preferenceFragment.getActivity(), Uri.parse(uri))
-                        : FileUtil.INSTANCE.getUriInfo(preferenceFragment.getActivity(), Uri.parse(uri));
+                FileUtil.UriInfo uriInfo = folderPicker ? FileUtil.getFolderUriInfo(preferenceFragment.getActivity(), Uri.parse(uri))
+                        : FileUtil.getUriInfo(preferenceFragment.getActivity(), Uri.parse(uri));
                 preference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? defaultSummary : uriInfo.getDisplayName());
             }
             if (preference instanceof FilePickerPreference filePickerPreference) {
@@ -351,8 +351,8 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
         if ((requestCode == FilePickerUtil.PICK_FOLDER_REQUEST_CODE || requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE)
                 && resultCode == Activity.RESULT_OK) {
             FileUtil.UriInfo uriInfo = requestCode == FilePickerUtil.PICK_FOLDER_REQUEST_CODE
-                    ? FileUtil.INSTANCE.getFolderUriInfo(this, data.getData())
-                    : FileUtil.INSTANCE.getUriInfo(this, data.getData());
+                    ? FileUtil.getFolderUriInfo(this, data.getData())
+                    : FileUtil.getUriInfo(this, data.getData());
             Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get(FilePickerUtil.extra);
             if (value == null || uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !value.second.test(uriInfo)) {
                 return;

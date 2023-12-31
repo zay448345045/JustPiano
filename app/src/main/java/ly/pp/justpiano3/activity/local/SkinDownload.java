@@ -53,7 +53,7 @@ public final class SkinDownload extends BaseActivity implements Callback {
         if (handler != null) {
             handler.sendMessage(message);
         }
-        FileUtil.INSTANCE.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/skins/" + skinId + ".ps",
+        FileUtil.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/skins/" + skinId + ".ps",
                 file, progress -> {
                     this.progress = progress;
                     Message message1 = Message.obtain(handler);

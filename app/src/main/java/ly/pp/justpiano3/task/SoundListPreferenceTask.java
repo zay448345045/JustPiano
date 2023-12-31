@@ -37,7 +37,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
                 }
             }
         }
-        DocumentFile soundFile = FileUtil.INSTANCE.uriToDocumentFile(soundListPreference.context, Uri.parse(objects[0]));
+        DocumentFile soundFile = FileUtil.uriToDocumentFile(soundListPreference.context, Uri.parse(objects[0]));
         if (soundFile == null || soundFile.getName() == null || soundFile.length() > 1024 * 1024 * 1024) {
             return "invalid";
         }
@@ -53,7 +53,7 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
                 }
                 SoundEngineUtil.startAudioStreamNative();
             } else if (soundFile.getName().endsWith(".sf2")) {
-                String newSf2Path = FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(soundListPreference.context, soundFile);
+                String newSf2Path = FileUtil.copyDocumentFileToAppFilesDir(soundListPreference.context, soundFile);
                 if (newSf2Path == null) {
                     return "invalid";
                 }
