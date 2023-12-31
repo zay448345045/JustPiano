@@ -57,8 +57,8 @@ public final class FamilyHandler extends Handler {
                         }
                     }
                     family.bindFamilyPeopleListViewAdapter(family.peopleListView, family.peopleList);
-                    family.declaration.setText("家族宣言:\n" + data.getString("D"));
-                    family.info.setText("家族名称:" + data.getString("N")
+                    family.declarationTextView.setText("家族宣言:\n" + data.getString("D"));
+                    family.infoTextView.setText("家族名称:" + data.getString("N")
                             + "\n家族成立日期:" + data.getString("T")
                             + "\n族长:" + data.getString("Z")
                             + "\n家族总贡献:" + data.getString("C"));

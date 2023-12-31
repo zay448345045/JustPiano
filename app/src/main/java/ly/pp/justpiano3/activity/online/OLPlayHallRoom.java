@@ -432,6 +432,14 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         sendMsg(OnlineProtocolType.FAMILY, builder.build());
     }
 
+    public void letChangeFamilyLeader(String name) {
+        OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+        builder.setType(11);
+        builder.setStatus(1);
+        builder.setUserName(name);
+        sendMsg(OnlineProtocolType.FAMILY, builder.build());
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

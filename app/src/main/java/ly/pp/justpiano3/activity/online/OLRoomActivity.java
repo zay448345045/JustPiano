@@ -92,7 +92,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public GridView playerGrid;
     private final List<Bundle> invitePlayerList = new ArrayList<>();
     public TabHost roomTabs;
-    public boolean onStart = true;
+    public boolean onStart;
     private String userTo = "";
     private ListView playerListView;
     private ListView friendsListView;

@@ -295,6 +295,10 @@ public final class MainGameAdapter extends BaseAdapter {
                             mailMessageTextView.setText(from + " 请求加入您所在的家族，是否批准?");
                             sendButton.setText("批准");
                         }
+                        case "'''" -> {
+                            mailMessageTextView.setText(from + " 请求将所在家族的族长转让给您，是否同意?");
+                            sendButton.setText("同意");
+                        }
                         default -> {
                             mailMessageTextView.setText(mailMessage);
                             sendButton.setText("回复");

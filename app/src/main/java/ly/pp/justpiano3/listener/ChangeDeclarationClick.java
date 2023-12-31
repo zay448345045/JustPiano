@@ -45,7 +45,7 @@ public final class ChangeDeclarationClick implements OnClickListener {
             builder.setType(9);
             builder.setMessage(valueOf);
             family.sendMsg(OnlineProtocolType.FAMILY, builder.build());
-            family.declaration.setText("家族宣言:\n" + valueOf);
+            family.declarationTextView.setText("家族宣言:\n" + valueOf);
         }
     }
 }

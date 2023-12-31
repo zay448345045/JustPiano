@@ -46,8 +46,8 @@ import protobuf.dto.OnlineUserInfoDialogDTO;
 public final class OLFamily extends OLBaseActivity implements OnClickListener {
     public JPProgressBar jpprogressBar;
     public FamilyPositionEnum position;
-    public TextView declaration;
-    public TextView info;
+    public TextView declarationTextView;
+    public TextView infoTextView;
     public FamilyHandler familyHandler;
     public String familyID;
     private String peopleNow;  // 目前选择人的名字
@@ -64,16 +64,16 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
     public PopupWindow infoWindow;
     private LayoutInflater layoutinflater;
     private Button manageFamily;
-    private Button inOut;
+    private Button inOutButton;
 
     public void positionHandle() {
         switch (position) {
             case LEADER -> {
                 manageFamily.setEnabled(true);
-                inOut.setText("解散家族");
+                inOutButton.setText("解散家族");
             }
-            case VICE_LEADER, MEMBER -> inOut.setText("退出家族");
-            case NOT_IN_FAMILY -> inOut.setText("申请加入");
+            case VICE_LEADER, MEMBER -> inOutButton.setText("退出家族");
+            case NOT_IN_FAMILY -> inOutButton.setText("申请加入");
         }
     }
 
@@ -81,8 +81,10 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         switch (position) {
             case LEADER -> jpDialogBuilder.setTitle("警告").setMessage("确定要解散家族吗?");
-            case VICE_LEADER, MEMBER -> jpDialogBuilder.setTitle("警告").setMessage("确定要退出家族吗?");
-            case NOT_IN_FAMILY -> jpDialogBuilder.setTitle("提示").setMessage("申请加入家族需要族长或副族长的批准!");
+            case VICE_LEADER, MEMBER ->
+                    jpDialogBuilder.setTitle("警告").setMessage("确定要退出家族吗?");
+            case NOT_IN_FAMILY ->
+                    jpDialogBuilder.setTitle("提示").setMessage("申请加入家族需要族长或副族长的批准!");
         }
         jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                     OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
@@ -95,14 +97,14 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
-    public void loadManageFamilyPopupWindow(Bundle b) {
+    public void loadManageFamilyPopupWindow(Bundle bundle) {
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_family_manage, null);
         Button button = inflate.findViewById(R.id.ol_family_levelup);
-        if (b.getInt("R", 0) == 1) {
+        if (bundle.getInt("R", 0) == 1) {
             button.setEnabled(true);
         }
         TextView info = inflate.findViewById(R.id.ol_family_levelup_info);
-        info.setText(b.getString("I", "不断提升您的等级与考级，即可将您的家族升级为人数更多、规模更大的家族!"));
+        info.setText(bundle.getString("I", "不断提升您的等级与考级，即可将您的家族升级为人数更多、规模更大的家族!"));
         PopupWindow popupWindow = new JPPopupWindow(this);
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
@@ -116,30 +118,30 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
     /**
      * 显示个人资料
      */
-    public void showInfoDialog(Bundle b) {
+    public void showInfoDialog(Bundle bundle) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
-            User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
-                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
-            ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
-            ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
-            ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
-            ImageView imageView4 = inflate.findViewById(R.id.ol_user_hair);
-            ImageView imageView4e = inflate.findViewById(R.id.ol_user_eye);
-            ImageView imageView5 = inflate.findViewById(R.id.ol_user_shoes);
-            TextView textView = inflate.findViewById(R.id.user_info);
-            TextView textView2 = inflate.findViewById(R.id.user_psign);
-            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
-            int lv = b.getInt("LV");
+            User user = new User(bundle.getString("U"), bundle.getInt("DR_H"), bundle.getInt("DR_E"), bundle.getInt("DR_J"),
+                    bundle.getInt("DR_T"), bundle.getInt("DR_S"), bundle.getString("S"), bundle.getInt("LV"), bundle.getInt("CL"));
+            ImageView userModView = inflate.findViewById(R.id.ol_user_mod);
+            ImageView userTrousersView = inflate.findViewById(R.id.ol_user_trousers);
+            ImageView userJacketView = inflate.findViewById(R.id.ol_user_jacket);
+            ImageView userHairView = inflate.findViewById(R.id.ol_user_hair);
+            ImageView userEyeView = inflate.findViewById(R.id.ol_user_eye);
+            ImageView userShoesView = inflate.findViewById(R.id.ol_user_shoes);
+            TextView userInfoTextView = inflate.findViewById(R.id.user_info);
+            TextView userSignatureTextView = inflate.findViewById(R.id.user_psign);
+            ImageLoadUtil.setUserDressImageBitmap(this, user, userModView, userTrousersView, userJacketView, userHairView, userEyeView, userShoesView);
+            int lv = bundle.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
-            textView.setText("用户名称:" + b.getString("U")
+            userInfoTextView.setText("用户名称:" + bundle.getString("U")
                     + "\n用户等级:LV." + lv
-                    + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:CL." + b.getInt("CL")
-                    + "\n所在家族:" + b.getString("F")
-                    + "\n在线曲库冠军数:" + b.getInt("W")
-                    + "\n在线曲库弹奏总分:" + b.getInt("SC"));
-            textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
+                    + "\n经验进度:" + bundle.getInt("E") + "/" + targetExp
+                    + "\n考级进度:CL." + bundle.getInt("CL")
+                    + "\n所在家族:" + bundle.getString("F")
+                    + "\n在线曲库冠军数:" + bundle.getInt("W")
+                    + "\n在线曲库弹奏总分:" + bundle.getInt("SC"));
+            userSignatureTextView.setText("个性签名:\n" + (bundle.getString("P").isEmpty() ? "无" : bundle.getString("P")));
             new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", (dialog, which) -> {
                         if (OnlineUtil.getConnectionService() == null) {
@@ -225,16 +227,32 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
                 builder1.setName(peopleNow);
                 sendMsg(OnlineProtocolType.USER_INFO_DIALOG, builder1.build());
             }
-        } else if (id == R.id.ol_couple_b) {  //提升/撤职副族长
-            OnlineFamilyDTO.Builder builder;
+        } else if (id == R.id.ol_couple_b) {  // 提升/撤职副族长
             if (infoWindow != null && infoWindow.isShowing()) {
                 infoWindow.dismiss();
             }
             jpprogressBar.show();
-            builder = OnlineFamilyDTO.newBuilder();
+            OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
             builder.setType(7);
             builder.setUserName(peopleNow);
             sendMsg(OnlineProtocolType.FAMILY, builder.build());
+        } else if (id == R.id.ol_chat_black) {  // 族长转移
+            if (infoWindow != null && infoWindow.isShowing()) {
+                infoWindow.dismiss();
+            }
+            JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
+            jpDialogBuilder.setTitle("提示");
+            jpDialogBuilder.setMessage("确定要把族长转移给Ta吗?");
+            jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
+                        OnlineFamilyDTO.Builder familyBuilder = OnlineFamilyDTO.newBuilder();
+                        familyBuilder.setType(11);
+                        familyBuilder.setUserName(peopleNow);
+                        familyBuilder.setStatus(0);
+                        sendMsg(OnlineProtocolType.FAMILY, familyBuilder.build());
+                        dialog.dismiss();
+                        jpprogressBar.show();
+                    })
+                    .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } else if (id == R.id.ol_family_changedecl) {
             showSendDialog(" ", 1);
         } else if (id == R.id.ol_family_changepic) {
@@ -308,13 +326,13 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         builder.setType(1);
         builder.setFamilyId(Integer.parseInt(familyID));
         sendMsg(OnlineProtocolType.FAMILY, builder.build());
-        inOut = findViewById(R.id.in_out);
-        inOut.setOnClickListener(this);
+        inOutButton = findViewById(R.id.in_out);
+        inOutButton.setOnClickListener(this);
         manageFamily = findViewById(R.id.manage_family);
         manageFamily.setOnClickListener(this);
         peopleListView = findViewById(R.id.family_people_list);
-        declaration = findViewById(R.id.declaration);
-        info = findViewById(R.id.info_text);
+        declarationTextView = findViewById(R.id.declaration);
+        infoTextView = findViewById(R.id.info_text);
         findViewById(R.id.column_position).setOnClickListener(this);
         findViewById(R.id.column_family_name).setOnClickListener(this);
         findViewById(R.id.column_last_login_time).setOnClickListener(this);
@@ -328,16 +346,17 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
 
     public PopupWindow loadInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
         PopupWindow popupWindow = new JPPopupWindow(this);
-        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_room_user_operation, null);
-        Button showInfoButton = inflate.findViewById(R.id.ol_showinfo_b);  //个人资料
-        Button mailSendButton = inflate.findViewById(R.id.ol_chat_b);  //私信
-        Button kickOutButton = inflate.findViewById(R.id.ol_kickout_b);  //移出家族
-        Button positionChangeButton = inflate.findViewById(R.id.ol_couple_b);  //提升/撤职副族长
-        inflate.findViewById(R.id.ol_chat_black).setVisibility(View.GONE);
+        View userOperationView = LayoutInflater.from(this).inflate(R.layout.ol_room_user_operation, null);
+        Button showInfoButton = userOperationView.findViewById(R.id.ol_showinfo_b);  // 个人资料
+        Button mailSendButton = userOperationView.findViewById(R.id.ol_chat_b);  // 私信
+        Button kickOutButton = userOperationView.findViewById(R.id.ol_kickout_b);  // 移出家族
+        Button positionChangeButton = userOperationView.findViewById(R.id.ol_couple_b);  // 提升/撤职副族长
+        Button leaderChangeButton = userOperationView.findViewById(R.id.ol_chat_black);  // 转移族长
         mailSendButton.setText("发送私信");
         kickOutButton.setText("移出家族");
-        inflate.findViewById(R.id.ol_closepos_b).setVisibility(View.GONE);
-        popupWindow.setContentView(inflate);
+        leaderChangeButton.setText("族长转移");
+        userOperationView.findViewById(R.id.ol_closepos_b).setVisibility(View.GONE);
+        popupWindow.setContentView(userOperationView);
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
         if (position == FamilyPositionEnum.MEMBER || position == FamilyPositionEnum.NOT_IN_FAMILY
                 || (position == FamilyPositionEnum.VICE_LEADER && userPosition != FamilyPositionEnum.MEMBER)) {
@@ -349,6 +368,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         }
         if (position != FamilyPositionEnum.LEADER) {
             positionChangeButton.setVisibility(View.GONE);
+            leaderChangeButton.setVisibility(View.GONE);
         } else {
             switch (userPosition) {
                 case VICE_LEADER -> positionChangeButton.setText("撤职副族长");
@@ -364,33 +384,34 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         mailSendButton.setOnClickListener(this);
         showInfoButton.setOnClickListener(this);
         kickOutButton.setOnClickListener(this);
+        leaderChangeButton.setOnClickListener(this);
         peopleNow = name;
         infoWindow = popupWindow;
         return popupWindow;
     }
 
-    //发送私信和祝语,i = 0私信，i = 1改变宣言
-    private void showSendDialog(String str, int i) {
-        String str2;
-        String str3;
+    // 发送私信和祝语,type = 0 私信，type = 1 改变宣言
+    private void showSendDialog(String userName, int type) {
+        String buttonText;
+        String title;
         View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
         TextView textView = inflate.findViewById(R.id.text_1);
         TextView textView2 = inflate.findViewById(R.id.title_1);
         inflate.findViewById(R.id.title_2).setVisibility(View.GONE);
         inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
         textView2.setText("内容:");
-        if (i == 0) {
-            str2 = "发送";
-            str3 = "发送私信给:" + str;
-        } else if (i == 1) {
-            str3 = "设置家族宣言";
-            str2 = "修改";
-            textView.setText(declaration.getText().toString().substring(6));
+        if (type == 0) {
+            buttonText = "发送";
+            title = "发送私信给:" + userName;
+        } else if (type == 1) {
+            title = "设置家族宣言";
+            buttonText = "修改";
+            textView.setText(declarationTextView.getText().toString().substring(6));
         } else {
             return;
         }
-        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate)
-                .setFirstButton(str2, new ChangeDeclarationClick(this, textView, i, str))
+        new JPDialogBuilder(this).setTitle(title).loadInflate(inflate)
+                .setFirstButton(buttonText, new ChangeDeclarationClick(this, textView, type, userName))
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 

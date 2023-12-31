@@ -32,6 +32,7 @@ public final class OLSendMailClick implements OnClickListener {
                 return;
             }
             case "''" -> olPlayHallRoom.letInFamily(to);
+            case "''‘" -> olPlayHallRoom.letChangeFamilyLeader(to);
         }
         olPlayHallRoom.sendMail(to, 0);
     }
