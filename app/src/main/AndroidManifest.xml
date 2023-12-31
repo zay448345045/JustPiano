@@ -125,7 +125,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLPlayRoom"
-            android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
+            android:configChanges="keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity

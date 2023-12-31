@@ -2,7 +2,6 @@ package ly.pp.justpiano3.activity.online;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -304,7 +303,6 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         jpprogressBar = new JPProgressBar(this);
         jpprogressBar.show();
         layoutinflater = LayoutInflater.from(this);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         setContentView(R.layout.ol_family);
         OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
         builder.setType(1);

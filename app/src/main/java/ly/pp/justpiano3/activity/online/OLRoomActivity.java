@@ -50,6 +50,7 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.ChangeRoomNameClick;
 import ly.pp.justpiano3.listener.PlayerImageItemClick;
@@ -358,23 +359,19 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     private void bindMsgListView() {
-        // 不知道要不要走UI线程，我测试不走也可以
-        runOnUiThread(() -> {
-            int lastPosition = msgListView.getLastVisiblePosition();
-            int count = msgListView.getCount();
-            if (msgListView.getAdapter() != null) {
-                ((ChattingAdapter) msgListView.getAdapter()).notifyDataSetChanged();
-            } else {
-                // 只new一次，msgList是引用，不要重新赋值
-                msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater));
-            }
-            // 如果刷新的时候，位置不在最底部 或 看不到最底部的元素，则不弹回去
-            if (lastPosition == count - 1) {
-                // 这里计算offset很麻烦，就写了一个比较大的数
-                msgListView.smoothScrollToPositionFromTop(lastPosition, -10000, 500);
-            }
-        });
-
+        int lastPosition = msgListView.getLastVisiblePosition();
+        int count = msgListView.getCount();
+        if (msgListView.getAdapter() != null) {
+            ((ChattingAdapter) msgListView.getAdapter()).notifyDataSetChanged();
+        } else {
+            // 只new一次，msgList是引用，不要重新赋值
+            msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater));
+        }
+        // 如果刷新的时候，位置不在最底部 或 看不到最底部的元素，则不弹回去
+        if (lastPosition == count - 1) {
+            // 这里计算offset很麻烦，就写了一个比较大的数
+            msgListView.smoothScrollToPositionFromTop(lastPosition, -10000, 500);
+        }
     }
 
     public void handleKicked() {
@@ -394,8 +391,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     public void handleChat(Message message) {
         // 消息处理（流消息，推荐消息等） 返回值表示是否拦截后续执行
-        boolean isIntercept = specialMessageHandle(message);
-        if (isIntercept) {
+        if (specialMessageHandle(message)) {
             return;
         }
         if (msgList.size() > Consts.MAX_CHAT_SAVE_COUNT) {
@@ -625,28 +621,28 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         expressImageView.setOnClickListener(this);
         changeColorButton.setOnClickListener(this);
         handler = new Handler(this);
-        PopupWindow popupWindow = new JPPopupWindow(this);
-        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
-        popupWindow.setContentView(inflate);
-        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(
-                new ExpressAdapter(this, Consts.expressions, popupWindow, OnlineProtocolType.ROOM_CHAT));
-        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-        expressPopupWindow = popupWindow;
-        PopupWindow popupWindow3 = new JPPopupWindow(this);
-        View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_room_color_pick, null);
-        popupWindow3.setContentView(inflate3);
-        popupWindow3.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-        inflate3.findViewById(R.id.white).setOnClickListener(this);
-        inflate3.findViewById(R.id.yellow).setOnClickListener(this);
-        inflate3.findViewById(R.id.blue).setOnClickListener(this);
-        inflate3.findViewById(R.id.red).setOnClickListener(this);
-        inflate3.findViewById(R.id.orange).setOnClickListener(this);
-        inflate3.findViewById(R.id.purple).setOnClickListener(this);
-        inflate3.findViewById(R.id.pink).setOnClickListener(this);
-        inflate3.findViewById(R.id.gold).setOnClickListener(this);
-        inflate3.findViewById(R.id.green).setOnClickListener(this);
-        inflate3.findViewById(R.id.black).setOnClickListener(this);
-        changeColorPopupWindow = popupWindow3;
+        PopupWindow expressPopupWindow = new JPPopupWindow(this);
+        View expressView = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
+        expressPopupWindow.setContentView(expressView);
+        ((GridView) expressView.findViewById(R.id.ol_express_grid)).setAdapter(
+                new ExpressAdapter(this, Consts.expressions, expressPopupWindow, OnlineProtocolType.ROOM_CHAT));
+        expressPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+        this.expressPopupWindow = expressPopupWindow;
+        PopupWindow changeColorPopupWindow = new JPPopupWindow(this);
+        View roomColorPickView = LayoutInflater.from(this).inflate(R.layout.ol_room_color_pick, null);
+        changeColorPopupWindow.setContentView(roomColorPickView);
+        changeColorPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+        roomColorPickView.findViewById(R.id.white).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.yellow).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.blue).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.red).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.orange).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.purple).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.pink).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.gold).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.green).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.black).setOnClickListener(this);
+        this.changeColorPopupWindow = changeColorPopupWindow;
         roomTabs = findViewById(R.id.tabhost);
         roomTabs.setup();
         TabHost.TabSpec newTabSpec = roomTabs.newTabSpec("tab1");
@@ -674,12 +670,14 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         if (savedInstanceState != null) {
             msgList = savedInstanceState.getParcelableArrayList("msgList");
             bindMsgListView();
+        } else {
+            SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
         }
     }
 
     protected void setTabTitleViewLayout(int i) {
         TextView textView = roomTabs.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-        textView.setTextColor(0xffffffff);
+        textView.setTextColor(Color.WHITE);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textView.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);

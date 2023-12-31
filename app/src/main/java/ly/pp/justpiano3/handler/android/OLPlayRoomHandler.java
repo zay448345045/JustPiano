@@ -64,7 +64,7 @@ public final class OLPlayRoomHandler extends Handler {
                     byte b = (byte) message.getData().getInt("MSG_CI");
                     String string = message.getData().getString("MSG_C");
                     if (!string.isEmpty()) {
-                        olPlayRoom.mo2860a(i, string, i2, b);
+                        olPlayRoom.buildNewCoupleDialog(i, string, i2, b);
                     }
                 });
                 case 2, 4 -> post(() -> olPlayRoom.handleChat(message));
@@ -156,7 +156,7 @@ public final class OLPlayRoomHandler extends Handler {
                     byte b = (byte) message.getData().getInt("MSG_CI");
                     String string = message.getData().getString("MSG_C");
                     if (i != 0) {
-                        olPlayRoom.mo2860a(i, string, i2, b);
+                        olPlayRoom.buildNewCoupleDialog(i, string, i2, b);
                     }
                 });
                 case 23 -> post(() -> olPlayRoom.showInfoDialog(message.getData()));
