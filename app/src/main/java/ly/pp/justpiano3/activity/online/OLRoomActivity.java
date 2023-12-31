@@ -92,7 +92,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public GridView playerGrid;
     private final List<Bundle> invitePlayerList = new ArrayList<>();
     public TabHost roomTabs;
-    public boolean onStart;
+    public boolean onStart = true;
     private String userTo = "";
     private ListView playerListView;
     private ListView friendsListView;
@@ -670,6 +670,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         if (savedInstanceState != null) {
             msgList = savedInstanceState.getParcelableArrayList("msgList");
             bindMsgListView();
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus("N").build());
         } else {
             SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
         }
