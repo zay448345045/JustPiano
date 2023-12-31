@@ -3,7 +3,6 @@ package ly.pp.justpiano3.service;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
@@ -128,13 +127,10 @@ public final class ConnectionService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle(NOTIFY_CONTENT_TITLE)
                     .setContentText(NOTIFY_CONTENT_TEXT)
                     .setSmallIcon(R.drawable.icon)
-                    .setContentIntent(pendingIntent)
                     .build();
             int type = 0;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
