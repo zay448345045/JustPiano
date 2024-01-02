@@ -2,13 +2,16 @@ package ly.pp.justpiano3.view.preference;
 
 import android.app.Activity;
 import android.content.Context;
-import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
 
 import ly.pp.justpiano3.utils.FilePickerUtil;
 
@@ -33,16 +36,16 @@ public final class FilePickerPreference extends Preference {
     }
 
     @Override
-    protected void onBindView(View view) {
-        super.onBindView(view);
-        if (view.findViewById(BUTTON_ID) != null) {
+    public void onBindViewHolder(@NonNull PreferenceViewHolder preferenceViewHolder) {
+        super.onBindViewHolder(preferenceViewHolder);
+        if (preferenceViewHolder.itemView.findViewById(BUTTON_ID) != null) {
             return;
         }
         // 检查按钮是否已经添加到一个父视图，如果是，先从父视图移除
         if (defaultButton.getParent() != null) {
             ((ViewGroup) defaultButton.getParent()).removeView(defaultButton);
         }
-        LinearLayout layout = (LinearLayout) view;
+        LinearLayout layout = (LinearLayout) preferenceViewHolder.itemView;
         layout.setOrientation(LinearLayout.HORIZONTAL);
         layout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
