@@ -97,7 +97,7 @@ public final class SkinListPreference extends DialogPreference {
     }
 
     public DialogFragmentCompat newDialogFragmentCompatInstance() {
-        dialogFragmentCompat = new DialogFragmentCompat().newInstance(getKey());
+        dialogFragmentCompat = new DialogFragmentCompat(this).newInstance(this, getKey());
         return dialogFragmentCompat;
     }
 
@@ -107,10 +107,16 @@ public final class SkinListPreference extends DialogPreference {
         }
     }
 
-    public class DialogFragmentCompat extends PreferenceDialogFragmentCompat {
+    public static class DialogFragmentCompat extends PreferenceDialogFragmentCompat {
 
-        public DialogFragmentCompat newInstance(String key) {
-            final DialogFragmentCompat fragment = new DialogFragmentCompat();
+        private final SkinListPreference skinListPreference;
+
+        public DialogFragmentCompat(SkinListPreference skinListPreference) {
+            this.skinListPreference = skinListPreference;
+        }
+
+        public DialogFragmentCompat newInstance(SkinListPreference skinListPreference, String key) {
+            final DialogFragmentCompat fragment = new DialogFragmentCompat(skinListPreference);
             final Bundle b = new Bundle(1);
             b.putString(ARG_KEY, key);
             fragment.setArguments(b);
@@ -120,38 +126,39 @@ public final class SkinListPreference extends DialogPreference {
         @Override
         protected void onPrepareDialogBuilder(@NonNull AlertDialog.Builder builder) {
             super.onPrepareDialogBuilder(builder);
-            loadSkinList();
-            jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
-            LinearLayout linearLayout = new LinearLayout(context);
+            skinListPreference.loadSkinList();
+            skinListPreference.jpProgressBar = new JPProgressBar(new ContextThemeWrapper(skinListPreference.context, R.style.JustPianoTheme));
+            LinearLayout linearLayout = new LinearLayout(skinListPreference.context);
             linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             linearLayout.setMinimumWidth(400);
             linearLayout.setPadding(20, 20, 20, 20);
             linearLayout.setBackgroundColor(Color.WHITE);
-            TextView textView = new TextView(context);
+            TextView textView = new TextView(skinListPreference.context);
             textView.setTextSize(14);
             textView.setTextColor(Color.BLACK);
             textView.setText("下载皮肤存储位置：SD卡/Android/data/ly.pp.justpiano3/files/Skins，卸载APP时将删除所有文件");
             linearLayout.addView(textView);
-            ListView skinListView = new ListView(context);
+            ListView skinListView = new ListView(skinListPreference.context);
             skinListView.setDivider(null);
-            skinListAdapter = new SkinListAdapter(SkinListPreference.this, context, skinNameList, skinKeyList);
-            skinListView.setAdapter(skinListAdapter);
+            skinListPreference.skinListAdapter = new SkinListAdapter(skinListPreference,
+                    skinListPreference.context, skinListPreference.skinNameList, skinListPreference.skinKeyList);
+            skinListView.setAdapter(skinListPreference.skinListAdapter);
             linearLayout.addView(skinListView);
             builder.setView(linearLayout);
         }
 
         @Override
         public void onDialogClosed(boolean positiveResult) {
-            if (!TextUtils.isEmpty(skinKey)) {
-                persistString(skinKey);
+            if (!TextUtils.isEmpty(skinListPreference.skinKey)) {
+                skinListPreference.persistString(skinListPreference.skinKey);
             }
-            if (context instanceof PreferenceActivity preferenceActivity) {
+            if (skinListPreference.context instanceof PreferenceActivity preferenceActivity) {
                 ImageLoadUtil.setBackground(preferenceActivity);
             }
-            GlobalSetting.loadSettings(context, false);
-            FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(context, Uri.parse(skinKey));
-            setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认皮肤" : uriInfo.getDisplayName());
+            GlobalSetting.loadSettings(skinListPreference.context, false);
+            FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(skinListPreference.context, Uri.parse(skinListPreference.skinKey));
+            skinListPreference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认皮肤" : uriInfo.getDisplayName());
         }
 
         public void closeDialog() {
