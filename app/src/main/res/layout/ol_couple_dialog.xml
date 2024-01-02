@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/dimen_5dp">
+        android:layout_marginTop="@dimen/dimen_4dp">
 
         <RelativeLayout
             android:id="@+id/RelativeLayout01"
@@ -20,35 +20,35 @@
 
             <ImageView
                 android:id="@+id/ol_couple_mod"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"/>
 
             <ImageView
                 android:id="@+id/ol_couple_eye"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"/>
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"/>
 
             <ImageView
                 android:id="@+id/ol_couple_hair"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"/>
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"/>
 
             <ImageView
                 android:id="@+id/ol_couple_shoes"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"/>
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"/>
 
             <ImageView
                 android:id="@+id/ol_couple_trousers"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"/>
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"/>
 
             <ImageView
                 android:id="@+id/ol_couple_jacket"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"
                 android:textStyle="bold"/>
 
             <TextView
@@ -63,7 +63,7 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:textColor="@color/white1"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
 
             <TextView
                 android:id="@+id/ol_couple_level"
@@ -76,7 +76,7 @@
                 android:maxLines="1"
                 android:textColor="@color/green_r"
                 android:textColorHint="@color/yellow_r"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:typeface="sans"/>
 
             <TextView
@@ -90,7 +90,7 @@
                 android:maxLines="1"
                 android:textColor="@color/yellow"
                 android:textColorHint="@color/yellow_r"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:typeface="sans"/>
 
             <TextView
@@ -105,7 +105,7 @@
                 android:maxEms="1"
                 android:textColor="@color/white1"
                 android:textColorHint="@color/yellow_r"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:typeface="monospace"/>
         </RelativeLayout>
 
@@ -113,12 +113,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:paddingBottom="@dimen/dimen_30dp">
+            android:paddingBottom="@dimen/dimen_28dp">
 
             <ImageView
                 android:id="@+id/couple_type"
-                android:layout_width="@dimen/dimen_42dp"
-                android:layout_height="@dimen/dimen_42dp"
+                android:layout_width="@dimen/dimen_34dp"
+                android:layout_height="@dimen/dimen_34dp"
                 android:layout_centerHorizontal="true"
                 android:layout_weight="0.22"
                 android:paddingLeft="@dimen/dimen_4dp"
@@ -134,35 +134,35 @@
 
             <ImageView
                 android:id="@+id/ol_player_mod"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"/>
 
             <ImageView
                 android:id="@+id/ol_player_eye"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"/>
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"/>
 
             <ImageView
                 android:id="@+id/ol_player_hair"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"/>
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"/>
 
             <ImageView
                 android:id="@+id/ol_player_shoes"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"/>
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"/>
 
             <ImageView
                 android:id="@+id/ol_player_trousers"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"/>
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"/>
 
             <ImageView
                 android:id="@+id/ol_player_jacket"
-                android:layout_width="@dimen/dimen_100dp"
-                android:layout_height="@dimen/dimen_100dp"/>
+                android:layout_width="@dimen/dimen_80dp"
+                android:layout_height="@dimen/dimen_80dp"/>
 
             <TextView
                 android:id="@+id/ol_player_name"
@@ -176,7 +176,7 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:textColor="@color/white1"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
 
             <TextView
                 android:id="@+id/ol_player_level"
@@ -189,7 +189,7 @@
                 android:maxLines="1"
                 android:textColor="@color/green_r"
                 android:textColorHint="@color/yellow_r"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:typeface="sans"/>
 
             <TextView
@@ -203,7 +203,7 @@
                 android:maxLines="1"
                 android:textColor="@color/yellow"
                 android:textColorHint="@color/yellow_r"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:typeface="sans"/>
 
             <TextView
@@ -218,7 +218,7 @@
                 android:maxEms="1"
                 android:textColor="@color/white1"
                 android:textColorHint="@color/yellow_r"
-                android:textSize="11sp"
+                android:textSize="10sp"
                 android:typeface="monospace"/>
         </RelativeLayout>
     </LinearLayout>
@@ -226,8 +226,9 @@
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_100dp"
+        android:layout_height="@dimen/dimen_70dp"
         android:background="@drawable/ol_rectangle_mask"
+        android:layout_marginTop="@dimen/dimen_minus_2dp"
         android:scrollbars="none">
 
         <LinearLayout
@@ -239,6 +240,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:textSize="10sp"
                 android:textColor="@color/white1"/>
         </LinearLayout>
     </ScrollView>

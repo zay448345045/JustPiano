@@ -18,7 +18,7 @@
                 android:paddingLeft="@dimen/dimen_6dp"
                 android:paddingRight="@dimen/dimen_6dp"
                 android:textColor="@color/white1"
-                android:textSize="24sp"/>
+                android:textSize="20sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -82,14 +82,14 @@
                 android:id="@+id/negativeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_3dp"
+                android:layout_marginTop="@dimen/dimen_2dp"
                 android:layout_marginRight="@dimen/dimen_4dp"
                 android:layout_weight="1"
                 android:background="@drawable/selector_ol_cancel"
                 android:maxLines="1"
                 android:text="@string/mydialog_cancel"
                 android:textColor="@color/white1"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 android:textStyle="bold"/>
 
         <Button
@@ -97,13 +97,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_4dp"
-                android:layout_marginTop="@dimen/dimen_3dp"
+                android:layout_marginTop="@dimen/dimen_2dp"
                 android:layout_weight="1"
                 android:background="@drawable/selector_ol_ok"
                 android:maxLines="1"
                 android:text="@string/mydialog_ok"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 android:textStyle="bold"/>
     </LinearLayout>
 </LinearLayout>
