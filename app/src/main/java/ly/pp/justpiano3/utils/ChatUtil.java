@@ -163,7 +163,7 @@ public class ChatUtil {
             }
             try (OutputStream outputStream = context.getContentResolver().openOutputStream(fileUri, "wa")) {
                 String msg = message.getData().getString("M");
-                if (msg != null && !msg.startsWith("//")) {
+                if (outputStream != null && msg != null && !msg.startsWith("//")) {
                     if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
                         outputStream.write((time + "[私]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
                     } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {

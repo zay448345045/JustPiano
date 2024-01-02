@@ -7,7 +7,7 @@ import android.os.PowerManager;
 /**
  * 唤醒锁操作工具
  */
-public class WakeLockUtil {
+public final class WakeLockUtil {
 
     private static PowerManager.WakeLock wakeLock;
 

@@ -27,6 +27,7 @@ import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.utils.DateUtil;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -270,7 +271,7 @@ public final class OLPlayHallHandler extends Handler {
             });
             case 12 -> post(() -> olPlayHall.showRoomInfo(message.getData()));
             case 13 -> post(() -> {
-                if (OnlineUtil.isX86()) {
+                if (DeviceUtil.isX86()) {
                     Toast.makeText(olPlayHall, "您的设备不支持弹奏", Toast.LENGTH_SHORT).show();
                     return;
                 }

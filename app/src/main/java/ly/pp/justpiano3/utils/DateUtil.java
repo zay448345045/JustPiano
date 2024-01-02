@@ -13,7 +13,7 @@ import java.util.Locale;
  * @author Jhpz
  * @since create(2023 / 8 / 6)
  **/
-public class DateUtil {
+public final class DateUtil {
     /**
      * 模板 默认
      */

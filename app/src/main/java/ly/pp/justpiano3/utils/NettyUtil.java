@@ -18,7 +18,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
-public class NettyUtil {
+public final class NettyUtil {
 
     public interface OnConnectListener {
         void onSuccess();

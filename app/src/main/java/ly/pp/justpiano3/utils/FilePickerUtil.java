@@ -7,7 +7,7 @@ import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilePickerUtil {
+public final class FilePickerUtil {
 
     public static final int PICK_FILE_REQUEST_CODE = 110;
 

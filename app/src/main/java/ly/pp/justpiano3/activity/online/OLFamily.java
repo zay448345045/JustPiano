@@ -34,6 +34,7 @@ import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
 import ly.pp.justpiano3.handler.android.FamilyHandler;
 import ly.pp.justpiano3.listener.ChangeDeclarationClick;
+import ly.pp.justpiano3.utils.BizUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
@@ -133,10 +134,9 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             TextView userSignatureTextView = inflate.findViewById(R.id.user_psign);
             ImageLoadUtil.setUserDressImageBitmap(this, user, userModView, userTrousersView, userJacketView, userHairView, userEyeView, userShoesView);
             int lv = bundle.getInt("LV");
-            int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             userInfoTextView.setText("用户名称:" + bundle.getString("U")
                     + "\n用户等级:LV." + lv
-                    + "\n经验进度:" + bundle.getInt("E") + "/" + targetExp
+                    + "\n经验进度:" + bundle.getInt("E") + "/" + BizUtil.getTargetExp(lv)
                     + "\n考级进度:CL." + bundle.getInt("CL")
                     + "\n所在家族:" + bundle.getString("F")
                     + "\n在线曲库冠军数:" + bundle.getInt("W")

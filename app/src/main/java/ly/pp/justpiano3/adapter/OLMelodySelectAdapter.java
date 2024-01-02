@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.local.WaterfallActivity;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.activity.online.OLMelodySelect;
 import ly.pp.justpiano3.activity.online.PopUserInfo;
-import ly.pp.justpiano3.activity.local.WaterfallActivity;
 import ly.pp.justpiano3.listener.OLMelodySongsPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
-import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.DeviceUtil;
 
 public final class OLMelodySelectAdapter extends BaseAdapter {
     public final OLMelodySelect olMelodySelect;
@@ -90,7 +90,7 @@ public final class OLMelodySelectAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.ol_length)).setText("时长:" + str1 + ":" + str2);
         ((TextView) view.findViewById(R.id.ol_update)).setText("冠军时间:" + songsList.get(i).get("update"));
         ((TextView) view.findViewById(R.id.ol_playcount)).setText("播放量:" + songsList.get(i).get("playCount"));
-        if (!OnlineUtil.isX86()) {
+        if (!DeviceUtil.isX86()) {
             view.findViewById(R.id.ol_play_button).setOnClickListener(new OLMelodySongsPlayClick(
                     this, trim, songId, (Integer) songsList.get(i).get("topScore"), d));
         }

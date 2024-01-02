@@ -17,6 +17,7 @@ import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.thread.SongPlay;
+import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineQuitRoomDTO;
 
@@ -104,7 +105,7 @@ public final class OLPlayRoomHandler extends Handler {
                         olPlayRoom.startActivity(intent);
                         olPlayRoom.finish();
                     } else if (!songFilePath.isEmpty()) {
-                        if (OnlineUtil.isX86()) {
+                        if (DeviceUtil.isX86()) {
                             Toast.makeText(olPlayRoom, "您的设备不支持弹奏", Toast.LENGTH_SHORT).show();
                             return;
                         }

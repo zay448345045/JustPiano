@@ -38,7 +38,7 @@ import okhttp3.Response;
  * Create by SunnyDay on 2019/04/18
  * 仿写实现ImageLoader的大概功能：三级缓存、图片压缩、同步异步加载。
  */
-public class ImageLoader {
+public final class ImageLoader {
     private static final String TAG = "ImageLoader";
     private static final int IO_BUFFER_SIZE = 8 * 1024;
     private static final long DISK_CACHE_SIZE = 1024 * 1024 * 50;// 磁盘缓存大小50M

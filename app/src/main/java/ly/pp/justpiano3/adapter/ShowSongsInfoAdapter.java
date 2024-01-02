@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.local.WaterfallActivity;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.activity.online.PopUserInfo;
 import ly.pp.justpiano3.activity.online.ShowSongsInfo;
-import ly.pp.justpiano3.activity.local.WaterfallActivity;
 import ly.pp.justpiano3.listener.ShowSongsInfoPlayClick;
 import ly.pp.justpiano3.thread.AcceptFavorThread;
-import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.DeviceUtil;
 
 public final class ShowSongsInfoAdapter extends BaseAdapter {
     public final ShowSongsInfo showSongsInfo;
@@ -102,7 +102,7 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
         String str2 = songsTime % 60 >= 10 ? String.valueOf(songsTime % 60) : "0" + songsTime % 60;
         ((TextView) view.findViewById(R.id.ol_length)).setText("时长:" + str1 + ":" + str2);
         ((TextView) view.findViewById(R.id.ol_update)).setText("冠军时间:" + songsList.get(i).get("update"));
-        if (!OnlineUtil.isX86()) {
+        if (!DeviceUtil.isX86()) {
             view.findViewById(R.id.ol_play_button).setOnClickListener(new ShowSongsInfoPlayClick(
                     this, trim, songId, Integer.parseInt((String) songsList.get(i).get("topScore")), d));
         }

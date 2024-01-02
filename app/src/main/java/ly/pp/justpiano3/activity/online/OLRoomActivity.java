@@ -57,6 +57,7 @@ import ly.pp.justpiano3.listener.PlayerImageItemClick;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.thread.SongPlay;
+import ly.pp.justpiano3.utils.BizUtil;
 import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
@@ -195,10 +196,9 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             TextView textView2 = inflate.findViewById(R.id.user_psign);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             int lv = b.getInt("LV");
-            int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + b.getString("U")
                     + "\n用户等级:LV." + lv
-                    + "\n经验进度:" + b.getInt("E") + "/" + targetExp
+                    + "\n经验进度:" + b.getInt("E") + "/" + BizUtil.getTargetExp(lv)
                     + "\n考级进度:CL." + b.getInt("CL")
                     + "\n所在家族:" + b.getString("F")
                     + "\n在线曲库冠军数:" + b.getInt("W")

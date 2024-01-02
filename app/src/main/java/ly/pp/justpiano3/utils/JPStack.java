@@ -6,33 +6,33 @@ import java.util.Stack;
 
 public final class JPStack {
 
-    private static Stack<Activity> stack;
+    private static Stack<Activity> jpStack;
 
     public static void pop(Activity activity) {
         if (activity != null) {
-            stack.remove(activity);
+            jpStack.remove(activity);
         }
     }
 
     public static Activity top() {
-        if (stack == null) {
+        if (jpStack == null) {
             return null;
         }
-        return !stack.empty() ? stack.lastElement() : null;
+        return !jpStack.empty() ? jpStack.lastElement() : null;
     }
 
     public static void push(Activity activity) {
         if (activity != null) {
-            if (stack == null) {
-                stack = new Stack<>();
+            if (jpStack == null) {
+                jpStack = new Stack<>();
             }
-            stack.add(activity);
+            jpStack.add(activity);
         }
     }
 
     public static void clear() {
-        if (stack != null) {
-            stack.clear();
+        if (jpStack != null) {
+            jpStack.clear();
         }
     }
 }

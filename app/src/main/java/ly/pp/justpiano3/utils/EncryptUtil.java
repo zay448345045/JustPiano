@@ -16,7 +16,7 @@ import javax.crypto.Cipher;
 /**
  * @author as
  */
-public class EncryptUtil {
+public final class EncryptUtil {
 
     /**
      * 密钥长度（bit）

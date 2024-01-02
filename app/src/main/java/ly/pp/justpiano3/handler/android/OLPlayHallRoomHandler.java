@@ -38,6 +38,7 @@ import ly.pp.justpiano3.adapter.DailyTimeAdapter;
 import ly.pp.justpiano3.adapter.FamilyAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
+import ly.pp.justpiano3.utils.BizUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
@@ -68,11 +69,10 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.hallList.add(bundle.getBundle(String.valueOf(i)));
                     }
                     olPlayHallRoom.sortListAndBindAdapter(olPlayHallRoom.hallListView, olPlayHallRoom.hallList);
-                    olPlayHallRoom.userName.setText(data.getString("U"));
+                    olPlayHallRoom.userNameTextView.setText(data.getString("U"));
                     OLBaseActivity.kitiName = data.getString("U");
                     int lv = data.getInt("LV");
-                    int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
-                    olPlayHallRoom.userExpView.setText("经验值:" + data.getInt("E") + "/" + targetExp);
+                    olPlayHallRoom.userExpView.setText("经验值:" + data.getInt("E") + "/" + BizUtil.getTargetExp(lv));
                     olPlayHallRoom.userLevelView.setText("LV." + lv);
                     int i = data.getInt("CL");
                     olPlayHallRoom.userClassView.setText("CL." + i);
@@ -86,7 +86,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                     }
                     ImageLoadUtil.setFamilyImageBitmap(olPlayHallRoom, olPlayHallRoom.familyID, olPlayHallRoom.familyView);
                     olPlayHallRoom.lv = data.getInt("LV");
-                    olPlayHallRoom.cl = data.getInt("CL");
                     olPlayHallRoom.userSex = data.getString("S");
                     olPlayHallRoom.userTrousersIndex = data.getInt("DR_T");
                     olPlayHallRoom.userJacketIndex = data.getInt("DR_J");

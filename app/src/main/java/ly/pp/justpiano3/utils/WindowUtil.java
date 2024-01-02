@@ -11,7 +11,7 @@ import android.view.WindowManager;
 /**
  * window相关工具
  */
-public class WindowUtil {
+public final class WindowUtil {
 
     /**
      * 设置适配全面屏，隐藏状态栏、导航栏等

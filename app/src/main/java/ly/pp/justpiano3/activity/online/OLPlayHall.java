@@ -53,6 +53,7 @@ import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.CreateRoomClick;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
+import ly.pp.justpiano3.utils.BizUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
@@ -128,10 +129,9 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             TextView textView2 = inflate.findViewById(R.id.user_psign);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             int lv = bundle.getInt("LV");
-            int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + bundle.getString("U")
                     + "\n用户等级:LV." + lv
-                    + "\n经验进度:" + bundle.getInt("E") + "/" + targetExp
+                    + "\n经验进度:" + bundle.getInt("E") + "/" + BizUtil.getTargetExp(lv)
                     + "\n考级进度:CL." + bundle.getInt("CL")
                     + "\n所在家族:" + bundle.getString("F")
                     + "\n在线曲库冠军数:" + bundle.getInt("W")

@@ -13,7 +13,7 @@ import protobuf.dto.OnlineDialogDTO;
 /**
  * @author as
  */
-public class DialogUtil {
+public final class DialogUtil {
 
     /**
      * 是否已经显示对话框，防止对话框重复显示

@@ -1,7 +1,6 @@
 package ly.pp.justpiano3.activity.local;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -66,7 +65,6 @@ import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class MelodySelect extends BaseActivity implements Callback, OnClickListener {
     private SharedPreferences sharedPreferences;
-    public LayoutInflater layoutInflater1;
     public JPProgressBar jpProgressBar;
     public String songsPath = "";
     public CheckBox isRecord;
@@ -329,12 +327,10 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        setContentView(LayoutInflater.from(this).inflate(R.layout.lo_melody_list, null));
         SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
         SongPlay.INSTANCE.setCallBack(this::autoPlayNextSong);
         jpProgressBar = new JPProgressBar(this);
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater1 = LayoutInflater.from(this);
-        setContentView(layoutInflater.inflate(R.layout.lo_melody_list, null));
         sortButton = findViewById(R.id.list_sort_b);
         sortButton.setOnClickListener(this);
         totalSongCountTextView = findViewById(R.id.all_mel);

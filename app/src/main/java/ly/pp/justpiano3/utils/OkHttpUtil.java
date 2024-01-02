@@ -10,7 +10,7 @@ import okhttp3.OkHttpClient;
  * @author Jhpz
  * @since create(2023 / 7 / 29)
  **/
-public class OkHttpUtil {
+public final class OkHttpUtil {
     private static final OkHttpClient client;
 
     static {

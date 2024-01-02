@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ThreadPoolUtil {
+public final class ThreadPoolUtil {
 
     /**
      * 线程池核心线程数

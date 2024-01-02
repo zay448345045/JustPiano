@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import ly.pp.justpiano3.entity.GlobalSetting;
 
-public class MidiDeviceUtil {
+public final class MidiDeviceUtil {
 
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

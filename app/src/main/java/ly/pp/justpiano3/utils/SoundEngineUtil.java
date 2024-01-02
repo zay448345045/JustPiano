@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javazoom.jl.converter.Converter;
 import ly.pp.justpiano3.midi.MidiUtil;
 
-public class SoundEngineUtil {
+public final class SoundEngineUtil {
 
     /**
      * 处于延音状态下的音符列表

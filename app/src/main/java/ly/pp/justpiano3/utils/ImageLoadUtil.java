@@ -21,9 +21,10 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 
-public class ImageLoadUtil {
+public final class ImageLoadUtil {
 
     public static final Map<String, Bitmap> familyBitmapCacheMap = new HashMap<>(128);
+
     public static final Map<String, Bitmap> dressBitmapCacheMap = new HashMap<>(256);
 
     private static final StringBuilder stringBuilderCache = new StringBuilder();

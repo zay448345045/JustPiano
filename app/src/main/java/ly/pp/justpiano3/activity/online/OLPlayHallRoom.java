@@ -44,6 +44,7 @@ import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.ChangeBlessingClick;
 import ly.pp.justpiano3.listener.tab.PlayHallRoomTabChange;
 import ly.pp.justpiano3.task.OLPlayHallRoomTask;
+import ly.pp.justpiano3.utils.BizUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.OnlineUtil;
@@ -58,10 +59,9 @@ import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListener {
-    public int cl;
     public int lv = 1;
     public TabHost tabHost;
-    public TextView userName;
+    public TextView userNameTextView;
     public TextView mailCountsView;
     public TextView userLevelView;
     public TextView userClassView;
@@ -145,10 +145,9 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             TextView textView2 = inflate.findViewById(R.id.user_psign);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             int lv = bundle.getInt("LV");
-            int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
             textView.setText("用户名称:" + bundle.getString("U")
                     + "\n用户等级:LV." + lv
-                    + "\n经验进度:" + bundle.getInt("E") + "/" + targetExp
+                    + "\n经验进度:" + bundle.getInt("E") + "/" + BizUtil.getTargetExp(lv)
                     + "\n考级进度:CL." + bundle.getInt("CL")
                     + "\n所在家族:" + bundle.getString("F")
                     + "\n在线曲库冠军数:" + bundle.getInt("W")
@@ -320,11 +319,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
 
     @Override
     public void onBackPressed() {
-        try {
-            JPStack.clear();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        JPStack.clear();
         startActivity(new Intent(this, OLMainMode.class));
         finish();
     }
@@ -475,8 +470,8 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         newTabSpec.setContent(R.id.infor_tab);
         newTabSpec.setIndicator("资料");
         tabHost.addTab(newTabSpec);
-        userName = findViewById(R.id.ol_player_name);
-        userName.setText("");
+        userNameTextView = findViewById(R.id.ol_player_name);
+        userNameTextView.setText("");
         findViewById(R.id.ol_dress_button).setOnClickListener(this);
         findViewById(R.id.ol_bonus_button).setOnClickListener(this);
         userLevelView = findViewById(R.id.ol_player_level);

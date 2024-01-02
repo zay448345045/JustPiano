@@ -6,7 +6,7 @@ import android.view.ViewTreeObserver;
 /**
  * view相关工具
  */
-public class ViewUtil {
+public final class ViewUtil {
 
     /**
      * 设置view的布局完成回调

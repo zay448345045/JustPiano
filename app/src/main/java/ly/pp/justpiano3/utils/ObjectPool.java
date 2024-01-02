@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 一个对象池
  */
-public class ObjectPool<T> {
+public final class ObjectPool<T> {
     private final ConcurrentHashMap<T, Boolean> pool;
     private final ObjectFactory<T> factory;
     private final int maxPoolSize;

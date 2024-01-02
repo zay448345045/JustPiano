@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
@@ -238,14 +237,5 @@ public class OnlineUtil {
         if (JPStack.top() instanceof OLBaseActivity olBaseActivity) {
             olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.accept(olBaseActivity), delayMillis);
         }
-    }
-
-    public static boolean isX86() {
-        for (String abi : Build.SUPPORTED_ABIS) {
-            if ("x86".equalsIgnoreCase(abi) || "x86_64".equalsIgnoreCase(abi)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
