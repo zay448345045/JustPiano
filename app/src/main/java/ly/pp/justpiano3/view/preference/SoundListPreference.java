@@ -94,7 +94,7 @@ public final class SoundListPreference extends DialogPreference {
     }
 
     public DialogFragmentCompat newDialogFragmentCompatInstance() {
-        dialogFragmentCompat = new DialogFragmentCompat().newInstance(getKey());
+        dialogFragmentCompat = new DialogFragmentCompat(this).newInstance(this, getKey());
         return dialogFragmentCompat;
     }
 
@@ -104,10 +104,16 @@ public final class SoundListPreference extends DialogPreference {
         }
     }
 
-    public class DialogFragmentCompat extends PreferenceDialogFragmentCompat {
+    public static class DialogFragmentCompat extends PreferenceDialogFragmentCompat {
 
-        public DialogFragmentCompat newInstance(String key) {
-            final DialogFragmentCompat fragment = new DialogFragmentCompat();
+        private final SoundListPreference soundListPreference;
+
+        public DialogFragmentCompat(SoundListPreference soundListPreference) {
+            this.soundListPreference = soundListPreference;
+        }
+
+        public DialogFragmentCompat newInstance(SoundListPreference soundListPreference, String key) {
+            final DialogFragmentCompat fragment = new DialogFragmentCompat(soundListPreference);
             final Bundle b = new Bundle(1);
             b.putString(ARG_KEY, key);
             fragment.setArguments(b);
@@ -117,35 +123,36 @@ public final class SoundListPreference extends DialogPreference {
         @Override
         protected void onPrepareDialogBuilder(@NonNull AlertDialog.Builder builder) {
             super.onPrepareDialogBuilder(builder);
-            loadSoundList();
-            jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
-            LinearLayout linearLayout = new LinearLayout(context);
+            soundListPreference.loadSoundList();
+            soundListPreference.jpProgressBar = new JPProgressBar(new ContextThemeWrapper(soundListPreference.context, R.style.JustPianoTheme));
+            LinearLayout linearLayout = new LinearLayout(soundListPreference.context);
             linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             linearLayout.setMinimumWidth(400);
             linearLayout.setPadding(20, 20, 20, 20);
             linearLayout.setBackgroundColor(Color.WHITE);
-            TextView textView = new TextView(context);
+            TextView textView = new TextView(soundListPreference.context);
             textView.setTextSize(14);
             textView.setTextColor(Color.BLACK);
             textView.setText("下载音源存储位置：SD卡/Android/data/ly.pp.justpiano3/files/Sounds，卸载APP时将删除所有文件");
             linearLayout.addView(textView);
-            ListView listView = new ListView(context);
+            ListView listView = new ListView(soundListPreference.context);
             listView.setDivider(null);
-            soundListAdapter = new SoundListAdapter(SoundListPreference.this, context, soundNameList, soundKeyList);
-            listView.setAdapter(soundListAdapter);
+            soundListPreference.soundListAdapter = new SoundListAdapter(soundListPreference,
+                    soundListPreference.context, soundListPreference.soundNameList, soundListPreference.soundKeyList);
+            listView.setAdapter(soundListPreference.soundListAdapter);
             linearLayout.addView(listView);
             builder.setView(linearLayout);
         }
 
         @Override
         public void onDialogClosed(boolean positiveResult) {
-            if (!TextUtils.isEmpty(soundKey)) {
-                persistString(soundKey);
+            if (!TextUtils.isEmpty(soundListPreference.soundKey)) {
+                soundListPreference.persistString(soundListPreference.soundKey);
             }
-            GlobalSetting.loadSettings(context, false);
-            FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(context, Uri.parse(soundKey));
-            setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认音源" : uriInfo.getDisplayName());
+            GlobalSetting.loadSettings(soundListPreference.context, false);
+            FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(soundListPreference.context, Uri.parse(soundListPreference.soundKey));
+            soundListPreference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认音源" : uriInfo.getDisplayName());
         }
 
         public void closeDialog() {

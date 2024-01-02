@@ -239,6 +239,10 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
                 SkinListPreference.DialogFragmentCompat dialogFragmentCompat = skinListPreference.newDialogFragmentCompatInstance();
                 dialogFragmentCompat.setTargetFragment(this, 0);
                 dialogFragmentCompat.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
+            } else if (preference instanceof SoundListPreference soundListPreference) {
+                SoundListPreference.DialogFragmentCompat dialogFragmentCompat = soundListPreference.newDialogFragmentCompatInstance();
+                dialogFragmentCompat.setTargetFragment(this, 0);
+                dialogFragmentCompat.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
             } else {
                 super.onDisplayPreferenceDialog(preference);
             }
