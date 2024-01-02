@@ -59,7 +59,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         put("settings_easter_egg", new EasterEggFragment());
     }};
 
-    public final Map<String, Pair<Preference, Predicate<FileUtil.UriInfo>>> filePickerPreferenceMap = new HashMap<>();
+    private static final Map<String, Pair<Preference, Predicate<FileUtil.UriInfo>>> filePickerPreferenceMap = new HashMap<>();
 
     public final ActivityResultLauncher<Intent> skinSelectLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -106,7 +106,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public class SettingsFragment extends PreferenceFragmentCompat {
+    public static class SettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -245,7 +245,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public class PianoPlaySettingsFragment extends PreferenceFragmentCompat {
+    public static class PianoPlaySettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
@@ -253,7 +253,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public class PlayNoteSettingsFragment extends PreferenceFragmentCompat {
+    public static class PlayNoteSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -261,7 +261,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public class WaterfallSettingsFragment extends PreferenceFragmentCompat {
+    public static class WaterfallSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -278,7 +278,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public class SoundSettingsFragment extends PreferenceFragmentCompat {
+    public static class SoundSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -307,7 +307,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public class KeyboardSettingsFragment extends PreferenceFragmentCompat {
+    public static class KeyboardSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -315,7 +315,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public class OnlineChatSettingsFragment extends PreferenceFragmentCompat {
+    public static class OnlineChatSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -334,7 +334,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public class EasterEggFragment extends PreferenceFragmentCompat {
+    public static class EasterEggFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -345,7 +345,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
     /**
      * 注册filePickerPreference行为
      */
-    private void registerFilePickerPreference(PreferenceFragmentCompat preferenceFragment, String key, boolean folderPicker,
+    private static void registerFilePickerPreference(PreferenceFragmentCompat preferenceFragment, String key, boolean folderPicker,
                                                      String defaultSummary, String uri, Predicate<FileUtil.UriInfo> predicate) {
         Preference preference = preferenceFragment.findPreference(key);
         if (preference != null) {
