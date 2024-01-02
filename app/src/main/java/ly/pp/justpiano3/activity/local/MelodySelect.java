@@ -234,24 +234,24 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
             sortButton.setEnabled(false);
         } else if (id == R.id.list_sort_b) {
-            PopupWindow popupWindow = new JPPopupWindow(this);
-            View inflate = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
-            popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-            popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-            popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-            inflate.findViewById(R.id.lo_songs_order_name_asc).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_name_des).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_new).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_recent).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_diff_asc).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_diff_des).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_score_asc).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_score_des).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_length_asc).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_length_des).setOnClickListener(this);
-            popupWindow.setContentView(inflate);
-            sortPopupWindow = popupWindow;
-            popupWindow.showAsDropDown(sortButton, Gravity.CENTER, 0, 0);
+            PopupWindow sortPopupWindow = new JPPopupWindow(this);
+            View songOrderView = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
+            sortPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+            sortPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+            sortPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+            songOrderView.findViewById(R.id.lo_songs_order_name_asc).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_name_des).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_new).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_recent).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_diff_asc).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_diff_des).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_score_asc).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_score_des).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_length_asc).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_length_des).setOnClickListener(this);
+            sortPopupWindow.setContentView(songOrderView);
+            this.sortPopupWindow = sortPopupWindow;
+            sortPopupWindow.showAsDropDown(sortButton, Gravity.CENTER, 0, 0);
         } else if (id == R.id.lo_songs_order_name_asc) {
             songsSort(0);
         } else if (id == R.id.lo_songs_order_name_des) {
@@ -273,18 +273,18 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         } else if (id == R.id.lo_songs_order_length_des) {
             songsSort(9);
         } else if (id == R.id.menu_list_fast) {
-            PopupWindow popupWindow2 = new JPPopupWindow(this);
-            View inflate2 = LayoutInflater.from(this).inflate(R.layout.lo_extra_func, null);
-            popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-            popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-            popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-            inflate2.findViewById(R.id.lo_extra_func_settings).setOnClickListener(this);
-            inflate2.findViewById(R.id.lo_extra_func_sync).setOnClickListener(this);
-            inflate2.findViewById(R.id.lo_extra_func_midi_import).setOnClickListener(this);
-            inflate2.findViewById(R.id.lo_extra_func_data_export).setOnClickListener(this);
-            popupWindow2.setContentView(inflate2);
-            menuPopupWindow = popupWindow2;
-            popupWindow2.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
+            PopupWindow menuPopupWindow = new JPPopupWindow(this);
+            View extraFunctionView = LayoutInflater.from(this).inflate(R.layout.lo_extra_func, null);
+            menuPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+            menuPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+            menuPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+            extraFunctionView.findViewById(R.id.lo_extra_func_settings).setOnClickListener(this);
+            extraFunctionView.findViewById(R.id.lo_extra_func_sync).setOnClickListener(this);
+            extraFunctionView.findViewById(R.id.lo_extra_func_midi_import).setOnClickListener(this);
+            extraFunctionView.findViewById(R.id.lo_extra_func_data_export).setOnClickListener(this);
+            menuPopupWindow.setContentView(extraFunctionView);
+            this.menuPopupWindow = menuPopupWindow;
+            menuPopupWindow.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
         } else if (id == R.id.lo_extra_func_settings) {
             menuPopupWindow.dismiss();
             SongPlay.INSTANCE.stopPlay();
@@ -433,20 +433,18 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             Handler handler = new Handler(this);
             List<String> sortNamesList = new ArrayList<>();
             Collections.addAll(sortNamesList, Consts.sortNames);
-            View inflate = getLayoutInflater().inflate(R.layout.options, null);
-            ListView listView = inflate.findViewById(R.id.list);
-            PopupWindowSelectAdapter popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, sortNamesList, 1);
-            listView.setAdapter(popupWindowSelectAdapter);
-            sortPopupWindow = new JPPopupWindow(inflate, sortButton.getWidth() + 100, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            View optionView = getLayoutInflater().inflate(R.layout.options, null);
+            ListView listView = optionView.findViewById(R.id.list);
+            listView.setAdapter(new PopupWindowSelectAdapter(this, handler, sortNamesList, 1));
+            sortPopupWindow = new JPPopupWindow(optionView, sortButton.getWidth() + 100, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             sortPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             List<String> menuListNames = new ArrayList<>();
             Collections.addAll(menuListNames, Consts.localMenuListNames);
-            inflate = getLayoutInflater().inflate(R.layout.options, null);
-            listView = inflate.findViewById(R.id.list);
-            popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, menuListNames, 2);
-            listView.setAdapter(popupWindowSelectAdapter);
+            optionView = getLayoutInflater().inflate(R.layout.options, null);
+            listView = optionView.findViewById(R.id.list);
+            listView.setAdapter(new PopupWindowSelectAdapter(this, handler, menuListNames, 2));
             listView.setDivider(null);
-            menuPopupWindow = new JPPopupWindow(inflate, sortButton.getWidth() + 50, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            menuPopupWindow = new JPPopupWindow(optionView, sortButton.getWidth() + 50, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             menuPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             firstLoadFocusFinish = true;
         }

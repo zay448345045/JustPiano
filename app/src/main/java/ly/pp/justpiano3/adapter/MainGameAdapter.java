@@ -91,11 +91,11 @@ public final class MainGameAdapter extends BaseAdapter {
         switch (type) {
             case 0 -> {
                 // 大厅列表
-                if (view == null) {
-                    view = LayoutInflater.from(activity).inflate(R.layout.ol_hall_view, null);
-                }
                 if (activity == null) {
                     return view;
+                }
+                if (view == null) {
+                    view = LayoutInflater.from(activity).inflate(R.layout.ol_hall_view, null);
                 }
                 String string = list.get(i).getString("N");
                 byte hallId = list.get(i).getByte("I");
@@ -120,11 +120,11 @@ public final class MainGameAdapter extends BaseAdapter {
             }
             case 1 -> {
                 // 好友列表
-                if (view == null) {
-                    view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
-                }
                 if (activity == null) {
                     return view;
+                }
+                if (view == null) {
+                    view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
                 }
                 String userName = list.get(i).getString("F");
                 int i3 = list.get(i).getInt("O");
@@ -256,11 +256,11 @@ public final class MainGameAdapter extends BaseAdapter {
             }
             case 2 -> {
                 // 私信列表
-                if (view == null) {
-                    view = LayoutInflater.from(activity).inflate(R.layout.ol_mail_view, null);
-                }
                 if (activity == null) {
                     return view;
+                }
+                if (view == null) {
+                    view = LayoutInflater.from(activity).inflate(R.layout.ol_mail_view, null);
                 }
                 if (list.size() > i) {
                     String from = list.get(i).getString("F");
@@ -313,13 +313,12 @@ public final class MainGameAdapter extends BaseAdapter {
             }
             case 3 -> {
                 // 大厅用户列表
-                if (view == null) {
-                    view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
-                }
                 if (activity == null) {
                     return view;
                 }
-                view.setKeepScreenOn(true);
+                if (view == null) {
+                    view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
+                }
                 String userName = list.get(i).getString("U");
                 String gender = list.get(i).getString("S");
                 i4 = list.get(i).getInt("R");

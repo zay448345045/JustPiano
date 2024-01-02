@@ -22,21 +22,16 @@ public final class OLPlayHallRoomTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... strArr) {
-        String str = "";
-        // 创建请求参数
-        FormBody formBody = new FormBody.Builder()
-                .add("head", "2")
-                .add("version", BuildConfig.VERSION_NAME)
-                .add("keywords", strArr[0])
-                .add("userName", strArr[1])
-                .build();
-        // 创建请求对象
         Request request = new Request.Builder()
                 .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetUserInfo")
-                .post(formBody)
+                .post(new FormBody.Builder()
+                        .add("head", "2")
+                        .add("version", BuildConfig.VERSION_NAME)
+                        .add("keywords", strArr[0])
+                        .build())
                 .build();
+        String str = "";
         try {
-            // 发送请求并获取响应
             Response response = OkHttpUtil.client().newCall(request).execute();
             if (response.isSuccessful()) {
                 str = response.body().string();

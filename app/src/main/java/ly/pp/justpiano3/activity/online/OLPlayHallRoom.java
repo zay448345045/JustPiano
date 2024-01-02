@@ -130,11 +130,11 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         }
     }
 
-    public void showInfoDialog(Bundle b) {
+    public void showInfoDialog(Bundle bundle) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
-            User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
-                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
+            User user = new User(bundle.getString("U"), bundle.getInt("DR_H"), bundle.getInt("DR_E"), bundle.getInt("DR_J"),
+                    bundle.getInt("DR_T"), bundle.getInt("DR_S"), bundle.getString("S"), bundle.getInt("LV"), bundle.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
@@ -144,16 +144,16 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
-            int lv = b.getInt("LV");
+            int lv = bundle.getInt("LV");
             int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
-            textView.setText("用户名称:" + b.getString("U")
+            textView.setText("用户名称:" + bundle.getString("U")
                     + "\n用户等级:LV." + lv
-                    + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:CL." + b.getInt("CL")
-                    + "\n所在家族:" + b.getString("F")
-                    + "\n在线曲库冠军数:" + b.getInt("W")
-                    + "\n在线曲库弹奏总分:" + b.getInt("SC"));
-            textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
+                    + "\n经验进度:" + bundle.getInt("E") + "/" + targetExp
+                    + "\n考级进度:CL." + bundle.getInt("CL")
+                    + "\n所在家族:" + bundle.getString("F")
+                    + "\n在线曲库冠军数:" + bundle.getInt("W")
+                    + "\n在线曲库弹奏总分:" + bundle.getInt("SC"));
+            textView2.setText("个性签名:\n" + (bundle.getString("P").isEmpty() ? "无" : bundle.getString("P")));
             new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
                     .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
@@ -179,13 +179,13 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         saveMailToLocal();
     }
 
-    public void mo2841a(int i, String str, String str2) {
-        if (i == 3) {
+    public void buildDialog(int type, String title, String message) {
+        if (type == 3) {
             tabHost.setCurrentTab(1);
         }
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-        jpDialogBuilder.setTitle(str);
-        jpDialogBuilder.setMessage(str2);
+        jpDialogBuilder.setTitle(title);
+        jpDialogBuilder.setMessage(message);
         jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
@@ -212,27 +212,27 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         hallListAdapter.notifyDataSetChanged();
     }
 
-    public void sendMail(String str, int i) {
-        String str2;
-        String str3;
-        View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
-        TextView textView = inflate.findViewById(R.id.text_1);
-        TextView textView2 = inflate.findViewById(R.id.title_1);
-        inflate.findViewById(R.id.title_2).setVisibility(View.GONE);
-        inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
+    public void sendMail(String userName, int type) {
+        View messageSendView = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
+        TextView textView = messageSendView.findViewById(R.id.text_1);
+        TextView textView2 = messageSendView.findViewById(R.id.title_1);
+        messageSendView.findViewById(R.id.title_2).setVisibility(View.GONE);
+        messageSendView.findViewById(R.id.text_2).setVisibility(View.GONE);
         textView2.setText("内容:");
-        if (i == 0) {
-            str2 = "发送";
-            str3 = "发送私信给:" + str;
-        } else if (i == 1) {
-            str3 = "设置祝语";
-            str2 = "修改";
+        String buttonText;
+        String title;
+        if (type == 0) {
+            buttonText = "发送";
+            title = "发送私信给:" + userName;
+        } else if (type == 1) {
+            title = "设置祝语";
+            buttonText = "修改";
             textView.setText(coupleBlessView.getText().toString().substring(4));
         } else {
             return;
         }
-        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate).
-                setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str))
+        new JPDialogBuilder(this).setTitle(title).loadInflate(messageSendView).
+                setFirstButton(buttonText, new ChangeBlessingClick(this, textView, type, userName))
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
@@ -280,19 +280,19 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         mailListAdapter.notifyDataSetChanged();
     }
 
-    public void addFriends(String str) {
-        if (!str.isEmpty()) {
+    public void addFriends(String userName) {
+        if (!userName.isEmpty()) {
             JPDialogBuilder buildAndShowDialog = new JPDialogBuilder(this);
             buildAndShowDialog.setTitle("好友请求");
-            buildAndShowDialog.setMessage("[" + str + "]请求加您为好友，是否同意?");
+            buildAndShowDialog.setMessage("[" + userName + "]请求加您为好友，是否同意?");
             buildAndShowDialog.setFirstButton("同意", (dialog, which) -> {
                 dialog.dismiss();
                 JSONObject jSONObject = new JSONObject();
                 try {
                     jSONObject.put("H", 1);
-                    jSONObject.put("T", str);
+                    jSONObject.put("T", userName);
                     jSONObject.put("F", OLBaseActivity.getAccountName());
-                    new OLPlayHallRoomTask(this).execute(jSONObject.toString(), "");
+                    new OLPlayHallRoomTask(this).execute(jSONObject.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

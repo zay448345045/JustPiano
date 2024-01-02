@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import org.json.JSONArray;
@@ -54,17 +55,16 @@ public final class OLPlayHallRoomHandler extends Handler {
     }
 
     @Override
-    public void handleMessage(Message message) {
+    public void handleMessage(@NonNull Message message) {
         OLPlayHallRoom olPlayHallRoom = (OLPlayHallRoom) weakReference.get();
         if (olPlayHallRoom != null) {
             switch (message.what) {
                 case 0 -> post(() -> {
-                    int i;
                     olPlayHallRoom.hallList.clear();
                     Bundle data = message.getData();
                     Bundle bundle = data.getBundle("L");
                     int size = bundle.size();
-                    for (i = 0; i < size; i++) {
+                    for (int i = 0; i < size; i++) {
                         olPlayHallRoom.hallList.add(bundle.getBundle(String.valueOf(i)));
                     }
                     olPlayHallRoom.sortListAndBindAdapter(olPlayHallRoom.hallListView, olPlayHallRoom.hallList);
@@ -74,7 +74,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                     int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
                     olPlayHallRoom.userExpView.setText("经验值:" + data.getInt("E") + "/" + targetExp);
                     olPlayHallRoom.userLevelView.setText("LV." + lv);
-                    i = data.getInt("CL");
+                    int i = data.getInt("CL");
                     olPlayHallRoom.userClassView.setText("CL." + i);
                     olPlayHallRoom.userClassView.setTextColor(ContextCompat.getColor(olPlayHallRoom, Consts.colors[i]));
                     olPlayHallRoom.userClassNameView.setText(Consts.nameCL[i]);
@@ -111,7 +111,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.finish();
                         return;
                     }
-                    olPlayHallRoom.mo2841a(data.getInt("T"), data.getString("N"), data.getString("I"));
+                    olPlayHallRoom.buildDialog(data.getInt("T"), data.getString("N"), data.getString("I"));
                 });
                 case 2 -> post(() -> {
                     Bundle data = message.getData();
@@ -152,12 +152,12 @@ public final class OLPlayHallRoomHandler extends Handler {
                         olPlayHallRoom.myFamilyPic.setImageBitmap(myFamilyBitmap);
                         ImageLoadUtil.familyBitmapCacheMap.put(olPlayHallRoom.familyID, myFamilyBitmap);
                         ThreadPoolUtil.execute(() -> {
-                            File file1 = new File(olPlayHallRoom.getFilesDir(), olPlayHallRoom.familyID + ".webp");
+                            File file = new File(olPlayHallRoom.getFilesDir(), olPlayHallRoom.familyID + ".webp");
                             try {
-                                if (!file1.exists()) {
-                                    file1.createNewFile();
+                                if (!file.exists()) {
+                                    file.createNewFile();
                                 }
-                                OutputStream outputStream1 = new FileOutputStream(file1);
+                                OutputStream outputStream1 = new FileOutputStream(file);
                                 outputStream1.write(olPlayHallRoom.myFamilyPicArray);
                                 outputStream1.close();
                             } catch (Exception e) {
@@ -181,21 +181,18 @@ public final class OLPlayHallRoomHandler extends Handler {
                 });
                 case 4 -> {
                     post(() -> {
-                        int i;
-                        int i2 = 0;
                         olPlayHallRoom.jpprogressBar.dismiss();
                         olPlayHallRoom.mailList.clear();
                         Bundle data = message.getData();
                         int size = data.size();
-                        for (i = 0; i < size; i++) {
+                        for (int i = 0; i < size; i++) {
                             olPlayHallRoom.mailList.add(data.getBundle(String.valueOf(i)));
                         }
                         try {
                             JSONArray jSONArray = new JSONArray(olPlayHallRoom.sharedPreferences.getString("mailsString", "[]"));
-                            i = jSONArray.length();
-                            while (i2 < i) {
+                            for (int i = 0; i < jSONArray.length(); i++) {
                                 Bundle bundle = new Bundle();
-                                JSONObject jSONObject = jSONArray.getJSONObject(i2);
+                                JSONObject jSONObject = jSONArray.getJSONObject(i);
                                 if (jSONObject.has("type")) {
                                     bundle.putInt("type", jSONObject.getInt("type"));
                                 }
@@ -203,7 +200,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                                 bundle.putString("M", jSONObject.getString("M"));
                                 bundle.putString("T", jSONObject.getString("T"));
                                 olPlayHallRoom.mailList.add(bundle);
-                                i2++;
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -223,8 +219,8 @@ public final class OLPlayHallRoomHandler extends Handler {
                     String str = "确定";
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHallRoom);
                     jpDialogBuilder.setTitle(title);
+                    jpDialogBuilder.setMessage(messageStr);
                     if (b > 0) {
-                        jpDialogBuilder.setMessage(messageStr);
                         jpDialogBuilder.setFirstButton("进入Ta所在大厅", (dialog, which) -> {
                             dialog.dismiss();
                             OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
@@ -233,7 +229,6 @@ public final class OLPlayHallRoomHandler extends Handler {
                         });
                         jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                     } else {
-                        jpDialogBuilder.setMessage(messageStr);
                         jpDialogBuilder.setFirstButton(str, (dialog, which) -> dialog.dismiss());
                     }
                     DialogUtil.handleGoldSend(jpDialogBuilder, data.getInt("T"), data.getString("N"), data.getString("F"));
@@ -280,8 +275,7 @@ public final class OLPlayHallRoomHandler extends Handler {
                     jpDialogBuilder.buildAndShowDialog();
                 });
                 case 10 -> post(() -> {
-                    int result = message.getData().getInt("R");
-                    switch (result) {
+                    switch (message.getData().getInt("R")) {
                         case 0 -> {
                             Toast.makeText(olPlayHallRoom, "家族创建成功!", Toast.LENGTH_SHORT).show();
                             OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
@@ -317,18 +311,18 @@ public final class OLPlayHallRoomHandler extends Handler {
                     }
                     String todayOnlineTime = data.getString("T");
                     String tomorrowExp = data.getString("M");
-                    View inflate = olPlayHallRoom.getLayoutInflater().inflate(R.layout.account_list, olPlayHallRoom.findViewById(R.id.dialog));
-                    ListView listView = inflate.findViewById(R.id.account_list);
+                    View accountListView = olPlayHallRoom.getLayoutInflater().inflate(R.layout.account_list, olPlayHallRoom.findViewById(R.id.dialog));
+                    ListView listView = accountListView.findViewById(R.id.account_list);
                     listView.setBackgroundResource(R.color.translent);
                     listView.setCacheColorHint(Color.TRANSPARENT);
                     listView.setAlwaysDrawnWithCacheEnabled(true);
                     listView.setSelector(R.color.translent);
-                    TextView textView = inflate.findViewById(R.id.account_msg);
+                    TextView textView = accountListView.findViewById(R.id.account_msg);
                     textView.setVisibility(View.VISIBLE);
                     textView.setText("今日您已在线" + todayOnlineTime + "分钟，明日可获得" + tomorrowExp + "\n以下为昨日在线时长排名：");
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHallRoom).setWidth(375).setTitle("在线奖励")
                             .setSecondButton("取消", (dialog, which) -> dialog.dismiss())
-                            .loadInflate(inflate).setFirstButtonDisabled(disabled).setFirstButton("领取奖励", (dialog, i) -> {
+                            .loadInflate(accountListView).setFirstButtonDisabled(disabled).setFirstButton("领取奖励", (dialog, i) -> {
                                 dialog.dismiss();
                                 olPlayHallRoom.jpprogressBar.show();
                                 OnlineDailyDTO.Builder builder = OnlineDailyDTO.newBuilder();
@@ -338,10 +332,8 @@ public final class OLPlayHallRoomHandler extends Handler {
                     listView.setAdapter(new DailyTimeAdapter(list, olPlayHallRoom.getLayoutInflater(), olPlayHallRoom));
                     jpDialogBuilder.buildAndShowDialog();
                 });
-                case 12 -> post(() -> {
-                    String info = message.getData().getString("M");
-                    Toast.makeText(olPlayHallRoom, info, Toast.LENGTH_SHORT).show();
-                });
+                case 12 ->
+                        post(() -> Toast.makeText(olPlayHallRoom, message.getData().getString("M"), Toast.LENGTH_SHORT).show());
                 case 21 -> post(() -> {
                     Toast.makeText(olPlayHallRoom, "您已掉线，请检查您的网络再重新登录", Toast.LENGTH_SHORT).show();
                     olPlayHallRoom.startActivity(new Intent(olPlayHallRoom, OLMainMode.class));
