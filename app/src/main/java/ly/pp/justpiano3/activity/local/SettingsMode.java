@@ -102,7 +102,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 soundPreference.setSummary(GlobalSetting.INSTANCE.getSound());
             }
             // 检测是否支持midi功能，支持midi功能时，midi设备相关的设置才允许点击
-            if (MidiDeviceUtil.isSupportMidi(getActivity())) {
+            if (MidiDeviceUtil.isSupportMidiDevice(getActivity())) {
                 Preference midiDevicePreference = findPreference("midi_device_list");
                 if (midiDevicePreference != null) {
                     midiDevicePreference.setSummary("启用/禁用MIDI设备");

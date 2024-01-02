@@ -118,7 +118,7 @@ public final class MidiDeviceUtil {
     /**
      * 检测设备是否支持midi
      */
-    public static boolean isSupportMidi(Context context) {
+    public static boolean isSupportMidiDevice(Context context) {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI);
     }
 

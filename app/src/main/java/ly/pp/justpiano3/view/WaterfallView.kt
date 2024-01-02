@@ -25,6 +25,8 @@ import ly.pp.justpiano3.utils.ObjectPool
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
 import java.util.Arrays
+import java.util.Collections
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -75,7 +77,7 @@ class WaterfallView @JvmOverloads constructor(
     /**
      * 自由演奏瀑布流音块内容，key：音高，value：音块列表
      */
-    var freeStyleNotes: MutableMap<Byte, MutableList<WaterfallNote>> = mutableMapOf()
+    var freeStyleNotes: MutableMap<Byte, MutableList<WaterfallNote>> = ConcurrentHashMap()
 
     /**
      * 自由演奏瀑布流音块对象池
@@ -188,7 +190,7 @@ class WaterfallView @JvmOverloads constructor(
         progressBarBaseImage = ImageLoadUtil.loadSkinImage(context, "progress_bar_base")
         // 初始化自由演奏音符内存分配
         for (i in 0..Byte.MAX_VALUE) {
-            freeStyleNotes[i.toByte()] = mutableListOf()
+            freeStyleNotes[i.toByte()] = Collections.synchronizedList(ArrayList<WaterfallNote>())
         }
     }
 

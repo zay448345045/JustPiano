@@ -32,8 +32,9 @@ public final class SoundEngineUtil {
         try {
             System.loadLibrary("soundengine");
         } catch (Error e) {
+            e.printStackTrace();
+            System.exit(0);
             Process.killProcess(Process.myPid());
-            System.exit(1);
         }
         // 注册延音踏板状态变更监听器
         MidiDeviceUtil.setMidiSustainPedalListener(status -> {

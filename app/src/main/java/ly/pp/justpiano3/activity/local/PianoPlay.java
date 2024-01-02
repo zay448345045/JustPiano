@@ -479,7 +479,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         if (isOpenRecord) {
             recordFinish();
         }
-        if (MidiDeviceUtil.isSupportMidi(this)) {
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.removeMidiConnectionListener();
         }
         SoundEngineUtil.stopPlayAllSounds();
