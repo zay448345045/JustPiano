@@ -12,6 +12,8 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -45,20 +47,43 @@ import ly.pp.justpiano3.view.preference.SoundListPreference;
 
 public final class SettingsActivity extends FragmentActivity implements MidiDeviceUtil.MidiDeviceListener {
 
-    private static final SettingsFragment settingFragment = new SettingsFragment();
+    private final SettingsFragment settingFragment = new SettingsFragment();
 
-    private static final Map<String, PreferenceFragmentCompat> preferenceFragmentMap = new HashMap<>();
-    public static final Map<String, Pair<Preference, Predicate<FileUtil.UriInfo>>> filePickerPreferenceMap = new HashMap<>();
+    private final Map<String, PreferenceFragmentCompat> preferenceFragmentMap = new HashMap<>() {{
+        put("settings_piano_play", new PianoPlaySettingsFragment());
+        put("settings_play_note", new PlayNoteSettingsFragment());
+        put("settings_waterfall", new WaterfallSettingsFragment());
+        put("settings_sound", new SoundSettingsFragment());
+        put("settings_keyboard", new KeyboardSettingsFragment());
+        put("settings_online_chat", new OnlineChatSettingsFragment());
+        put("settings_easter_egg", new EasterEggFragment());
+    }};
 
-    static {
-        preferenceFragmentMap.put("settings_piano_play", new PianoPlaySettingsFragment());
-        preferenceFragmentMap.put("settings_play_note", new PlayNoteSettingsFragment());
-        preferenceFragmentMap.put("settings_waterfall", new WaterfallSettingsFragment());
-        preferenceFragmentMap.put("settings_sound", new SoundSettingsFragment());
-        preferenceFragmentMap.put("settings_keyboard", new KeyboardSettingsFragment());
-        preferenceFragmentMap.put("settings_online_chat", new OnlineChatSettingsFragment());
-        preferenceFragmentMap.put("settings_easter_egg", new EasterEggFragment());
-    }
+    public final Map<String, Pair<Preference, Predicate<FileUtil.UriInfo>>> filePickerPreferenceMap = new HashMap<>();
+
+    public final ActivityResultLauncher<Intent> skinSelectLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("skin_select");
+                if (value != null && value.first instanceof SkinListPreference skinListPreference) {
+                    skinListPreference.skinKey = skinListPreference.getPersistedString();
+                    skinListPreference.closeDialog();
+                }
+                ImageLoadUtil.setBackground(this);
+            });
+
+    public final ActivityResultLauncher<Intent> soundSelectLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("sound_select");
+                if (value != null && value.first instanceof SoundListPreference soundListPreference) {
+                    soundListPreference.soundKey = soundListPreference.getPersistedString();
+                    soundListPreference.closeDialog();
+                }
+                ImageLoadUtil.setBackground(this);
+            });
+
+    public final ActivityResultLauncher<Intent> filePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result ->
+                    filePickerActivityResultHandle(false, result.getResultCode(), result.getData()));
 
     @Override
     public void onBackPressed() {
@@ -81,7 +106,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat {
+    public class SettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -220,7 +245,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public static class PianoPlaySettingsFragment extends PreferenceFragmentCompat {
+    public class PianoPlaySettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
@@ -228,7 +253,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public static class PlayNoteSettingsFragment extends PreferenceFragmentCompat {
+    public class PlayNoteSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -236,7 +261,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public static class WaterfallSettingsFragment extends PreferenceFragmentCompat {
+    public class WaterfallSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -253,7 +278,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public static class SoundSettingsFragment extends PreferenceFragmentCompat {
+    public class SoundSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -282,7 +307,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public static class KeyboardSettingsFragment extends PreferenceFragmentCompat {
+    public class KeyboardSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -290,7 +315,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public static class OnlineChatSettingsFragment extends PreferenceFragmentCompat {
+    public class OnlineChatSettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -309,7 +334,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         }
     }
 
-    public static class EasterEggFragment extends PreferenceFragmentCompat {
+    public class EasterEggFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -320,7 +345,7 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
     /**
      * 注册filePickerPreference行为
      */
-    private static void registerFilePickerPreference(PreferenceFragmentCompat preferenceFragment, String key, boolean folderPicker,
+    private void registerFilePickerPreference(PreferenceFragmentCompat preferenceFragment, String key, boolean folderPicker,
                                                      String defaultSummary, String uri, Predicate<FileUtil.UriInfo> predicate) {
         Preference preference = preferenceFragment.findPreference(key);
         if (preference != null) {

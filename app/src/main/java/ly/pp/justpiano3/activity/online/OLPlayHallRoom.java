@@ -21,6 +21,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.protobuf.MessageLite;
@@ -124,6 +125,21 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public ImageView coupleShoesView;
     public String coupleSex;
     private LayoutInflater layoutinflater;
+
+    private final ActivityResultLauncher<Intent> dressRoomLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Bundle extras = result.getData().getExtras();
+                    userSex = extras.getString("S");
+                    userTrousersIndex = extras.getInt("T");
+                    userJacketIndex = extras.getInt("J");
+                    userHairIndex = extras.getInt("H");
+                    userEyeIndex = extras.getInt("E");
+                    userShoesIndex = extras.getInt("O");
+                    ImageLoadUtil.setUserDressImageBitmap(this, userSex, userTrousersIndex, userJacketIndex, userHairIndex, userEyeIndex, userShoesIndex,
+                            userModView, userTrousersView, userJacketsView, userHairView, userEyeView, userShoesView);
+                }
+            });
 
     public void sendMsg(int type, MessageLite message) {
         if (OnlineUtil.getConnectionService() != null) {
@@ -327,19 +343,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             intent.putExtra("S", userSex);
             intent.putExtra("Lv", lv);
             intent.putExtra("O", userShoesIndex - 1);
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Bundle extras = result.getData().getExtras();
-                    userSex = extras.getString("S");
-                    userTrousersIndex = extras.getInt("T");
-                    userJacketIndex = extras.getInt("J");
-                    userHairIndex = extras.getInt("H");
-                    userEyeIndex = extras.getInt("E");
-                    userShoesIndex = extras.getInt("O");
-                    ImageLoadUtil.setUserDressImageBitmap(this, userSex, userTrousersIndex, userJacketIndex, userHairIndex, userEyeIndex, userShoesIndex,
-                            userModView, userTrousersView, userJacketsView, userHairView, userEyeView, userShoesView);
-                }
-            }).launch(intent);
+            dressRoomLauncher.launch(intent);
         } else if (id == R.id.ol_bonus_button) {
             jpprogressBar.show();
             OnlineDailyDTO.Builder builder2 = OnlineDailyDTO.newBuilder();

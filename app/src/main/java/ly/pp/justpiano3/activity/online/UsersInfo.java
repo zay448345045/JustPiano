@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
@@ -58,6 +59,24 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
     private TextView scoreText;
     private TextView pSignText;
     private ImageView faceImage;
+
+    private final ActivityResultLauncher<Intent> cropPictureLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Bundle extras = result.getData().getExtras();
+                    if (extras != null) {
+                        Bitmap bitmap = extras.getParcelable("data");
+                        faceImage.setImageDrawable(new BitmapDrawable(bitmap));
+//                    try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
+//                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fileOutputStream);
+//                        new UserFaceChangeTask(this).execute(
+//                                "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/UploadFace", filePath, accountJpg);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+                    }
+                }
+            });
 
     public static void updateUserInfo(UsersInfo usersInfo, String str) {
         JSONObject jsonObject = null;
@@ -155,22 +174,7 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
         intent.putExtra("outputX", 240);
         intent.putExtra("outputY", 240);
         intent.putExtra("return-data", true);
-        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                Bundle extras = result.getData().getExtras();
-                if (extras != null) {
-                    Bitmap bitmap = extras.getParcelable("data");
-                    faceImage.setImageDrawable(new BitmapDrawable(bitmap));
-//                    try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
-//                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fileOutputStream);
-//                        new UserFaceChangeTask(this).execute(
-//                                "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/UploadFace", filePath, accountJpg);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-                }
-            }
-        }).launch(intent);
+        cropPictureLauncher.launch(intent);
     }
 
     @Override

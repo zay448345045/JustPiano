@@ -11,10 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.util.Pair;
-import androidx.core.util.Predicate;
-import androidx.preference.Preference;
 
 import java.util.Objects;
 
@@ -23,8 +19,6 @@ import ly.pp.justpiano3.activity.local.SettingsActivity;
 import ly.pp.justpiano3.activity.local.SkinDownload;
 import ly.pp.justpiano3.task.SkinListPreferenceTask;
 import ly.pp.justpiano3.utils.FilePickerUtil;
-import ly.pp.justpiano3.utils.FileUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.preference.SkinListPreference;
 
 public final class SkinListAdapter extends BaseAdapter {
@@ -82,17 +76,10 @@ public final class SkinListAdapter extends BaseAdapter {
         }
         setButton.setOnClickListener(v -> {
             if (skinKey.equals("more")) {
-                ((ComponentActivity) (context)).registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                    Pair<Preference, Predicate<FileUtil.UriInfo>> value = SettingsActivity.filePickerPreferenceMap.get("skin_select");
-                    if (value != null && value.first instanceof SkinListPreference skinListPreference) {
-                        skinListPreference.skinKey = skinListPreference.getPersistedString();
-                        skinListPreference.closeDialog();
-                    }
-                    ImageLoadUtil.setBackground((ComponentActivity) (context));
-                }).launch(new Intent(context, SkinDownload.class));
+                ((SettingsActivity) (context)).skinSelectLauncher.launch(new Intent(context, SkinDownload.class));
             } else if (skinKey.equals("select")) {
-                FilePickerUtil.openFilePicker((ComponentActivity) context, false, "skin_select", result ->
-                        ((SettingsActivity) context).filePickerActivityResultHandle(false, result.getResultCode(), result.getData()));
+                FilePickerUtil.openFilePicker((ComponentActivity) context, false,
+                        "skin_select", ((SettingsActivity) context).filePickerLauncher);
             } else {
                 skinListPreference.skinKey = skinKey;
                 skinListPreference.skinFile = Objects.equals("original", skinKey) ? null : Uri.parse(skinKey);

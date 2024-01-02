@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity.local;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -20,6 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 
 import com.google.protobuf.MessageLite;
@@ -102,6 +105,16 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     private int localSongsTime;
     public int playType;
     private final Map<Byte, Pair<Byte, Long>> playingPitchMap = new ConcurrentHashMap<>();
+
+    public final ActivityResultLauncher<Intent> playFinishLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    if (isOpenRecord) {
+                        recordFinish();
+                    }
+                    finish();
+                }
+            });
 
     private List<Bundle> sortByField(List<Bundle> list, String field) {
         if (list != null && !list.isEmpty()) {

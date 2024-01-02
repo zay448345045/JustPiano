@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
@@ -90,6 +91,22 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     private String recordFilePath;
     private String recordFileName;
     private int tabTitleHeight;
+
+    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                ImageLoadUtil.setBackground(this);
+                keyboardView.changeSkinKeyboardImage(this);
+                keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries()
+                        .get(GlobalSetting.getKeyboardOctaveTagType()));
+                waterfallView.setViewAlpha(GlobalSetting.getWaterfallOnlineAlpha());
+                waterfallView.setShowOctaveLine(GlobalSetting.getWaterfallOctaveLine());
+                waterfallView.setNoteFallDownSpeed(GlobalSetting.getWaterfallDownSpeed());
+                if (GlobalSetting.getKeyboardRealtime()) {
+                    stopNotesSchedule();
+                } else {
+                    openNotesSchedule();
+                }
+            });
 
     private void broadNote(byte pitch, byte volume) {
         if (GlobalSetting.getKeyboardRealtime()) {
@@ -232,21 +249,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         super.onClick(view);
         int id = view.getId();
         if (id == R.id.keyboard_setting) {
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                        ImageLoadUtil.setBackground(this);
-                        keyboardView.changeSkinKeyboardImage(this);
-                        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries()
-                                .get(GlobalSetting.getKeyboardOctaveTagType()));
-                        waterfallView.setViewAlpha(GlobalSetting.getWaterfallOnlineAlpha());
-                        waterfallView.setShowOctaveLine(GlobalSetting.getWaterfallOctaveLine());
-                        waterfallView.setNoteFallDownSpeed(GlobalSetting.getWaterfallDownSpeed());
-                        if (GlobalSetting.getKeyboardRealtime()) {
-                            stopNotesSchedule();
-                        } else {
-                            openNotesSchedule();
-                        }
-                    }
-            ).launch(new Intent(this, SettingsActivity.class));
+            settingsLauncher.launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.keyboard_record) {
             try {
                 Button recordButton = (Button) view;

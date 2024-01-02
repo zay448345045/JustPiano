@@ -20,6 +20,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
@@ -75,6 +76,9 @@ public final class OLPlayRoom extends OLRoomActivity {
     private PopupWindow coupleModePopupWindow;
     private PopupWindow playSongsModePopupWindow;
     private RecyclerView songsRecyclerView;
+
+    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> ImageLoadUtil.setBackground(this));
 
     private void playSongByDegreeRandom(int startDegree, int endDegree) {
         List<Song> songs = JPApplication.getSongDatabase().songDao().getSongByRightHandDegreeWithRandom(startDegree, endDegree);
@@ -270,8 +274,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             if (normalModePopupWindow != null) {
                 normalModePopupWindow.dismiss();
             }
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->
-                    ImageLoadUtil.setBackground(this)).launch(new Intent(this, SettingsActivity.class));
+            settingsLauncher.launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.rand_0) {
             playSongByDegreeRandom(2, 4);
         } else if (id == R.id.rand_all) {

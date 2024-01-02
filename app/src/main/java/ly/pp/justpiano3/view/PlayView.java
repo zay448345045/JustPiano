@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,7 +16,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
 import java.nio.charset.StandardCharsets;
@@ -682,14 +680,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     intent.putExtra("songsTime", songsTime);
                     intent.putExtra("hand", handValue);
                     intent.putExtra("top_combo", topComboNum);
-                    pianoPlay.registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            if (pianoPlay.isOpenRecord) {
-                                pianoPlay.recordFinish();
-                            }
-                            pianoPlay.finish();
-                        }
-                    }).launch(intent);
+                    pianoPlay.playFinishLauncher.launch(intent);
                 }
             }
         }

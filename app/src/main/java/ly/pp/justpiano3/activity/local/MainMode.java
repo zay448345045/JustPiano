@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import ly.pp.justpiano3.BuildConfig;
@@ -26,6 +27,16 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class MainMode extends BaseActivity implements OnClickListener {
     private boolean pressAgain;
+
+    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                ImageLoadUtil.setBackground(this);
+                if (GlobalSetting.getAllFullScreenShow()) {
+                    WindowUtil.fullScreenHandle(getWindow());
+                } else {
+                    WindowUtil.exitFullScreenHandle(getWindow());
+                }
+            });
 
     @Override
     public void onBackPressed() {
@@ -80,15 +91,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
             startActivity(intent);
         } else if (id == R.id.settings) {
             intent.setClass(this, SettingsActivity.class);
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                        ImageLoadUtil.setBackground(this);
-                        if (GlobalSetting.getAllFullScreenShow()) {
-                            WindowUtil.fullScreenHandle(getWindow());
-                        } else {
-                            WindowUtil.exitFullScreenHandle(getWindow());
-                        }
-                    }
-            ).launch(intent);
+            settingsLauncher.launch(intent);
         } else if (id == R.id.feed_back) {
             View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
             TextView textView = inflate.findViewById(R.id.text_1);

@@ -10,18 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.util.Pair;
-import androidx.core.util.Predicate;
-import androidx.preference.Preference;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.local.SettingsActivity;
 import ly.pp.justpiano3.activity.local.SoundDownload;
 import ly.pp.justpiano3.task.SoundListPreferenceTask;
 import ly.pp.justpiano3.utils.FilePickerUtil;
-import ly.pp.justpiano3.utils.FileUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.view.preference.SoundListPreference;
 
 public final class SoundListAdapter extends BaseAdapter {
@@ -79,17 +73,10 @@ public final class SoundListAdapter extends BaseAdapter {
         }
         setButton.setOnClickListener(v -> {
             if (soundKey.equals("more")) {
-                ((ComponentActivity) (context)).registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                    Pair<Preference, Predicate<FileUtil.UriInfo>> value = SettingsActivity.filePickerPreferenceMap.get("sound_select");
-                    if (value != null && value.first instanceof SoundListPreference soundListPreference) {
-                        soundListPreference.soundKey = soundListPreference.getPersistedString();
-                        soundListPreference.closeDialog();
-                    }
-                    ImageLoadUtil.setBackground((ComponentActivity) (context));
-                }).launch(new Intent(context, SoundDownload.class));
+                ((SettingsActivity) (context)).soundSelectLauncher.launch(new Intent(context, SoundDownload.class));
             } else if (soundKey.equals("select")) {
-                FilePickerUtil.openFilePicker((ComponentActivity) context, false, "sound_select", result ->
-                        ((SettingsActivity) context).filePickerActivityResultHandle(false, result.getResultCode(), result.getData()));
+                FilePickerUtil.openFilePicker((ComponentActivity) context, false,
+                        "sound_select", ((SettingsActivity) context).filePickerLauncher);
             } else {
                 soundListPreference.soundKey = soundKey;
                 new SoundListPreferenceTask(soundListPreference).execute(soundKey);

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -51,6 +52,17 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
     private boolean recordStart;
     private String recordFilePath;
     private String recordFileName;
+
+    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                ImageLoadUtil.setBackground(this);
+                firstKeyboardView.changeSkinKeyboardImage(this);
+                secondKeyboardView.changeSkinKeyboardImage(this);
+                KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.getEntries()
+                        .get(GlobalSetting.getKeyboardOctaveTagType());
+                firstKeyboardView.setOctaveTagType(octaveTagType);
+                secondKeyboardView.setOctaveTagType(octaveTagType);
+            });
 
     @Override
     public void onBackPressed() {
@@ -255,16 +267,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.keyboard_setting) {
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                        ImageLoadUtil.setBackground(this);
-                        firstKeyboardView.changeSkinKeyboardImage(this);
-                        secondKeyboardView.changeSkinKeyboardImage(this);
-                        KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.getEntries()
-                                .get(GlobalSetting.getKeyboardOctaveTagType());
-                        firstKeyboardView.setOctaveTagType(octaveTagType);
-                        secondKeyboardView.setOctaveTagType(octaveTagType);
-                    }
-            ).launch(new Intent(this, SettingsActivity.class));
+            settingsLauncher.launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.keyboard_record) {
             try {
                 Button recordButton = (Button) view;
