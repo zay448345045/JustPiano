@@ -15,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 import androidx.core.util.Predicate;
 import androidx.fragment.app.FragmentActivity;
@@ -44,7 +43,7 @@ import ly.pp.justpiano3.view.preference.FilePickerPreference;
 import ly.pp.justpiano3.view.preference.SkinListPreference;
 import ly.pp.justpiano3.view.preference.SoundListPreference;
 
-public final class SettingsMode extends FragmentActivity implements MidiDeviceUtil.MidiDeviceListener {
+public final class SettingsActivity extends FragmentActivity implements MidiDeviceUtil.MidiDeviceListener {
 
     private static final SettingsFragment settingFragment = new SettingsFragment();
 
@@ -341,13 +340,9 @@ public final class SettingsMode extends FragmentActivity implements MidiDeviceUt
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == FilePickerUtil.PICK_FOLDER_REQUEST_CODE || requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE)
-                && resultCode == Activity.RESULT_OK) {
-            FileUtil.UriInfo uriInfo = requestCode == FilePickerUtil.PICK_FOLDER_REQUEST_CODE
-                    ? FileUtil.getFolderUriInfo(this, data.getData())
+    public void filePickerActivityResultHandle(boolean folderPicker, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            FileUtil.UriInfo uriInfo = folderPicker ? FileUtil.getFolderUriInfo(this, data.getData())
                     : FileUtil.getUriInfo(this, data.getData());
             Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get(FilePickerUtil.extra);
             if (value == null || uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !value.second.test(uriInfo)) {
@@ -375,20 +370,6 @@ public final class SettingsMode extends FragmentActivity implements MidiDeviceUt
                 GlobalSetting.setBackgroundPic(uriInfo.getUri().toString());
                 ImageLoadUtil.setBackground(this);
             }
-        } else if (requestCode == SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE) {
-            Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("skin_select");
-            if (value != null && value.first instanceof SkinListPreference skinListPreference) {
-                skinListPreference.skinKey = skinListPreference.getPersistedString();
-                skinListPreference.closeDialog();
-            }
-            ImageLoadUtil.setBackground(this);
-        } else if (requestCode == SoundDownload.SOUND_DOWNLOAD_REQUEST_CODE) {
-            Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get("sound_select");
-            if (value != null && value.first instanceof SoundListPreference soundListPreference) {
-                soundListPreference.soundKey = soundListPreference.getPersistedString();
-                soundListPreference.closeDialog();
-            }
-            ImageLoadUtil.setBackground(this);
         }
     }
 

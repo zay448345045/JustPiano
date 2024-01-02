@@ -12,7 +12,7 @@
             android:title="弹奏设置">
             <intent
                 android:data="settings_piano_play"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.local.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <PreferenceScreen
@@ -20,7 +20,7 @@
             android:title="音块设置">
             <intent
                 android:data="settings_play_note"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.local.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <PreferenceScreen
@@ -28,7 +28,7 @@
             android:title="瀑布流设置">
             <intent
                 android:data="settings_waterfall"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.local.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <SwitchPreference
@@ -61,7 +61,7 @@
             android:title="声音效果设置">
             <intent
                 android:data="settings_sound"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.local.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <PreferenceScreen
@@ -69,7 +69,7 @@
             android:title="钢琴键盘设置">
             <intent
                 android:data="settings_keyboard"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.local.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <ly.pp.justpiano3.view.preference.FilePickerPreference
@@ -102,7 +102,7 @@
             android:title="聊天设置">
             <intent
                 android:data="settings_online_chat"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.local.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <SwitchPreference
@@ -119,7 +119,7 @@
             android:title="软件版本">
             <intent
                 android:data="settings_easter_egg"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.local.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <Preference

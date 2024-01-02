@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 
 import kotlin.Pair;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.local.SettingsMode;
+import ly.pp.justpiano3.activity.local.SettingsActivity;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -246,7 +246,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                             openNotesSchedule();
                         }
                     }
-            ).launch(new Intent(this, SettingsMode.class));
+            ).launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.keyboard_record) {
             try {
                 Button recordButton = (Button) view;

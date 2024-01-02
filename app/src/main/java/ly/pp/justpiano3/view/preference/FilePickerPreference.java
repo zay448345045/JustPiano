@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.view.preference;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -14,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
+import ly.pp.justpiano3.activity.local.SettingsActivity;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 
 public final class FilePickerPreference extends Preference {
@@ -81,9 +81,13 @@ public final class FilePickerPreference extends Preference {
         super.onClick();
         if (activity != null) {
             if (folderPicker) {
-                FilePickerUtil.openFolderPicker(activity, getKey());
+                FilePickerUtil.openFolderPicker(activity, getKey(), result ->
+                        ((SettingsActivity) activity).filePickerActivityResultHandle(
+                                folderPicker, result.getResultCode(), result.getData()));
             } else {
-                FilePickerUtil.openFilePicker(activity, false, getKey());
+                FilePickerUtil.openFilePicker(activity, false, getKey(), result ->
+                        ((SettingsActivity) activity).filePickerActivityResultHandle(
+                                folderPicker, result.getResultCode(), result.getData()));
             }
         }
     }

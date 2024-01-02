@@ -264,7 +264,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                         firstKeyboardView.setOctaveTagType(octaveTagType);
                         secondKeyboardView.setOctaveTagType(octaveTagType);
                     }
-            ).launch(new Intent(this, SettingsMode.class));
+            ).launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.keyboard_record) {
             try {
                 Button recordButton = (Button) view;

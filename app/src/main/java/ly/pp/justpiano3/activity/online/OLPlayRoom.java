@@ -35,7 +35,7 @@ import java.util.Objects;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.local.SettingsMode;
+import ly.pp.justpiano3.activity.local.SettingsActivity;
 import ly.pp.justpiano3.adapter.OLRoomSongsAdapter;
 import ly.pp.justpiano3.adapter.PlayerImageAdapter;
 import ly.pp.justpiano3.constant.Consts;
@@ -271,7 +271,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 normalModePopupWindow.dismiss();
             }
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->
-                    ImageLoadUtil.setBackground(this)).launch(new Intent(this, SettingsMode.class));
+                    ImageLoadUtil.setBackground(this)).launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.rand_0) {
             playSongByDegreeRandom(2, 4);
         } else if (id == R.id.rand_all) {

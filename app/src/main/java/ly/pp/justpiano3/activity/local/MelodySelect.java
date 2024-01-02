@@ -231,7 +231,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             menuPopupWindow.dismiss();
             SongPlay.stopPlay();
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> ImageLoadUtil.setBackground(this)
-            ).launch(new Intent(this, SettingsMode.class));
+            ).launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.lo_extra_func_sync) {
             menuPopupWindow.dismiss();
             new SongSyncTask(this).execute();

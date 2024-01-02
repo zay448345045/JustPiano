@@ -79,7 +79,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
             intent.setClass(this, ChatFiles.class);
             startActivity(intent);
         } else if (id == R.id.settings) {
-            intent.setClass(this, SettingsMode.class);
+            intent.setClass(this, SettingsActivity.class);
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                         ImageLoadUtil.setBackground(this);
                         if (GlobalSetting.getAllFullScreenShow()) {
