@@ -204,7 +204,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                     + "\n在线曲库冠军数:" + b.getInt("W")
                     + "\n在线曲库弹奏总分:" + b.getInt("SC"));
             textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+            new JPDialogBuilder(this).setWidth(288).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
                     .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {

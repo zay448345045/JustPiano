@@ -115,7 +115,7 @@
                 android:text="@string/ol_room_view_name"
                 android:gravity="center_vertical"
                 android:textColor="@color/roomtext"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
         <RelativeLayout

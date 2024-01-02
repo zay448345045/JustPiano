@@ -137,7 +137,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
                     + "\n在线曲库冠军数:" + bundle.getInt("W")
                     + "\n在线曲库弹奏总分:" + bundle.getInt("SC"));
             textView2.setText("个性签名:\n" + (bundle.getString("P").isEmpty() ? "无" : bundle.getString("P")));
-            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+            new JPDialogBuilder(this).setWidth(288).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
                     .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
