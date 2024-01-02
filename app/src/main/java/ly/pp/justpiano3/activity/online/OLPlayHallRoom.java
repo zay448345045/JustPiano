@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity.online;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -19,6 +20,8 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.protobuf.MessageLite;
 
@@ -302,22 +305,6 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     }
 
     @Override
-    protected void onActivityResult(int i, int i2, Intent intent) {
-        super.onActivityResult(i, i2, intent);
-        if (i2 == -1) {
-            Bundle extras = intent.getExtras();
-            userSex = extras.getString("S");
-            userTrousersIndex = extras.getInt("T");
-            userJacketIndex = extras.getInt("J");
-            userHairIndex = extras.getInt("H");
-            userEyeIndex = extras.getInt("E");
-            userShoesIndex = extras.getInt("O");
-            ImageLoadUtil.setUserDressImageBitmap(this, userSex, userTrousersIndex, userJacketIndex, userHairIndex, userEyeIndex, userShoesIndex,
-                    userModView, userTrousersView, userJacketsView, userHairView, userEyeView, userShoesView);
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         JPStack.clear();
         startActivity(new Intent(this, OLMainMode.class));
@@ -340,7 +327,19 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             intent.putExtra("S", userSex);
             intent.putExtra("Lv", lv);
             intent.putExtra("O", userShoesIndex - 1);
-            startActivityForResult(intent, 0);
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Bundle extras = result.getData().getExtras();
+                    userSex = extras.getString("S");
+                    userTrousersIndex = extras.getInt("T");
+                    userJacketIndex = extras.getInt("J");
+                    userHairIndex = extras.getInt("H");
+                    userEyeIndex = extras.getInt("E");
+                    userShoesIndex = extras.getInt("O");
+                    ImageLoadUtil.setUserDressImageBitmap(this, userSex, userTrousersIndex, userJacketIndex, userHairIndex, userEyeIndex, userShoesIndex,
+                            userModView, userTrousersView, userJacketsView, userHairView, userEyeView, userShoesView);
+                }
+            }).launch(intent);
         } else if (id == R.id.ol_bonus_button) {
             jpprogressBar.show();
             OnlineDailyDTO.Builder builder2 = OnlineDailyDTO.newBuilder();

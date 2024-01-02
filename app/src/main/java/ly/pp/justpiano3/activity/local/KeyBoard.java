@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
@@ -251,23 +252,19 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this);
-            firstKeyboardView.changeSkinKeyboardImage(this);
-            secondKeyboardView.changeSkinKeyboardImage(this);
-            KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.getEntries().get(GlobalSetting.INSTANCE.getKeyboardOctaveTagType());
-            firstKeyboardView.setOctaveTagType(octaveTagType);
-            secondKeyboardView.setOctaveTagType(octaveTagType);
-        }
-    }
-
-    @Override
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.keyboard_setting) {
-            startActivityForResult(new Intent(this, SettingsMode.class), SettingsMode.SETTING_MODE_CODE);
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                        ImageLoadUtil.setBackground(this);
+                        firstKeyboardView.changeSkinKeyboardImage(this);
+                        secondKeyboardView.changeSkinKeyboardImage(this);
+                        KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.getEntries()
+                                .get(GlobalSetting.INSTANCE.getKeyboardOctaveTagType());
+                        firstKeyboardView.setOctaveTagType(octaveTagType);
+                        secondKeyboardView.setOctaveTagType(octaveTagType);
+                    }
+            ).launch(new Intent(this, SettingsMode.class));
         } else if (id == R.id.keyboard_record) {
             try {
                 Button recordButton = (Button) view;

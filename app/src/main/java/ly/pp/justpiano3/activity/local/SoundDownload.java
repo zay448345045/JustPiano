@@ -33,7 +33,6 @@ import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class SoundDownload extends BaseActivity implements Callback {
-    public static final int SOUND_DOWNLOAD_REQUEST_CODE = 98;
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;

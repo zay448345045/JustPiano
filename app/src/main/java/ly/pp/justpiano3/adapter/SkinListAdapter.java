@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.preference.PreferenceActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.activity.ComponentActivity;
 
 import java.util.Objects;
 
@@ -76,7 +79,7 @@ public final class SkinListAdapter extends BaseAdapter {
             if (skinKey.equals("more")) {
                 ((Activity) (context)).startActivityForResult(new Intent(context, SkinDownload.class), SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE);
             } else if (skinKey.equals("select")) {
-                FilePickerUtil.openFilePicker((Activity) context, false, "skin_select");
+                FilePickerUtil.openFilePicker((ComponentActivity) context, false, "skin_select");
             } else {
                 skinListPreference.skinKey = skinKey;
                 skinListPreference.skinFile = Objects.equals("original", skinKey) ? null : Uri.parse(skinKey);

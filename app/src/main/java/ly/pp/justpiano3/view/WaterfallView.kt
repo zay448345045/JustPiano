@@ -37,8 +37,7 @@ class WaterfallView @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) :
-    SurfaceView(context, attrs, defStyleAttr), SurfaceHolder.Callback {
+) : SurfaceView(context, attrs, defStyleAttr), SurfaceHolder.Callback {
 
     /**
      * 背景图及背景的绘制范围

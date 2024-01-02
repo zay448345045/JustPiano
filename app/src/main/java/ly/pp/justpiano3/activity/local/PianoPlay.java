@@ -66,7 +66,7 @@ import protobuf.dto.OnlineQuitRoomDTO;
 public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.MidiDeviceListener {
     public HorizontalListView horizontalListView;
     public TextView showHideGrade;
-    private boolean isOpenRecord;
+    public boolean isOpenRecord;
     public PianoPlayHandler pianoPlayHandler = new PianoPlayHandler(this);
     public View pausedPlay;
     public int times;
@@ -293,17 +293,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             } else {
                 Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
             }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int i, int i2, Intent intent) {
-        if (i2 == -1) {
-            if (isOpenRecord) {
-                recordFinish();
-            }
-            finish();
-            super.onActivityResult(i, i2, intent);
         }
     }
 

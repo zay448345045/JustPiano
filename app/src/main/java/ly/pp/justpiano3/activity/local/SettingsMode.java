@@ -43,8 +43,6 @@ import ly.pp.justpiano3.view.preference.SoundListPreference;
 
 public final class SettingsMode extends PreferenceActivity implements MidiDeviceUtil.MidiDeviceListener {
 
-    public static final int SETTING_MODE_CODE = 122;
-
     private static final Map<String, PreferenceFragment> preferenceFragmentMap = new HashMap<>();
     private static final Map<String, Pair<Preference, Predicate<FileUtil.UriInfo>>> filePickerPreferenceMap = new HashMap<>();
 

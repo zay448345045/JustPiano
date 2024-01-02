@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -231,7 +232,21 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         super.onClick(view);
         int id = view.getId();
         if (id == R.id.keyboard_setting) {
-            startActivityForResult(new Intent(this, SettingsMode.class), SettingsMode.SETTING_MODE_CODE);
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                        ImageLoadUtil.setBackground(this);
+                        keyboardView.changeSkinKeyboardImage(this);
+                        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries()
+                                .get(GlobalSetting.INSTANCE.getKeyboardOctaveTagType()));
+                        waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
+                        waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
+                        waterfallView.setNoteFallDownSpeed(GlobalSetting.INSTANCE.getWaterfallDownSpeed());
+                        if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
+                            stopNotesSchedule();
+                        } else {
+                            openNotesSchedule();
+                        }
+                    }
+            ).launch(new Intent(this, SettingsMode.class));
         } else if (id == R.id.keyboard_record) {
             try {
                 Button recordButton = (Button) view;
@@ -271,24 +286,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this);
-            keyboardView.changeSkinKeyboardImage(this);
-            keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries().get(GlobalSetting.INSTANCE.getKeyboardOctaveTagType()));
-            waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
-            waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
-            waterfallView.setNoteFallDownSpeed(GlobalSetting.INSTANCE.getWaterfallDownSpeed());
-            if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
-                stopNotesSchedule();
-            } else {
-                openNotesSchedule();
             }
         }
     }

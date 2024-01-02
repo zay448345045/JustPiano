@@ -26,6 +26,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -120,63 +121,6 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             this.orderPosition = orderPosition;
         }
         return false;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this);
-        } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK
-                && Objects.equals(FilePickerUtil.extra, "midi_import")) {
-            List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, data);
-            if (uriInfoList.size() != 1) {
-                return;
-            }
-            FileUtil.UriInfo uriInfo = uriInfoList.get(0);
-            if (uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !(uriInfo.getDisplayName().endsWith(".mid") || uriInfo.getDisplayName().endsWith(".midi"))) {
-                Toast.makeText(this, "请选择合法的midi格式文件", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            String songName = uriInfo.getDisplayName().substring(0, uriInfo.getDisplayName().indexOf('.'));
-            File pmFile = new File(getFilesDir().getAbsolutePath() + "/ImportSongs/" + songName + ".pm");
-            if (pmFile.exists()) {
-                Toast.makeText(this, "不能重复导入曲谱，请删除同名曲谱后再试", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (pmFile.getParentFile() != null && !pmFile.getParentFile().exists()) {
-                pmFile.getParentFile().mkdirs();
-            }
-            if (uriInfo.getFileSize() != null && uriInfo.getFileSize() > 2 * 1024 * 1024) {
-                Toast.makeText(this, "不接受大小超过2M的midi文件", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (uriInfo.getFileSize() != null && uriInfo.getFileSize() > 256 * 1024) {
-                Toast.makeText(this, "midi文件建议小于256KB，文件过大可能导致加载过慢或出现异常", Toast.LENGTH_SHORT).show();
-            }
-            jpProgressBar.setCancelable(false);
-            jpProgressBar.show();
-            ThreadPoolUtil.execute(() -> importMidi(this, uriInfo, songName, pmFile));
-        } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK
-                && Objects.equals(FilePickerUtil.extra, "db_import")) {
-            List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, data);
-            if (uriInfoList.size() != 1) {
-                return;
-            }
-            FileUtil.UriInfo uriInfo = uriInfoList.get(0);
-            if (uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !uriInfo.getDisplayName().endsWith(".db")) {
-                Toast.makeText(this, "请选择合法的db格式文件", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            new LocalDataImportExportTask(this, uriInfo.getUri(), false).execute();
-        } else if (requestCode == FilePickerUtil.PICK_FOLDER_REQUEST_CODE && resultCode == Activity.RESULT_OK
-                && Objects.equals(FilePickerUtil.extra, "db_export")) {
-            FileUtil.UriInfo uriInfo = FileUtil.getFolderUriInfo(this, data.getData());
-            if (uriInfo.getUri() == null) {
-                Toast.makeText(this, "导出错误，请提交反馈或联系开发者", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            new LocalDataImportExportTask(this, uriInfo.getUri(), true).execute();
-        }
     }
 
     private static void importMidi(MelodySelect melodySelect, FileUtil.UriInfo uriInfo, String songName, File pmFile) {
@@ -286,13 +230,45 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         } else if (id == R.id.lo_extra_func_settings) {
             menuPopupWindow.dismiss();
             SongPlay.INSTANCE.stopPlay();
-            startActivityForResult(new Intent(this, SettingsMode.class), SettingsMode.SETTING_MODE_CODE);
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> ImageLoadUtil.setBackground(this)
+            ).launch(new Intent(this, SettingsMode.class));
         } else if (id == R.id.lo_extra_func_sync) {
             menuPopupWindow.dismiss();
             new SongSyncTask(this).execute();
         } else if (id == R.id.lo_extra_func_midi_import) {
             menuPopupWindow.dismiss();
-            FilePickerUtil.openFilePicker(this, false, "midi_import");
+            FilePickerUtil.openFilePicker(this, false, "midi_import", result -> {
+                if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
+                    return;
+                }
+                List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, result.getData());
+                if (uriInfoList.size() != 1) {
+                    return;
+                }
+                FileUtil.UriInfo uriInfo = uriInfoList.get(0);
+                if (uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !(uriInfo.getDisplayName().endsWith(".mid") || uriInfo.getDisplayName().endsWith(".midi"))) {
+                    Toast.makeText(this, "请选择合法的midi格式文件", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String songName = uriInfo.getDisplayName().substring(0, uriInfo.getDisplayName().indexOf('.'));
+                File pmFile = new File(getFilesDir().getAbsolutePath() + "/ImportSongs/" + songName + ".pm");
+                if (pmFile.exists()) {
+                    Toast.makeText(this, "不能重复导入曲谱，请删除同名曲谱后再试", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (pmFile.getParentFile() != null && !pmFile.getParentFile().exists()) {
+                    pmFile.getParentFile().mkdirs();
+                }
+                if (uriInfo.getFileSize() != null && uriInfo.getFileSize() > 2 * 1024 * 1024) {
+                    Toast.makeText(this, "不接受大小超过2M的midi文件", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (uriInfo.getFileSize() != null && uriInfo.getFileSize() > 256 * 1024) {
+                    Toast.makeText(this, "midi文件建议小于256KB，文件过大可能导致加载过慢或出现异常", Toast.LENGTH_SHORT).show();
+                }
+                jpProgressBar.setCancelable(false);
+                jpProgressBar.show();
+                ThreadPoolUtil.execute(() -> importMidi(this, uriInfo, songName, pmFile));
+            });
         } else if (id == R.id.lo_extra_func_data_export) {
             menuPopupWindow.dismiss();
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
@@ -313,9 +289,33 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             jpDialogBuilder.addRadioButton(radioButton).setFirstButton("执行", (dialog, which) -> {
                 dialog.dismiss();
                 if (jpDialogBuilder.getRadioGroupCheckedId() == 2) {
-                    FilePickerUtil.openFilePicker(this, false, "db_import");
+                    FilePickerUtil.openFilePicker(this, false, "db_import", result -> {
+                        if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
+                            return;
+                        }
+                        List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, result.getData());
+                        if (uriInfoList.size() != 1) {
+                            return;
+                        }
+                        FileUtil.UriInfo uriInfo = uriInfoList.get(0);
+                        if (uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !uriInfo.getDisplayName().endsWith(".db")) {
+                            Toast.makeText(this, "请选择合法的db格式文件", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        new LocalDataImportExportTask(this, uriInfo.getUri(), false).execute();
+                    });
                 } else if (jpDialogBuilder.getRadioGroupCheckedId() == 1) {
-                    FilePickerUtil.openFolderPicker(this, "db_export");
+                    FilePickerUtil.openFolderPicker(this, "db_export", result -> {
+                        if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
+                            return;
+                        }
+                        FileUtil.UriInfo uriInfo = FileUtil.getFolderUriInfo(this, result.getData().getData());
+                        if (uriInfo.getUri() == null) {
+                            Toast.makeText(this, "导出错误，请提交反馈或联系开发者", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        new LocalDataImportExportTask(this, uriInfo.getUri(), true).execute();
+                    });
                 }
             });
             jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());

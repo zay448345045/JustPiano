@@ -262,10 +262,6 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             jpDialogBuilder.setMessage("当前版本不支持家族族徽的上传，请至官网上传");
             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
             jpDialogBuilder.buildAndShowDialog();
-//                Intent intent = new Intent("android.intent.action.GET_CONTENT");
-//                intent.addCategory("android.intent.category.OPENABLE");
-//                intent.setType("image/*");
-//                startActivityForResult(intent, 2);
         } else if (id == R.id.ol_family_changetest) {
         } else if (id == R.id.ol_family_levelup) {
             OnlineFamilyDTO.Builder builder;
@@ -425,22 +421,5 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         } else {
             Toast.makeText(this, "连接已断开，请重新登录", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if (data != null && requestCode == 2 && resultCode == Activity.RESULT_OK) {
-//            try {
-//                InputStream inputStream = getContentResolver().openInputStream(data.getData());
-//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                byte[] pic = ImageResizerUtil.compressScale(bitmap);
-//                JSONObject jSONObject = new JSONObject();
-//                jSONObject.put("K", 11);
-//                jSONObject.put("J", GZIPUtil.arrayToZIP(pic));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 }

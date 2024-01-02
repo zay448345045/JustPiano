@@ -10,6 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
@@ -78,7 +80,15 @@ public final class MainMode extends BaseActivity implements OnClickListener {
             startActivity(intent);
         } else if (id == R.id.settings) {
             intent.setClass(this, SettingsMode.class);
-            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                        ImageLoadUtil.setBackground(this);
+                        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+                            WindowUtil.fullScreenHandle(getWindow());
+                        } else {
+                            WindowUtil.exitFullScreenHandle(getWindow());
+                        }
+                    }
+            ).launch(intent);
         } else if (id == R.id.feed_back) {
             View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
             TextView textView = inflate.findViewById(R.id.text_1);
@@ -109,19 +119,6 @@ public final class MainMode extends BaseActivity implements OnClickListener {
             });
             jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
             jpDialogBuilder.buildAndShowDialog();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this);
-            if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
-                WindowUtil.fullScreenHandle(getWindow());
-            } else {
-                WindowUtil.exitFullScreenHandle(getWindow());
-            }
         }
     }
 

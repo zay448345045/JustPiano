@@ -1,21 +1,22 @@
 package ly.pp.justpiano3.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.activity.ComponentActivity;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.util.Consumer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class FilePickerUtil {
 
-    public static final int PICK_FILE_REQUEST_CODE = 110;
-
-    public static final int PICK_FOLDER_REQUEST_CODE = 111;
-
     public static String extra;
 
-    public static void openFilePicker(Activity activity, boolean allowMultipleFiles, String extra) {
+    public static void openFilePicker(ComponentActivity activity, boolean allowMultipleFiles,
+                                      String extra, Consumer<ActivityResult> resultHandle) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
@@ -38,16 +39,19 @@ public final class FilePickerUtil {
             chooserIntent = Intent.createChooser(intent, "选择文件");
         }
         FilePickerUtil.extra = extra;
-        activity.startActivityForResult(chooserIntent, PICK_FILE_REQUEST_CODE);
+        activity.registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                resultHandle::accept).launch(chooserIntent);
     }
 
-    public static void openFolderPicker(Activity activity, String extra) {
+    public static void openFolderPicker(ComponentActivity activity, String extra,
+                                        Consumer<ActivityResult> resultHandle) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         FilePickerUtil.extra = extra;
-        activity.startActivityForResult(intent, PICK_FOLDER_REQUEST_CODE);
+        activity.registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                resultHandle::accept).launch(intent);
     }
 
     public static List<FileUtil.UriInfo> getUriFromIntent(Context context, Intent intent) {

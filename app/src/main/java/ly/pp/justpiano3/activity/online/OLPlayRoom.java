@@ -20,6 +20,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
@@ -269,7 +270,8 @@ public final class OLPlayRoom extends OLRoomActivity {
             if (normalModePopupWindow != null) {
                 normalModePopupWindow.dismiss();
             }
-            startActivityForResult(new Intent(this, SettingsMode.class), SettingsMode.SETTING_MODE_CODE);
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->
+                    ImageLoadUtil.setBackground(this)).launch(new Intent(this, SettingsMode.class));
         } else if (id == R.id.rand_0) {
             playSongByDegreeRandom(2, 4);
         } else if (id == R.id.rand_all) {
@@ -408,14 +410,6 @@ public final class OLPlayRoom extends OLRoomActivity {
             if (normalModePopupWindow != null) {
                 normalModePopupWindow.dismiss();
             }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this);
         }
     }
 
