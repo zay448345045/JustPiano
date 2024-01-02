@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public final class OLPlayRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
     public OLPlayRoomHandler(OLPlayRoom olPlayRoom) {
+        super(Looper.getMainLooper());
         weakReference = new WeakReference<>(olPlayRoom);
     }
 

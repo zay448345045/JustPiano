@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
@@ -15,12 +16,12 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.Objects;
 
+import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.activity.online.OLMainMode;
 import ly.pp.justpiano3.activity.online.OLPlayHall;
 import ly.pp.justpiano3.activity.online.OLPlayKeyboardRoom;
 import ly.pp.justpiano3.activity.online.OLPlayRoom;
-import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -30,7 +31,6 @@ import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
 import ly.pp.justpiano3.utils.EncryptUtil;
-import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineClTestDTO;
@@ -41,6 +41,7 @@ public final class OLPlayHallHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
     public OLPlayHallHandler(OLPlayHall olPlayHall) {
+        super(Looper.getMainLooper());
         weakReference = new WeakReference<>(olPlayHall);
     }
 

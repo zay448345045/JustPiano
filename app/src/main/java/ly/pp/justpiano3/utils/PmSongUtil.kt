@@ -173,7 +173,7 @@ object PmSongUtil {
     /**
      * midi文件转pm文件
      *
-     * @param midiFile midi文件
+     * @param midiUri midi文件uri
      * @param pmFile   pm文件
      * @return 曲谱信息
      */

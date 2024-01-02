@@ -11,17 +11,12 @@ import ly.pp.justpiano3.activity.online.OLMelodySelect;
 import ly.pp.justpiano3.activity.online.ShowSongsInfo;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
-import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public final class ShowSongsInfoPlayTask extends AsyncTask<Void, Void, Void> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
     private final Intent intent;
     private byte[] songBytes = null;
-    private String str = "";
 
     public ShowSongsInfoPlayTask(ShowSongsInfo showSongsInfo, Intent intent) {
         this.showSongsInfo = new WeakReference<>(showSongsInfo);
@@ -31,26 +26,10 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... v) {
         if (!showSongsInfo.get().songID.isEmpty()) {
-            // 创建HttpUrl.Builder对象，用于添加查询参数
-            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/DownloadSong").newBuilder();
-            FormBody.Builder builder = new FormBody.Builder();
-            builder.add("version", BuildConfig.VERSION_NAME);
-            builder.add("songID", showSongsInfo.get().songID);
-            // 创建Request对象，用于发送请求
-            Request request = new Request.Builder()
-                    .url(urlBuilder.build())
-                    .post(builder.build())
-                    .build();
-            try {
-                // 同步执行请求，获取Response对象
-                Response response = OkHttpUtil.client().newCall(request).execute();
-                if (response.isSuccessful()) {
-                    str = response.body().string();
-                }
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-            songBytes = GZIPUtil.ZIPToArray(str);
+            songBytes = GZIPUtil.ZIPToArray(OkHttpUtil.sendPostRequest("DownloadSong", new FormBody.Builder()
+                    .add("version", BuildConfig.VERSION_NAME)
+                    .add("songID", showSongsInfo.get().songID)
+                    .build()));
         }
         return null;
     }

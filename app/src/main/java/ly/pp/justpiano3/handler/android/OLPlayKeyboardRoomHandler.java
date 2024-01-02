@@ -2,6 +2,7 @@ package ly.pp.justpiano3.handler.android;
 
 import android.app.Activity;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
     public OLPlayKeyboardRoomHandler(OLPlayKeyboardRoom olPlayKeyboardRoom) {
+        super(Looper.getMainLooper());
         weakReference = new WeakReference<>(olPlayKeyboardRoom);
     }
 

@@ -10,10 +10,7 @@ import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.activity.online.ShowSongsInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
-import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<ShowSongsInfo> showSongsInfo;
@@ -24,32 +21,16 @@ public final class ShowSongsInfoTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... v) {
-        String str = "";
         if (!showSongsInfo.get().keywords.isEmpty()) {
-            // 创建一个FormBody对象，用于存放请求参数
-            FormBody formBody = new FormBody.Builder()
+            return OkHttpUtil.sendPostRequest("GetListByKeywords", new FormBody.Builder()
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("head", showSongsInfo.get().head)
                     .add("keywords", showSongsInfo.get().keywords)
                     .add("user", OLBaseActivity.getAccountName())
                     .add("page", String.valueOf(showSongsInfo.get().page))
-                    .build();
-            // 创建一个Request对象，设置请求URL和请求体
-            Request request = new Request.Builder()
-                    .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetListByKeywords")
-                    .post(formBody)
-                    .build();
-            try {
-                // 发送请求并获取响应
-                Response response = OkHttpUtil.client().newCall(request).execute();
-                if (response.isSuccessful()) {
-                    str = response.body().string();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                    .build());
         }
-        return str;
+        return "";
     }
 
     @Override

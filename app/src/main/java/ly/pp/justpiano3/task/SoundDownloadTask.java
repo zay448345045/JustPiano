@@ -15,10 +15,7 @@ import ly.pp.justpiano3.activity.local.SoundDownload;
 import ly.pp.justpiano3.adapter.SoundDownloadAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
-import ly.pp.justpiano3.utils.OnlineUtil;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.FormBody;
 
 public final class SoundDownloadTask {
     private final WeakReference<SoundDownload> soundDownload;
@@ -32,26 +29,9 @@ public final class SoundDownloadTask {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         onPreExecute();
         future = executor.submit(() -> {
-            final String result = doInBackground();
+            final String result = OkHttpUtil.sendPostRequest("GetSoundList", new FormBody.Builder().build());
             new Handler(Looper.getMainLooper()).post(() -> onPostExecute(result));
         });
-    }
-
-    private String doInBackground() {
-        try {
-            Request request = new Request.Builder()
-                    .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/GetSoundList")
-                    .post(RequestBody.create("", null))
-                    .build();
-            Response response = OkHttpUtil.client().newCall(request).execute();
-            if (response.code() != 200) {
-                return "";
-            }
-            return response.body().string();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
     }
 
     private void onPostExecute(String str) {

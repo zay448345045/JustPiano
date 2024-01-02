@@ -3,6 +3,7 @@ package ly.pp.justpiano3.handler.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ public final class OLPlayDressRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
     public OLPlayDressRoomHandler(OLPlayDressRoom olPlayDressRoom) {
+        super(Looper.getMainLooper());
         weakReference = new WeakReference<>(olPlayDressRoom);
     }
 

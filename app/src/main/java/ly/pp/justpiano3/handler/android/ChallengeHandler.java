@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ public final class ChallengeHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
     public ChallengeHandler(OLChallenge challenge) {
+        super(Looper.getMainLooper());
         weakReference = new WeakReference<>(challenge);
     }
 

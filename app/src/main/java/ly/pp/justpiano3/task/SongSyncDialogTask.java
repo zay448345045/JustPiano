@@ -16,8 +16,6 @@ import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.PmSongUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     private final WeakReference<OLMainMode> olMainMode;
@@ -30,26 +28,10 @@ public final class SongSyncDialogTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... objects) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(olMainMode.get());
         long lastSongModifiedTime = sharedPreferences.getLong("song_sync_time", PmSongUtil.SONG_SYNC_DEFAULT_TIME);
-        // 创建请求参数
-        FormBody formBody = new FormBody.Builder()
+        return OkHttpUtil.sendPostRequest("SyncSongDialog", new FormBody.Builder()
                 .add("version", BuildConfig.VERSION_NAME)
                 .add("lastSongModifiedTime", String.valueOf(lastSongModifiedTime))
-                .build();
-        // 创建请求对象
-        Request request = new Request.Builder()
-                .url("http://" + OnlineUtil.server + ":8910/JustPianoServer/server/SyncSongDialog")
-                .post(formBody)
-                .build();
-        try {
-            // 发送请求并获取响应
-            Response response = OkHttpUtil.client().newCall(request).execute();
-            if (response.isSuccessful()) {
-                return response.body().string();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+                .build());
     }
 
     @Override

@@ -4,19 +4,13 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.activity.online.UsersInfo;
 import ly.pp.justpiano3.utils.OkHttpUtil;
-import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
     private final WeakReference<UsersInfo> usersInfo;
@@ -27,15 +21,6 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... strArr) {
-        String str = "";
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme("http")
-                .host(OnlineUtil.server)
-                .port(8910)
-                .addPathSegment("JustPianoServer")
-                .addPathSegment("server")
-                .addPathSegment("ChangeUserMsg")
-                .build();
         FormBody.Builder bodyBuilder = new FormBody.Builder()
                 .add("head", "0")
                 .add("version", BuildConfig.VERSION_NAME)
@@ -47,21 +32,7 @@ public final class UserInfoChangeTask extends AsyncTask<String, Void, String> {
         } else {
             bodyBuilder.add("oldPass", strArr[1]).add("newPass", strArr[2]);
         }
-
-        RequestBody body = bodyBuilder.build();
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-        try {
-            Response response = OkHttpUtil.client().newCall(request).execute();
-            if (response.isSuccessful()) {
-                str = response.body().string();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return str;
+        return OkHttpUtil.sendPostRequest("ChangeUserMsg", bodyBuilder.build());
     }
 
     @Override

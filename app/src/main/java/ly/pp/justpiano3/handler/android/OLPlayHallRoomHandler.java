@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.ListView;
@@ -52,6 +53,7 @@ public final class OLPlayHallRoomHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
     public OLPlayHallRoomHandler(OLPlayHallRoom olPlayHallRoom) {
+        super(Looper.getMainLooper());
         weakReference = new WeakReference<>(olPlayHallRoom);
     }
 

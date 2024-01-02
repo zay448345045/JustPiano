@@ -4,20 +4,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.activity.online.LoginActivity;
 import ly.pp.justpiano3.activity.online.Register;
 import ly.pp.justpiano3.utils.OkHttpUtil;
-import ly.pp.justpiano3.utils.OnlineUtil;
 import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public final class RegisterTask extends AsyncTask<Void, Integer, String> {
     private final WeakReference<Register> register;
@@ -28,37 +20,13 @@ public final class RegisterTask extends AsyncTask<Void, Integer, String> {
 
     @Override
     protected String doInBackground(Void... v) {
-        String response = "";
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme("http")
-                .host(OnlineUtil.server)
-                .port(8910)
-                .addPathSegment("JustPianoServer")
-                .addPathSegment("server")
-                .addPathSegment("RegistServlet")
-                .build();
-        RequestBody body = new FormBody.Builder()
+        String result = OkHttpUtil.sendPostRequest("RegistServlet", new FormBody.Builder()
                 .add("username", register.get().account)
                 .add("password", register.get().password)
                 .add("userkitiname", register.get().kitiName)
                 .add("sex", register.get().sex)
-                .build();
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-        try {
-            Response execute = OkHttpUtil.client().newCall(request).execute();
-            if (execute.isSuccessful()) {
-                int read = new DataInputStream(new ByteArrayInputStream(execute.body().bytes())).read();
-                response = String.valueOf(read);
-                return response;
-            }
-        } catch (IOException e) {
-            response = "3";
-            e.printStackTrace();
-        }
-        return response;
+                .build());
+        return result.length() > 0 ? String.valueOf(result.charAt(0)) : "3";
     }
 
     @Override
