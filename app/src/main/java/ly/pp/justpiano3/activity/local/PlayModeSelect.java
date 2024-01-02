@@ -22,7 +22,7 @@ public final class PlayModeSelect extends BaseActivity implements OnClickListene
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.game_mode) {
-            GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
+            GlobalSetting.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
             startActivity(new Intent(this, MelodySelect.class));
             finish();
         } else if (id == R.id.freestyle_mode) {

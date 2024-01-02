@@ -287,7 +287,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordWavPath.replace(".raw", ".wav"));
             Uri desUri = FileUtil.getOrCreateFileByUriFolder(this,
-                    GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", songsName + ".wav");
+                    GlobalSetting.getRecordsSavePath(), "Records", songsName + ".wav");
             if (FileUtil.moveFileToUri(this, srcFile, desUri)) {
                 Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
             } else {
@@ -376,7 +376,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         isShowingSongsInfo = false;
         isBack = false;
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        GlobalSetting.INSTANCE.loadSettings(this, true);
+        GlobalSetting.loadSettings(this, true);
         pausedPlay = LayoutInflater.from(this).inflate(R.layout.paused_play, null);
         layoutParams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams2.gravity = android.view.Gravity.CENTER;
@@ -588,7 +588,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     }
 
     public void updateKeyboardPrefer() {
-        if (GlobalSetting.INSTANCE.getKeyboardPrefer()) {
+        if (GlobalSetting.getKeyboardPrefer()) {
             Message obtainMessage = pianoPlayHandler.obtainMessage();
             obtainMessage.what = 4;
             pianoPlayHandler.handleMessage(obtainMessage);

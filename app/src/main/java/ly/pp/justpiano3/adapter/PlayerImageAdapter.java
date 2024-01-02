@@ -127,10 +127,10 @@ public final class PlayerImageAdapter extends BaseAdapter {
             if ("H".equals(olPlayRoom.positionStatus)) {
                 olPlayRoom.playButton.setText("开始");
             } else if ("R".equals(userStatus)) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.ONCE);
                 olPlayRoom.playButton.setText("取消");
             } else {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.ONCE);
                 olPlayRoom.playButton.setText("准备");
             }
         }

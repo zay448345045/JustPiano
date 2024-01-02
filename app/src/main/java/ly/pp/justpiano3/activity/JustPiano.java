@@ -64,7 +64,7 @@ public final class JustPiano extends BaseActivity implements Runnable {
                     if (pmFileList != null) {
                         for (String pmFileName : pmFileList) {
                             String songPath = "songs/" + pmCategoryList[i] + "/" + pmFileName;
-                            PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByFilePath(this, songPath);
+                            PmSongData pmSongData = PmSongUtil.parsePmDataByFilePath(this, songPath);
                             if (pmSongData == null) {
                                 continue;
                             }

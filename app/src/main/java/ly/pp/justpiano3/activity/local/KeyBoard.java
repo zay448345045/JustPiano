@@ -96,19 +96,19 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
     }
 
     private void initKeyboardView(KeyboardView keyboardView) {
-        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries().get(GlobalSetting.INSTANCE.getKeyboardOctaveTagType()));
+        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries().get(GlobalSetting.getKeyboardOctaveTagType()));
         keyboardView.setKeyboardListener(new KeyboardView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
-                SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
-                if (GlobalSetting.INSTANCE.getSoundVibration()) {
-                    VibrationUtil.vibrateOnce(KeyBoard.this, GlobalSetting.INSTANCE.getSoundVibrationTime());
+                SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.getKeyboardSoundTune()), volume);
+                if (GlobalSetting.getSoundVibration()) {
+                    VibrationUtil.vibrateOnce(KeyBoard.this, GlobalSetting.getSoundVibrationTime());
                 }
             }
 
             @Override
             public void onKeyUp(byte pitch) {
-                SoundEngineUtil.stopPlaySound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()));
+                SoundEngineUtil.stopPlaySound((byte) (pitch + GlobalSetting.getKeyboardSoundTune()));
             }
         });
     }
@@ -123,7 +123,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
             SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
             Uri desUri = FileUtil.getOrCreateFileByUriFolder(this,
-                    GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
+                    GlobalSetting.getRecordsSavePath(), "Records", recordFileName);
             if (FileUtil.moveFileToUri(this, srcFile, desUri)) {
                 Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
             } else {
@@ -260,7 +260,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                         firstKeyboardView.changeSkinKeyboardImage(this);
                         secondKeyboardView.changeSkinKeyboardImage(this);
                         KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.getEntries()
-                                .get(GlobalSetting.INSTANCE.getKeyboardOctaveTagType());
+                                .get(GlobalSetting.getKeyboardOctaveTagType());
                         firstKeyboardView.setOctaveTagType(octaveTagType);
                         secondKeyboardView.setOctaveTagType(octaveTagType);
                     }
@@ -295,7 +295,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                     SoundEngineUtil.setRecord(false);
                     File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
                     Uri desUri = FileUtil.getOrCreateFileByUriFolder(this,
-                            GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
+                            GlobalSetting.getRecordsSavePath(), "Records", recordFileName);
                     if (FileUtil.moveFileToUri(this, srcFile, desUri)) {
                         Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
                     } else {

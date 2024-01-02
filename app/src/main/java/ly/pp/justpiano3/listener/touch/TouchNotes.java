@@ -107,8 +107,8 @@ public final class TouchNotes implements OnTouchListener {
     public void fireKeyDown(int touchNoteNum) {
         if (touchNoteNum != -1 && !playView.pianoPlay.playKeyBoardView.touchNoteMap.containsKey(touchNoteNum)) {
             SoundEngineUtil.playSound((byte) (touchNoteNum + playView.noteMod12 * 12), playView.volume0);
-            if (GlobalSetting.INSTANCE.getSoundVibration()) {
-                VibrationUtil.vibrateOnce(playView.pianoPlay, GlobalSetting.INSTANCE.getSoundVibrationTime());
+            if (GlobalSetting.getSoundVibration()) {
+                VibrationUtil.vibrateOnce(playView.pianoPlay, GlobalSetting.getSoundVibrationTime());
             }
             playView.judgeTouchNote(touchNoteNum + playView.noteMod12 * 12, false);
             playView.pianoPlay.playKeyBoardView.touchNoteMap.put(touchNoteNum, 0);

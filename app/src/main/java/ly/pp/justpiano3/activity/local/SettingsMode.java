@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 import androidx.core.util.Predicate;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
@@ -43,14 +44,12 @@ import ly.pp.justpiano3.view.preference.FilePickerPreference;
 import ly.pp.justpiano3.view.preference.SkinListPreference;
 import ly.pp.justpiano3.view.preference.SoundListPreference;
 
-public final class SettingsMode extends AppCompatActivity implements MidiDeviceUtil.MidiDeviceListener {
-
-    public static final int SETTING_MODE_CODE = 122;
+public final class SettingsMode extends FragmentActivity implements MidiDeviceUtil.MidiDeviceListener {
 
     private static final SettingsFragment settingFragment = new SettingsFragment();
 
     private static final Map<String, PreferenceFragmentCompat> preferenceFragmentMap = new HashMap<>();
-    private static final Map<String, Pair<Preference, Predicate<FileUtil.UriInfo>>> filePickerPreferenceMap = new HashMap<>();
+    public static final Map<String, Pair<Preference, Predicate<FileUtil.UriInfo>>> filePickerPreferenceMap = new HashMap<>();
 
     static {
         preferenceFragmentMap.put("settings_piano_play", new PianoPlaySettingsFragment());
@@ -64,7 +63,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
 
     @Override
     public void onBackPressed() {
-        GlobalSetting.INSTANCE.loadSettings(this, false);
+        GlobalSetting.loadSettings(this, false);
         finish();
     }
 
@@ -76,7 +75,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
         PreferenceFragmentCompat preferenceFragmentCompat = preferenceFragmentMap.get(getIntent().getDataString());
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content,
                 preferenceFragmentCompat == null ? settingFragment : preferenceFragmentCompat).commit();
-        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+        if (GlobalSetting.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(getWindow());
         } else {
             WindowUtil.exitFullScreenHandle(getWindow());
@@ -94,11 +93,11 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
             }
             Preference skinPreference = findPreference("skin_select");
             if (skinPreference != null) {
-                skinPreference.setSummary(GlobalSetting.INSTANCE.getSkin());
+                skinPreference.setSummary(GlobalSetting.getSkin());
             }
             Preference soundPreference = findPreference("sound_select");
             if (soundPreference != null) {
-                soundPreference.setSummary(GlobalSetting.INSTANCE.getSound());
+                soundPreference.setSummary(GlobalSetting.getSound());
             }
             // 检测是否支持midi功能，支持midi功能时，midi设备相关的设置才允许点击
             if (MidiDeviceUtil.isSupportMidiDevice(getActivity())) {
@@ -110,7 +109,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
             }
             // 背景图设置项初始化
             registerFilePickerPreference(this, "background_pic", false,
-                    "默认背景图", GlobalSetting.INSTANCE.getBackgroundPic(), uriInfo -> {
+                    "默认背景图", GlobalSetting.getBackgroundPic(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".jpg")
                                 && !uriInfo.getDisplayName().endsWith(".jpeg") && !uriInfo.getDisplayName().endsWith(".png"))) {
                             Toast.makeText(getActivity(), "请选择合法的jpg或png格式图片文件", Toast.LENGTH_SHORT).show();
@@ -134,7 +133,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
             }
             // 皮肤、音源选择器初始化
             registerFilePickerPreference(this, "skin_select", false,
-                    "默认皮肤", GlobalSetting.INSTANCE.getSkin(), uriInfo -> {
+                    "默认皮肤", GlobalSetting.getSkin(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || !uriInfo.getDisplayName().endsWith(".ps")) {
                             Toast.makeText(getActivity(), "请选择合法的ps格式皮肤文件", Toast.LENGTH_SHORT).show();
                             return false;
@@ -142,7 +141,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
                         return true;
                     });
             registerFilePickerPreference(this, "sound_select", false,
-                    "默认音源", GlobalSetting.INSTANCE.getSound(), uriInfo -> {
+                    "默认音源", GlobalSetting.getSound(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".ss")
                                 && !uriInfo.getDisplayName().endsWith(".sf2"))) {
                             Toast.makeText(getActivity(), "请选择合法的ss或sf2格式音源文件", Toast.LENGTH_SHORT).show();
@@ -152,7 +151,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
                     });
             registerFilePickerPreference(this, "records_save_path", true,
                     "默认存储位置(SD卡/Android/data/ly.pp.justpiano3/files/Records)",
-                    GlobalSetting.INSTANCE.getRecordsSavePath(), uriInfo -> true);
+                    GlobalSetting.getRecordsSavePath(), uriInfo -> true);
             // 保持后台网络连接点击事件处理
             Preference appInfoPreference = findPreference("background_keep_alive");
             if (appInfoPreference != null) {
@@ -244,7 +243,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
             setPreferencesFromResource(R.xml.settings_waterfall, rootKey);
             registerFilePickerPreference(this, "waterfall_background_pic", false,
-                    "默认背景图", GlobalSetting.INSTANCE.getWaterfallBackgroundPic(), uriInfo -> {
+                    "默认背景图", GlobalSetting.getWaterfallBackgroundPic(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".jpg")
                                 && !uriInfo.getDisplayName().endsWith(".jpeg") && !uriInfo.getDisplayName().endsWith(".png"))) {
                             Toast.makeText(getActivity(), "请选择合法的jpg或png格式图片文件", Toast.LENGTH_SHORT).show();
@@ -277,7 +276,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
             Preference forceEnableSustainPedalPreference = findPreference("force_enable_sustain_pedal");
             if (forceEnableSustainPedalPreference != null) {
                 forceEnableSustainPedalPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                    GlobalSetting.INSTANCE.setForceEnableSustainPedal((Boolean) newValue);
+                    GlobalSetting.setForceEnableSustainPedal((Boolean) newValue);
                     return true;
                 });
             }
@@ -298,7 +297,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
             setPreferencesFromResource(R.xml.settings_online_chat, rootKey);
             registerFilePickerPreference(this, "chats_sound_file", false,
-                    "默认音效", GlobalSetting.INSTANCE.getChatsSoundFile(), uriInfo -> {
+                    "默认音效", GlobalSetting.getChatsSoundFile(), uriInfo -> {
                         if (uriInfo.getDisplayName() == null || (!uriInfo.getDisplayName().endsWith(".wav") && !uriInfo.getDisplayName().endsWith(".mp3"))) {
                             Toast.makeText(getActivity(), "请选择合法的wav或mp3格式音频文件", Toast.LENGTH_SHORT).show();
                             return false;
@@ -307,7 +306,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
                     });
             registerFilePickerPreference(this, "chats_save_path", true,
                     "默认存储位置(SD卡/Android/data/ly.pp.justpiano3/files/Chats)",
-                    GlobalSetting.INSTANCE.getChatsSavePath(), uriInfo -> true);
+                    GlobalSetting.getChatsSavePath(), uriInfo -> true);
         }
     }
 
@@ -373,7 +372,7 @@ public final class SettingsMode extends AppCompatActivity implements MidiDeviceU
                 new SoundListPreferenceTask(soundListPreference).execute(uriInfo.getUri().toString());
             }
             if (Objects.equals(value.first.getKey(), "background_pic")) {
-                GlobalSetting.INSTANCE.setBackgroundPic(uriInfo.getUri().toString());
+                GlobalSetting.setBackgroundPic(uriInfo.getUri().toString());
                 ImageLoadUtil.setBackground(this);
             }
         } else if (requestCode == SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE) {

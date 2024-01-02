@@ -14,7 +14,8 @@ class WaterfallUtil {
          * 根据一个键盘view的琴键坐标信息，计算出（瀑布流音块）长条的坐标和宽度（略小于琴键的宽度）
          * 返回值为瀑布流音符横坐标的左边界和右边界
          */
-        @JvmStatic fun convertToWaterfallWidth(keyboardView: KeyboardView?, pitch: Byte): Pair<Float, Float> {
+        @JvmStatic
+        fun convertToWaterfallWidth(keyboardView: KeyboardView?, pitch: Byte): Pair<Float, Float> {
             val rectF = convertPitchToReact(keyboardView, pitch) ?: return Pair(-1f, -1f)
             // 根据比例计算瀑布流的宽度
             val waterfallWidth =

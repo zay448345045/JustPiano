@@ -133,6 +133,7 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.6.1'
     implementation 'androidx.paging:paging-runtime-ktx:3.2.1'
     implementation 'androidx.documentfile:documentfile:1.0.1'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
     kapt 'androidx.room:room-compiler:2.6.1'
     implementation 'androidx.room:room-ktx:2.6.1'
     // native-crash 用于上报C++异常闪退日志

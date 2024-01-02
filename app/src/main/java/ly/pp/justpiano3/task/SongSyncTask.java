@@ -85,7 +85,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
         }
         // 3.按曲谱文件path查询数据库，确认曲谱是否已存在
         for (File file : files) {
-            String item = PmSongUtil.INSTANCE.getPmSongCategoryByFilePath(file.getAbsolutePath());
+            String item = PmSongUtil.getPmSongCategoryByFilePath(file.getAbsolutePath());
             if (item == null) {
                 continue;
             }
@@ -112,7 +112,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
         }
         // 4.取新增/更新的曲谱文件，解压并准备进行数据库填充
         for (File file : files) {
-            String item = PmSongUtil.INSTANCE.getPmSongCategoryByFilePath(file.getAbsolutePath());
+            String item = PmSongUtil.getPmSongCategoryByFilePath(file.getAbsolutePath());
             if (item == null) {
                 continue;
             }
@@ -120,7 +120,7 @@ public final class SongSyncTask extends AsyncTask<Void, Void, String> {
             FileInputStream fileInputStream = new FileInputStream(file);
             byte[] pmData = new byte[fileInputStream.available()];
             fileInputStream.read(pmData);
-            PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByBytes(pmData);
+            PmSongData pmSongData = PmSongUtil.parsePmDataByBytes(pmData);
             if (pmSongData == null) {
                 continue;
             }

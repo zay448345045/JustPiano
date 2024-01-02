@@ -43,9 +43,9 @@ public final class LoadBackgroundsThread extends Thread {
         long startPlayTime = System.currentTimeMillis();
         while (pianoPlay.isPlayingStart) {
             // 时间计算部分：和瀑布流原理相同，具体解释详见瀑布流
-            int playIntervalTime = (int) ((System.currentTimeMillis() - startPlayTime) / GlobalSetting.INSTANCE.getNotesDownSpeed() - progressPauseTime);
+            int playIntervalTime = (int) ((System.currentTimeMillis() - startPlayTime) / GlobalSetting.getNotesDownSpeed() - progressPauseTime);
             boolean isPause = !playView.startFirstNoteTouching ||
-                    (GlobalSetting.INSTANCE.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !playView.isTouchRightNote);
+                    (GlobalSetting.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !playView.isTouchRightNote);
             if (isPause && pauseProgress == null) {
                 pauseProgress = playIntervalTime;
             } else if (!isPause && pauseProgress != null) {
@@ -63,7 +63,7 @@ public final class LoadBackgroundsThread extends Thread {
                     // 绘制背景图、判断线
                     canvas.drawBitmap(playView.backgroundImage, null, f6028n, null);
                     canvas.drawBitmap(playView.barImage, null, f6029o, null);
-                    if (GlobalSetting.INSTANCE.getRoughLine() != 1) {
+                    if (GlobalSetting.getRoughLine() != 1) {
                         canvas.drawBitmap(playView.roughLineImage, null,
                                 new RectF(0f, (float) (playView.getHeight() * 0.49) - playView.roughLineImage.getHeight(),
                                         (float) playView.getWidth(), (float) (playView.getHeight() * 0.49)), null);

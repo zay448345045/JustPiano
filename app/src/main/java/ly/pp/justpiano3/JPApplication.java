@@ -57,7 +57,7 @@ public final class JPApplication extends Application {
         new CrashHandler().init();
         // 从app应用数据中加载设置
         SoundEngineUtil.init(this);
-        GlobalSetting.INSTANCE.loadSettings(this, false);
+        GlobalSetting.loadSettings(this, false);
         // 初始化一些图像缓存
         ImageLoadUtil.init(this);
         // 从app应用数据中加载账号信息

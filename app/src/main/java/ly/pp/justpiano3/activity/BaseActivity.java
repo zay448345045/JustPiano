@@ -16,7 +16,7 @@ public class BaseActivity extends ComponentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImageLoadUtil.setBackground(this);
-        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+        if (GlobalSetting.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(getWindow());
         } else {
             WindowUtil.exitFullScreenHandle(getWindow());
@@ -27,7 +27,7 @@ public class BaseActivity extends ComponentActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+            if (GlobalSetting.getAllFullScreenShow()) {
                 WindowUtil.fullScreenHandle(getWindow());
             } else {
                 WindowUtil.exitFullScreenHandle(getWindow());

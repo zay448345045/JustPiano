@@ -227,9 +227,9 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         try {
-            GlobalSetting.INSTANCE.loadSettings(this, true);
+            GlobalSetting.loadSettings(this, true);
             layoutInflater1 = LayoutInflater.from(this);
             layoutInflater2 = LayoutInflater.from(this);
             new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Consts.sortNames).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -315,10 +315,10 @@ public final class OLPlayRoom extends OLRoomActivity {
                 ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter()))).submitList(pagedList);
             });
         } else if (id == R.id.ol_soundstop) {
-            SongPlay.INSTANCE.stopPlay();
+            SongPlay.stopPlay();
         } else if (id == R.id.onetimeplay) {
             if (positionStatus.equals("H")) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.ONCE);
                 Toast.makeText(this, PlaySongsModeEnum.ONCE.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
@@ -326,7 +326,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.circulateplay) {
             if (positionStatus.equals("H")) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RECYCLE);
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.RECYCLE);
                 Toast.makeText(this, PlaySongsModeEnum.RECYCLE.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
@@ -334,7 +334,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.randomplay) {
             if (positionStatus.equals("H")) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RANDOM);
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.RANDOM);
                 Toast.makeText(this, PlaySongsModeEnum.RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
@@ -342,7 +342,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.favorplay) {
             if (positionStatus.equals("H")) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR_RANDOM);
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.FAVOR_RANDOM);
                 Toast.makeText(this, PlaySongsModeEnum.FAVOR_RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
@@ -350,7 +350,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.favorlist) {
             if (positionStatus.equals("H")) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR);
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.FAVOR);
                 Toast.makeText(this, PlaySongsModeEnum.FAVOR.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
@@ -417,7 +417,7 @@ public final class OLPlayRoom extends OLRoomActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        SongPlay.INSTANCE.setCallBack(this::updateNewSongPlay);
+        SongPlay.setCallBack(this::updateNewSongPlay);
         setContentView(R.layout.ol_play_room);
         initRoomActivity(savedInstanceState);
         findViewById(R.id.ol_search_b).setOnClickListener(this);
@@ -542,7 +542,7 @@ public final class OLPlayRoom extends OLRoomActivity {
 
     @Override
     protected void onDestroy() {
-        SongPlay.INSTANCE.setCallBack(null);
+        SongPlay.setCallBack(null);
         super.onDestroy();
     }
 

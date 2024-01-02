@@ -97,6 +97,6 @@ public final class RecordFiles extends BaseActivity {
         listView = findViewById(R.id.listFile);
         listView.setCacheColorHint(Color.TRANSPARENT);
         tipsTextView = findViewById(R.id.txt1);
-        loadRecordFiles(GlobalSetting.INSTANCE.getRecordsSavePath());
+        loadRecordFiles(GlobalSetting.getRecordsSavePath());
     }
 }

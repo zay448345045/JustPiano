@@ -82,7 +82,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
             intent.setClass(this, SettingsMode.class);
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                         ImageLoadUtil.setBackground(this);
-                        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+                        if (GlobalSetting.getAllFullScreenShow()) {
                             WindowUtil.fullScreenHandle(getWindow());
                         } else {
                             WindowUtil.exitFullScreenHandle(getWindow());
@@ -125,7 +125,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalSetting.INSTANCE.loadSettings(this, false);
+        GlobalSetting.loadSettings(this, false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);

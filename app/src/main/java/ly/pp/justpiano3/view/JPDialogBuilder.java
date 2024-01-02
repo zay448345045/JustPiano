@@ -222,7 +222,7 @@ public final class JPDialogBuilder {
                 Context context = dialog.getContext();
                 dialog.show();
                 Window window = dialog.getWindow();
-                if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+                if (GlobalSetting.getAllFullScreenShow()) {
                     WindowUtil.fullScreenHandle(window);
                 } else {
                     WindowUtil.exitFullScreenHandle(window);

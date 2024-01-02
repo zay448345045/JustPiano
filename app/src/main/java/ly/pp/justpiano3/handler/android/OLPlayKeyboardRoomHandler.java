@@ -135,7 +135,7 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
             Integer color = user.getColor() == 0 ? null : ColorUtil.getUserColorByUserColorIndex(olPlayKeyboardRoom, user.getColor());
             olPlayKeyboardRoom.keyboardView.fireKeyDown(pitch, volume, color);
             olPlayKeyboardRoom.onlineWaterfallKeyDownHandle(pitch, volume, color == null ?
-                    GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : color);
+                    GlobalSetting.getWaterfallFreeStyleColor() : color);
         } else {
             if (!sustainPedalOn && !olKeyboardState.getMuted()) {
                 SoundEngineUtil.stopPlaySound(pitch);

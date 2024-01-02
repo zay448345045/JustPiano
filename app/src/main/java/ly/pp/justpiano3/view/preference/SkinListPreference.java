@@ -149,8 +149,8 @@ public final class SkinListPreference extends DialogPreference {
             if (context instanceof PreferenceActivity preferenceActivity) {
                 ImageLoadUtil.setBackground(preferenceActivity);
             }
-            GlobalSetting.INSTANCE.loadSettings(context, false);
-            FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(context, Uri.parse(skinKey));
+            GlobalSetting.loadSettings(context, false);
+            FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(context, Uri.parse(skinKey));
             setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认皮肤" : uriInfo.getDisplayName());
         }
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
@@ -17,7 +18,7 @@ import ly.pp.justpiano3.utils.FilePickerUtil;
 
 public final class FilePickerPreference extends Preference {
     private static final int BUTTON_ID = View.generateViewId();
-    private Activity activity;
+    private ComponentActivity activity;
     /**
      * 是否是目录选择，默认false
      */
@@ -58,7 +59,7 @@ public final class FilePickerPreference extends Preference {
         }
     }
 
-    public void setActivity(Activity activity) {
+    public void setActivity(ComponentActivity activity) {
         this.activity = activity;
     }
 

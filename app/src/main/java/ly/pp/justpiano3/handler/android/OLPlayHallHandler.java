@@ -54,8 +54,8 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.msgList.remove(0);
                 }
                 String time = "";
-                if (GlobalSetting.INSTANCE.getShowChatTime()) {
-                    time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.INSTANCE.getShowChatTimeModes());
+                if (GlobalSetting.getShowChatTime()) {
+                    time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.getShowChatTimeModes());
                 }
                 message.getData().putString("TIME", time);
                 // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
@@ -63,8 +63,8 @@ public final class OLPlayHallHandler extends Handler {
                     olPlayHall.msgList.add(message.getData());
                 }
                 // 聊天音效播放
-                if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), OLBaseActivity.getKitiName())) {
-                    SoundEffectPlayUtil.playSoundEffect(olPlayHall, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
+                if (GlobalSetting.getChatsSound() && !Objects.equals(message.getData().getString("U"), OLBaseActivity.getKitiName())) {
+                    SoundEffectPlayUtil.playSoundEffect(olPlayHall, Uri.parse(GlobalSetting.getChatsSoundFile()));
                 }
                 // 聊天记录存储
                 ChatUtil.chatsSaveHandle(message, olPlayHall, time);

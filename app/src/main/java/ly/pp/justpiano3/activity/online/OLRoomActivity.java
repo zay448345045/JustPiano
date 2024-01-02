@@ -259,7 +259,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
             onStart = false;
             sendMsg(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
-            SongPlay.INSTANCE.stopPlay();
+            SongPlay.stopPlay();
             Intent intent = new Intent(this, OLPlayHall.class);
             Bundle bundle = new Bundle();
             bundle.putString("hallName", hallName);
@@ -398,8 +398,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             msgList.remove(0);
         }
         String time = "";
-        if (GlobalSetting.INSTANCE.getShowChatTime()) {
-            time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.INSTANCE.getShowChatTimeModes());
+        if (GlobalSetting.getShowChatTime()) {
+            time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.getShowChatTimeModes());
         }
         message.getData().putString("TIME", time);
         // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
@@ -407,8 +407,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             msgList.add(message.getData());
         }
         // 聊天音效播放
-        if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), OLBaseActivity.getKitiName())) {
-            SoundEffectPlayUtil.playSoundEffect(this, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
+        if (GlobalSetting.getChatsSound() && !Objects.equals(message.getData().getString("U"), OLBaseActivity.getKitiName())) {
+            SoundEffectPlayUtil.playSoundEffect(this, Uri.parse(GlobalSetting.getChatsSoundFile()));
         }
         // 聊天记录存储
         ChatUtil.chatsSaveHandle(message, this, time);
@@ -670,7 +670,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             bindMsgListView();
             sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus("N").build());
         } else {
-            SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
+            SongPlay.setPlaySongsMode(PlaySongsModeEnum.ONCE);
         }
     }
 

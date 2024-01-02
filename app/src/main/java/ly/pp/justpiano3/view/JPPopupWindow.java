@@ -36,7 +36,7 @@ public class JPPopupWindow extends PopupWindow {
     @Override
     public void showAsDropDown(View anchor) {
         super.showAsDropDown(anchor);
-        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+        if (GlobalSetting.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(((Activity) context).getWindow());
         } else {
             WindowUtil.exitFullScreenHandle(((Activity) context).getWindow());
@@ -46,7 +46,7 @@ public class JPPopupWindow extends PopupWindow {
     @Override
     public void showAsDropDown(View anchor, int xoff, int yoff) {
         super.showAsDropDown(anchor, xoff, yoff);
-        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+        if (GlobalSetting.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(((Activity) context).getWindow());
         } else {
             WindowUtil.exitFullScreenHandle(((Activity) context).getWindow());
@@ -56,7 +56,7 @@ public class JPPopupWindow extends PopupWindow {
     @Override
     public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
         super.showAsDropDown(anchor, xoff, yoff, gravity);
-        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+        if (GlobalSetting.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(((Activity) context).getWindow());
         } else {
             WindowUtil.exitFullScreenHandle(((Activity) context).getWindow());
@@ -66,7 +66,7 @@ public class JPPopupWindow extends PopupWindow {
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
         super.showAtLocation(parent, gravity, x, y);
-        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+        if (GlobalSetting.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(((Activity) context).getWindow());
         } else {
             WindowUtil.exitFullScreenHandle(((Activity) context).getWindow());

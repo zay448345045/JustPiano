@@ -316,13 +316,13 @@ public final class MidiDeviceUtil {
             // 音符按下
             if (midiReceiver != null) {
                 midiReceiver.midiDeviceListener.onMidiMessageReceive(
-                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), value3);
+                        (byte) (value2 + GlobalSetting.getMidiKeyboardTune()), value3);
             }
         } else if (midiEventType == 0x80) {
             // 音符抬起
             if (midiReceiver != null) {
                 midiReceiver.midiDeviceListener.onMidiMessageReceive(
-                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0);
+                        (byte) (value2 + GlobalSetting.getMidiKeyboardTune()), (byte) 0);
             }
         } else if (midiEventType == 0xB0 && (value2 & 0xFF) == 64) {
             // 延音踏板，midi的CC控制器64号判断
@@ -335,7 +335,7 @@ public final class MidiDeviceUtil {
      */
     private static void changeSustainPedalStatus(boolean currentSustainPedalValue) {
         if (sustainPedal.getAndSet(currentSustainPedalValue) != currentSustainPedalValue
-                && !GlobalSetting.INSTANCE.getForceEnableSustainPedal()
+                && !GlobalSetting.getForceEnableSustainPedal()
                 && midiSustainPedalListener != null) {
             midiSustainPedalListener.onChange(currentSustainPedalValue);
         }
@@ -345,6 +345,6 @@ public final class MidiDeviceUtil {
      * 获取延音踏板当前状态
      */
     public static boolean getSustainPedalStatus() {
-        return GlobalSetting.INSTANCE.getForceEnableSustainPedal() || sustainPedal.get();
+        return GlobalSetting.getForceEnableSustainPedal() || sustainPedal.get();
     }
 }

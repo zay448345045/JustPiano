@@ -57,8 +57,8 @@ public final class OLPlayRoomHandler extends Handler {
                                     olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + "0" + tune);
                                 }
                             }
-                            if (!SongPlay.INSTANCE.isPlaying()) {
-                                SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, message.arg1, olPlayRoom.getTune());
+                            if (!SongPlay.isPlaying()) {
+                                SongPlay.startPlay(olPlayRoom, songFilePath, message.arg1, olPlayRoom.getTune());
                             }
                         }
                     }
@@ -90,12 +90,12 @@ public final class OLPlayRoomHandler extends Handler {
                                 olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().subSequence(0, 1) + "0" + tune);
                             }
                             olPlayRoom.songNameScrollText.setText(songName + "[难度:" + songRightHandDegree + "]");
-                            SongPlay.INSTANCE.startPlay(olPlayRoom, songFilePath, tune);
+                            SongPlay.startPlay(olPlayRoom, songFilePath, tune);
                         }
                     }
                 });
                 case 5 -> post(() -> {
-                    SongPlay.INSTANCE.stopPlay();
+                    SongPlay.stopPlay();
                     String songFilePath = message.getData().getString("S");
                     if (!olPlayRoom.onStart) {
                         OnlineUtil.getConnectionService().writeData(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());

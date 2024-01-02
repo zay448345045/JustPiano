@@ -32,7 +32,7 @@ public final class LocalSongsStartPlayClick implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        SongPlay.INSTANCE.stopPlay();
+        SongPlay.stopPlay();
         Intent intent = new Intent(melodySelect, PianoPlay.class);
         intent.putExtra("head", 0);
         intent.putExtra("path", path);
@@ -42,7 +42,7 @@ public final class LocalSongsStartPlayClick implements OnClickListener {
         intent.putExtra("songsTime", songsTime);
         intent.putExtra("score", score);
         intent.putExtra("isOpenRecord", melodySelect.isRecord.isChecked());
-        GlobalSetting.INSTANCE.setLocalPlayMode(melodySelect.isPractise.isChecked()
+        GlobalSetting.setLocalPlayMode(melodySelect.isPractise.isChecked()
                 ? LocalPlayModeEnum.PRACTISE : LocalPlayModeEnum.NORMAL);
         intent.putExtra("hand", melodySelect.isLeftHand.isChecked() ? 1 : 0);
         melodySelect.startActivity(intent);

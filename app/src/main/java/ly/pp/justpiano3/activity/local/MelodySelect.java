@@ -129,7 +129,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         }
         String message = "成功导入曲目《" + songName + "》，可点击“本地导入”分类查看";
         try {
-            SongData songData = PmSongUtil.INSTANCE.midiFileToPmFile(melodySelect, uriInfo.getDisplayName(), uriInfo.getUri(), pmFile);
+            SongData songData = PmSongUtil.midiFileToPmFile(melodySelect, uriInfo.getDisplayName(), uriInfo.getUri(), pmFile);
             if (!pmFile.exists()) {
                 throw new RuntimeException("导入《" + songName + "》失败，请确认midi文件是否合法");
             }
@@ -229,7 +229,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             menuPopupWindow.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
         } else if (id == R.id.lo_extra_func_settings) {
             menuPopupWindow.dismiss();
-            SongPlay.INSTANCE.stopPlay();
+            SongPlay.stopPlay();
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> ImageLoadUtil.setBackground(this)
             ).launch(new Intent(this, SettingsMode.class));
         } else if (id == R.id.lo_extra_func_sync) {
@@ -328,8 +328,8 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         setContentView(LayoutInflater.from(this).inflate(R.layout.lo_melody_list, null));
-        SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
-        SongPlay.INSTANCE.setCallBack(this::autoPlayNextSong);
+        SongPlay.setPlaySongsMode(PlaySongsModeEnum.ONCE);
+        SongPlay.setCallBack(this::autoPlayNextSong);
         jpProgressBar = new JPProgressBar(this);
         sortButton = findViewById(R.id.list_sort_b);
         sortButton.setOnClickListener(this);
@@ -409,7 +409,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
                 if (song != null) {
                     songsPath = song.getFilePath();
                     songsPositionInListView++;
-                    SongPlay.INSTANCE.startPlay(this, song.getFilePath(), 0);
+                    SongPlay.startPlay(this, song.getFilePath(), 0);
                 }
             }
         }
@@ -417,8 +417,8 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
 
     @Override
     protected void onDestroy() {
-        SongPlay.INSTANCE.stopPlay();
-        SongPlay.INSTANCE.setCallBack(null);
+        SongPlay.stopPlay();
+        SongPlay.setCallBack(null);
         super.onDestroy();
     }
 

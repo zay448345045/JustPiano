@@ -223,8 +223,8 @@ public final class ImageLoadUtil {
             return;
         }
         Bitmap backgroundBitmap = null;
-        if (!TextUtils.isEmpty(GlobalSetting.INSTANCE.getBackgroundPic())) {
-            backgroundBitmap = loadFileImage(activity, Uri.parse(GlobalSetting.INSTANCE.getBackgroundPic()));
+        if (!TextUtils.isEmpty(GlobalSetting.getBackgroundPic())) {
+            backgroundBitmap = loadFileImage(activity, Uri.parse(GlobalSetting.getBackgroundPic()));
         }
         if (backgroundBitmap != null) {
             activity.getWindow().setBackgroundDrawable(new BitmapDrawable(activity.getResources(), backgroundBitmap));

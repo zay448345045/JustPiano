@@ -438,9 +438,9 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         jpprogressBar = new JPProgressBar(this);
         layoutinflater = LayoutInflater.from(this);
         sharedPreferences = getSharedPreferences("mails_" + OLBaseActivity.getAccountName(), MODE_PRIVATE);
-        GlobalSetting.INSTANCE.loadSettings(this, true);
+        GlobalSetting.loadSettings(this, true);
         setContentView(R.layout.ol_hall_list);
-        GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         hallListView = findViewById(R.id.ol_hall_list);
         hallListView.setCacheColorHint(Color.TRANSPARENT);
         hallList.clear();

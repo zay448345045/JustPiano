@@ -18,7 +18,7 @@ object SongPlay {
     /**
      * 播放模式
      */
-    var playSongsMode = PlaySongsModeEnum.ONCE
+    @JvmStatic var playSongsMode = PlaySongsModeEnum.ONCE
 
     /**
      * 自定义线程池产生的协程作用域
@@ -34,11 +34,12 @@ object SongPlay {
     /**
      * 播放结束时切换下一首曲谱的回调
      */
-    var callBack: CallBack? = null
+    @JvmStatic var callBack: CallBack? = null
 
     /**
      * 开始播放
      */
+    @JvmStatic
     fun startPlay(context: Context, songFilePath: String, tune: Int) {
         startPlay(context, songFilePath, 0, tune)
     }
@@ -46,6 +47,7 @@ object SongPlay {
     /**
      * 开始播放，支持指定起始播放进度
      */
+    @JvmStatic
     fun startPlay(context: Context, songFilePath: String, songProgress: Int, tune: Int) {
         PmSongUtil.parsePmDataByFilePath(context, songFilePath)?.let {
             job?.cancel()
@@ -129,6 +131,7 @@ object SongPlay {
     /**
      * 停止播放
      */
+    @JvmStatic
     fun stopPlay() {
         job?.cancel()
         job = null
@@ -138,6 +141,7 @@ object SongPlay {
     /**
      * 是否正在播放
      */
+    @JvmStatic
     fun isPlaying(): Boolean {
         return job?.isActive == true
     }

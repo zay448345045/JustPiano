@@ -97,6 +97,6 @@ public final class ChatFiles extends BaseActivity {
         listView = findViewById(R.id.listFile);
         listView.setCacheColorHint(Color.TRANSPARENT);
         tipsTextView = findViewById(R.id.txt1);
-        loadChatFiles(GlobalSetting.INSTANCE.getChatsSavePath());
+        loadChatFiles(GlobalSetting.getChatsSavePath());
     }
 }

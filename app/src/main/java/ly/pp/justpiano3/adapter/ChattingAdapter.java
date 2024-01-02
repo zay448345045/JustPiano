@@ -94,7 +94,7 @@ public final class ChattingAdapter extends BaseAdapter {
     private void setMsgFontSize(TextView... views) {
         if (views != null) {
             for (TextView view : views) {
-                view.setTextSize(GlobalSetting.INSTANCE.getChatTextSize());
+                view.setTextSize(GlobalSetting.getChatTextSize());
             }
         }
     }
@@ -105,7 +105,7 @@ public final class ChattingAdapter extends BaseAdapter {
         String message = bundle.getString("M");
         if (!str1.isEmpty()) {
             ((OLPlayRoom) activity).setTune(bundle.getInt("D"));
-            textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[荐]" + userName);
+            textView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[荐]" + userName);
             textView2.setText(message);
             textView2.setTextColor(0xffff0000);
             if (((OLPlayRoom) activity).getPlayerKind().equals("H")) {
@@ -127,7 +127,7 @@ public final class ChattingAdapter extends BaseAdapter {
         String string2 = bundle.getString("M");
         int id = bundle.getInt("V");
         if (!string2.startsWith("//")) {
-            textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
+            textView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
             TextView textView2 = view.findViewById(R.id.ol_user_mao);
             if (activity instanceof OLRoomActivity) {
                 switch (id) {
@@ -196,10 +196,10 @@ public final class ChattingAdapter extends BaseAdapter {
             textView3.setText(string2);
         } else {
             try {
-                textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
+                textView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
                 ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(Consts.expressions[Integer.parseInt(string2.substring(2))]);
             } catch (Exception e) {
-                textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
+                textView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
                 switch (string2) {
                     case "//dalao0" ->
                             ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.dalao0);
@@ -275,7 +275,7 @@ public final class ChattingAdapter extends BaseAdapter {
     private void handlePrivateMessage(View view, TextView textView, TextView textView2, Bundle bundle) {
         String string = bundle.getString("U");
         String string2 = bundle.getString("M");
-        textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[私]" + string);
+        textView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[私]" + string);
         textView.setTextColor(0xff00ff00);
         ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ff00);
         textView2.setText(string2);
@@ -285,7 +285,7 @@ public final class ChattingAdapter extends BaseAdapter {
     private void handleSystemMessage(View view, TextView textView, TextView textView2, Bundle bundle) {
         String string = bundle.getString("U");
         String string2 = bundle.getString("M");
-        textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[系统消息]" + string);
+        textView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[系统消息]" + string);
         textView.setTextColor(0xffffff00);
         ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xffffff00);
         textView2.setText(string2);
@@ -295,7 +295,7 @@ public final class ChattingAdapter extends BaseAdapter {
     private void handleServerMessage(View view, TextView textView, TextView textView2, Bundle bundle) {
         String string = bundle.getString("U");
         String string2 = bundle.getString("M");
-        textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[全服消息]" + string);
+        textView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[全服消息]" + string);
         textView.setTextColor(0xff00ffff);
         ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
         textView2.setText(string2);
@@ -310,7 +310,7 @@ public final class ChattingAdapter extends BaseAdapter {
         if (streamStatus) {
             message += DateUtil.second() % 2 == 0 ? "🔶" : "🔸";
         }
-        userText.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + sendUserName);
+        userText.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + sendUserName);
         msgText.setText(message);
         // 设置标签颜色
         TextView maoText = view.findViewById(R.id.ol_user_mao);

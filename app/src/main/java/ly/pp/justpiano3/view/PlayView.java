@@ -241,7 +241,7 @@ public final class PlayView extends SurfaceView implements Callback {
         fireImage = ImageLoadUtil.loadSkinImage(pianoPlay, "fire");
         longKeyboardImage = ImageLoadUtil.loadSkinImage(pianoPlay, "keyboard_long");
         nullImage = ImageLoadUtil.loadSkinImage(pianoPlay, "null");
-        switch (GlobalSetting.INSTANCE.getRoughLine()) {
+        switch (GlobalSetting.getRoughLine()) {
             case 1 -> roughLineImage = nullImage;
             case 2 -> roughLineImage = ImageLoadUtil.loadSkinImage(pianoPlay, "rough_line1");
             case 3 -> roughLineImage = ImageLoadUtil.loadSkinImage(pianoPlay, "rough_line");
@@ -249,7 +249,7 @@ public final class PlayView extends SurfaceView implements Callback {
         progressBarImage = ImageLoadUtil.loadSkinImage(pianoPlay, "progress_bar");
         progressBarBaseImage = ImageLoadUtil.loadSkinImage(pianoPlay, "progress_bar_base");
         Bitmap bitmap = noteImage;
-        matrix.postScale(GlobalSetting.INSTANCE.getNoteSize(), GlobalSetting.INSTANCE.getNoteSize());
+        matrix.postScale(GlobalSetting.getNoteSize(), GlobalSetting.getNoteSize());
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         noteImage = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
@@ -268,7 +268,7 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     private void loadPm(Context context, String songFilePath, int tune) {
-        PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByFilePath(context, songFilePath);
+        PmSongData pmSongData = PmSongUtil.parsePmDataByFilePath(context, songFilePath);
         if (pmSongData == null) {
             return;
         }
@@ -290,7 +290,7 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     private void loadPm(byte[] bArr) {
-        PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByBytes(bArr);
+        PmSongData pmSongData = PmSongUtil.parsePmDataByBytes(bArr);
         if (pmSongData == null) {
             return;
         }
@@ -320,7 +320,7 @@ public final class PlayView extends SurfaceView implements Callback {
             if (i4 < tickArray.length) {
                 tick += tickArray[i4];
                 actualTime = -tick * pm_2;
-                position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
+                position = (int) (-tick * pm_2 / GlobalSetting.getTempSpeed() / GlobalSetting.getNotesDownSpeed());
                 if (trackArray[i4] != handValue) {
                     notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4],
                             (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
@@ -356,10 +356,10 @@ public final class PlayView extends SurfaceView implements Callback {
         if (barImage == null) {
             loadImages();
         }
-        perfectStandard = 200f / GlobalSetting.INSTANCE.getNotesDownSpeed();
-        coolStandard = 300f / GlobalSetting.INSTANCE.getNotesDownSpeed();
-        greatStandard = 400f / GlobalSetting.INSTANCE.getNotesDownSpeed();
-        missStandard = 500f / GlobalSetting.INSTANCE.getNotesDownSpeed();
+        perfectStandard = 200f / GlobalSetting.getNotesDownSpeed();
+        coolStandard = 300f / GlobalSetting.getNotesDownSpeed();
+        greatStandard = 400f / GlobalSetting.getNotesDownSpeed();
+        missStandard = 500f / GlobalSetting.getNotesDownSpeed();
         line.setColor(Color.argb(178, 244, 255, 64));
         line.setStrokeWidth(3);
         screenWidth = getWidth();
@@ -478,7 +478,7 @@ public final class PlayView extends SurfaceView implements Callback {
             }
             hasTouched = true;
             i3 = i4;
-            if (GlobalSetting.INSTANCE.getNoteDismiss()) {
+            if (GlobalSetting.getNoteDismiss()) {
                 judgingNote.image = nullImage;
                 int index = notesList.indexOf(judgingNote);
                 for (int i1 = 0; i1 < notesList.size(); i1++) {
@@ -709,18 +709,18 @@ public final class PlayView extends SurfaceView implements Callback {
                     if (!currentPlayNote.image.equals(nullImage)) {
                         judgingNote = currentPlayNote;
                         if (currentPlayNote.posiAdd15AddAnim > -15f) {
-                            if (GlobalSetting.INSTANCE.getShowLine() && canvas != null) {
+                            if (GlobalSetting.getShowLine() && canvas != null) {
                                 canvas.drawLine(currentPlayNote.getHalfWidth() + currentPlayNote.positionX, whiteKeyHeight, currentPlayNote.getHalfWidth() + currentPlayNote.positionX, 15 + currentPlayNote.posiAdd15AddAnim, line);
                             }
-                            if (GlobalSetting.INSTANCE.getChangeNotesColor()) {
+                            if (GlobalSetting.getChangeNotesColor()) {
                                 currentPlayNote.image = playNoteImage;
                             } else if (currentPlayNote.posiAdd15AddAnim >= halfHeightSub20) {
                                 currentPlayNote.image = playNoteImage;
                             }
                         }
                     }
-                    if (GlobalSetting.INSTANCE.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hide
-                            && currentPlayNote.posiAdd15AddAnim > whiteKeyHeight - 100 / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
+                    if (GlobalSetting.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hide
+                            && currentPlayNote.posiAdd15AddAnim > whiteKeyHeight - 100 / GlobalSetting.getNotesDownSpeed()) {
                         isTouchRightNote = false;
                     }
                     noteRightValue = currentPlayNote.pitch;
@@ -745,7 +745,7 @@ public final class PlayView extends SurfaceView implements Callback {
         int i;
         int i2;
         int i3;
-        if (canvas != null && touchNotesList != null && GlobalSetting.INSTANCE.getShowTouchNotesLevel()) {
+        if (canvas != null && touchNotesList != null && GlobalSetting.getShowTouchNotesLevel()) {
             try {
                 for (ShowTouchNotesLevel showTouchNotesLevel : touchNotesList) {
                     Rect rect = f4770bB;

@@ -60,7 +60,7 @@ public class OLBaseActivity extends BaseActivity {
         jpDialogBuilder.setCancelableFalse();
         jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
             dialog.dismiss();
-            SongPlay.INSTANCE.stopPlay();
+            SongPlay.stopPlay();
             OLBaseActivity.returnMainMode(OLBaseActivity.this);
         });
         jpDialogBuilder.buildAndShowDialog();

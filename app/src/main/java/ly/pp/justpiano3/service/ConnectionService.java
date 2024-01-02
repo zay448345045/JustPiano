@@ -98,7 +98,7 @@ public final class ConnectionService extends Service {
         super.onCreate();
         foregroundServiceHandle();
         initNetty();
-        if (GlobalSetting.INSTANCE.getWakeLock()) {
+        if (GlobalSetting.getWakeLock()) {
             WakeLockUtil.acquireWakeLock(this, "JustPiano:JPWakeLock");
         }
     }
@@ -146,7 +146,7 @@ public final class ConnectionService extends Service {
     @Override
     public void onDestroy() {
         outLine();
-        if (GlobalSetting.INSTANCE.getWakeLock()) {
+        if (GlobalSetting.getWakeLock()) {
             WakeLockUtil.releaseWakeLock();
         }
         super.onDestroy();

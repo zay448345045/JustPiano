@@ -77,9 +77,9 @@ public final class OLMainMode extends OLBaseActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalSetting.INSTANCE.loadSettings(this, true);
+        GlobalSetting.loadSettings(this, true);
         setContentView(R.layout.ol_main_mode);
-        GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         findViewById(R.id.ol_top_b).setOnClickListener(this);
         findViewById(R.id.ol_users_b).setOnClickListener(this);
         findViewById(R.id.ol_playhall_b).setOnClickListener(this);
