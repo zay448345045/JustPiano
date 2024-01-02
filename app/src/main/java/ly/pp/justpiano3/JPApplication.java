@@ -66,7 +66,7 @@ public final class JPApplication extends Application {
         songDatabase = Room.databaseBuilder(this, SongDatabase.class, "data")
                 .addMigrations(generateMigrations()).allowMainThreadQueries().build();
         // 支持midi设备功能时，初始化midi设备
-        if (MidiDeviceUtil.isSupportMidi(this)) {
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.initMidiDevice(this);
         }
     }
@@ -154,17 +154,14 @@ public final class JPApplication extends Application {
             new FeedbackTask(getApplicationContext(),
                     TextUtils.isEmpty(OLBaseActivity.kitiName) ? "未知用户" : OLBaseActivity.kitiName,
                     DeviceUtil.getAppAndDeviceInfo() + '\n' + byteArrayOutputStream).execute();
-            // 关闭网络连接服务，退出进程
-            OnlineUtil.outlineConnectionService(getApplicationContext());
-            // 关闭fluidsynth
-            SoundEngineUtil.closeFluidSynth();
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Process.killProcess(Process.myPid());
+            onTerminate();
             System.exit(1);
+            Process.killProcess(Process.myPid());
         }
     }
 
@@ -175,7 +172,7 @@ public final class JPApplication extends Application {
         if (songDatabase != null) {
             songDatabase.close();
         }
-        // 关闭网络连接服务
+        // 关闭TCP网络连接服务
         OnlineUtil.outlineConnectionService(this);
         // 关闭fluidsynth
         SoundEngineUtil.closeFluidSynth();

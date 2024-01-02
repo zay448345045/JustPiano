@@ -166,7 +166,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
                     progressBar!!.dismiss()
                 }
             }
-            if (MidiDeviceUtil.isSupportMidi(this)) {
+            if (MidiDeviceUtil.isSupportMidiDevice(this)) {
                 MidiDeviceUtil.setMidiConnectionListener(this@WaterfallActivity)
             }
             // 如果有录音，启动录音
@@ -216,7 +216,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
 
     override fun onDestroy() {
         finishRecord()
-        if (MidiDeviceUtil.isSupportMidi(this)) {
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.removeMidiConnectionListener()
         }
         // 停止播放，释放资源

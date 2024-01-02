@@ -143,7 +143,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     public void initPlayer(GridView gridView, Bundle bundle) {
         if (roomPositionSub1 < 0) {
             // 初次加载完成，确认用户已经进入房间内，再开始MIDI监听和记录弹奏，开启瀑布流等
-            if (MidiDeviceUtil.isSupportMidi(this)) {
+            if (MidiDeviceUtil.isSupportMidiDevice(this)) {
                 MidiDeviceUtil.setMidiConnectionListener(this);
             }
             if (!GlobalSetting.INSTANCE.getKeyboardRealtime()) {
@@ -281,7 +281,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         if (requestCode == SettingsMode.SETTING_MODE_CODE) {
             ImageLoadUtil.setBackground(this);
             keyboardView.changeSkinKeyboardImage(this);
-            keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
+            keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries().get(GlobalSetting.INSTANCE.getKeyboardOctaveTagType()));
             waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
             waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
             waterfallView.setNoteFallDownSpeed(GlobalSetting.INSTANCE.getWaterfallDownSpeed());
@@ -320,7 +320,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             olKeyboardStates.put(i, new OLKeyboardState(false, false, false));
         }
         keyboardView = findViewById(R.id.keyboard_view);
-        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
+        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries().get(GlobalSetting.INSTANCE.getKeyboardOctaveTagType()));
         keyboardView.setKeyboardListener(new KeyboardView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
@@ -402,7 +402,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     @Override
     protected void onDestroy() {
-        if (MidiDeviceUtil.isSupportMidi(this)) {
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.removeMidiConnectionListener();
         }
         stopNotesSchedule();

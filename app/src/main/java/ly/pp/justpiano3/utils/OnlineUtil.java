@@ -234,7 +234,7 @@ public class OnlineUtil {
     }
 
     public static void handleOnTopBaseActivity(Consumer<OLBaseActivity> consumer, long delayMillis) {
-        if (JPStack.top() instanceof OLBaseActivity olBaseActivity) {
+        if (JPStack.top() instanceof OLBaseActivity olBaseActivity && !olBaseActivity.isDestroyed()) {
             olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.accept(olBaseActivity), delayMillis);
         }
     }

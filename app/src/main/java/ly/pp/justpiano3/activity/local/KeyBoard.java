@@ -89,13 +89,13 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
-        if (MidiDeviceUtil.isSupportMidi(this)) {
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.setMidiConnectionListener(this);
         }
     }
 
     private void initKeyboardView(KeyboardView keyboardView) {
-        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
+        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries().get(GlobalSetting.INSTANCE.getKeyboardOctaveTagType()));
         keyboardView.setKeyboardListener(new KeyboardView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
@@ -114,7 +114,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
 
     @Override
     public void onDestroy() {
-        if (MidiDeviceUtil.isSupportMidi(this)) {
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.removeMidiConnectionListener();
         }
         if (recordStart) {
@@ -257,7 +257,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
             ImageLoadUtil.setBackground(this);
             firstKeyboardView.changeSkinKeyboardImage(this);
             secondKeyboardView.changeSkinKeyboardImage(this);
-            KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()];
+            KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.getEntries().get(GlobalSetting.INSTANCE.getKeyboardOctaveTagType());
             firstKeyboardView.setOctaveTagType(octaveTagType);
             secondKeyboardView.setOctaveTagType(octaveTagType);
         }
