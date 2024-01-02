@@ -3,7 +3,6 @@ package ly.pp.justpiano3.activity.local;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.midi.MidiDeviceInfo;
 import android.net.Uri;
 import android.os.Build;
@@ -103,8 +102,7 @@ public final class SettingsMode extends PreferenceActivity implements MidiDevice
                 soundPreference.setSummary(GlobalSetting.INSTANCE.getSound());
             }
             // 检测是否支持midi功能，支持midi功能时，midi设备相关的设置才允许点击
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                    && getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiDeviceUtil.isSupportMidi(getActivity())) {
                 Preference midiDevicePreference = findPreference("midi_device_list");
                 if (midiDevicePreference != null) {
                     midiDevicePreference.setSummary("启用/禁用MIDI设备");

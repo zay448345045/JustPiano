@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.utils;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.midi.MidiDevice;
 import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
@@ -112,6 +113,13 @@ public final class MidiDeviceUtil {
                 onMidiMessageReceive(msg[i], msg[i + 1], msg[i + 2]);
             }
         }
+    }
+
+    /**
+     * 检测设备是否支持midi
+     */
+    public static boolean isSupportMidi(Context context) {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

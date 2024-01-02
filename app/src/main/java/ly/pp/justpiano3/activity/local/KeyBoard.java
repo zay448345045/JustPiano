@@ -2,7 +2,6 @@ package ly.pp.justpiano3.activity.local;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -89,7 +89,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (MidiDeviceUtil.isSupportMidi(this)) {
             MidiDeviceUtil.setMidiConnectionListener(this);
         }
     }
@@ -114,7 +114,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
 
     @Override
     public void onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (MidiDeviceUtil.isSupportMidi(this)) {
             MidiDeviceUtil.removeMidiConnectionListener();
         }
         if (recordStart) {
@@ -206,41 +206,34 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
     private final Handler handler = new Handler(new Handler.Callback() {
 
         @Override
-        public boolean handleMessage(Message msg) {
+        public boolean handleMessage(@NonNull Message message) {
             SharedPreferences.Editor edit = sharedPreferences.edit();
-            if (msg.what == R.id.keyboard1_count_down) {
+            if (message.what == R.id.keyboard1_count_down) {
                 firstKeyboardView.setWhiteKeyNum(firstKeyboardView.getWhiteKeyNum() - 1);
                 edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard2_count_down) {
+            } else if (message.what == R.id.keyboard2_count_down) {
                 secondKeyboardView.setWhiteKeyNum(secondKeyboardView.getWhiteKeyNum() - 1);
                 edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard1_count_up) {
+            } else if (message.what == R.id.keyboard1_count_up) {
                 firstKeyboardView.setWhiteKeyNum(firstKeyboardView.getWhiteKeyNum() + 1);
                 edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard2_count_up) {
+            } else if (message.what == R.id.keyboard2_count_up) {
                 secondKeyboardView.setWhiteKeyNum(secondKeyboardView.getWhiteKeyNum() + 1);
                 edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard1_move_left) {
+            } else if (message.what == R.id.keyboard1_move_left) {
                 firstKeyboardView.setWhiteKeyOffset(firstKeyboardView.getWhiteKeyOffset() - 1);
                 edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard2_move_left) {
+            } else if (message.what == R.id.keyboard2_move_left) {
                 secondKeyboardView.setWhiteKeyOffset(secondKeyboardView.getWhiteKeyOffset() - 1);
                 edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard1_move_right) {
+            } else if (message.what == R.id.keyboard1_move_right) {
                 firstKeyboardView.setWhiteKeyOffset(firstKeyboardView.getWhiteKeyOffset() + 1);
                 edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard2_move_right) {
+            } else if (message.what == R.id.keyboard2_move_right) {
                 secondKeyboardView.setWhiteKeyOffset(secondKeyboardView.getWhiteKeyOffset() + 1);
                 edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
-                edit.apply();
             }
+            edit.apply();
             return false;
         }
     });

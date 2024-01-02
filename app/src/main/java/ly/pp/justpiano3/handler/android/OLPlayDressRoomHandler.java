@@ -7,6 +7,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.activity.online.OLPlayDressRoom;
@@ -24,7 +26,7 @@ public final class OLPlayDressRoomHandler extends Handler {
     }
 
     @Override
-    public void handleMessage(final Message message) {
+    public void handleMessage(@NonNull Message message) {
         final OLPlayDressRoom olPlayDressRoom = (OLPlayDressRoom) weakReference.get();
         try {
             switch (message.what) {

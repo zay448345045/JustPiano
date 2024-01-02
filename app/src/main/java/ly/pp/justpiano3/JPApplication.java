@@ -2,8 +2,6 @@ package ly.pp.justpiano3;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Process;
@@ -68,7 +66,7 @@ public final class JPApplication extends Application {
         songDatabase = Room.databaseBuilder(this, SongDatabase.class, "data")
                 .addMigrations(generateMigrations()).allowMainThreadQueries().build();
         // 支持midi设备功能时，初始化midi设备
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (MidiDeviceUtil.isSupportMidi(this)) {
             MidiDeviceUtil.initMidiDevice(this);
         }
     }

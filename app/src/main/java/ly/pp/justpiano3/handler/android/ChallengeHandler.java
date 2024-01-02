@@ -8,6 +8,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +30,7 @@ public final class ChallengeHandler extends Handler {
     }
 
     @Override
-    public void handleMessage(Message message) {
+    public void handleMessage(@NonNull Message message) {
         OLChallenge challenge = (OLChallenge) weakReference.get();
         try {
             switch (message.what) {

@@ -2,7 +2,6 @@ package ly.pp.justpiano3.activity.online;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.midi.MidiDeviceInfo;
 import android.net.Uri;
@@ -144,7 +143,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     public void initPlayer(GridView gridView, Bundle bundle) {
         if (roomPositionSub1 < 0) {
             // 初次加载完成，确认用户已经进入房间内，再开始MIDI监听和记录弹奏，开启瀑布流等
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiDeviceUtil.isSupportMidi(this)) {
                 MidiDeviceUtil.setMidiConnectionListener(this);
             }
             if (!GlobalSetting.INSTANCE.getKeyboardRealtime()) {
@@ -195,20 +194,17 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         if (message.what == R.id.keyboard_count_down) {
             keyboardView.setWhiteKeyNum(keyboardView.getWhiteKeyNum() - 1);
             edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
-            edit.apply();
         } else if (message.what == R.id.keyboard_count_up) {
             keyboardView.setWhiteKeyNum(keyboardView.getWhiteKeyNum() + 1);
             edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
-            edit.apply();
         } else if (message.what == R.id.keyboard_move_left) {
             keyboardView.setWhiteKeyOffset(keyboardView.getWhiteKeyOffset() - 1);
             edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
-            edit.apply();
         } else if (message.what == R.id.keyboard_move_right) {
             keyboardView.setWhiteKeyOffset(keyboardView.getWhiteKeyOffset() + 1);
             edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
-            edit.apply();
         }
+        edit.apply();
         onlineWaterfallViewNoteWidthUpdateHandle();
         return false;
     }
@@ -406,7 +402,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     @Override
     protected void onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (MidiDeviceUtil.isSupportMidi(this)) {
             MidiDeviceUtil.removeMidiConnectionListener();
         }
         stopNotesSchedule();

@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity.local
 
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -167,9 +166,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
                     progressBar!!.dismiss()
                 }
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
-            ) {
+            if (MidiDeviceUtil.isSupportMidi(this)) {
                 MidiDeviceUtil.setMidiConnectionListener(this@WaterfallActivity)
             }
             // 如果有录音，启动录音
@@ -219,9 +216,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
 
     override fun onDestroy() {
         finishRecord()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
-        ) {
+        if (MidiDeviceUtil.isSupportMidi(this)) {
             MidiDeviceUtil.removeMidiConnectionListener()
         }
         // 停止播放，释放资源

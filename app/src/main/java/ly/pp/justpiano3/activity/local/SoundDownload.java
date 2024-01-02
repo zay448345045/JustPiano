@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
@@ -159,7 +160,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
     }
 
     @Override
-    public boolean handleMessage(Message message) {
+    public boolean handleMessage(@NonNull Message message) {
         if (!Thread.currentThread().isInterrupted()) {
             switch (message.what) {
                 case 0 -> {
