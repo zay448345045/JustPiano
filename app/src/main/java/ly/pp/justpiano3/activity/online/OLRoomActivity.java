@@ -164,7 +164,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             imageView11.setImageResource(Consts.couples[jSONObject4.getInt("T")]);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
             ImageLoadUtil.setUserDressImageBitmap(this, user2, imageView6, imageView7, imageView8, imageView9, imageView9e, imageView10);
-            new JPDialogBuilder(this).setWidth(288).setTitle(str).loadInflate(inflate)
+            new JPDialogBuilder(this).setWidth(232).setTitle(str).loadInflate(inflate)
                     .setFirstButton("祝福:" + jSONObject4.getInt("P"), (dialog, which) -> {
                         try {
                             OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
