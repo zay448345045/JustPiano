@@ -328,7 +328,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
                 if (jpDialogBuilder.getRadioGroupCheckedId() == 2) {
                     FilePickerUtil.openFilePicker(this, false, "db_import", dbImportLauncher);
                 } else if (jpDialogBuilder.getRadioGroupCheckedId() == 1) {
-                    FilePickerUtil.openFolderPicker(this, "db_export", dbExportLauncher);
+                    FilePickerUtil.openFolderPicker("db_export", dbExportLauncher);
                 }
             });
             jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());

@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.view.preference;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -15,10 +16,11 @@ import androidx.preference.PreferenceViewHolder;
 
 import ly.pp.justpiano3.activity.local.SettingsActivity;
 import ly.pp.justpiano3.utils.FilePickerUtil;
+import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public final class FilePickerPreference extends Preference {
     private static final int BUTTON_ID = View.generateViewId();
-    private ComponentActivity activity;
+    private Activity activity;
     /**
      * 是否是目录选择，默认false
      */
@@ -70,6 +72,7 @@ public final class FilePickerPreference extends Preference {
     public void persist(String showName, String value) {
         setSummary(showName);
         persistString(value);
+        ImageLoadUtil.setBackground(activity);
     }
 
     public void setDefaultButtonClickListener(View.OnClickListener onClickListener) {
@@ -81,7 +84,7 @@ public final class FilePickerPreference extends Preference {
         super.onClick();
         if (activity != null) {
             if (folderPicker) {
-                FilePickerUtil.openFolderPicker(activity, getKey(), ((SettingsActivity) activity).filePickerLauncher);
+                FilePickerUtil.openFolderPicker(getKey(), ((SettingsActivity) activity).filePickerLauncher);
             } else {
                 FilePickerUtil.openFilePicker(activity, false, getKey(), ((SettingsActivity) activity).filePickerLauncher);
             }

@@ -147,9 +147,7 @@ public final class SoundListPreference extends DialogPreference {
 
         @Override
         public void onDialogClosed(boolean positiveResult) {
-            if (!TextUtils.isEmpty(soundListPreference.soundKey)) {
-                soundListPreference.persistString(soundListPreference.soundKey);
-            }
+            soundListPreference.persistString(soundListPreference.soundKey);
             GlobalSetting.loadSettings(soundListPreference.context, false);
             FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(soundListPreference.context, Uri.parse(soundListPreference.soundKey));
             soundListPreference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认音源" : uriInfo.getDisplayName());

@@ -1,10 +1,10 @@
 package ly.pp.justpiano3.view.preference;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
@@ -150,12 +150,8 @@ public final class SkinListPreference extends DialogPreference {
 
         @Override
         public void onDialogClosed(boolean positiveResult) {
-            if (!TextUtils.isEmpty(skinListPreference.skinKey)) {
-                skinListPreference.persistString(skinListPreference.skinKey);
-            }
-            if (skinListPreference.context instanceof PreferenceActivity preferenceActivity) {
-                ImageLoadUtil.setBackground(preferenceActivity);
-            }
+            skinListPreference.persistString(skinListPreference.skinKey);
+            ImageLoadUtil.setBackground((Activity) skinListPreference.context);
             GlobalSetting.loadSettings(skinListPreference.context, false);
             FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(skinListPreference.context, Uri.parse(skinListPreference.skinKey));
             skinListPreference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认皮肤" : uriInfo.getDisplayName());

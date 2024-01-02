@@ -39,8 +39,7 @@ public final class FilePickerUtil {
         activityResultLauncher.launch(chooserIntent);
     }
 
-    public static void openFolderPicker(Context context, String extra,
-                                        ActivityResultLauncher<Intent> activityResultLauncher) {
+    public static void openFolderPicker(String extra, ActivityResultLauncher<Intent> activityResultLauncher) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
