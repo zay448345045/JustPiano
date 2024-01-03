@@ -3,7 +3,8 @@ package ly.pp.justpiano3.listener;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
+
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 

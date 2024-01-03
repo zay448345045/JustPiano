@@ -6,9 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.widget.ImageView;
+
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.FileInputStream;

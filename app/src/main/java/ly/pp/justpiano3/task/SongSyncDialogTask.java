@@ -2,8 +2,9 @@ package ly.pp.justpiano3.task;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import org.json.JSONObject;
 

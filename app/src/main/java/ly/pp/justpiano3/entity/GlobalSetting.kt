@@ -1,7 +1,7 @@
 package ly.pp.justpiano3.entity
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import ly.pp.justpiano3.enums.LocalPlayModeEnum
 import ly.pp.justpiano3.utils.SoundEngineUtil
 
