@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.view.preference
 
 import android.content.Context
+import android.os.Bundle
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.Gravity
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.preference.DialogPreference
 import androidx.preference.PreferenceDialogFragmentCompat
 import ly.pp.justpiano3.R
@@ -32,7 +34,6 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
     private val defaultValue: String
     private var value: String? = null
     private var message: String? = null
-    var emptyText: TextView? = null
 
     init {
         suffix = attrs.getAttributeValue(Consts.ANDROID_NAMESPACE, "text")
@@ -80,6 +81,12 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
     class DialogFragmentCompat(private val seekbarPreference: SeekBarPreference) :
         PreferenceDialogFragmentCompat() {
 
+        init {
+            val bundle = Bundle(1)
+            bundle.putString(ARG_KEY, seekbarPreference.key)
+            arguments = bundle
+        }
+
         override fun onCreateDialogView(context: Context): View {
             val layout = LinearLayout(context)
             layout.orientation = LinearLayout.VERTICAL
@@ -87,31 +94,31 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            seekbarPreference.emptyText = TextView(context)
-            seekbarPreference.emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
-            seekbarPreference.emptyText!!.textSize = 4f
-            layout.addView(seekbarPreference.emptyText, params)
+            var emptyText = TextView(context)
+            emptyText.gravity = Gravity.CENTER_HORIZONTAL
+            emptyText.textSize = 4f
+            layout.addView(emptyText, params)
             if (!TextUtils.isEmpty(seekbarPreference.message)) {
-                seekbarPreference.emptyText = TextView(context)
-                seekbarPreference.emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
-                seekbarPreference.emptyText!!.textSize = 2f
-                layout.addView(seekbarPreference.emptyText, params)
+                emptyText = TextView(context)
+                emptyText.gravity = Gravity.CENTER_HORIZONTAL
+                emptyText.textSize = 2f
+                layout.addView(emptyText, params)
                 val messageText = TextView(context)
                 messageText.text = seekbarPreference.message
                 layout.addView(messageText, params)
-                seekbarPreference.emptyText = TextView(context)
-                seekbarPreference.emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
-                seekbarPreference.emptyText!!.textSize = 10f
-                layout.addView(seekbarPreference.emptyText, params)
+                emptyText = TextView(context)
+                emptyText.gravity = Gravity.CENTER_HORIZONTAL
+                emptyText.textSize = 10f
+                layout.addView(emptyText, params)
             }
             seekbarPreference.valueText = TextView(context)
             seekbarPreference.valueText!!.gravity = Gravity.CENTER_HORIZONTAL
             seekbarPreference.valueText!!.textSize = 24f
             layout.addView(seekbarPreference.valueText, params)
-            seekbarPreference.emptyText = TextView(context)
-            seekbarPreference.emptyText!!.gravity = Gravity.CENTER_HORIZONTAL
-            seekbarPreference.emptyText!!.textSize = 14f
-            layout.addView(seekbarPreference.emptyText, params)
+            emptyText = TextView(context)
+            emptyText.gravity = Gravity.CENTER_HORIZONTAL
+            emptyText.textSize = 14f
+            layout.addView(emptyText, params)
             seekbarPreference.seekBar = SeekBar(context)
             seekbarPreference.seekBar!!.max = seekbarPreference.maxSteps
             seekbarPreference.seekBar!!.setOnSeekBarChangeListener(seekbarPreference)
@@ -140,6 +147,12 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
             seekbarPreference.seekBar!!.progress =
                 ((seekbarPreference.value!!.toFloat() - seekbarPreference.minValue)
                         / (seekbarPreference.maxValue - seekbarPreference.minValue) * 100).roundToInt()
+        }
+
+        override fun onPrepareDialogBuilder(builder: AlertDialog.Builder) {
+            super.onPrepareDialogBuilder(builder)
+            builder.setPositiveButton(null, null)
+            builder.setNegativeButton(null, null)
         }
 
         override fun onDialogClosed(positiveResult: Boolean) {

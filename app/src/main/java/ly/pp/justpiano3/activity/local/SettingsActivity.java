@@ -82,8 +82,41 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
             });
 
     public final ActivityResultLauncher<Intent> filePickerLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result ->
-                    filePickerActivityResultHandle(false, result.getResultCode(), result.getData()));
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
+                    return;
+                }
+                FileUtil.UriInfo uriInfo = Objects.equals(Intent.ACTION_OPEN_DOCUMENT_TREE, result.getData().getAction())
+                        ? FileUtil.getFolderUriInfo(this, result.getData().getData())
+                        : FileUtil.getUriInfo(this, result.getData().getData());
+                Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get(FilePickerUtil.extra);
+                if (value == null || uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !value.second.test(uriInfo)) {
+                    return;
+                }
+                try {
+                    getContentResolver().takePersistableUriPermission(uriInfo.getUri(),
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "获取文件访问权限出错", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (value.first instanceof FilePickerPreference filePickerPreference) {
+                    filePickerPreference.persist(uriInfo.getDisplayName(), uriInfo.getUri().toString());
+                } else if (value.first instanceof SkinListPreference skinListPreference) {
+                    skinListPreference.skinKey = uriInfo.getUri().toString();
+                    skinListPreference.skinFile = uriInfo.getUri();
+                    new SkinListPreferenceTask(skinListPreference).execute(uriInfo.getUri().toString());
+                } else if (value.first instanceof SoundListPreference soundListPreference) {
+                    soundListPreference.soundKey = uriInfo.getUri().toString();
+                    new SoundListPreferenceTask(soundListPreference).execute(uriInfo.getUri().toString());
+                }
+                if (Objects.equals(value.first.getKey(), "background_pic")) {
+                    GlobalSetting.setBackgroundPic(uriInfo.getUri().toString());
+                    ImageLoadUtil.setBackground(this);
+                }
+            });
+
 
     @Override
     public void onBackPressed() {
@@ -100,7 +133,34 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
                 preferenceFragmentCompat == null ? settingFragment : preferenceFragmentCompat).commit();
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat {
+    public static class BaseSettingsFragment extends PreferenceFragmentCompat {
+
+        @Override
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+            // nothing
+        }
+
+        @Override
+        public void onDisplayPreferenceDialog(@NonNull Preference preference) {
+            if (preference instanceof SkinListPreference skinListPreference) {
+                SkinListPreference.DialogFragmentCompat dialogFragmentCompat = skinListPreference.newDialog();
+                dialogFragmentCompat.setTargetFragment(this, 0);
+                dialogFragmentCompat.show(getParentFragmentManager(), "SkinListPreference");
+            } else if (preference instanceof SoundListPreference soundListPreference) {
+                SoundListPreference.DialogFragmentCompat dialogFragmentCompat = soundListPreference.newDialog();
+                dialogFragmentCompat.setTargetFragment(this, 0);
+                dialogFragmentCompat.show(getParentFragmentManager(), "SoundListPreference");
+            } else if (preference instanceof SeekBarPreference seekBarPreference) {
+                SeekBarPreference.DialogFragmentCompat dialogFragmentCompat = seekBarPreference.newDialog();
+                dialogFragmentCompat.setTargetFragment(this, 0);
+                dialogFragmentCompat.show(getParentFragmentManager(), "SeekBarPreference");
+            } else {
+                super.onDisplayPreferenceDialog(preference);
+            }
+        }
+    }
+
+    public static class SettingsFragment extends BaseSettingsFragment {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -226,22 +286,9 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
             super.onResume();
             batteryKeepAliveHandle();
         }
-
-        @Override
-        public void onDisplayPreferenceDialog(@NonNull Preference preference) {
-            if (preference instanceof SkinListPreference skinListPreference) {
-                skinListPreference.newDialog().show(getParentFragmentManager(), "SkinListPreference");
-            } else if (preference instanceof SoundListPreference soundListPreference) {
-                soundListPreference.newDialog().show(getParentFragmentManager(), "SoundListPreference");
-            } else if (preference instanceof SeekBarPreference seekBarPreference) {
-                seekBarPreference.newDialog().show(getParentFragmentManager(), "SeekBarPreference");
-            } else {
-                super.onDisplayPreferenceDialog(preference);
-            }
-        }
     }
 
-    public static class PianoPlaySettingsFragment extends PreferenceFragmentCompat {
+    public static class PianoPlaySettingsFragment extends BaseSettingsFragment {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
@@ -249,7 +296,7 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
         }
     }
 
-    public static class PlayNoteSettingsFragment extends PreferenceFragmentCompat {
+    public static class PlayNoteSettingsFragment extends BaseSettingsFragment {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -257,7 +304,7 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
         }
     }
 
-    public static class WaterfallSettingsFragment extends PreferenceFragmentCompat {
+    public static class WaterfallSettingsFragment extends BaseSettingsFragment {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -274,7 +321,7 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
         }
     }
 
-    public static class SoundSettingsFragment extends PreferenceFragmentCompat {
+    public static class SoundSettingsFragment extends BaseSettingsFragment {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -303,7 +350,7 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
         }
     }
 
-    public static class KeyboardSettingsFragment extends PreferenceFragmentCompat {
+    public static class KeyboardSettingsFragment extends BaseSettingsFragment {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -311,7 +358,7 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
         }
     }
 
-    public static class OnlineChatSettingsFragment extends PreferenceFragmentCompat {
+    public static class OnlineChatSettingsFragment extends BaseSettingsFragment {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -330,7 +377,7 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
         }
     }
 
-    public static class EasterEggFragment extends PreferenceFragmentCompat {
+    public static class EasterEggFragment extends BaseSettingsFragment {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -361,45 +408,12 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
         }
     }
 
-    public void filePickerActivityResultHandle(boolean folderPicker, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            FileUtil.UriInfo uriInfo = folderPicker ? FileUtil.getFolderUriInfo(this, data.getData())
-                    : FileUtil.getUriInfo(this, data.getData());
-            Pair<Preference, Predicate<FileUtil.UriInfo>> value = filePickerPreferenceMap.get(FilePickerUtil.extra);
-            if (value == null || uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !value.second.test(uriInfo)) {
-                return;
-            }
-            try {
-                getContentResolver().takePersistableUriPermission(uriInfo.getUri(),
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, "获取文件访问权限出错", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (value.first instanceof FilePickerPreference filePickerPreference) {
-                filePickerPreference.persist(uriInfo.getDisplayName(), uriInfo.getUri().toString());
-            } else if (value.first instanceof SkinListPreference skinListPreference) {
-                skinListPreference.skinKey = uriInfo.getUri().toString();
-                skinListPreference.skinFile = uriInfo.getUri();
-                new SkinListPreferenceTask(skinListPreference).execute(uriInfo.getUri().toString());
-            } else if (value.first instanceof SoundListPreference soundListPreference) {
-                soundListPreference.soundKey = uriInfo.getUri().toString();
-                new SoundListPreferenceTask(soundListPreference).execute(uriInfo.getUri().toString());
-            }
-            if (Objects.equals(value.first.getKey(), "background_pic")) {
-                GlobalSetting.setBackgroundPic(uriInfo.getUri().toString());
-                ImageLoadUtil.setBackground(this);
-            }
-        }
-    }
-
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiConnect(MidiDeviceInfo midiDeviceInfo) {
         Preference midiDevicePreference = settingFragment.findPreference("midi_device_list");
-        if (midiDevicePreference != null) {
-            ((MidiDeviceListPreference) midiDevicePreference).midiDeviceListRefresh();
+        if (midiDevicePreference instanceof MidiDeviceListPreference midiDeviceListPreference) {
+            midiDeviceListPreference.midiDeviceListRefresh();
         }
     }
 
@@ -407,8 +421,8 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiDisconnect(MidiDeviceInfo midiDeviceInfo) {
         Preference midiDevicePreference = settingFragment.findPreference("midi_device_list");
-        if (midiDevicePreference != null) {
-            ((MidiDeviceListPreference) midiDevicePreference).midiDeviceListRefresh();
+        if (midiDevicePreference instanceof MidiDeviceListPreference midiDeviceListPreference) {
+            midiDeviceListPreference.midiDeviceListRefresh();
         }
     }
 }

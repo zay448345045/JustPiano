@@ -9,8 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.ComponentActivity;
-
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.local.SettingsActivity;
 import ly.pp.justpiano3.activity.local.SoundDownload;
@@ -75,7 +73,7 @@ public final class SoundListAdapter extends BaseAdapter {
             if (soundKey.equals("more")) {
                 ((SettingsActivity) (context)).soundSelectLauncher.launch(new Intent(context, SoundDownload.class));
             } else if (soundKey.equals("select")) {
-                FilePickerUtil.openFilePicker((ComponentActivity) context, false,
+                FilePickerUtil.openFilePicker(context, false,
                         "sound_select", ((SettingsActivity) context).filePickerLauncher);
             } else {
                 soundListPreference.soundKey = soundKey;

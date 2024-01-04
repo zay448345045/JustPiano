@@ -10,8 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.ComponentActivity;
-
 import java.util.Objects;
 
 import ly.pp.justpiano3.R;
@@ -78,7 +76,7 @@ public final class SkinListAdapter extends BaseAdapter {
             if (skinKey.equals("more")) {
                 ((SettingsActivity) (context)).skinSelectLauncher.launch(new Intent(context, SkinDownload.class));
             } else if (skinKey.equals("select")) {
-                FilePickerUtil.openFilePicker((ComponentActivity) context, false,
+                FilePickerUtil.openFilePicker(context, false,
                         "skin_select", ((SettingsActivity) context).filePickerLauncher);
             } else {
                 skinListPreference.skinKey = skinKey;

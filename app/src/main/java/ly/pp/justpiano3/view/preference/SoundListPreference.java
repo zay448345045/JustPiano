@@ -3,6 +3,7 @@ package ly.pp.justpiano3.view.preference;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
@@ -109,6 +110,9 @@ public final class SoundListPreference extends DialogPreference {
 
         public DialogFragmentCompat(SoundListPreference soundListPreference) {
             this.soundListPreference = soundListPreference;
+            Bundle bundle = new Bundle(1);
+            bundle.putString(ARG_KEY, soundListPreference.getKey());
+            setArguments(bundle);
         }
 
         @Override
