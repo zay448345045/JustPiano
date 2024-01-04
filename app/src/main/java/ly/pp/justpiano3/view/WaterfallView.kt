@@ -174,8 +174,6 @@ class WaterfallView @JvmOverloads constructor(
         setBackgroundColor(Color.TRANSPARENT)
         setZOrderOnTop(true)
         holder.setFormat(PixelFormat.TRANSPARENT)
-        // 保持屏幕常亮
-        holder.setKeepScreenOn(true)
         // 通过皮肤加载背景图、进度条图片
         if (!TextUtils.isEmpty(GlobalSetting.waterfallBackgroundPic)) {
             backgroundImage = ImageLoadUtil.loadFileImage(

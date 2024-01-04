@@ -391,7 +391,6 @@ public final class PlayView extends SurfaceView implements Callback {
         if (surfaceholder == null) {
             surfaceholder = getHolder();
             surfaceholder.addCallback(this);
-            surfaceholder.setKeepScreenOn(true);
         }
     }
 

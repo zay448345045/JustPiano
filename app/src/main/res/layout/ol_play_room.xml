@@ -99,7 +99,6 @@
                 android:layout_toEndOf="@+id/room_title"
                 android:background="@drawable/selector_list_c"
                 android:gravity="center_vertical|end"
-                android:keepScreenOn="true"
                 android:textColor="#f9f3b8"
                 android:textSize="12sp" />
 
@@ -110,7 +109,6 @@
                 android:layout_alignStart="@+id/ol_player_grid"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/selector_list_c"
-                android:keepScreenOn="true"
                 android:maxLines="1"
                 android:text="@string/ol_room_view_name"
                 android:gravity="center_vertical"

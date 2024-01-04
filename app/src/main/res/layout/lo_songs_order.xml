@@ -8,8 +8,7 @@
     android:layout_marginEnd="@dimen/dimen_3dp"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/ol_rectangle_mask"
-    android:keepScreenOn="true">
+    android:background="@drawable/ol_rectangle_mask">
 
     <TextView
         android:id="@+id/lo_songs_order_name_asc"

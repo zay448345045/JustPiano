@@ -173,7 +173,6 @@
                 android:id="@+id/keyboard1_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:keepScreenOn="true"
                 app:whiteKeyNum="8"
                 app:whiteKeyOffset="28">
             </ly.pp.justpiano3.view.KeyboardView>
@@ -190,7 +189,6 @@
                 android:id="@+id/keyboard2_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:keepScreenOn="true"
                 app:whiteKeyNum="8"
                 app:whiteKeyOffset="21">
             </ly.pp.justpiano3.view.KeyboardView>

@@ -6,7 +6,6 @@
     android:layout_gravity="center"
     android:background="@drawable/ol_rectangle_mask"
     android:gravity="center"
-    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <GridView

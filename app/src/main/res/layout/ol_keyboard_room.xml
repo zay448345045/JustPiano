@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -49,7 +48,6 @@
                     android:layout_toEndOf="@+id/room_title"
                     android:background="@drawable/selector_list_c"
                     android:gravity="center_vertical|end"
-                    android:keepScreenOn="true"
                     android:textColor="#f9f3b8"
                     android:textSize="12sp" />
 
@@ -60,7 +58,6 @@
                     android:layout_alignStart="@+id/ol_player_grid"
                     android:layout_alignParentTop="true"
                     android:background="@drawable/selector_list_c"
-                    android:keepScreenOn="true"
                     android:maxLines="1"
                     android:gravity="center_vertical"
                     android:text="@string/ol_room_view_name"
@@ -348,7 +345,6 @@
             android:id="@+id/keyboard_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:keepScreenOn="true"
             app:whiteKeyNum="15"
             app:whiteKeyOffset="21" />
     </LinearLayout>

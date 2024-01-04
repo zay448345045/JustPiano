@@ -106,8 +106,6 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
         // 获得焦点
         setFocusable(true);
         setFocusableInTouchMode(true);
-        // 设置常亮
-        setKeepScreenOn(true);
     }
 
     @Override
