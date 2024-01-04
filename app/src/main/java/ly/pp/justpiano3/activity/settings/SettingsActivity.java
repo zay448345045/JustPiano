@@ -33,9 +33,9 @@ import ly.pp.justpiano3.view.preference.SoundListPreference;
 
 public final class SettingsActivity extends BaseActivity implements MidiDeviceUtil.MidiDeviceListener {
 
-    private final SettingsFragment settingsFragment = new SettingsFragment();
+    private static final SettingsFragment settingsFragment = new SettingsFragment();
 
-    private final Map<String, PreferenceFragmentCompat> preferenceFragmentMap = new HashMap<>() {{
+    private static final Map<String, PreferenceFragmentCompat> preferenceFragmentMap = new HashMap<>() {{
         put("settings_piano_play", new PianoPlaySettingsFragment());
         put("settings_play_note", new PlayNoteSettingsFragment());
         put("settings_waterfall", new WaterfallSettingsFragment());
@@ -99,7 +99,6 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
                     ImageLoadUtil.setBackground(this);
                 }
             });
-
 
     @Override
     public void onBackPressed() {

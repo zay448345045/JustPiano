@@ -172,9 +172,13 @@ namespace iolib {
     }
 
     void SimpleMultiPlayer::closeStream() {
-        if (mAudioStream != nullptr) {
+        if (mAudioStream != nullptr && mAudioStream.get() != nullptr) {
             mAudioStream->stop();
+        }
+        if (mAudioStream != nullptr && mAudioStream.get() != nullptr) {
             mAudioStream->close();
+        }
+        if (mAudioStream != nullptr && mAudioStream.get() != nullptr) {
             mAudioStream.reset();
         }
     }
