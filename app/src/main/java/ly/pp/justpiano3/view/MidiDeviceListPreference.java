@@ -25,8 +25,6 @@ import ly.pp.justpiano3.utils.MidiDeviceUtil;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public final class MidiDeviceListPreference extends DialogPreference {
-    private DialogFragmentCompat dialogFragmentCompat;
-    public Context context;
     public JPProgressBar jpProgressBar;
     private MidiDeviceInfo[] midiDeviceInfoList;
     private String[] midiDeviceNameList;
@@ -34,12 +32,10 @@ public final class MidiDeviceListPreference extends DialogPreference {
 
     public MidiDeviceListPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.context = context;
     }
 
     public MidiDeviceListPreference(Context context) {
         super(context, null);
-        this.context = context;
     }
 
     private void loadMidiDeviceList() {
@@ -65,43 +61,46 @@ public final class MidiDeviceListPreference extends DialogPreference {
         }
     }
 
-    public DialogFragmentCompat newDialogFragmentCompatInstance() {
-        dialogFragmentCompat = new DialogFragmentCompat().newInstance(getKey());
-        return dialogFragmentCompat;
+    public DialogFragmentCompat newDialog() {
+        return new DialogFragmentCompat(this);
     }
 
-    public class DialogFragmentCompat extends PreferenceDialogFragmentCompat {
+    public static class DialogFragmentCompat extends PreferenceDialogFragmentCompat {
 
-        public DialogFragmentCompat newInstance(String key) {
-            final DialogFragmentCompat fragment = new DialogFragmentCompat();
-            final Bundle b = new Bundle(1);
-            b.putString(ARG_KEY, key);
-            fragment.setArguments(b);
-            return fragment;
+        private final MidiDeviceListPreference midiDeviceListPreference;
+
+        public DialogFragmentCompat(MidiDeviceListPreference midiDeviceListPreference) {
+            this.midiDeviceListPreference = midiDeviceListPreference;
+            Bundle bundle = new Bundle(1);
+            bundle.putString(ARG_KEY, midiDeviceListPreference.getKey());
+            setArguments(bundle);
         }
 
         @Override
         protected void onPrepareDialogBuilder(@NonNull AlertDialog.Builder builder) {
             super.onPrepareDialogBuilder(builder);
-            loadMidiDeviceList();
-            jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
-            LinearLayout linearLayout = new LinearLayout(context);
-            linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            midiDeviceListPreference.loadMidiDeviceList();
+            midiDeviceListPreference.jpProgressBar = new JPProgressBar(
+                    new ContextThemeWrapper(midiDeviceListPreference.getContext(), R.style.JustPianoTheme));
+            LinearLayout linearLayout = new LinearLayout(midiDeviceListPreference.getContext());
+            linearLayout.setLayoutParams(new LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             linearLayout.setMinimumWidth(400);
             linearLayout.setPadding(20, 20, 20, 20);
             linearLayout.setBackgroundColor(-1);
-            ListView listView = new ListView(context);
+            ListView listView = new ListView(midiDeviceListPreference.getContext());
             listView.setDivider(null);
-            midiDeviceListAdapter = new MidiDeviceListAdapter(MidiDeviceListPreference.this, midiDeviceNameList, midiDeviceInfoList);
-            listView.setAdapter(midiDeviceListAdapter);
+            midiDeviceListPreference.midiDeviceListAdapter = new MidiDeviceListAdapter(midiDeviceListPreference,
+                    midiDeviceListPreference.midiDeviceNameList, midiDeviceListPreference.midiDeviceInfoList);
+            listView.setAdapter(midiDeviceListPreference.midiDeviceListAdapter);
             linearLayout.addView(listView);
             builder.setView(linearLayout);
         }
 
         @Override
         public void onDialogClosed(boolean positiveResult) {
-
+            // nothing
         }
     }
 }

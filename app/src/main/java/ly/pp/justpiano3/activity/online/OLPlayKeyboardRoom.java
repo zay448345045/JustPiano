@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 
 import kotlin.Pair;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.local.SettingsActivity;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;

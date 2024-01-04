@@ -18,7 +18,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, Void> 
 
     @Override
     protected Void doInBackground(String... objects) {
-        File dir = new File(skinListPreference.context.getFilesDir(), "Skins");
+        File dir = new File(skinListPreference.getContext().getFilesDir(), "Skins");
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
             if (listFiles != null) {
@@ -28,7 +28,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, Void> 
             }
         }
         if (!Objects.equals(objects[0], "original")) {
-            GZIPUtil.unzipFromUri(skinListPreference.context, skinListPreference.skinFile, dir.toString());
+            GZIPUtil.unzipFromUri(skinListPreference.getContext(), skinListPreference.skinFile, dir.toString());
         }
         return null;
     }
@@ -38,7 +38,7 @@ public final class SkinListPreferenceTask extends AsyncTask<String, Void, Void> 
         if (skinListPreference.jpProgressBar.isShowing()) {
             skinListPreference.jpProgressBar.cancel();
         }
-        Toast.makeText(skinListPreference.context, "皮肤设置成功!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(skinListPreference.getContext(), "皮肤设置成功!", Toast.LENGTH_SHORT).show();
         skinListPreference.closeDialog();
     }
 

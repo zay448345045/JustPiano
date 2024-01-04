@@ -45,6 +45,7 @@ import java.util.Objects;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.adapter.LocalSongsAdapter;
 import ly.pp.justpiano3.adapter.LocalSongsItemAdapter;
 import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;

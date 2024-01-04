@@ -36,7 +36,7 @@ import java.util.Objects;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.local.SettingsActivity;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.adapter.OLRoomSongsAdapter;
 import ly.pp.justpiano3.adapter.PlayerImageAdapter;
 import ly.pp.justpiano3.constant.Consts;

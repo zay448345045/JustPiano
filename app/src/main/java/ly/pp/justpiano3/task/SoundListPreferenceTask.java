@@ -25,10 +25,10 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
     @Override
     protected String doInBackground(String... objects) {
         if (objects[0].equals("original")) {
-            SoundEngineUtil.reLoadOriginalSounds(soundListPreference.context);
+            SoundEngineUtil.reLoadOriginalSounds(soundListPreference.getContext());
             return null;
         }
-        File dir = new File(soundListPreference.context.getFilesDir(), "Sounds");
+        File dir = new File(soundListPreference.getContext().getFilesDir(), "Sounds");
         if (dir.isDirectory()) {
             File[] listFiles = dir.listFiles();
             if (listFiles != null) {
@@ -37,23 +37,23 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
                 }
             }
         }
-        DocumentFile soundFile = FileUtil.uriToDocumentFile(soundListPreference.context, Uri.parse(objects[0]));
+        DocumentFile soundFile = FileUtil.uriToDocumentFile(soundListPreference.getContext(), Uri.parse(objects[0]));
         if (soundFile == null || soundFile.getName() == null || soundFile.length() > 1024 * 1024 * 1024) {
             return "invalid";
         }
         try {
             if (soundFile.getName().endsWith(".ss")) {
-                GZIPUtil.unzipFromUri(soundListPreference.context, soundFile.getUri(), dir.toString());
+                GZIPUtil.unzipFromUri(soundListPreference.getContext(), soundFile.getUri(), dir.toString());
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadSf2();
                 SoundEngineUtil.unloadWavAssetsNative();
                 SoundEngineUtil.setupAudioStreamNative();
                 for (int i = MidiUtil.MAX_PIANO_MIDI_PITCH; i >= MidiUtil.MIN_PIANO_MIDI_PITCH; i--) {
-                    SoundEngineUtil.loadSoundAssetsNative(soundListPreference.context, i);
+                    SoundEngineUtil.loadSoundAssetsNative(soundListPreference.getContext(), i);
                 }
                 SoundEngineUtil.startAudioStreamNative();
             } else if (soundFile.getName().endsWith(".sf2")) {
-                String newSf2Path = FileUtil.copyDocumentFileToAppFilesDir(soundListPreference.context, soundFile);
+                String newSf2Path = FileUtil.copyDocumentFileToAppFilesDir(soundListPreference.getContext(), soundFile);
                 if (newSf2Path == null) {
                     return "invalid";
                 }
@@ -76,9 +76,9 @@ public final class SoundListPreferenceTask extends AsyncTask<String, Void, Strin
             soundListPreference.jpProgressBar.cancel();
         }
         if (Objects.equals("invalid", result)) {
-            Toast.makeText(soundListPreference.context, "音源文件无效，或大小超过1G", Toast.LENGTH_SHORT).show();
+            Toast.makeText(soundListPreference.getContext(), "音源文件无效，或大小超过1G", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(soundListPreference.context, Objects.equals("error", result)
+            Toast.makeText(soundListPreference.getContext(), Objects.equals("error", result)
                     ? "音源设置失败!" : "音源设置成功!", Toast.LENGTH_SHORT).show();
         }
         soundListPreference.closeDialog();

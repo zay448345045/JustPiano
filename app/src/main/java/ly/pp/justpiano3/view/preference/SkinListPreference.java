@@ -34,7 +34,6 @@ public final class SkinListPreference extends DialogPreference {
     private DialogFragmentCompat dialogFragmentCompat;
     public Uri skinFile;
     public String skinKey = "";
-    public Context context;
     public JPProgressBar jpProgressBar;
     private CharSequence[] skinNameList;
     private CharSequence[] skinKeyList;
@@ -42,16 +41,14 @@ public final class SkinListPreference extends DialogPreference {
 
     public SkinListPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.context = context;
     }
 
     public SkinListPreference(Context context) {
         super(context, null);
-        this.context = context;
     }
 
     private void loadSkinList() {
-        File skinsDir = new File(context.getExternalFilesDir(null), "Skins");
+        File skinsDir = new File(getContext().getExternalFilesDir(null), "Skins");
         if (!skinsDir.exists()) {
             skinsDir.mkdirs();
         }
@@ -86,7 +83,7 @@ public final class SkinListPreference extends DialogPreference {
     }
 
     public void deleteFiles(String str) {
-        FileUtil.deleteFileUsingUri(context, Uri.parse(str));
+        FileUtil.deleteFileUsingUri(getContext(), Uri.parse(str));
         loadSkinList();
         skinListAdapter.updateSkinList(skinNameList, skinKeyList);
         skinListAdapter.notifyDataSetChanged();
@@ -122,22 +119,22 @@ public final class SkinListPreference extends DialogPreference {
         protected void onPrepareDialogBuilder(@NonNull AlertDialog.Builder builder) {
             super.onPrepareDialogBuilder(builder);
             skinListPreference.loadSkinList();
-            skinListPreference.jpProgressBar = new JPProgressBar(new ContextThemeWrapper(skinListPreference.context, R.style.JustPianoTheme));
-            LinearLayout linearLayout = new LinearLayout(skinListPreference.context);
+            skinListPreference.jpProgressBar = new JPProgressBar(new ContextThemeWrapper(skinListPreference.getContext(), R.style.JustPianoTheme));
+            LinearLayout linearLayout = new LinearLayout(skinListPreference.getContext());
             linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             linearLayout.setMinimumWidth(400);
             linearLayout.setPadding(20, 20, 20, 20);
             linearLayout.setBackgroundColor(Color.WHITE);
-            TextView textView = new TextView(skinListPreference.context);
+            TextView textView = new TextView(skinListPreference.getContext());
             textView.setTextSize(14);
             textView.setTextColor(Color.BLACK);
             textView.setText("下载皮肤存储位置：SD卡/Android/data/ly.pp.justpiano3/files/Skins，卸载APP时将删除所有文件");
             linearLayout.addView(textView);
-            ListView skinListView = new ListView(skinListPreference.context);
+            ListView skinListView = new ListView(skinListPreference.getContext());
             skinListView.setDivider(null);
             skinListPreference.skinListAdapter = new SkinListAdapter(skinListPreference,
-                    skinListPreference.context, skinListPreference.skinNameList, skinListPreference.skinKeyList);
+                    skinListPreference.getContext(), skinListPreference.skinNameList, skinListPreference.skinKeyList);
             skinListView.setAdapter(skinListPreference.skinListAdapter);
             linearLayout.addView(skinListView);
             builder.setView(linearLayout);
@@ -146,9 +143,9 @@ public final class SkinListPreference extends DialogPreference {
         @Override
         public void onDialogClosed(boolean positiveResult) {
             skinListPreference.persistString(skinListPreference.skinKey);
-            ImageLoadUtil.setBackground((Activity) skinListPreference.context);
-            GlobalSetting.loadSettings(skinListPreference.context, false);
-            FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(skinListPreference.context, Uri.parse(skinListPreference.skinKey));
+            ImageLoadUtil.setBackground((Activity) skinListPreference.getContext());
+            GlobalSetting.loadSettings(skinListPreference.getContext(), false);
+            FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(skinListPreference.getContext(), Uri.parse(skinListPreference.skinKey));
             skinListPreference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认皮肤" : uriInfo.getDisplayName());
         }
 

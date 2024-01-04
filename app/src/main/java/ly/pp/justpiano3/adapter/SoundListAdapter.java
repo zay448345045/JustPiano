@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.local.SettingsActivity;
 import ly.pp.justpiano3.activity.local.SoundDownload;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.task.SoundListPreferenceTask;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.view.preference.SoundListPreference;

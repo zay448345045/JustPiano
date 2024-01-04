@@ -14,13 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
-import ly.pp.justpiano3.activity.local.SettingsActivity;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public final class FilePickerPreference extends Preference {
+
     private static final int BUTTON_ID = View.generateViewId();
+
     private Activity activity;
+
     /**
      * 是否是目录选择，默认false
      */

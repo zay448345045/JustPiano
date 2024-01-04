@@ -18,6 +18,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
 import ly.pp.justpiano3.activity.online.LoginActivity;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.utils.DeviceUtil;
