@@ -78,7 +78,8 @@ public final class SoundDownloadAdapter extends BaseAdapter {
                 imageLoader.bindBitmap("http://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + ".jpg", imageView);
                 scrollTextView.setText(soundName);
                 textView.setText("by:" + soundAuthor);
-                textView3.setText(soundSize + "KB");
+                float sizeInMega = ((float) soundSize /1024);
+                textView3.setText(String.format("%.2f",sizeInMega)  + "MB");
                 int downloadNum = jSONObject.getInt("D");
                 if (downloadNum > 10000) {
                     textView2.setText("下载:" + (downloadNum / 10000) + "万次");

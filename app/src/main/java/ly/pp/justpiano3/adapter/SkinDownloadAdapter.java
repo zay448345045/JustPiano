@@ -66,12 +66,13 @@ public final class SkinDownloadAdapter extends BaseAdapter {
                 imageView.setTag(skinId);
                 String skinName = jSONObject.getString("N");
                 String skinAuthor = jSONObject.getString("A");
-                int size = jSONObject.getInt("S");
+                int size =  jSONObject.getInt("S");
+                float sizeInMega = ((float) size /1024);
                 imageView.setImageResource(R.drawable.icon);
                 imageLoader.bindBitmap("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/skins/" + skinId + ".jpg", imageView);
                 scrollTextView.setText(skinName);
                 textView.setText("by:" + skinAuthor);
-                textView3.setText(size + "KB");
+                textView3.setText(String.format("%.2f",sizeInMega) + "MB");
                 int downloadNum = jSONObject.getInt("D");
                 if (downloadNum > 10000) {
                     textView2.setText("下载:" + (downloadNum / 10000) + "万次");
