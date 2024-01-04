@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,7 +39,7 @@ public final class OLPlayRoomHandler extends Handler {
                 case 1 -> post(() -> {
                     olPlayRoom.updatePlayerList(olPlayRoom.playerGrid, message.getData());
                     String songFilePath = message.getData().getString("SI");
-                    if (!songFilePath.isEmpty()) {
+                    if (!TextUtils.isEmpty(songFilePath)) {
                         int tune = message.getData().getInt("diao");
                         olPlayRoom.setTune(tune);
                         songFilePath = "songs/" + songFilePath + ".pm";
@@ -66,7 +67,7 @@ public final class OLPlayRoomHandler extends Handler {
                     int i2 = message.getData().getInt("MSG_CT");
                     byte b = (byte) message.getData().getInt("MSG_CI");
                     String string = message.getData().getString("MSG_C");
-                    if (!string.isEmpty()) {
+                    if (!TextUtils.isEmpty(string)) {
                         olPlayRoom.buildNewCoupleDialog(i, string, i2, b);
                     }
                 });
@@ -74,7 +75,7 @@ public final class OLPlayRoomHandler extends Handler {
                 case 3 -> post(() -> {
                     String songFilePath = message.getData().getString("song_path");
                     int tune = message.getData().getInt("diao");
-                    if (!songFilePath.isEmpty()) {
+                    if (!TextUtils.isEmpty(songFilePath)) {
                         songFilePath = "songs/" + songFilePath + ".pm";
                         olPlayRoom.currentPlaySongPath = songFilePath;
                         String[] simpleSongInfo = olPlayRoom.querySongNameAndDiffByPath(songFilePath);
@@ -106,7 +107,7 @@ public final class OLPlayRoomHandler extends Handler {
                         intent.putExtras(bundle);
                         olPlayRoom.startActivity(intent);
                         olPlayRoom.finish();
-                    } else if (!songFilePath.isEmpty()) {
+                    } else if (!TextUtils.isEmpty(songFilePath)) {
                         if (DeviceUtil.isX86()) {
                             Toast.makeText(olPlayRoom, "您的设备不支持弹奏", Toast.LENGTH_SHORT).show();
                             return;

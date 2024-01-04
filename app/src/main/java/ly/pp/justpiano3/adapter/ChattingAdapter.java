@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.adapter;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.OLPlayHall;
@@ -126,7 +128,7 @@ public final class ChattingAdapter extends BaseAdapter {
         String string = bundle.getString("U");
         String string2 = bundle.getString("M");
         int id = bundle.getInt("V");
-        if (!string2.startsWith("//")) {
+        if (string2 != null && !string2.startsWith("//")) {
             textView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
             TextView textView2 = view.findViewById(R.id.ol_user_mao);
             if (activity instanceof OLRoomActivity) {
@@ -177,7 +179,7 @@ public final class ChattingAdapter extends BaseAdapter {
                         textView3.setTextColor(0xff000000);
                     }
                     default -> {
-                        if (string.equals("琴娘")) {
+                        if (Objects.equals(string, "琴娘")) {
                             textView.setTextColor(0xffffd8ec);
                             textView2.setTextColor(0xffffd8ec);
                             textView3.setTextColor(0xffffd8ec);
@@ -200,7 +202,7 @@ public final class ChattingAdapter extends BaseAdapter {
                 ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(Consts.expressions[Integer.parseInt(string2.substring(2))]);
             } catch (Exception e) {
                 textView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
-                switch (string2) {
+                switch (Objects.requireNonNull(string2)) {
                     case "//dalao0" ->
                             ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.dalao0);
                     case "//7yxg" ->
@@ -262,9 +264,9 @@ public final class ChattingAdapter extends BaseAdapter {
                     case "//duili" ->
                             ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.duili);
                     default -> {
-                        textView.setTextColor(0xffffffff);
-                        ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xffffffff);
-                        ((TextView) view.findViewById(R.id.ol_msg_text)).setTextColor(0xffffffff);
+                        textView.setTextColor(Color.WHITE);
+                        ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(Color.WHITE);
+                        ((TextView) view.findViewById(R.id.ol_msg_text)).setTextColor(Color.WHITE);
                         ((TextView) view.findViewById(R.id.ol_msg_text)).setText(string2);
                     }
                 }
@@ -302,7 +304,6 @@ public final class ChattingAdapter extends BaseAdapter {
         textView2.setTextColor(0xff00ffff);
     }
 
-
     private void handleStreamMessage(View view, TextView userText, TextView msgText, Bundle bundle) {
         String sendUserName = bundle.getString("U");
         String message = bundle.getString("M");
@@ -318,5 +319,4 @@ public final class ChattingAdapter extends BaseAdapter {
         msgText.setTextColor(0xffffd8ec);
         maoText.setTextColor(0xffffd8ec);
     }
-
 }

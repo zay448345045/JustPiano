@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.task;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -49,12 +50,13 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
         if (str.length() > 3) {
             if (searchSongs.get().headType < 2) {
                 searchSongs.get().bindAdapter(str, searchSongs.get().songsListView);
-                searchSongs.get().songsListView.setCacheColorHint(0x00000000);
+                searchSongs.get().songsListView.setCacheColorHint(Color.TRANSPARENT);
             } else if (searchSongs.get().headType == 6) {
                 try {
                     if (searchSongs.get().songsListView != null) {
-                        searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(searchSongs.get(), searchSongs.get().userListHandle(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
-                        searchSongs.get().songsListView.setCacheColorHint(0x00000000);
+                        searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(
+                                searchSongs.get(), searchSongs.get().userListHandle(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
+                        searchSongs.get().songsListView.setCacheColorHint(Color.TRANSPARENT);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

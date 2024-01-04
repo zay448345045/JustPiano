@@ -104,31 +104,31 @@ public final class OLPlayHallRoomHandler extends Handler {
                     }
                 });
                 case 1 -> post(() -> {
-                    Bundle data = message.getData();
-                    if (data.getInt("T") == 0) {
+                    Bundle bundle = message.getData();
+                    if (bundle.getInt("T") == 0) {
                         Intent intent = new Intent(olPlayHallRoom, OLPlayHall.class);
-                        intent.putExtras(data);
+                        intent.putExtras(bundle);
                         olPlayHallRoom.startActivity(intent);
                         olPlayHallRoom.finish();
                         return;
                     }
-                    olPlayHallRoom.buildDialog(data.getInt("T"), data.getString("N"), data.getString("I"));
+                    olPlayHallRoom.buildDialog(bundle.getInt("T"), bundle.getString("N"), bundle.getString("I"));
                 });
                 case 2 -> post(() -> {
-                    Bundle data = message.getData();
-                    int size = data.size() - 7;
+                    Bundle bundle = message.getData();
+                    int size = bundle.size() - 7;
                     if (size == 0) {
                         olPlayHallRoom.familyPageNum--;
                     }
                     int preSize = olPlayHallRoom.familyList.size();
                     for (int i = 0; i < size; i++) {
                         Map<String, Object> familyDataMap = new HashMap<>();
-                        familyDataMap.put("C", data.getBundle(String.valueOf(i)).getString("C"));
-                        familyDataMap.put("N", data.getBundle(String.valueOf(i)).getString("N"));
-                        familyDataMap.put("T", data.getBundle(String.valueOf(i)).getString("T"));
-                        familyDataMap.put("U", data.getBundle(String.valueOf(i)).getString("U"));
-                        familyDataMap.put("I", data.getBundle(String.valueOf(i)).getString("I"));
-                        familyDataMap.put("J", data.getBundle(String.valueOf(i)).getByteArray("J"));
+                        familyDataMap.put("C", bundle.getBundle(String.valueOf(i)).getString("C"));
+                        familyDataMap.put("N", bundle.getBundle(String.valueOf(i)).getString("N"));
+                        familyDataMap.put("T", bundle.getBundle(String.valueOf(i)).getString("T"));
+                        familyDataMap.put("U", bundle.getBundle(String.valueOf(i)).getString("U"));
+                        familyDataMap.put("I", bundle.getBundle(String.valueOf(i)).getString("I"));
+                        familyDataMap.put("J", bundle.getBundle(String.valueOf(i)).getByteArray("J"));
                         familyDataMap.put("P", String.valueOf(i + 1 + preSize));
                         olPlayHallRoom.familyList.add(familyDataMap);
                     }
@@ -138,12 +138,12 @@ public final class OLPlayHallRoomHandler extends Handler {
                     } else {
                         olPlayHallRoom.updateFamilyListShow(familyAdapter, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
                     }
-                    olPlayHallRoom.myFamilyPosition.setText(data.getString("P"));
-                    olPlayHallRoom.myFamilyName.setText(data.getString("N"));
-                    olPlayHallRoom.myFamilyContribution.setText(data.getString("C"));
-                    olPlayHallRoom.myFamilyCount.setText(data.getString("U") + "/" + data.getString("T"));
-                    olPlayHallRoom.familyID = data.getString("I");
-                    olPlayHallRoom.myFamilyPicArray = data.getByteArray("J");
+                    olPlayHallRoom.myFamilyPosition.setText(bundle.getString("P"));
+                    olPlayHallRoom.myFamilyName.setText(bundle.getString("N"));
+                    olPlayHallRoom.myFamilyContribution.setText(bundle.getString("C"));
+                    olPlayHallRoom.myFamilyCount.setText(bundle.getString("U") + "/" + bundle.getString("T"));
+                    olPlayHallRoom.familyID = bundle.getString("I");
+                    olPlayHallRoom.myFamilyPicArray = bundle.getByteArray("J");
                     if (olPlayHallRoom.myFamilyPicArray == null || olPlayHallRoom.myFamilyPicArray.length <= 1) {
                         ImageLoadUtil.familyBitmapCacheMap.put(olPlayHallRoom.familyID, null);
                         olPlayHallRoom.myFamilyPic.setImageResource(R.drawable.family);
@@ -170,11 +170,11 @@ public final class OLPlayHallRoomHandler extends Handler {
                 case 3 -> post(() -> {
                     olPlayHallRoom.friendList.clear();
                     olPlayHallRoom.jpprogressBar.dismiss();
-                    Bundle data = message.getData();
-                    int size = data.size();
+                    Bundle bundle = message.getData();
+                    int size = bundle.size();
                     if (size >= 0) {
                         for (int i = 0; i < size; i++) {
-                            olPlayHallRoom.friendList.add(data.getBundle(String.valueOf(i)));
+                            olPlayHallRoom.friendList.add(bundle.getBundle(String.valueOf(i)));
                         }
                         olPlayHallRoom.updateUserListShow(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
                     }
@@ -213,34 +213,33 @@ public final class OLPlayHallRoomHandler extends Handler {
                 }
                 case 5 -> post(() -> {
                     olPlayHallRoom.jpprogressBar.dismiss();
-                    Bundle data = message.getData();
-                    byte b = (byte) data.getInt("H");
-                    String title = data.getString("Ti");
-                    String messageStr = data.getString("I");
+                    Bundle bundle = message.getData();
+                    byte hallId = (byte) bundle.getInt("H");
+                    String title = bundle.getString("Ti");
+                    String messageStr = bundle.getString("I");
                     String str = "确定";
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHallRoom);
                     jpDialogBuilder.setTitle(title);
                     jpDialogBuilder.setMessage(messageStr);
-                    if (b > 0) {
+                    if (hallId > 0) {
                         jpDialogBuilder.setFirstButton("进入Ta所在大厅", (dialog, which) -> {
                             dialog.dismiss();
                             OnlineEnterHallDTO.Builder builder = OnlineEnterHallDTO.newBuilder();
-                            builder.setHallId(b);
+                            builder.setHallId(hallId);
                             olPlayHallRoom.sendMsg(OnlineProtocolType.ENTER_HALL, builder.build());
                         });
                         jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
                     } else {
                         jpDialogBuilder.setFirstButton(str, (dialog, which) -> dialog.dismiss());
                     }
-                    DialogUtil.handleGoldSend(jpDialogBuilder, data.getInt("T"), data.getString("N"), data.getString("F"));
+                    DialogUtil.handleGoldSend(jpDialogBuilder, bundle.getInt("T"), bundle.getString("N"), bundle.getString("F"));
                     jpDialogBuilder.buildAndShowDialog();
                 });
                 case 6 -> post(() -> olPlayHallRoom.setBroadcast(message.getData()));
                 case 7 -> post(() -> {
-                    Bundle data = message.getData();
                     OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                     builder.setType(2);
-                    builder.setName(data.getString("F"));
+                    builder.setName(message.getData().getString("F"));
                     olPlayHallRoom.friendList.remove(message.arg1);
                     olPlayHallRoom.sendMsg(OnlineProtocolType.SET_USER_INFO, builder.build());
                     olPlayHallRoom.updateUserListShow(olPlayHallRoom.friendListView, olPlayHallRoom.friendList);
@@ -341,19 +340,19 @@ public final class OLPlayHallRoomHandler extends Handler {
                     olPlayHallRoom.finish();
                 });
                 case 22 -> post(() -> {
-                    Bundle data = message.getData();
-                    olPlayHallRoom.coupleBlessView.setText(data.getString("IN"));
-                    olPlayHallRoom.coupleNameView.setText(data.getString("U"));
-                    olPlayHallRoom.coupleLvView.setText("LV." + data.getInt("LV"));
-                    olPlayHallRoom.couplePointsView.setText("祝福点数:" + data.getInt("CP"));
-                    int i = data.getInt("CL");
+                    Bundle bundle = message.getData();
+                    olPlayHallRoom.coupleBlessView.setText(bundle.getString("IN"));
+                    olPlayHallRoom.coupleNameView.setText(bundle.getString("U"));
+                    olPlayHallRoom.coupleLvView.setText("LV." + bundle.getInt("LV"));
+                    olPlayHallRoom.couplePointsView.setText("祝福点数:" + bundle.getInt("CP"));
+                    int i = bundle.getInt("CL");
                     olPlayHallRoom.coupleClView.setText("CL." + i);
                     olPlayHallRoom.coupleClView.setTextColor(ContextCompat.getColor(olPlayHallRoom, Consts.colors[i]));
                     olPlayHallRoom.coupleClNameView.setText(Consts.nameCL[i]);
                     olPlayHallRoom.coupleClNameView.setTextColor(ContextCompat.getColor(olPlayHallRoom, Consts.colors[i]));
-                    olPlayHallRoom.coupleSex = data.getString("S");
-                    ImageLoadUtil.setUserDressImageBitmap(olPlayHallRoom, olPlayHallRoom.coupleSex, data.getInt("DR_T"),
-                            data.getInt("DR_J"), data.getInt("DR_H"), data.getInt("DR_E"), data.getInt("DR_S"),
+                    olPlayHallRoom.coupleSex = bundle.getString("S");
+                    ImageLoadUtil.setUserDressImageBitmap(olPlayHallRoom, olPlayHallRoom.coupleSex, bundle.getInt("DR_T"),
+                            bundle.getInt("DR_J"), bundle.getInt("DR_H"), bundle.getInt("DR_E"), bundle.getInt("DR_S"),
                             olPlayHallRoom.coupleModView, olPlayHallRoom.coupleTrousersView, olPlayHallRoom.coupleJacketView,
                             olPlayHallRoom.coupleHairView, olPlayHallRoom.coupleEyeView, olPlayHallRoom.coupleShoesView);
                 });

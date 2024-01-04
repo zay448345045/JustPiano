@@ -49,6 +49,8 @@ public interface Consts {
 
     int[] teamRoomModeResource = new int[]{R.drawable.back_puased, R.drawable.back_puased, R.drawable.v1_name, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v6_name};
 
+    int[] challengePositionColor = new int[]{0xFFFFD700, 0xFFC0C0C0, 0xFFD2B48C};
+
     /**
      * 私信等，限制字数
      */

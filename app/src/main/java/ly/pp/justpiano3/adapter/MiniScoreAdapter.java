@@ -48,7 +48,6 @@ public final class MiniScoreAdapter extends BaseAdapter {
         int i2;
         String str2;
         view = layoutInflater.inflate(R.layout.ol_play_score_view, null);
-        view.setKeepScreenOn(true);
         try {
             str2 = (String) list.get((byte) i).get("U");
             try {

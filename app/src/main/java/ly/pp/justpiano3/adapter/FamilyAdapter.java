@@ -3,6 +3,7 @@ package ly.pp.justpiano3.adapter;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,13 @@ import java.util.Map;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.OLFamily;
 import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
+import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
 
 public final class FamilyAdapter extends BaseAdapter {
-    public OLPlayHallRoom olPlayHallRoom;
+
+    private final OLPlayHallRoom olPlayHallRoom;
     private List<Map<String, Object>> list;
     private final LayoutInflater layoutInflater;
 
@@ -117,31 +120,16 @@ public final class FamilyAdapter extends BaseAdapter {
                 }
             });
         }
-        switch (i) {
-            case 0 -> {
-                nameText.setTextColor(0xFFFFD700);
-                contributionText.setTextColor(0xFFFFD700);
-                countText.setTextColor(0xFFFFD700);
-                positionText.setTextColor(0xFFFFD700);
-            }
-            case 1 -> {
-                nameText.setTextColor(0xFFC0C0C0);
-                contributionText.setTextColor(0xFFC0C0C0);
-                countText.setTextColor(0xFFC0C0C0);
-                positionText.setTextColor(0xFFC0C0C0);
-            }
-            case 2 -> {
-                nameText.setTextColor(0xFFD2B48C);
-                contributionText.setTextColor(0xFFD2B48C);
-                countText.setTextColor(0xFFD2B48C);
-                positionText.setTextColor(0xFFD2B48C);
-            }
-            default -> {
-                nameText.setTextColor(0xFFFFFFFF);
-                contributionText.setTextColor(0xFFFFFFFF);
-                countText.setTextColor(0xFFFFFFFF);
-                positionText.setTextColor(0xFFFFFFFF);
-            }
+        if (i >= 0 && i < Consts.challengePositionColor.length) {
+            nameText.setTextColor(Consts.challengePositionColor[i]);
+            contributionText.setTextColor(Consts.challengePositionColor[i]);
+            countText.setTextColor(Consts.challengePositionColor[i]);
+            positionText.setTextColor(Consts.challengePositionColor[i]);
+        } else {
+            nameText.setTextColor(Color.WHITE);
+            contributionText.setTextColor(Color.WHITE);
+            countText.setTextColor(Color.WHITE);
+            positionText.setTextColor(Color.WHITE);
         }
         return view;
     }

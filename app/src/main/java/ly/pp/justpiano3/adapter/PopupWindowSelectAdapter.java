@@ -20,10 +20,10 @@ public final class PopupWindowSelectAdapter extends BaseAdapter {
     private final Activity activity;
     private final int messageWhat;
 
-    public PopupWindowSelectAdapter(Activity activity, Handler handler, List<String> arrayList, int messageWhat) {
+    public PopupWindowSelectAdapter(Activity activity, Handler handler, List<String> list, int messageWhat) {
         this.activity = activity;
         this.handler = handler;
-        list = arrayList;
+        this.list = list;
         this.messageWhat = messageWhat;
     }
 

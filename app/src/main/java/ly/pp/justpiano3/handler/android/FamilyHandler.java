@@ -35,8 +35,8 @@ public final class FamilyHandler extends Handler {
             switch (message.what) {
                 case 1 -> post(() -> {
                     family.peopleList.clear();
-                    Bundle data = message.getData();
-                    int size = data.size() - 6;
+                    Bundle bundle = message.getData();
+                    int size = bundle.size() - 6;
                     if (size == 0) {
                         HashMap<String, String> hashMap = new HashMap<>();
                         hashMap.put("C", "");
@@ -50,23 +50,23 @@ public final class FamilyHandler extends Handler {
                     } else {
                         for (int i = 0; i < size; i++) {
                             HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("C", data.getBundle(String.valueOf(i)).getString("C"));
-                            hashMap.put("N", data.getBundle(String.valueOf(i)).getString("N"));
-                            hashMap.put("L", data.getBundle(String.valueOf(i)).getString("L"));
-                            hashMap.put("O", data.getBundle(String.valueOf(i)).getString("O"));
-                            hashMap.put("P", data.getBundle(String.valueOf(i)).getString("P"));
-                            hashMap.put("S", data.getBundle(String.valueOf(i)).getString("S"));
-                            hashMap.put("D", data.getBundle(String.valueOf(i)).getString("D"));
+                            hashMap.put("C", bundle.getBundle(String.valueOf(i)).getString("C"));
+                            hashMap.put("N", bundle.getBundle(String.valueOf(i)).getString("N"));
+                            hashMap.put("L", bundle.getBundle(String.valueOf(i)).getString("L"));
+                            hashMap.put("O", bundle.getBundle(String.valueOf(i)).getString("O"));
+                            hashMap.put("P", bundle.getBundle(String.valueOf(i)).getString("P"));
+                            hashMap.put("S", bundle.getBundle(String.valueOf(i)).getString("S"));
+                            hashMap.put("D", bundle.getBundle(String.valueOf(i)).getString("D"));
                             family.peopleList.add(hashMap);
                         }
                     }
                     family.bindFamilyPeopleListViewAdapter(family.peopleListView, family.peopleList);
-                    family.declarationTextView.setText("家族宣言:\n" + data.getString("D"));
-                    family.infoTextView.setText("家族名称:" + data.getString("N")
-                            + "\n家族成立日期:" + data.getString("T")
-                            + "\n族长:" + data.getString("Z")
-                            + "\n家族总贡献:" + data.getString("C"));
-                    switch (Objects.requireNonNull(data.getString("P"))) {
+                    family.declarationTextView.setText("家族宣言:\n" + bundle.getString("D"));
+                    family.infoTextView.setText("家族名称:" + bundle.getString("N")
+                            + "\n家族成立日期:" + bundle.getString("T")
+                            + "\n族长:" + bundle.getString("Z")
+                            + "\n家族总贡献:" + bundle.getString("C"));
+                    switch (Objects.requireNonNull(bundle.getString("P"))) {
                         case "族长" -> family.position = FamilyPositionEnum.LEADER;
                         case "副族长" -> family.position = FamilyPositionEnum.VICE_LEADER;
                         case "族员" -> family.position = FamilyPositionEnum.MEMBER;

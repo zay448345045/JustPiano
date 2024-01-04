@@ -83,17 +83,12 @@ public final class MainGameAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        TextView fromToTextView;
-        RelativeLayout relativeLayout;
-        RelativeLayout relativeLayout2;
-        Button sendButton;
-        int i4;
+        if (activity == null) {
+            return view;
+        }
         switch (type) {
             case 0 -> {
                 // 大厅列表
-                if (activity == null) {
-                    return view;
-                }
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_hall_view, null);
                 }
@@ -106,7 +101,7 @@ public final class MainGameAdapter extends BaseAdapter {
                 ((TextView) hallNameView).setTextColor((float) currentUserCount / totalUserCount >= 0.8f ? 0xFFCD064B : 0xFFFFBB40);
                 ((TextView) hallNameView).setText(string);
                 ((TextView) view.findViewById(R.id.ol_hall_pnums)).setText(currentUserCount + "/" + totalUserCount);
-                fromToTextView = view.findViewById(R.id.ol_getin_text);
+                TextView fromToTextView = view.findViewById(R.id.ol_getin_text);
                 fromToTextView.setText(currentUserCount < totalUserCount ? "进入" : "已满");
                 view.setOnClickListener(v -> {
                     if (list.get(i).getInt("W") > 0) {
@@ -120,9 +115,6 @@ public final class MainGameAdapter extends BaseAdapter {
             }
             case 1 -> {
                 // 好友列表
-                if (activity == null) {
-                    return view;
-                }
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
                 }
@@ -130,8 +122,8 @@ public final class MainGameAdapter extends BaseAdapter {
                 int i3 = list.get(i).getInt("O");
                 String gender = list.get(i).getString("S");
                 int lv = list.get(i).getInt("LV");
-                relativeLayout = view.findViewById(R.id.ol_friend_bar);
-                relativeLayout2 = view.findViewById(R.id.ol_friend_drop);
+                RelativeLayout relativeLayout = view.findViewById(R.id.ol_friend_bar);
+                RelativeLayout relativeLayout2 = view.findViewById(R.id.ol_friend_drop);
                 relativeLayout2.setVisibility(View.GONE);
                 relativeLayout.setOnClickListener(v -> {
                     int visibility = relativeLayout2.getVisibility();
@@ -141,9 +133,9 @@ public final class MainGameAdapter extends BaseAdapter {
                         relativeLayout2.setVisibility(View.GONE);
                     }
                 });
-                sendButton = view.findViewById(R.id.ol_friend_chat);
+                Button sendButton = view.findViewById(R.id.ol_friend_chat);
                 view.findViewById(R.id.ol_friend_room).setVisibility(View.GONE);
-                Button button2 = view.findViewById(R.id.ol_friend_game);
+                Button friendGameButton = view.findViewById(R.id.ol_friend_game);
                 Button dialogButton = view.findViewById(R.id.ol_friend_dialog);
                 Button goldSendButton = view.findViewById(R.id.ol_friend_gold_send);
                 goldSendButton.setVisibility(View.VISIBLE);
@@ -168,13 +160,13 @@ public final class MainGameAdapter extends BaseAdapter {
                 textView2.setText(userName);
                 if (i3 == 0) {
                     textView2.setTextColor(ContextCompat.getColor(activity, R.color.white));
-                    button2.setTextColor(ContextCompat.getColor(activity, R.color.white));
+                    friendGameButton.setTextColor(ContextCompat.getColor(activity, R.color.white));
                     sendButton.setTextColor(ContextCompat.getColor(activity, R.color.white));
                 } else {
                     textView2.setTextColor(ContextCompat.getColor(activity, R.color.white1));
-                    button2.setTextColor(ContextCompat.getColor(activity, R.color.white1));
+                    friendGameButton.setTextColor(ContextCompat.getColor(activity, R.color.white1));
                     sendButton.setTextColor(ContextCompat.getColor(activity, R.color.white1));
-                    button2.setOnClickListener(v -> {
+                    friendGameButton.setOnClickListener(v -> {
                         relativeLayout2.setVisibility(View.GONE);
                         OnlineDialogDTO.Builder builder = OnlineDialogDTO.newBuilder();
                         builder.setName(userName);
@@ -256,9 +248,6 @@ public final class MainGameAdapter extends BaseAdapter {
             }
             case 2 -> {
                 // 私信列表
-                if (activity == null) {
-                    return view;
-                }
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_mail_view, null);
                 }
@@ -266,17 +255,17 @@ public final class MainGameAdapter extends BaseAdapter {
                     String from = list.get(i).getString("F");
                     String to = list.get(i).getString("T");
                     String mailMessage = list.get(i).getString("M");
-                    i4 = 0;
+                    int i4 = 0;
                     if (list.get(i).containsKey("type")) {
                         i4 = list.get(i).getInt("type");
                     }
-                    fromToTextView = view.findViewById(R.id.fromTo);
+                    TextView fromToTextView = view.findViewById(R.id.fromTo);
                     if (i4 == 0) {
                         fromToTextView.setText("From:");
                     } else if (i4 == 1) {
                         fromToTextView.setText("To:");
                     }
-                    sendButton = view.findViewById(R.id.mail_send);
+                    Button sendButton = view.findViewById(R.id.mail_send);
                     Button buttonX = view.findViewById(R.id.mail_sendX);
                     buttonX.setText("回复");
                     Button mailDeleteButton = view.findViewById(R.id.mail_dele);
@@ -313,17 +302,14 @@ public final class MainGameAdapter extends BaseAdapter {
             }
             case 3 -> {
                 // 大厅用户列表
-                if (activity == null) {
-                    return view;
-                }
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.ol_friend_view, null);
                 }
                 String userName = list.get(i).getString("U");
                 String gender = list.get(i).getString("S");
-                i4 = list.get(i).getInt("R");
-                relativeLayout = view.findViewById(R.id.ol_friend_bar);
-                relativeLayout2 = view.findViewById(R.id.ol_friend_drop);
+                int i4 = list.get(i).getInt("R");
+                RelativeLayout relativeLayout = view.findViewById(R.id.ol_friend_bar);
+                RelativeLayout relativeLayout2 = view.findViewById(R.id.ol_friend_drop);
                 relativeLayout2.setVisibility(View.GONE);
                 relativeLayout.setOnClickListener(v -> {
                     int visibility = relativeLayout2.getVisibility();
@@ -333,14 +319,14 @@ public final class MainGameAdapter extends BaseAdapter {
                         relativeLayout2.setVisibility(View.GONE);
                     }
                 });
-                fromToTextView = view.findViewById(R.id.ol_friend_room);
+                TextView fromToTextView = view.findViewById(R.id.ol_friend_room);
                 switch (i4) {
                     case 0 -> fromToTextView.setText("大厅");
                     case -1 -> fromToTextView.setText("考级");
                     case -2 -> fromToTextView.setText("挑战");
                     default -> fromToTextView.setText(i4 + "房");
                 }
-                sendButton = view.findViewById(R.id.ol_friend_chat);
+                Button sendButton = view.findViewById(R.id.ol_friend_chat);
                 ImageView imageView2 = view.findViewById(R.id.ol_friend_sex);
                 imageView2.setImageResource(Objects.equals(gender, "f") ? R.drawable.f : R.drawable.m);
                 ((TextView) view.findViewById(R.id.ol_friend_level)).setText("LV." + list.get(i).getInt("LV"));

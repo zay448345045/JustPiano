@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.view.preference
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.AttributeSet
@@ -61,7 +62,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
             if (showValue.toFloat() == defaultValue.toFloat()) "$showText (默认)"
             else if (showValue.toFloat() >= criticalValue) "$showText (不建议)" else showText
         valueText!!.setTextColor(
-            if (showValue.toFloat() >= criticalValue) 0xfff05189.toInt() else 0xffffffff.toInt()
+            if (showValue.toFloat() >= criticalValue) 0xfff05189.toInt() else Color.WHITE
         )
         if (shouldPersist()) {
             persistString(showValue)

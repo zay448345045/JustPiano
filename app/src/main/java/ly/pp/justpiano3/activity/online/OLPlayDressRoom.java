@@ -3,6 +3,7 @@ package ly.pp.justpiano3.activity.online;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -230,7 +231,7 @@ public final class OLPlayDressRoom extends OLBaseActivity implements OnClickList
         for (int i = 0; i < 6; i++) {
             tabhost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 512;
             TextView tv = tabhost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            tv.setTextColor(0xffffffff);
+            tv.setTextColor(Color.WHITE);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);

@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,12 @@ import androidx.core.content.ContextCompat;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.activity.online.OLPlayHallRoom;
+import ly.pp.justpiano3.constant.Consts;
 
 public final class DailyTimeAdapter extends BaseAdapter {
     OLPlayHallRoom olPlayHallRoom;
@@ -63,39 +66,23 @@ public final class DailyTimeAdapter extends BaseAdapter {
         TextView dailyTimeBonusText = view.findViewById(R.id.ol_dailytime_bonus);
         dailyTimeBonusText.setText(bonus);
         TextView bonusGetText = view.findViewById(R.id.ol_bonus_get);
-        if (bonusGet.equals("0")) {
+        if (Objects.equals(bonusGet, "0")) {
             bonusGetText.setText("未领");
             bonusGetText.setBackgroundColor(ContextCompat.getColor(olPlayHallRoom, R.color.exit));
         } else {
             bonusGetText.setText("已领");
             bonusGetText.setBackgroundColor(ContextCompat.getColor(olPlayHallRoom, R.color.online));
         }
-        if (OLBaseActivity.kitiName.equals(name)) {
-            view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.drawable.selector_list_a);
+        view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(OLBaseActivity.kitiName.equals(name)
+                ? R.drawable.selector_list_a : R.drawable.selector_list_c);
+        if (i >= 0 && i < Consts.challengePositionColor.length) {
+            nameText.setTextColor(Consts.challengePositionColor[i]);
+            onlineTimeText.setTextColor(Consts.challengePositionColor[i]);
+            dailyTimeBonusText.setTextColor(Consts.challengePositionColor[i]);
         } else {
-            view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(R.drawable.selector_list_c);
-        }
-        switch (i) {
-            case 0 -> {
-                nameText.setTextColor(0xFFFFD700);
-                onlineTimeText.setTextColor(0xFFFFD700);
-                dailyTimeBonusText.setTextColor(0xFFFFD700);
-            }
-            case 1 -> {
-                nameText.setTextColor(0xFFC0C0C0);
-                onlineTimeText.setTextColor(0xFFC0C0C0);
-                dailyTimeBonusText.setTextColor(0xFFC0C0C0);
-            }
-            case 2 -> {
-                nameText.setTextColor(0xFFD2B48C);
-                onlineTimeText.setTextColor(0xFFD2B48C);
-                dailyTimeBonusText.setTextColor(0xFFD2B48C);
-            }
-            default -> {
-                nameText.setTextColor(0xFFFFFFFF);
-                onlineTimeText.setTextColor(0xFFFFFFFF);
-                dailyTimeBonusText.setTextColor(0xFFFFFFFF);
-            }
+            nameText.setTextColor(Color.WHITE);
+            onlineTimeText.setTextColor(Color.WHITE);
+            dailyTimeBonusText.setTextColor(Color.WHITE);
         }
         return view;
     }

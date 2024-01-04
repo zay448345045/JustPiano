@@ -37,34 +37,34 @@ public final class ChallengeHandler extends Handler {
                 case 1:
                     post(() -> {
                         challenge.scoreList.clear();
-                        Bundle data = message.getData();
-                        int size = data.size() - 4;
+                        Bundle bundle = message.getData();
+                        int size = bundle.size() - 4;
                         for (int i = 0; i < size; i++) {
                             Map<String, String> hashMap = new HashMap<>();
-                            hashMap.put("S", data.getBundle(String.valueOf(i)).getString("S"));
-                            hashMap.put("N", data.getBundle(String.valueOf(i)).getString("N"));
-                            hashMap.put("T", data.getBundle(String.valueOf(i)).getString("T"));
+                            hashMap.put("S", bundle.getBundle(String.valueOf(i)).getString("S"));
+                            hashMap.put("N", bundle.getBundle(String.valueOf(i)).getString("N"));
+                            hashMap.put("T", bundle.getBundle(String.valueOf(i)).getString("T"));
                             hashMap.put("P", String.valueOf(i + 1));
                             challenge.scoreList.add(hashMap);
                         }
                         challenge.scoreListView.setAdapter(new ChallengeListAdapter(challenge.scoreList, challenge.layoutinflater));
                         StringBuilder sb = new StringBuilder();
                         sb.append("用户名称:").append(OLBaseActivity.getKitiName())
-                                .append("\n最高分:").append(data.getInt("S"))
-                                .append("\n今日名次:").append(data.getString("P"))
-                                .append("\n昨日名次:").append(data.getString("Z"))
-                                .append("\n剩余挑战次数:").append(data.getString("T"));
-                        challenge.remainTimes = Integer.parseInt(data.getString("T"));
+                                .append("\n最高分:").append(bundle.getInt("S"))
+                                .append("\n今日名次:").append(bundle.getString("P"))
+                                .append("\n昨日名次:").append(bundle.getString("Z"))
+                                .append("\n剩余挑战次数:").append(bundle.getString("T"));
+                        challenge.remainTimes = Integer.parseInt(bundle.getString("T"));
                         challenge.info.setText(sb);
                         challenge.jpprogressBar.dismiss();
                     });
                     return;
                 case 2:
                     post(() -> {
-                        Bundle data = message.getData();
-                        int i = data.getInt("R");
-                        String string = data.getString("I");
-                        String string2 = data.getString("P");
+                        Bundle bundle = message.getData();
+                        int i = bundle.getInt("R");
+                        String string = bundle.getString("I");
+                        String string2 = bundle.getString("P");
                         String str = "提示";
                         String str2 = switch (i) {
                             case 0 -> "确定";

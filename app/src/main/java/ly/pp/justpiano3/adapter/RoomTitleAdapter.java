@@ -52,7 +52,6 @@ public final class RoomTitleAdapter extends BaseAdapter {
         if (view == null) {
             view = layoutInflater.inflate(R.layout.ol_room_view, null);
         }
-        view.setKeepScreenOn(true);
         String name = list.get(i).getString("N");
         int i2 = list.get(i).getInt("V");
         byte b = list.get(i).getByte("I");

@@ -47,7 +47,7 @@ public final class OLPlayDressRoomHandler extends Handler {
                             jpDialogBuilder.setMessage(info);
                             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                             jpDialogBuilder.buildAndShowDialog();
-                            if (info.startsWith("购买成功")) {
+                            if (info != null && info.startsWith("购买成功")) {
                                 int buyClothesType = message.getData().getInt("U_T");
                                 int buyClothesId = message.getData().getInt("U_I");
                                 olPlayDressRoom.handleBuyClothes(buyClothesType, buyClothesId);
@@ -81,20 +81,20 @@ public final class OLPlayDressRoomHandler extends Handler {
                 case 4 ->  // 购买商品
                         post(() -> {
                             olPlayDressRoom.jpprogressBar.dismiss();
-                            Bundle data = message.getData();
-                            olPlayDressRoom.goldNum.setText(data.getString("G"));
+                            Bundle bundle = message.getData();
+                            olPlayDressRoom.goldNum.setText(bundle.getString("G"));
                             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayDressRoom);
                             jpDialogBuilder.setTitle("提示");
-                            jpDialogBuilder.setMessage(data.getString("I"));
+                            jpDialogBuilder.setMessage(bundle.getString("I"));
                             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
                             jpDialogBuilder.buildAndShowDialog();
                         });
                 case 5 ->  // 接收服务器下发的服装价格
                         post(() -> {
                             olPlayDressRoom.jpprogressBar.dismiss();
-                            Bundle data = message.getData();
-                            int[] prices = data.getIntArray("P");
-                            int clothesType = data.getInt("C_T");
+                            Bundle bundle = message.getData();
+                            int[] prices = bundle.getIntArray("P");
+                            int clothesType = bundle.getInt("C_T");
                             boolean isFemale = "f".equals(olPlayDressRoom.sex);
                             switch (clothesType) {
                                 case 0 -> {

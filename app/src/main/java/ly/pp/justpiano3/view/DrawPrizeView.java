@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -129,7 +130,7 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
         mArcPaint.setDither(true);
         // 初始化绘制文本的画笔
         mTextPaint = new Paint();
-        mTextPaint.setColor(0xff000000);
+        mTextPaint.setColor(Color.BLACK);
         mTextPaint.setTextSize(mTextSize);
         // 初始化盘块绘制的范围
         mRange = new RectF(mPadding, mPadding, mPadding + mRadius, mPadding + mRadius);
@@ -172,7 +173,7 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
         try {
             mCanvas = mHolder.lockCanvas();
             if (mCanvas != null) {
-                mCanvas.drawColor(0xff000000);
+                mCanvas.drawColor(Color.BLACK);
                 // 绘制盘块
                 float tmpAngle = mStartAngle;
                 float sweepAngle = 360f / mItemCount;

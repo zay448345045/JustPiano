@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.adapter;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.PopUserInfo;
@@ -18,18 +20,18 @@ import ly.pp.justpiano3.thread.PictureHandle;
 
 public final class TopUserAdapter extends BaseAdapter {
     final ShowTopInfo showTopInfo;
-    private final List<Map<String, Object>> peopleList;
+    private final List<Map<String, Object>> list;
 
-    public TopUserAdapter(ShowTopInfo showTopInfo, int i, List<Map<String, Object>> list) {
+    public TopUserAdapter(ShowTopInfo showTopInfo, List<Map<String, Object>> list) {
         this.showTopInfo = showTopInfo;
-        peopleList = list;
+        this.list = list;
         showTopInfo.handler = new Handler(showTopInfo);
         showTopInfo.pictureHandle = new PictureHandle(showTopInfo.handler, 0);
     }
 
     @Override
     public int getCount() {
-        return peopleList.size();
+        return list.size();
     }
 
     @Override
@@ -47,55 +49,50 @@ public final class TopUserAdapter extends BaseAdapter {
         if (view == null) {
             view = showTopInfo.layoutInflater.inflate(R.layout.ol_top_view, null);
         }
-        view.setKeepScreenOn(true);
-        TextView textView = view.findViewById(R.id.ol_position_top);
-        TextView textView2 = view.findViewById(R.id.ol_user_top);
-        TextView textView3 = view.findViewById(R.id.ol_score_top);
-        TextView textView4 = view.findViewById(R.id.ol_nuns_top);
-        ImageView imageView = view.findViewById(R.id.user_face);
-        imageView.setTag(peopleList.get(i).get("faceID").toString());
-        showTopInfo.pictureHandle.setBitmap(imageView, showTopInfo.setDefaultAvatar(showTopInfo));
-        textView.setText(String.valueOf(showTopInfo.position + i));
-        String obj2 = peopleList.get(i).get("userName").toString();
-        textView2.setText(obj2);
-        ImageView imageView2 = view.findViewById(R.id.ol_user_sex);
-        if (peopleList.get(i).get("userSex").toString().equals("f")) {
-            imageView2.setImageResource(R.drawable.f);
-        } else {
-            imageView2.setImageResource(R.drawable.m);
-        }
-        int intValue = (Integer) peopleList.get(i).get("userScore");
-        textView3.setTextColor(0xffff0000);
+        TextView positionTextView = view.findViewById(R.id.ol_position_top);
+        TextView userNameTextView = view.findViewById(R.id.ol_user_top);
+        TextView scoreTextView = view.findViewById(R.id.ol_score_top);
+        TextView numTextView = view.findViewById(R.id.ol_nuns_top);
+        ImageView avatarImageView = view.findViewById(R.id.user_face);
+        avatarImageView.setTag(list.get(i).get("faceID").toString());
+        showTopInfo.pictureHandle.setBitmap(avatarImageView, showTopInfo.setDefaultAvatar(showTopInfo));
+        positionTextView.setText(String.valueOf(showTopInfo.position + i));
+        String userName = list.get(i).get("userName").toString();
+        userNameTextView.setText(userName);
+        ImageView genderImageView = view.findViewById(R.id.ol_user_sex);
+        genderImageView.setImageResource(Objects.equals(list.get(i).get("userSex"), "f") ? R.drawable.f : R.drawable.m);
+        int intValue = (Integer) list.get(i).get("userScore");
+        scoreTextView.setTextColor(Color.RED);
         switch (showTopInfo.head) {
             case 0 -> {
-                textView3.setText("冠军:" + peopleList.get(i).get("userNuns"));
-                textView4.setText("总分:" + intValue);
+                scoreTextView.setText("冠军:" + list.get(i).get("userNuns"));
+                numTextView.setText("总分:" + intValue);
             }
             case 1 -> {
-                textView3.setText("总分:" + intValue);
-                textView4.setText("冠军:" + peopleList.get(i).get("userNuns"));
+                scoreTextView.setText("总分:" + intValue);
+                numTextView.setText("冠军:" + list.get(i).get("userNuns"));
             }
             case 4 -> {
-                textView3.setText("等级:" + peopleList.get(i).get("userNuns"));
-                textView4.setText("经验:" + intValue);
+                scoreTextView.setText("等级:" + list.get(i).get("userNuns"));
+                numTextView.setText("经验:" + intValue);
             }
             case 7 -> {
-                textView3.setText("祝福:" + intValue);
-                textView4.setVisibility(View.GONE);
+                scoreTextView.setText("祝福:" + intValue);
+                numTextView.setVisibility(View.GONE);
             }
             case 9 -> {
-                textView3.setText("贡献:" + intValue / 10);
-                textView4.setText("等级:" + peopleList.get(i).get("userNuns"));
+                scoreTextView.setText("贡献:" + intValue / 10);
+                numTextView.setText("等级:" + list.get(i).get("userNuns"));
             }
             case 10 -> {
-                textView4.setText("等级:" + peopleList.get(i).get("userNuns"));
-                textView3.setText(String.valueOf(intValue / 10) + "级" + ((intValue % 10)) + "阶");
+                numTextView.setText("等级:" + list.get(i).get("userNuns"));
+                scoreTextView.setText(String.valueOf(intValue / 10) + "级" + ((intValue % 10)) + "阶");
             }
         }
         view.setOnClickListener(v -> {
             Intent intent = new Intent(showTopInfo, PopUserInfo.class);
             intent.putExtra("head", 1);
-            intent.putExtra("userKitiName", obj2);
+            intent.putExtra("userKitiName", userName);
             showTopInfo.startActivity(intent);
         });
         return view;

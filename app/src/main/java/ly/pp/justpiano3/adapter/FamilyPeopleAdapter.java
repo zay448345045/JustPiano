@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.OLFamily;
@@ -67,9 +68,9 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
         TextView lvText = view.findViewById(R.id.ol_family_count);
         TextView dateText = view.findViewById(R.id.ol_family_date);
         ImageView sex = view.findViewById(R.id.ol_family_pic);
-        if (list.get(i).get("S").equals("m")) {
+        if (Objects.equals(list.get(i).get("S"), "m")) {
             sex.setImageResource(R.drawable.m);
-        } else if (list.get(i).get("S").equals("f")) {
+        } else if (Objects.equals(list.get(i).get("S"), "f")) {
             sex.setImageResource(R.drawable.f);
         } else {
             sex.setImageResource(R.drawable.null_pic);
@@ -86,7 +87,7 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
             case MEMBER -> positionText.setText("族员");
             default -> positionText.setText("");
         }
-        if (list.get(i).get("O").equals("0")) {
+        if (Objects.equals(list.get(i).get("O"), "0")) {
             nameText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
             positionText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));
             contributionText.setTextColor(ContextCompat.getColor(olFamily, R.color.white));

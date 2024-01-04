@@ -55,7 +55,6 @@ public final class ShowSongsInfoAdapter extends BaseAdapter {
         if (view == null) {
             view = showSongsInfo.layoutInflater.inflate(R.layout.ol_c_view, null);
         }
-        view.setKeepScreenOn(true);
         String trim = songsList.get(i).get("songName").toString().trim();
         String songId = (String) songsList.get(i).get("songID");
         ImageButton imageButton = view.findViewById(R.id.ol_favor_b);

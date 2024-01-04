@@ -71,11 +71,11 @@ public final class OLPlayHallHandler extends Handler {
                 olPlayHall.bindChatAdapter(olPlayHall.msgListView, olPlayHall.msgList);
             });
             case 2 -> {
-                Bundle data = message.getData();
-                data.putBundle("bundle", olPlayHall.hallInfoBundle);
-                int mode = data.getInt("mode");
+                Bundle bundle = message.getData();
+                bundle.putBundle("bundle", olPlayHall.hallInfoBundle);
+                int mode = bundle.getInt("mode");
                 Intent intent = new Intent(olPlayHall, mode == RoomModeEnum.KEYBOARD.getCode() ? OLPlayKeyboardRoom.class : OLPlayRoom.class);
-                intent.putExtras(data);
+                intent.putExtras(bundle);
                 olPlayHall.startActivity(intent);
                 olPlayHall.finish();
             }
@@ -177,27 +177,27 @@ public final class OLPlayHallHandler extends Handler {
             });
             case 9 -> post(() -> {
                 if (!DialogUtil.isShowDialog()) {
-                    Bundle data14 = message.getData();
-                    int i = data14.getInt("T");
-                    byte b = (byte) data14.getInt("R");
-                    byte b2 = (byte) data14.getInt("H");
-                    int i2 = data14.getInt("C");
-                    String messageStr = data14.getString("I");
-                    String title = data14.getString("Ti");
+                    Bundle bundle = message.getData();
+                    int type = bundle.getInt("T");
+                    byte b = (byte) bundle.getInt("R");
+                    byte b2 = (byte) bundle.getInt("H");
+                    int i2 = bundle.getInt("C");
+                    String messageStr = bundle.getString("I");
+                    String title = bundle.getString("Ti");
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayHall);
                     jpDialogBuilder.setTitle(title);
                     title = "确定";
-                    if (i2 == 1 && b2 == olPlayHall.hallID && b2 > (byte) 0) {
+                    if (i2 == 1 && b2 == olPlayHall.hallID && b2 > 0) {
                         jpDialogBuilder.setMessage(messageStr);
                         jpDialogBuilder.setFirstButton("进入房间", (dialog, which) -> {
                             dialog.dismiss();
                             DialogUtil.setShowDialog(false);
-                            if (i == 0) {
-                                olPlayHall.enterRoomHandle(data14.getInt("P"), b);
-                            } else if (i == 1) {
+                            if (type == 0) {
+                                olPlayHall.enterRoomHandle(bundle.getInt("P"), b);
+                            } else if (type == 1) {
                                 OnlineEnterRoomDTO.Builder builder = OnlineEnterRoomDTO.newBuilder();
                                 builder.setRoomId(b);
-                                builder.setPassword(data14.getString("P"));
+                                builder.setPassword(bundle.getString("P"));
                                 olPlayHall.sendMsg(OnlineProtocolType.ENTER_ROOM, builder.build());
                             }
                         });
@@ -212,7 +212,7 @@ public final class OLPlayHallHandler extends Handler {
                             DialogUtil.setShowDialog(false);
                         });
                     }
-                    DialogUtil.handleGoldSend(jpDialogBuilder, i, data14.getString("N"), data14.getString("F"));
+                    DialogUtil.handleGoldSend(jpDialogBuilder, type, bundle.getString("N"), bundle.getString("F"));
                     jpDialogBuilder.buildAndShowDialog();
                     DialogUtil.setShowDialog(true);
                 }
@@ -227,9 +227,9 @@ public final class OLPlayHallHandler extends Handler {
                 olPlayHall.bindMainGameAdapter(olPlayHall.friendListView, olPlayHall.friendList, 1, true);
             });
             case 11 -> post(() -> {
-                Bundle data15 = message.getData();
-                int i = data15.getInt("result");
-                String[] msg = data15.getString("info").split("\n");
+                Bundle bundle = message.getData();
+                int i = bundle.getInt("result");
+                String[] msg = bundle.getString("info").split("\n");
                 String str = "提示";
                 String str2 = switch (i) {
                     case 0 -> "确定";
@@ -276,12 +276,12 @@ public final class OLPlayHallHandler extends Handler {
                     Toast.makeText(olPlayHall, "您的设备不支持弹奏", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Bundle data15 = message.getData();
+                Bundle bundle = message.getData();
                 Intent intent = new Intent(olPlayHall, PianoPlay.class);
                 intent.putExtra("head", 3);
-                intent.putExtra("songBytes", data15.getString("songBytes"));
-                intent.putExtra("times", data15.getInt("songsID"));
-                intent.putExtra("hand", data15.getInt("hand"));
+                intent.putExtra("songBytes", bundle.getString("songBytes"));
+                intent.putExtra("times", bundle.getInt("songsID"));
+                intent.putExtra("hand", bundle.getInt("hand"));
                 intent.putExtra("name", "");
                 intent.putExtra("bundle", olPlayHall.hallInfoBundle);
                 intent.putExtra("bundleHall", olPlayHall.hallInfoBundle);

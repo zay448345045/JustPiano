@@ -550,7 +550,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             TextView titleTextView = findViewById(R.id.ol_playhall_title);
             titleTextView.getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             TextView tv = tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            tv.setTextColor(0xffffffff);
+            tv.setTextColor(Color.WHITE);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);

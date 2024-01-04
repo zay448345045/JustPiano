@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import java.util.List;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
@@ -64,10 +65,10 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         if (olKeyboardState != null) {
             soundView.setImageResource(olKeyboardState.getMuted() ? R.drawable.stop : R.drawable.null_pic);
         }
-        if (positionStatus.equals("O")) {
+        if (Objects.equals(positionStatus, "O")) {
             modView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_none.webp"));
             return view;
-        } else if (positionStatus.equals("C")) {
+        } else if (Objects.equals(positionStatus, "C")) {
             modView.setImageBitmap(ImageLoadUtil.dressBitmapCacheMap.get("mod/_close.webp"));
             return view;
         }
@@ -117,7 +118,7 @@ public final class KeyboardPlayerImageAdapter extends BaseAdapter {
         clTextView.setTextColor(ContextCompat.getColor(olPlayKeyboardRoom, Consts.colors[cl]));
         clNameTextView.setText(Consts.nameCL[cl]);
         clNameTextView.setTextColor(ContextCompat.getColor(olPlayKeyboardRoom, Consts.colors[cl]));
-        ImageLoadUtil.setUserDressImageBitmap(olPlayKeyboardRoom, playerList.get(i).getString("S").equals("f") ? "f" : "m",
+        ImageLoadUtil.setUserDressImageBitmap(olPlayKeyboardRoom, Objects.equals(playerList.get(i).getString("S"), "f") ? "f" : "m",
                 playerList.get(i).getInt("TR"), playerList.get(i).getInt("JA"),
                 playerList.get(i).getInt("HA"), playerList.get(i).getInt("EY"),
                 playerList.get(i).getInt("SH"), modView, trousersView, jacketView, hairView, eyeView, shoesView);

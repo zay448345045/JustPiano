@@ -178,7 +178,7 @@ public final class PlayerImageAdapter extends BaseAdapter {
         clTextView.setTextColor(ContextCompat.getColor(olPlayRoom, Consts.colors[cl]));
         clNameTextView.setText(Consts.nameCL[cl]);
         clNameTextView.setTextColor(ContextCompat.getColor(olPlayRoom, Consts.colors[cl]));
-        ImageLoadUtil.setUserDressImageBitmap(olPlayRoom, playerList.get(i).getString("S").equals("f") ? "f" : "m",
+        ImageLoadUtil.setUserDressImageBitmap(olPlayRoom, Objects.equals(playerList.get(i).getString("S"), "f") ? "f" : "m",
                 playerList.get(i).getInt("TR"), playerList.get(i).getInt("JA"),
                 playerList.get(i).getInt("HA"), playerList.get(i).getInt("EY"),
                 playerList.get(i).getInt("SH"), modView, trousersView, jacketView, hairView, eyeView, shoesView);

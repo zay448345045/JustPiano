@@ -37,7 +37,6 @@ public final class LocalSongsItemAdapter extends BaseAdapter {
         if (view == null) {
             view = LayoutInflater.from(melodySelect).inflate(R.layout.songs_sort_view, null);
         }
-        view.setKeepScreenOn(true);
         ((TextView) view.findViewById(R.id.ol_s_p)).setText(Consts.items[i]);
         return view;
     }

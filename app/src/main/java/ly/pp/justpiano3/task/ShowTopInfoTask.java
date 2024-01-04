@@ -40,7 +40,7 @@ public final class ShowTopInfoTask extends AsyncTask<Void, Void, String> {
         if (str.length() > 3) {
             try {
                 showTopInfo.get().dataList = showTopInfo.get().userListHandle(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")));
-                ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().size, showTopInfo.get().dataList);
+                ListAdapter topUserAdapter = new TopUserAdapter(showTopInfo.get(), showTopInfo.get().dataList);
                 if (showTopInfo.get().listView != null) {
                     showTopInfo.get().listView.setAdapter(topUserAdapter);
                 }

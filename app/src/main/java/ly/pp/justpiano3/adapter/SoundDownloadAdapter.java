@@ -47,7 +47,6 @@ public final class SoundDownloadAdapter extends BaseAdapter {
         if (view == null) {
             view = soundDownload.layoutInflater.inflate(R.layout.skin_view, null);
         }
-        view.setKeepScreenOn(true);
         view.setBackgroundResource(R.drawable.selector_ol_orange);
         ScrollText scrollText = view.findViewById(R.id.skin_name);
         TextView textView = view.findViewById(R.id.skin_author);

@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import androidx.annotation.NonNull;
+
 import java.lang.ref.WeakReference;
 
 import ly.pp.justpiano3.activity.online.OLMainMode;
@@ -20,16 +22,14 @@ public final class OLMainModeHandler extends Handler {
     }
 
     @Override
-    public void handleMessage(Message message) {
+    public void handleMessage(@NonNull Message message) {
         OLMainMode oLMainMode = (OLMainMode) weakReference.get();
         if (oLMainMode.jpProgressBar != null && oLMainMode.jpProgressBar.isShowing()) {
             oLMainMode.jpProgressBar.cancel();
         }
         switch (message.what) {
             case 1 -> {
-                Intent intent = new Intent(oLMainMode, OLPlayHallRoom.class);
-                intent.putExtra("HEAD", 1);
-                oLMainMode.startActivity(intent);
+                oLMainMode.startActivity(new Intent(oLMainMode, OLPlayHallRoom.class).putExtra("HEAD", 1));
                 oLMainMode.finish();
             }
             case 2 -> post(() -> oLMainMode.addDialog("提示", "确定", "连接服务器失败"));

@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
@@ -43,7 +44,6 @@ public final class FinishScoreAdapter extends BaseAdapter {
         if (view == null) {
             view = layoutInflater.inflate(R.layout.ol_c_finish_view, null);
         }
-        view.setKeepScreenOn(true);
         String str = (String) list.get(i).get("N");
         if (str == null) {
             return view;
@@ -66,7 +66,7 @@ public final class FinishScoreAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.ol_miss)).setText(str8);
         ((TextView) view.findViewById(R.id.ol_combo)).setText(str9);
         TextView textView = view.findViewById(R.id.ol_total);
-        if (str2.equals("P")) {
+        if (Objects.equals(str2, "P")) {
             textView.setText("弹奏中");
         } else {
             textView.setText(str3);

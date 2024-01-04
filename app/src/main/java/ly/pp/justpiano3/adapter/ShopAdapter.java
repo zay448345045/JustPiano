@@ -50,11 +50,7 @@ public final class ShopAdapter extends BaseAdapter {
         shopItemPrice.setText(String.valueOf(shopProduct.getPrice()));
         ImageView shopItemImageView = view.findViewById(R.id.ol_shop_item_pic);
         int drawableById = olPlayDressRoom.getDrawableById(shopProduct.getPicture(), R.drawable.class);
-        if (drawableById == 0) {
-            shopItemImageView.setImageResource(R.drawable.family);
-        } else {
-            shopItemImageView.setImageResource(drawableById);
-        }
+        shopItemImageView.setImageResource(drawableById == 0 ? R.drawable.family : drawableById);
         Button shopItemBuyButton = view.findViewById(R.id.ol_shop_item_buy);
         shopItemBuyButton.setOnClickListener(v -> {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayDressRoom);

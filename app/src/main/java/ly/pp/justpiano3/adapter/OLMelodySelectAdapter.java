@@ -53,7 +53,6 @@ public final class OLMelodySelectAdapter extends BaseAdapter {
         if (view == null) {
             view = olMelodySelect.layoutInflater2.inflate(R.layout.ol_c_view, null);
         }
-        view.setKeepScreenOn(true);
         String trim = songsList.get(i).get("songName").toString().trim();
         String songId = (String) songsList.get(i).get("songID");
         ImageButton imageButton = view.findViewById(R.id.ol_favor_b);

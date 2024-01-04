@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.UserListPage;
@@ -53,11 +54,7 @@ public final class UserListPageAdapter extends BaseAdapter {
         Button deleteButton = view.findViewById(R.id.friend_dele);
         nameTextView.setText(simpleUser.getName());
         timeTextView.setText("加入屏蔽时间：" + DateUtil.format(simpleUser.getDate(), DateUtil.TEMPLATE_DEFAULT));
-        if (simpleUser.getGender().equals("f")) {
-            genderImageView.setImageResource(R.drawable.f);
-        } else {
-            genderImageView.setImageResource(R.drawable.m);
-        }
+        genderImageView.setImageResource(Objects.equals(simpleUser.getGender(), "f") ? R.drawable.f : R.drawable.m);
         deleteButton.setOnClickListener(v -> new JPDialogBuilder(userListPage)
                 .setTitle("删除用户")
                 .setMessage("从聊天屏蔽名单中刪除用户[" + simpleUser.getName() + "]?")
