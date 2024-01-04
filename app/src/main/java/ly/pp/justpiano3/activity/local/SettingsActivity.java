@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.util.Pair;
 import androidx.core.util.Predicate;
-import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
@@ -30,6 +29,7 @@ import java.util.Objects;
 
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.activity.BaseActivity;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.task.SkinListPreferenceTask;
 import ly.pp.justpiano3.task.SoundListPreferenceTask;
@@ -42,10 +42,11 @@ import ly.pp.justpiano3.utils.WakeLockUtil;
 import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.FilePickerPreference;
+import ly.pp.justpiano3.view.preference.SeekBarPreference;
 import ly.pp.justpiano3.view.preference.SkinListPreference;
 import ly.pp.justpiano3.view.preference.SoundListPreference;
 
-public final class SettingsActivity extends FragmentActivity implements MidiDeviceUtil.MidiDeviceListener {
+public final class SettingsActivity extends BaseActivity implements MidiDeviceUtil.MidiDeviceListener {
 
     private final SettingsFragment settingFragment = new SettingsFragment();
 
@@ -78,7 +79,6 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
                     soundListPreference.soundKey = soundListPreference.getPersistedString();
                     soundListPreference.closeDialog();
                 }
-                ImageLoadUtil.setBackground(this);
             });
 
     public final ActivityResultLauncher<Intent> filePickerLauncher = registerForActivityResult(
@@ -94,16 +94,10 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImageLoadUtil.setBackground(this);
         getWindow().getDecorView().findViewById(android.R.id.content).setBackgroundResource(R.color.black);
         PreferenceFragmentCompat preferenceFragmentCompat = preferenceFragmentMap.get(getIntent().getDataString());
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content,
                 preferenceFragmentCompat == null ? settingFragment : preferenceFragmentCompat).commit();
-        if (GlobalSetting.getAllFullScreenShow()) {
-            WindowUtil.fullScreenHandle(getWindow());
-        } else {
-            WindowUtil.exitFullScreenHandle(getWindow());
-        }
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -116,17 +110,17 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
                 versionPreference.setSummary(BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-' + BuildConfig.BUILD_TYPE);
             }
             Preference skinPreference = findPreference("skin_select");
-            if (skinPreference != null) {
+            if (skinPreference instanceof SkinListPreference) {
                 skinPreference.setSummary(GlobalSetting.getSkin());
             }
             Preference soundPreference = findPreference("sound_select");
-            if (soundPreference != null) {
+            if (soundPreference instanceof SoundListPreference) {
                 soundPreference.setSummary(GlobalSetting.getSound());
             }
             // 检测是否支持midi功能，支持midi功能时，midi设备相关的设置才允许点击
             if (MidiDeviceUtil.isSupportMidiDevice(getActivity())) {
                 Preference midiDevicePreference = findPreference("midi_device_list");
-                if (midiDevicePreference != null) {
+                if (midiDevicePreference instanceof MidiDeviceListPreference) {
                     midiDevicePreference.setSummary("启用/禁用MIDI设备");
                     midiDevicePreference.setEnabled(true);
                 }
@@ -236,13 +230,11 @@ public final class SettingsActivity extends FragmentActivity implements MidiDevi
         @Override
         public void onDisplayPreferenceDialog(@NonNull Preference preference) {
             if (preference instanceof SkinListPreference skinListPreference) {
-                SkinListPreference.DialogFragmentCompat dialogFragmentCompat = skinListPreference.newDialogFragmentCompatInstance();
-                dialogFragmentCompat.setTargetFragment(this, 0);
-                dialogFragmentCompat.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
+                skinListPreference.newDialog().show(getParentFragmentManager(), "SkinListPreference");
             } else if (preference instanceof SoundListPreference soundListPreference) {
-                SoundListPreference.DialogFragmentCompat dialogFragmentCompat = soundListPreference.newDialogFragmentCompatInstance();
-                dialogFragmentCompat.setTargetFragment(this, 0);
-                dialogFragmentCompat.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
+                soundListPreference.newDialog().show(getParentFragmentManager(), "SoundListPreference");
+            } else if (preference instanceof SeekBarPreference seekBarPreference) {
+                seekBarPreference.newDialog().show(getParentFragmentManager(), "SeekBarPreference");
             } else {
                 super.onDisplayPreferenceDialog(preference);
             }

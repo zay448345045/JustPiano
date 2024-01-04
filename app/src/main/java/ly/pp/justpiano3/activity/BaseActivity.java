@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-import androidx.activity.ComponentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.WindowUtil;
 
-public class BaseActivity extends ComponentActivity {
+public class BaseActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
@@ -96,8 +95,8 @@ public final class SkinListPreference extends DialogPreference {
         return getPersistedString("original");
     }
 
-    public DialogFragmentCompat newDialogFragmentCompatInstance() {
-        dialogFragmentCompat = new DialogFragmentCompat(this).newInstance(this, getKey());
+    public DialogFragmentCompat newDialog() {
+        dialogFragmentCompat = new DialogFragmentCompat(this);
         return dialogFragmentCompat;
     }
 
@@ -113,14 +112,6 @@ public final class SkinListPreference extends DialogPreference {
 
         public DialogFragmentCompat(SkinListPreference skinListPreference) {
             this.skinListPreference = skinListPreference;
-        }
-
-        public DialogFragmentCompat newInstance(SkinListPreference skinListPreference, String key) {
-            final DialogFragmentCompat fragment = new DialogFragmentCompat(skinListPreference);
-            final Bundle b = new Bundle(1);
-            b.putString(ARG_KEY, key);
-            fragment.setArguments(b);
-            return fragment;
         }
 
         @Override
