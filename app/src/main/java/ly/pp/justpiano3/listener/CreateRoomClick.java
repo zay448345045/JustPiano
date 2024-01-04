@@ -27,7 +27,7 @@ public final class CreateRoomClick implements OnClickListener {
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        int i2 = 0;
+        int roomMode = 0;
         String roomName = String.valueOf(roomNameText.getText());
         String password = String.valueOf(passwordText.getText());
         if (TextUtils.isEmpty(roomName)) {
@@ -38,16 +38,16 @@ public final class CreateRoomClick implements OnClickListener {
             if (TextUtils.isEmpty(password) || password.length() <= 8) {
                 int checkedRadioButtonId = roomModeRadioGroup.getCheckedRadioButtonId();
                 if (checkedRadioButtonId == R.id.group) {
-                    i2 = 1;
+                    roomMode = 1;
                 } else if (checkedRadioButtonId == R.id.couple) {
-                    i2 = 2;
+                    roomMode = 2;
                 } else if (checkedRadioButtonId == R.id.keyboard) {
-                    i2 = 3;
+                    roomMode = 3;
                 }
                 OnlineCreateRoomDTO.Builder builder = OnlineCreateRoomDTO.newBuilder();
                 builder.setRoomName(roomName);
                 builder.setPassword(password);
-                builder.setRoomMode(i2);
+                builder.setRoomMode(roomMode);
                 olPlayHall.sendMsg(OnlineProtocolType.CREATE_ROOM, builder.build());
                 dialogInterface.dismiss();
             } else {

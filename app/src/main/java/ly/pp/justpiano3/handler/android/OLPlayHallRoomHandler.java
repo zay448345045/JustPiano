@@ -132,11 +132,11 @@ public final class OLPlayHallRoomHandler extends Handler {
                         familyDataMap.put("P", String.valueOf(i + 1 + preSize));
                         olPlayHallRoom.familyList.add(familyDataMap);
                     }
-                    FamilyAdapter familyAdapter = (FamilyAdapter) olPlayHallRoom.familyListView.getAdapter();
+                    FamilyAdapter familyAdapter = (FamilyAdapter) olPlayHallRoom.pullUpdateListView.getAdapter();
                     if (familyAdapter == null) {
-                        olPlayHallRoom.bindAdapter(olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
+                        olPlayHallRoom.bindAdapter(olPlayHallRoom.pullUpdateListView, olPlayHallRoom.familyList);
                     } else {
-                        olPlayHallRoom.updateFamilyListShow(familyAdapter, olPlayHallRoom.familyListView, olPlayHallRoom.familyList);
+                        olPlayHallRoom.updateFamilyListShow(familyAdapter, olPlayHallRoom.pullUpdateListView, olPlayHallRoom.familyList);
                     }
                     olPlayHallRoom.myFamilyPosition.setText(bundle.getString("P"));
                     olPlayHallRoom.myFamilyName.setText(bundle.getString("N"));

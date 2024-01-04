@@ -75,10 +75,10 @@ public final class DailyTimeAdapter extends BaseAdapter {
         }
         view.findViewById(R.id.ol_dailytime_layout).setBackgroundResource(OLBaseActivity.kitiName.equals(name)
                 ? R.drawable.selector_list_a : R.drawable.selector_list_c);
-        if (i >= 0 && i < Consts.challengePositionColor.length) {
-            nameText.setTextColor(Consts.challengePositionColor[i]);
-            onlineTimeText.setTextColor(Consts.challengePositionColor[i]);
-            dailyTimeBonusText.setTextColor(Consts.challengePositionColor[i]);
+        if (i >= 0 && i < Consts.positionColor.length) {
+            nameText.setTextColor(Consts.positionColor[i]);
+            onlineTimeText.setTextColor(Consts.positionColor[i]);
+            dailyTimeBonusText.setTextColor(Consts.positionColor[i]);
         } else {
             nameText.setTextColor(Color.WHITE);
             onlineTimeText.setTextColor(Color.WHITE);

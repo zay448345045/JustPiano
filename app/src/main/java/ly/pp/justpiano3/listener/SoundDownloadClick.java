@@ -14,11 +14,11 @@ public final class SoundDownloadClick implements OnClickListener {
     private final String name;
     private final String soundType;
 
-    public SoundDownloadClick(SoundDownload soundDownload, int eventType, String soundId, String soundFileName, String soundType) {
+    public SoundDownloadClick(SoundDownload soundDownload, int type, String soundId, String name, String soundType) {
         this.soundDownload = soundDownload;
-        type = eventType;
+        this.type = type;
         this.soundId = soundId;
-        name = soundFileName;
+        this.name = name;
         this.soundType = soundType;
     }
 

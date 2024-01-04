@@ -27,7 +27,7 @@ import ly.pp.justpiano3.utils.ViewUtil
 import ly.pp.justpiano3.utils.WaterfallUtil
 import ly.pp.justpiano3.view.JPProgressBar
 import ly.pp.justpiano3.view.KeyboardView
-import ly.pp.justpiano3.view.ScrollText
+import ly.pp.justpiano3.view.ScrollTextView
 import ly.pp.justpiano3.view.WaterfallView
 import java.io.File
 import java.util.concurrent.Executors
@@ -95,7 +95,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
         val pmSongData = parseParamsFromIntentExtras()
         isOpenRecord = intent.extras?.getBoolean("isOpenRecord") == true
         songsName = intent.extras?.getString("songName")
-        val songNameView = findViewById<ScrollText>(R.id.waterfall_song_name)
+        val songNameView = findViewById<ScrollTextView>(R.id.waterfall_song_name)
         songNameView.text = if (freeStyle) "自由演奏" else pmSongData?.songName
         waterfallView = findViewById(R.id.waterfall_view)
         keyboardView = findViewById(R.id.waterfall_keyboard)

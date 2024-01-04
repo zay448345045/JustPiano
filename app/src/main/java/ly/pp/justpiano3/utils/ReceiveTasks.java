@@ -1248,7 +1248,7 @@ public final class ReceiveTasks {
         innerBundle.putInt("SH", user.getShoes());
         innerBundle.putInt("CL", user.getCl());
         innerBundle.putInt("GR", user.getHand());
-        innerBundle.putInt("CP", user.getCpKind());
+        innerBundle.putInt("CP", user.getCoupleType());
         innerBundle.putString("I", user.getFamilyID());
         bundle.putBundle(String.valueOf(i), innerBundle);
     }

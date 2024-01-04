@@ -14,7 +14,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.local.SkinDownload;
 import ly.pp.justpiano3.utils.ImageLoader;
 import ly.pp.justpiano3.utils.OnlineUtil;
-import ly.pp.justpiano3.view.ScrollText;
+import ly.pp.justpiano3.view.ScrollTextView;
 
 public final class SkinDownloadAdapter extends BaseAdapter {
     public final SkinDownload skinDownload;
@@ -47,14 +47,14 @@ public final class SkinDownloadAdapter extends BaseAdapter {
         if (view == null) {
             view = skinDownload.layoutInflater.inflate(R.layout.skin_view, null);
         }
-        ScrollText scrollText = view.findViewById(R.id.skin_name);
+        ScrollTextView scrollTextView = view.findViewById(R.id.skin_name);
         TextView textView = view.findViewById(R.id.skin_author);
         TextView textView2 = view.findViewById(R.id.download_count);
         TextView textView3 = view.findViewById(R.id.skin_size);
         ImageView imageView = view.findViewById(R.id.skin_image);
         if (i == 0) {
             imageView.setImageResource(R.drawable.icon);
-            scrollText.setText("还原默认皮肤");
+            scrollTextView.setText("还原默认皮肤");
             textView.setText("还原极品钢琴默认皮肤");
             textView3.setText("");
             textView2.setText("");
@@ -69,7 +69,7 @@ public final class SkinDownloadAdapter extends BaseAdapter {
                 int size = jSONObject.getInt("S");
                 imageView.setImageResource(R.drawable.icon);
                 imageLoader.bindBitmap("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/skins/" + skinId + ".jpg", imageView);
-                scrollText.setText(skinName);
+                scrollTextView.setText(skinName);
                 textView.setText("by:" + skinAuthor);
                 textView3.setText(size + "KB");
                 int downloadNum = jSONObject.getInt("D");

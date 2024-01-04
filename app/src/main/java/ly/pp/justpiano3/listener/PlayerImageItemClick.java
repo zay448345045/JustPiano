@@ -80,10 +80,10 @@ public final class PlayerImageItemClick implements OnItemClickListener {
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(olRoomActivity.getResources(), R.drawable._none, olRoomActivity.getTheme()));
         if (!user.getPlayerName().equals(OLBaseActivity.kitiName)) {
-            if (user.getCpKind() <= 0 || user.getCpKind() > 3) {
+            if (user.getCoupleType() <= 0 || user.getCoupleType() > 3) {
                 showCoupleDialogButton.setVisibility(View.GONE);
             } else {
-                showCoupleDialogButton.setText(Consts.coupleType[user.getCpKind() - 1]);
+                showCoupleDialogButton.setText(Consts.coupleType[user.getCoupleType() - 1]);
                 showCoupleDialogButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();
@@ -175,8 +175,8 @@ public final class PlayerImageItemClick implements OnItemClickListener {
             // 屏蔽聊天按钮处理
             ChatUtil.chatBlackButtonHandle(olRoomActivity, user, chatBlackButton, chatBlackCancelButton, popupWindow);
         } else {
-            if (user.getCpKind() > 0 && user.getCpKind() <= 3) {
-                showCoupleDialogButton.setText(Consts.coupleType[user.getCpKind() - 1]);
+            if (user.getCoupleType() > 0 && user.getCoupleType() <= 3) {
+                showCoupleDialogButton.setText(Consts.coupleType[user.getCoupleType() - 1]);
                 showCoupleDialogButton.setOnClickListener(v -> {
                     if (popupWindow.isShowing()) {
                         popupWindow.dismiss();

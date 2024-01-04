@@ -39,14 +39,14 @@ public final class ChangeBlessingClick implements OnClickListener {
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         dialogInterface.dismiss();
-        String valueOf = String.valueOf(textView.getText());
-        if (valueOf.isEmpty() || valueOf.equals("'")) {
+        String text = String.valueOf(textView.getText());
+        if (text.isEmpty() || text.equals("'")) {
             Toast.makeText(olPlayHallRoom, "请输入内容!", Toast.LENGTH_SHORT).show();
-        } else if (valueOf.length() > Consts.MAX_MESSAGE_COUNT) {
+        } else if (text.length() > Consts.MAX_MESSAGE_COUNT) {
             Toast.makeText(olPlayHallRoom, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
         } else if (type == 0 && !userName.isEmpty()) {
             OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
-            builder.setMessage(valueOf);
+            builder.setMessage(text);
             builder.setName(userName);
             OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SEND_MAIL, builder.build());
             Toast.makeText(olPlayHallRoom, "发送成功!", Toast.LENGTH_SHORT).show();
@@ -54,7 +54,7 @@ public final class ChangeBlessingClick implements OnClickListener {
             String format = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, Locale.CHINESE).format(new Date());
             Bundle bundle = new Bundle();
             bundle.putString("F", userName);
-            bundle.putString("M", valueOf);
+            bundle.putString("M", text);
             bundle.putString("T", format);
             bundle.putInt("type", 1);
             olPlayHallRoom.mailList.add(bundle);
@@ -81,8 +81,8 @@ public final class ChangeBlessingClick implements OnClickListener {
         } else if (type == 1) {
             OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
             builder.setType(4);
-            builder.setDeclaration(valueOf);
-            olPlayHallRoom.coupleBlessView.setText("祝语:\n" + valueOf);
+            builder.setDeclaration(text);
+            olPlayHallRoom.coupleBlessView.setText("祝语:\n" + text);
             OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SET_USER_INFO, builder.build());
         }
     }

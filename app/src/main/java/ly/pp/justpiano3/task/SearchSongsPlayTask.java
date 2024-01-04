@@ -25,10 +25,10 @@ public final class SearchSongsPlayTask {
 
     public void execute() {
         ThreadPoolUtil.execute(() -> {
-            if (!searchSongs.get().songID.isEmpty()) {
+            if (!searchSongs.get().songId.isEmpty()) {
                 songBytes = GZIPUtil.ZIPToArray(OkHttpUtil.sendPostRequest("DownloadSong", new FormBody.Builder()
                         .add("version", BuildConfig.VERSION_NAME)
-                        .add("songID", searchSongs.get().songID)
+                        .add("songID", searchSongs.get().songId)
                         .build()));
             }
             searchSongs.get().runOnUiThread(() -> {
@@ -41,7 +41,7 @@ public final class SearchSongsPlayTask {
                 intent.putExtra("head", 1);
                 intent.putExtra("songBytes", songBytes);
                 intent.putExtra("songName", searchSongs.get().songName);
-                intent.putExtra("songID", searchSongs.get().songID);
+                intent.putExtra("songID", searchSongs.get().songId);
                 intent.putExtra("topScore", searchSongs.get().topScore);
                 intent.putExtra("degree", searchSongs.get().degree);
                 searchSongs.get().startActivity(intent);

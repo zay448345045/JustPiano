@@ -37,6 +37,8 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.Scroller;
 
+import androidx.annotation.NonNull;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -50,7 +52,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
     private int mMaxX = Integer.MAX_VALUE;
     private int mDisplayOffset = 0;
     private GestureDetector mGesture;
-    private final Queue<View> mRemovedViewQueue = new LinkedList<View>();
+    private final Queue<View> mRemovedViewQueue = new LinkedList<>();
     private OnItemSelectedListener mOnItemSelected;
     private OnItemClickListener mOnItemClicked;
     private OnItemLongClickListener mOnItemLongClicked;
@@ -58,17 +60,17 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
     private final OnGestureListener mOnGesture = new GestureDetector.SimpleOnGestureListener() {
 
         @Override
-        public boolean onDown(MotionEvent e) {
+        public boolean onDown(@NonNull MotionEvent e) {
             return HorizontalListView.this.onDown();
         }
 
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
             return HorizontalListView.this.onFling(velocityX);
         }
 
         @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        public boolean onScroll(MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
             synchronized (HorizontalListView.this) {
                 mNextX += (int) distanceX;
             }
@@ -77,7 +79,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         }
 
         @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
+        public boolean onSingleTapConfirmed(@NonNull MotionEvent e) {
             for (int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
                 if (isEventWithinView(e, child)) {
@@ -94,7 +96,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         }
 
         @Override
-        public void onLongPress(MotionEvent e) {
+        public void onLongPress(@NonNull MotionEvent e) {
             int childCount = getChildCount();
             for (int i = 0; i < childCount; i++) {
                 View child = getChildAt(i);

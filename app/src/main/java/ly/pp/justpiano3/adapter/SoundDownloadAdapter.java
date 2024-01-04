@@ -14,7 +14,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.local.SoundDownload;
 import ly.pp.justpiano3.utils.ImageLoader;
 import ly.pp.justpiano3.utils.OnlineUtil;
-import ly.pp.justpiano3.view.ScrollText;
+import ly.pp.justpiano3.view.ScrollTextView;
 
 public final class SoundDownloadAdapter extends BaseAdapter {
     public final SoundDownload soundDownload;
@@ -48,14 +48,14 @@ public final class SoundDownloadAdapter extends BaseAdapter {
             view = soundDownload.layoutInflater.inflate(R.layout.skin_view, null);
         }
         view.setBackgroundResource(R.drawable.selector_ol_orange);
-        ScrollText scrollText = view.findViewById(R.id.skin_name);
+        ScrollTextView scrollTextView = view.findViewById(R.id.skin_name);
         TextView textView = view.findViewById(R.id.skin_author);
         TextView textView2 = view.findViewById(R.id.download_count);
         TextView textView3 = view.findViewById(R.id.skin_size);
         ImageView imageView = view.findViewById(R.id.skin_image);
         if (i == 0) {
             imageView.setImageResource(R.drawable.icon);
-            scrollText.setText("还原默认音源");
+            scrollTextView.setText("还原默认音源");
             textView.setText("还原极品钢琴默认音源");
             textView3.setText("");
             textView2.setText("");
@@ -76,7 +76,7 @@ public final class SoundDownloadAdapter extends BaseAdapter {
                 }
                 imageView.setImageResource(R.drawable.icon);
                 imageLoader.bindBitmap("http://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + ".jpg", imageView);
-                scrollText.setText(soundName);
+                scrollTextView.setText(soundName);
                 textView.setText("by:" + soundAuthor);
                 textView3.setText(soundSize + "KB");
                 int downloadNum = jSONObject.getInt("D");

@@ -5,17 +5,17 @@ import android.graphics.Bitmap;
 import ly.pp.justpiano3.view.PlayView;
 
 public final class ShowTouchNotesLevel {
-    public int screenWidth;
-    public int screenHeight;
+    public int width;
+    public int height;
     public int comboNum;
     public PlayView playView;
     public Bitmap levelImage;
 
-    public ShowTouchNotesLevel(int i, PlayView playView, int i2, int i3, int i4) {
-        screenWidth = i3 / 2;
-        screenHeight = i4 / 4;
+    public ShowTouchNotesLevel(int i, PlayView playView, int comboNum, int screenWidth, int screenHeight) {
+        width = screenWidth / 2;
+        height = screenHeight / 4;
         this.playView = playView;
-        comboNum = i2;
+        this.comboNum = comboNum;
         switch (i) {
             case -1 -> levelImage = playView.missImage;
             case 1 -> levelImage = playView.perfectImage;

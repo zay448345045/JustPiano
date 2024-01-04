@@ -20,7 +20,7 @@ import ly.pp.justpiano3.constant.Consts
 import ly.pp.justpiano3.database.entity.Song
 import ly.pp.justpiano3.listener.LocalSongsStartPlayClick
 import ly.pp.justpiano3.thread.SongPlay
-import ly.pp.justpiano3.view.ScrollText
+import ly.pp.justpiano3.view.ScrollTextView
 import java.io.File
 
 class LocalSongsAdapter(
@@ -65,7 +65,7 @@ class LocalSongsAdapter(
         private val leftHandDegreeTextView: TextView
         private val rightHandDegreeRatingBar: RatingBar
         private val leftHandDegreeRatingBar: RatingBar
-        private val songNameScrollText: ScrollText
+        private val songNameScrollTextView: ScrollTextView
 
         init {
             listenImageView = songView.findViewById(R.id.play_image)
@@ -79,7 +79,7 @@ class LocalSongsAdapter(
             leftHandDegreeTextView = songView.findViewById(R.id.nandu_2)
             rightHandDegreeRatingBar = songView.findViewById(R.id.nandu)
             leftHandDegreeRatingBar = songView.findViewById(R.id.leftnandu)
-            songNameScrollText = songView.findViewById(R.id.s_n)
+            songNameScrollTextView = songView.findViewById(R.id.s_n)
         }
 
         fun bindData(position: Int, song: Song) {
@@ -132,10 +132,10 @@ class LocalSongsAdapter(
                     ).show()
                 }
             }
-            songNameScrollText.text = song.name
-            songNameScrollText.movementMethod = ScrollingMovementMethod.getInstance()
-            songNameScrollText.setHorizontallyScrolling(true)
-            songNameScrollText.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
+            songNameScrollTextView.text = song.name
+            songNameScrollTextView.movementMethod = ScrollingMovementMethod.getInstance()
+            songNameScrollTextView.setHorizontallyScrolling(true)
+            songNameScrollTextView.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
             val rightHandScore = song.rightHandHighScore
             val leftHandScore = song.leftHandHighScore
             highScoreTextView.text =

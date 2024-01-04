@@ -60,7 +60,7 @@
                     android:layout_marginBottom="@dimen/dimen_1dp"
                     android:gravity="center">
 
-                    <ly.pp.justpiano3.view.ScrollText
+                    <ly.pp.justpiano3.view.ScrollTextView
                         android:id="@+id/ol_songlist_b"
                         style="@style/EditTextStyle"
                         android:layout_width="match_parent"

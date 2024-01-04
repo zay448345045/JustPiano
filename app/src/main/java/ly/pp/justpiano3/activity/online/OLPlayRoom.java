@@ -51,7 +51,7 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPPopupWindow;
-import ly.pp.justpiano3.view.ScrollText;
+import ly.pp.justpiano3.view.ScrollTextView;
 import protobuf.dto.OnlineChangeRoomHandDTO;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
 import protobuf.dto.OnlineCoupleDTO;
@@ -63,7 +63,7 @@ public final class OLPlayRoom extends OLRoomActivity {
     public OLPlayRoomHandler olPlayRoomHandler = new OLPlayRoomHandler(this);
     public LiveData<PagedList<Song>> pagedListLiveData;
     public String currentPlaySongPath;
-    public ScrollText songNameScrollText;
+    public ScrollTextView songNameScrollTextView;
     public Button settingButton;
     public Button playButton;
     public int currentHand;
@@ -288,7 +288,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         } else if (id == R.id.add_favor) {
             if (!TextUtils.isEmpty(currentPlaySongPath)) {
                 if (songDao.updateFavoriteSong(currentPlaySongPath, 1) > 0) {
-                    Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameScrollText.getText()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameScrollTextView.getText()), Toast.LENGTH_SHORT).show();
                 }
             }
             moreSongsPopupWindow.dismiss();
@@ -391,7 +391,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             if (playSongsModePopupWindow != null) {
                 int[] iArr = new int[2];
                 playSongsModeButton.getLocationOnScreen(iArr);
-                playSongsModePopupWindow.showAtLocation(songNameScrollText, Gravity.TOP | Gravity.START, iArr[0], (int) (iArr[1] * 0.43f));
+                playSongsModePopupWindow.showAtLocation(songNameScrollTextView, Gravity.TOP | Gravity.START, iArr[0], (int) (iArr[1] * 0.43f));
             }
         } else if (id == R.id.shengdiao) {
             if (positionStatus.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
@@ -441,14 +441,14 @@ public final class OLPlayRoom extends OLRoomActivity {
         DataSource.Factory<Integer, Song> allSongs = songDao.getAllSongsWithDataSource();
         pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
         pagedListLiveData.observe(this, olRoomSongsAdapter::submitList);
-        songNameScrollText = findViewById(R.id.ol_songlist_b);
-        songNameScrollText.setSingleLine(true);
-        songNameScrollText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        songNameScrollText.setMarqueeRepeatLimit(-1);
-        songNameScrollText.setSelected(true);
-        songNameScrollText.setFocusable(true);
-        songNameScrollText.setFocusableInTouchMode(true);
-        songNameScrollText.setOnClickListener(this);
+        songNameScrollTextView = findViewById(R.id.ol_songlist_b);
+        songNameScrollTextView.setSingleLine(true);
+        songNameScrollTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        songNameScrollTextView.setMarqueeRepeatLimit(-1);
+        songNameScrollTextView.setSelected(true);
+        songNameScrollTextView.setFocusable(true);
+        songNameScrollTextView.setFocusableInTouchMode(true);
+        songNameScrollTextView.setOnClickListener(this);
         PopupWindow moreSongsPopupWindow = new JPPopupWindow(this);
         View roomSongRandView = LayoutInflater.from(this).inflate(R.layout.ol_room_song_rand, null);
         moreSongsPopupWindow.setContentView(roomSongRandView);

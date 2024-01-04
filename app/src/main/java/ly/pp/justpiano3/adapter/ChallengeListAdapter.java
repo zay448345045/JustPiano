@@ -46,22 +46,19 @@ public final class ChallengeListAdapter extends BaseAdapter {
         if (name == null) {
             return view;
         }
-        String score = list.get(i).get("S");
-        String time = list.get(i).get("T");
-        String position = list.get(i).get("P");
         TextView positionText = view.findViewById(R.id.ol_challenge_position);
         TextView nameText = view.findViewById(R.id.ol_challenge_user);
         TextView scoreText = view.findViewById(R.id.ol_challenge_score);
         TextView timeText = view.findViewById(R.id.ol_challenge_time);
         nameText.setText(name);
-        scoreText.setText(score);
-        timeText.setText(time);
-        positionText.setText(position);
-        if (i >= 0 && i < Consts.challengePositionColor.length) {
-            nameText.setTextColor(Consts.challengePositionColor[i]);
-            scoreText.setTextColor(Consts.challengePositionColor[i]);
-            timeText.setTextColor(Consts.challengePositionColor[i]);
-            positionText.setTextColor(Consts.challengePositionColor[i]);
+        scoreText.setText(list.get(i).get("S"));
+        timeText.setText(list.get(i).get("T"));
+        positionText.setText(list.get(i).get("P"));
+        if (i >= 0 && i < Consts.positionColor.length) {
+            nameText.setTextColor(Consts.positionColor[i]);
+            scoreText.setTextColor(Consts.positionColor[i]);
+            timeText.setTextColor(Consts.positionColor[i]);
+            positionText.setTextColor(Consts.positionColor[i]);
         } else {
             nameText.setTextColor(Color.WHITE);
             scoreText.setTextColor(Color.WHITE);

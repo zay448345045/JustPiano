@@ -53,7 +53,7 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
-import ly.pp.justpiano3.view.FamilyListView;
+import ly.pp.justpiano3.view.PullUpdateListView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineDailyDTO;
@@ -92,7 +92,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public List<Bundle> friendList = new ArrayList<>();
     public ListView friendListView;
     public List<Map<String, Object>> familyList = new ArrayList<>();
-    public FamilyListView familyListView;
+    public PullUpdateListView pullUpdateListView;
     public int familyPageNum;
     public int cp;
     public boolean pageIsEnd;
@@ -184,7 +184,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         listView.setAdapter(new FamilyAdapter(list, layoutinflater, this));
     }
 
-    public void updateFamilyListShow(FamilyAdapter familyAdapter, FamilyListView listView, List<Map<String, Object>> list) {
+    public void updateFamilyListShow(FamilyAdapter familyAdapter, PullUpdateListView listView, List<Map<String, Object>> list) {
         familyAdapter.upDateList(list);
         familyAdapter.notifyDataSetChanged();
         listView.loadComplete();
@@ -450,9 +450,9 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         hallList.clear();
         friendListView = findViewById(R.id.ol_friend_list);
         friendListView.setCacheColorHint(Color.TRANSPARENT);
-        familyListView = findViewById(R.id.ol_family_list);
-        familyListView.setCacheColorHint(Color.TRANSPARENT);
-        familyListView.setLoadListener(() -> ThreadPoolUtil.execute(() -> {
+        pullUpdateListView = findViewById(R.id.ol_family_list);
+        pullUpdateListView.setCacheColorHint(Color.TRANSPARENT);
+        pullUpdateListView.setLoadListener(() -> ThreadPoolUtil.execute(() -> {
             familyPageNum++;
             OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
             builder.setType(2);
@@ -576,7 +576,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 }
                 familyList = (List<Map<String, Object>>) getIntent().getSerializableExtra("familyList");
                 tabHost.setCurrentTab(4);
-                bindAdapter(familyListView, familyList);
+                bindAdapter(pullUpdateListView, familyList);
                 try {
                     Thread.sleep(320);
                 } catch (InterruptedException e) {

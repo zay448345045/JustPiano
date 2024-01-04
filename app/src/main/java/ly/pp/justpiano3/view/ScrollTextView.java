@@ -5,17 +5,17 @@ import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
-public class ScrollText extends AppCompatTextView {
+public class ScrollTextView extends AppCompatTextView {
 
-    public ScrollText(Context context) {
+    public ScrollTextView(Context context) {
         super(context);
     }
 
-    public ScrollText(Context context, AttributeSet attributeSet) {
+    public ScrollTextView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    public ScrollText(Context context, AttributeSet attributeSet, int i) {
+    public ScrollTextView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
     }
 

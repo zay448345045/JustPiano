@@ -18,11 +18,11 @@ public final class SendMessageClick implements OnClickListener {
     private final String userName;
     private final String account;
 
-    public SendMessageClick(PopUserInfo popUserInfo, TextView textView, String str, String str2) {
+    public SendMessageClick(PopUserInfo popUserInfo, TextView textView, String userName, String account) {
         this.popUserInfo = popUserInfo;
         this.textView = textView;
-        userName = str;
-        account = str2;
+        this.userName = userName;
+        this.account = account;
     }
 
     @Override

@@ -18,16 +18,15 @@ public final class SkinDownloadClick implements OnClickListener {
     private final String url;
     private final String name;
 
-    public SkinDownloadClick(SkinDownload skinDownload, int i, String str, String str2) {
+    public SkinDownloadClick(SkinDownload skinDownload, int type, String url, String name) {
         this.skinDownload = skinDownload;
-        type = i;
-        url = str;
-        name = str2;
+        this.type = type;
+        this.url = url;
+        this.name = name;
     }
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        int i2 = 0;
         dialogInterface.dismiss();
         switch (type) {
             case 0 -> ThreadPoolUtil.execute(() -> skinDownload.downloadSkin(url, name));

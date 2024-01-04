@@ -31,7 +31,7 @@ public final class OLMelodySongsPlayTask extends AsyncTask<Void, Void, Void> {
         intent.putExtra("head", 1);
         intent.putExtra("songBytes", OLMelodySelect.songBytes);
         intent.putExtra("songName", olMelodySelect.get().songName);
-        intent.putExtra("songID", OLMelodySelect.songID);
+        intent.putExtra("songID", OLMelodySelect.songId);
         intent.putExtra("topScore", olMelodySelect.get().topScore);
         intent.putExtra("degree", olMelodySelect.get().degree);
         olMelodySelect.get().startActivity(intent);
@@ -42,7 +42,7 @@ public final class OLMelodySongsPlayTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... v) {
         OLMelodySelect.songBytes = GZIPUtil.ZIPToArray(OkHttpUtil.sendPostRequest("DownloadSong", new FormBody.Builder()
                 .add("version", BuildConfig.VERSION_NAME)
-                .add("songID", OLMelodySelect.songID)
+                .add("songID", OLMelodySelect.songId)
                 .build()));
         return null;
     }

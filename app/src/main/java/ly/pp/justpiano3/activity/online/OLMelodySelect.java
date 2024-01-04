@@ -46,7 +46,7 @@ import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class OLMelodySelect extends BaseActivity implements Callback, OnClickListener {
     public static byte[] songBytes;
-    public static String songID;
+    public static String songId;
     public double degree;
     public int topScore;
     private Button pageButton;

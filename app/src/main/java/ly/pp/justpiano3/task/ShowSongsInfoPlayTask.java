@@ -25,10 +25,10 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... v) {
-        if (!showSongsInfo.get().songID.isEmpty()) {
+        if (!showSongsInfo.get().songId.isEmpty()) {
             songBytes = GZIPUtil.ZIPToArray(OkHttpUtil.sendPostRequest("DownloadSong", new FormBody.Builder()
                     .add("version", BuildConfig.VERSION_NAME)
-                    .add("songID", showSongsInfo.get().songID)
+                    .add("songID", showSongsInfo.get().songId)
                     .build()));
         }
         return null;
@@ -45,7 +45,7 @@ public final class ShowSongsInfoPlayTask extends AsyncTask<Void, Void, Void> {
         intent.putExtra("head", 1);
         intent.putExtra("songBytes", songBytes);
         intent.putExtra("songName", showSongsInfo.get().songName);
-        intent.putExtra("songID", showSongsInfo.get().songID);
+        intent.putExtra("songID", showSongsInfo.get().songId);
         intent.putExtra("topScore", showSongsInfo.get().score);
         intent.putExtra("degree", showSongsInfo.get().degree);
         showSongsInfo.get().startActivity(intent);

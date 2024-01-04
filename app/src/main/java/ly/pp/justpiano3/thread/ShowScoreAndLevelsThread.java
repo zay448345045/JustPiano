@@ -11,10 +11,8 @@ public final class ShowScoreAndLevelsThread extends Thread {
     private final List<ShowTouchNotesLevel> showTouchNotesLevelList;
     private final PianoPlay pianoPlay;
 
-    public ShowScoreAndLevelsThread(List<ShowTouchNotesLevel> arrayList, PianoPlay pianoPlay) {
-        showTouchNotesLevelList = arrayList;
-        levelScore = 0;
-        comboScore = 0;
+    public ShowScoreAndLevelsThread(List<ShowTouchNotesLevel> showTouchNotesLevelList, PianoPlay pianoPlay) {
+        this.showTouchNotesLevelList = showTouchNotesLevelList;
         this.pianoPlay = pianoPlay;
     }
 
@@ -42,7 +40,7 @@ public final class ShowScoreAndLevelsThread extends Thread {
         while (pianoPlay.isPlayingStart) {
             try {
                 for (ShowTouchNotesLevel showTouchNotesLevel : showTouchNotesLevelList) {
-                    showTouchNotesLevel.screenHeight -= 10;
+                    showTouchNotesLevel.height -= 10;
                 }
                 ShowScoreAndLevelsThread.sleep(60);
             } catch (Exception e) {

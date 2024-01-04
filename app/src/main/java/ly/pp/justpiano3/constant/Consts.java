@@ -49,7 +49,7 @@ public interface Consts {
 
     int[] teamRoomModeResource = new int[]{R.drawable.back_puased, R.drawable.back_puased, R.drawable.v1_name, R.drawable.v1_name, R.drawable.v6_name, R.drawable.v6_name};
 
-    int[] challengePositionColor = new int[]{0xFFFFD700, 0xFFC0C0C0, 0xFFD2B48C};
+    int[] positionColor = new int[]{0xFFFFD700, 0xFFC0C0C0, 0xFFD2B48C};
 
     /**
      * 私信等，限制字数
@@ -61,7 +61,7 @@ public interface Consts {
      */
     int MAX_CHAT_SAVE_COUNT = 100;
 
-    DiffUtil.ItemCallback<Song> SONG_DIFF_UTIL = new DiffUtil.ItemCallback<Song>() {
+    DiffUtil.ItemCallback<Song> SONG_DIFF_UTIL = new DiffUtil.ItemCallback<>() {
         @Override
         public boolean areItemsTheSame(@NonNull Song oldItem, @NonNull Song newItem) {
             return Objects.equals(oldItem.getId(), newItem.getId());

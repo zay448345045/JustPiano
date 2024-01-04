@@ -48,7 +48,7 @@ public final class OLPlayRoomHandler extends Handler {
                         String string = simpleSongInfo[0];
                         String str2 = simpleSongInfo[1];
                         if (string != null) {
-                            olPlayRoom.songNameScrollText.setText(string + "[难度:" + str2 + "]");
+                            olPlayRoom.songNameScrollTextView.setText(string + "[难度:" + str2 + "]");
                             if (olPlayRoom.getMode() == RoomModeEnum.NORMAL.getCode()) {
                                 if (tune > 0) {
                                     olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + "+" + tune);
@@ -90,7 +90,7 @@ public final class OLPlayRoomHandler extends Handler {
                             } else {
                                 olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().subSequence(0, 1) + "0" + tune);
                             }
-                            olPlayRoom.songNameScrollText.setText(songName + "[难度:" + songRightHandDegree + "]");
+                            olPlayRoom.songNameScrollTextView.setText(songName + "[难度:" + songRightHandDegree + "]");
                             SongPlay.startPlay(olPlayRoom, songFilePath, tune);
                         }
                     }

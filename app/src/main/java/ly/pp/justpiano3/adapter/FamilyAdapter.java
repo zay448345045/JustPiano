@@ -120,11 +120,11 @@ public final class FamilyAdapter extends BaseAdapter {
                 }
             });
         }
-        if (i >= 0 && i < Consts.challengePositionColor.length) {
-            nameText.setTextColor(Consts.challengePositionColor[i]);
-            contributionText.setTextColor(Consts.challengePositionColor[i]);
-            countText.setTextColor(Consts.challengePositionColor[i]);
-            positionText.setTextColor(Consts.challengePositionColor[i]);
+        if (i >= 0 && i < Consts.positionColor.length) {
+            nameText.setTextColor(Consts.positionColor[i]);
+            contributionText.setTextColor(Consts.positionColor[i]);
+            countText.setTextColor(Consts.positionColor[i]);
+            positionText.setTextColor(Consts.positionColor[i]);
         } else {
             nameText.setTextColor(Color.WHITE);
             contributionText.setTextColor(Color.WHITE);

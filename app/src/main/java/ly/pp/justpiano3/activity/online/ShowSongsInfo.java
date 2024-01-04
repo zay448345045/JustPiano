@@ -30,7 +30,7 @@ public final class ShowSongsInfo extends BaseActivity implements OnClickListener
     public LayoutInflater layoutInflater;
     public String keywords = "";
     public String songName = "";
-    public String songID;
+    public String songId;
     public ListView songsListView;
     public JPProgressBar jpprogressBar;
     public double degree;
