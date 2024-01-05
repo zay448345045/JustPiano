@@ -16,22 +16,14 @@ public class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImageLoadUtil.setBackground(this);
-        if (GlobalSetting.getAllFullScreenShow()) {
-            WindowUtil.fullScreenHandle(getWindow());
-        } else {
-            WindowUtil.exitFullScreenHandle(getWindow());
-        }
+        fullScreenHandle();
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            if (GlobalSetting.getAllFullScreenShow()) {
-                WindowUtil.fullScreenHandle(getWindow());
-            } else {
-                WindowUtil.exitFullScreenHandle(getWindow());
-            }
+            fullScreenHandle();
         }
     }
 
@@ -41,5 +33,13 @@ public class BaseActivity extends FragmentActivity {
         override.fontScale = 1.0f;
         Context context = newBase.createConfigurationContext(override);
         super.attachBaseContext(context);
+    }
+
+    protected void fullScreenHandle() {
+        if (GlobalSetting.getAllFullScreenShow()) {
+            WindowUtil.fullScreenHandle(getWindow());
+        } else {
+            WindowUtil.exitFullScreenHandle(getWindow());
+        }
     }
 }

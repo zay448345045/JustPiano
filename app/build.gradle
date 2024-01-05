@@ -138,7 +138,6 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.6.1'
     // native-crash 用于上报C++异常闪退日志
     implementation 'io.github.BAByte:native-crash:1.0.6@aar'
-    implementation 'net.margaritov.preference.colorpicker.ColorPickerPreference:ColorPickerPreference:1.0.0'
 }
 
 protobuf {
