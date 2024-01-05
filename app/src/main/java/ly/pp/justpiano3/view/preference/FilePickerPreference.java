@@ -85,7 +85,7 @@ public final class FilePickerPreference extends Preference {
         super.onClick();
         if (activity != null) {
             if (folderPicker) {
-                FilePickerUtil.openFolderPicker(getKey(), ((SettingsActivity) activity).filePickerLauncher);
+                FilePickerUtil.openFolderPicker(getKey(), ((SettingsActivity) activity).folderPickerLauncher);
             } else {
                 FilePickerUtil.openFilePicker(activity, false, getKey(), ((SettingsActivity) activity).filePickerLauncher);
             }

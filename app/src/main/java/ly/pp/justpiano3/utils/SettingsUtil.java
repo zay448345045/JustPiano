@@ -13,6 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import java.util.HashMap;
 import java.util.Map;
 
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.FilePickerPreference;
 
@@ -40,6 +41,7 @@ public final class SettingsUtil {
                 filePickerPreference.setDefaultButtonClickListener(view -> {
                     filePickerPreference.persist(defaultSummary, "");
                     ImageLoadUtil.setBackground(preferenceFragment.getActivity(), "");
+                    GlobalSetting.loadSettings(preferenceFragment.getActivity(), false);
                 });
             }
             filePickerPreferenceMap.put(preference.getKey(), Pair.create(preference, predicate));

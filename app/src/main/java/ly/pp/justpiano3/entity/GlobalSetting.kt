@@ -313,7 +313,10 @@ object GlobalSetting {
      * 从sharedPreferences获取设置
      */
     @JvmStatic
-    fun loadSettings(context: Context, online: Boolean) {
+    fun loadSettings(context: Context?, online: Boolean) {
+        if (context == null) {
+            return
+        }
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         allFullScreenShow = sharedPreferences.getBoolean("all_full_screen_show", true)
         backgroundPic = sharedPreferences.getString("background_pic", "")!!

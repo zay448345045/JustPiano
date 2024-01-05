@@ -69,34 +69,17 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
                 if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
                     return;
                 }
-                FileUtil.UriInfo uriInfo = Objects.equals(Intent.ACTION_OPEN_DOCUMENT_TREE, result.getData().getAction())
-                        ? FileUtil.getFolderUriInfo(this, result.getData().getData())
-                        : FileUtil.getUriInfo(this, result.getData().getData());
-                if (!SettingsUtil.checkFilePickerPreferenceSelectedUri(FilePickerUtil.extra, uriInfo)) {
+                FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(this, result.getData().getData());
+                filePickerLauncherHandle(uriInfo);
+            });
+
+    public final ActivityResultLauncher<Intent> folderPickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
                     return;
                 }
-                try {
-                    getContentResolver().takePersistableUriPermission(Objects.requireNonNull(uriInfo.getUri()),
-                            Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "获取文件访问权限出错", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Preference preference = SettingsUtil.getFilePickerPreference(FilePickerUtil.extra);
-                if (preference instanceof FilePickerPreference filePickerPreference) {
-                    filePickerPreference.persist(uriInfo.getDisplayName(), uriInfo.getUri().toString());
-                } else if (preference instanceof SkinListPreference skinListPreference) {
-                    skinListPreference.skinKey = uriInfo.getUri().toString();
-                    skinListPreference.skinFile = uriInfo.getUri();
-                    new SkinListPreferenceTask(skinListPreference).execute(uriInfo.getUri().toString());
-                } else if (preference instanceof SoundListPreference soundListPreference) {
-                    soundListPreference.soundKey = uriInfo.getUri().toString();
-                    new SoundListPreferenceTask(soundListPreference).execute(uriInfo.getUri().toString());
-                }
-                if (preference != null && Objects.equals(preference.getKey(), "background_pic")) {
-                    ImageLoadUtil.setBackground(this, uriInfo.getUri().toString());
-                }
+                FileUtil.UriInfo uriInfo = FileUtil.getFolderUriInfo(this, result.getData().getData());
+                filePickerLauncherHandle(uriInfo);
             });
 
     @Override
@@ -124,5 +107,34 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onMidiDisconnect(MidiDeviceInfo midiDeviceInfo) {
         SettingsUtil.refreshMidiDevicePreference(settingsFragment);
+    }
+
+    private void filePickerLauncherHandle(FileUtil.UriInfo uriInfo) {
+        if (!SettingsUtil.checkFilePickerPreferenceSelectedUri(FilePickerUtil.extra, uriInfo)) {
+            return;
+        }
+        try {
+            getContentResolver().takePersistableUriPermission(Objects.requireNonNull(uriInfo.getUri()),
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "获取文件访问权限出错", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Preference preference = SettingsUtil.getFilePickerPreference(FilePickerUtil.extra);
+        if (preference instanceof FilePickerPreference filePickerPreference) {
+            filePickerPreference.persist(uriInfo.getDisplayName(), uriInfo.getUri().toString());
+            if (Objects.equals(preference.getKey(), "background_pic")) {
+                ImageLoadUtil.setBackground(this, uriInfo.getUri().toString());
+                GlobalSetting.loadSettings(this, false);
+            }
+        } else if (preference instanceof SkinListPreference skinListPreference) {
+            skinListPreference.skinKey = uriInfo.getUri().toString();
+            skinListPreference.skinFile = uriInfo.getUri();
+            new SkinListPreferenceTask(skinListPreference).execute(uriInfo.getUri().toString());
+        } else if (preference instanceof SoundListPreference soundListPreference) {
+            soundListPreference.soundKey = uriInfo.getUri().toString();
+            new SoundListPreferenceTask(soundListPreference).execute(uriInfo.getUri().toString());
+        }
     }
 }
