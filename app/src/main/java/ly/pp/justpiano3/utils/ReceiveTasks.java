@@ -428,7 +428,7 @@ public final class ReceiveTasks {
                         olPlayHallRoom.olPlayHallRoomHandler.handleMessage(message);
                     }
                 }
-                case 5, 6, 7, 10 -> {
+                case 5, 6, 7, 10, 11 -> {
                     if (topActivity instanceof OLFamily olFamily) {
                         bundle.putString("I", family.getFamilyDialog().getMessage());
                         message.setData(bundle);

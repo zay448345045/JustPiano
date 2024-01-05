@@ -273,11 +273,11 @@ public final class MainGameAdapter extends BaseAdapter {
                     TextView mailMessageTextView = view.findViewById(R.id.ol_mail_msg);
                     switch (Objects.requireNonNull(mailMessage)) {
                         case "" -> {
-                            mailMessageTextView.setText(from + " 请求加你为好友");
+                            mailMessageTextView.setText(from + " 请求加您为好友");
                             sendButton.setText("同意");
                         }
                         case "'" -> {
-                            mailMessageTextView.setText(from + " 请求与你解除搭档关系");
+                            mailMessageTextView.setText(from + " 请求与您解除搭档关系");
                             sendButton.setText("解除");
                         }
                         case "''" -> {

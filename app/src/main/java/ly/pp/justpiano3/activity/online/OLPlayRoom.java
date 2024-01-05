@@ -313,11 +313,13 @@ public final class OLPlayRoom extends OLRoomActivity {
             DataSource.Factory<Integer, Song> songByNameKeywords = songDao.getSongsByNameKeywordsWithDataSource(keywords);
             pagedListLiveData.removeObservers(this);
             pagedListLiveData = songDao.getPageListByDatasourceFactory(songByNameKeywords);
-            pagedListLiveData.observe(this, (pagedList) -> {
-                Toast.makeText(this, "搜索到" +
-                        (pagedList.getLoadedCount() >= SongDao.PAGE_SIZE ? SongDao.PAGE_SIZE + "+" : String.valueOf(pagedList.getLoadedCount()))
-                        + "首与" + keywords + " 有关的曲目!", Toast.LENGTH_SHORT).show();
+            pagedListLiveData.observe(this, pagedList -> {
                 ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter()))).submitList(pagedList);
+                if (pagedList.getLoadedCount() > 0) {
+                    Toast.makeText(this, "搜索到" +
+                            (pagedList.getLoadedCount() >= SongDao.PAGE_SIZE ? SongDao.PAGE_SIZE + "+" : String.valueOf(pagedList.getLoadedCount()))
+                            + "首与" + keywords + " 有关的曲目!", Toast.LENGTH_SHORT).show();
+                }
             });
         } else if (id == R.id.ol_soundstop) {
             SongPlay.stopPlay();

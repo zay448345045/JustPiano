@@ -83,30 +83,30 @@
                 android:id="@+id/normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_4dp"
                 android:checked="true"
-                android:text="@string/create_room_n"
-                android:layout_marginEnd="@dimen/dimen_4dp"/>
+                android:text="@string/create_room_n" />
 
             <RadioButton
                 android:id="@+id/group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/create_room_g"
-                android:layout_marginEnd="@dimen/dimen_4dp"/>
+                android:layout_marginEnd="@dimen/dimen_4dp"
+                android:text="@string/create_room_g" />
 
             <RadioButton
                 android:id="@+id/keyboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/create_room_k"
-                android:layout_marginEnd="@dimen/dimen_4dp"/>
+                android:layout_marginEnd="@dimen/dimen_4dp"
+                android:text="@string/create_room_k" />
 
             <RadioButton
                 android:id="@+id/couple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/create_room_c"
-                android:layout_marginEnd="@dimen/dimen_4dp"/>
+                android:layout_marginEnd="@dimen/dimen_4dp"
+                android:text="@string/create_room_c" />
         </RadioGroup>
     </LinearLayout>
 </LinearLayout>

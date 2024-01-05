@@ -369,7 +369,10 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             switch (userPosition) {
                 case VICE_LEADER -> positionChangeButton.setText("撤职副族长");
                 case MEMBER -> positionChangeButton.setText("晋升副族长");
-                default -> positionChangeButton.setVisibility(View.GONE);
+                default -> {
+                    leaderChangeButton.setVisibility(View.GONE);
+                    positionChangeButton.setVisibility(View.GONE);
+                }
             }
             positionChangeButton.setOnClickListener(this);
         }

@@ -20,7 +20,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:text="@string/ol_family_ma_up_ti"
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
@@ -32,7 +31,6 @@
                 android:layout_gravity="top"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:ems="30"
-
                 android:gravity="top"
                 android:text="@string/ol_family_ma_up_info"
                 android:textColor="@color/white1"
@@ -45,7 +43,6 @@
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/selector_ol_button"
                 android:enabled="false"
-
                 android:text="@string/ol_family_ma_up"
                 android:textColor="@color/white1"
                 android:textSize="18sp" />
@@ -54,7 +51,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10dp"
-
                 android:text="@string/family_declaration"
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
@@ -65,7 +61,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/selector_ol_button"
-
                 android:text="@string/ol_family_ma_de"
                 android:textColor="@color/white1"
                 android:textSize="18sp" />
@@ -74,7 +69,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10dp"
-
                 android:text="@string/ol_family_ma_ex"
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
@@ -85,7 +79,6 @@
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:checked="false"
                 android:enabled="false"
-
                 android:text="@string/ol_family_ma_ex_info"
                 android:textColor="@color/white1"
                 android:textSize="15sp" />
@@ -99,12 +92,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10dp"
-
                     android:maxEms="30"
                     android:text="@string/ol_family_ma_ex_song"
                     android:textColor="@color/white1"
-                    android:textSize="16sp"
-                     />
+                    android:textSize="16sp" />
 
                 <AutoCompleteTextView
                     style="@style/AutoCompleteStyle"
@@ -128,7 +119,6 @@
                     android:textColor="#ffffffff"
                     android:textColorHint="#90ffffff"
                     android:textSize="14sp" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -141,8 +131,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/ol_family_ma_ex_target"
                     android:textColor="@color/white1"
-                    android:textSize="16sp"
-                     />
+                    android:textSize="16sp" />
 
                 <EditText
                     android:layout_width="match_parent"
@@ -152,13 +141,11 @@
                     android:enabled="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-
                     android:gravity="bottom"
                     android:textColor="@color/white1"
                     android:textSize="16sp">
 
                     <requestFocus />
-
                 </EditText>
             </LinearLayout>
 
@@ -169,7 +156,6 @@
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/selector_ol_button"
                 android:enabled="false"
-
                 android:text="@string/ol_family_ma_ex_c"
                 android:textColor="@color/white1"
                 android:textSize="18sp" />
@@ -178,7 +164,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10dp"
-
                 android:text="@string/ol_family_ma_logo"
                 android:textColor="@color/white1"
                 android:textSize="24sp" />
@@ -189,7 +174,6 @@
                 android:layout_gravity="top"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:ems="30"
-
                 android:gravity="top"
                 android:text="@string/ol_family_ma_logo_info"
                 android:textColor="@color/white1"
@@ -203,13 +187,9 @@
                 android:layout_marginBottom="@dimen/dimen_80dp"
                 android:background="@drawable/selector_ol_button"
                 android:enabled="false"
-
                 android:text="@string/ol_family_ma_logo_c"
                 android:textColor="@color/white1"
                 android:textSize="18sp" />
-
         </LinearLayout>
-
     </ScrollView>
-
 </LinearLayout>

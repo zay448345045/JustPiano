@@ -315,7 +315,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                     e.printStackTrace();
                 }
             });
-            buildAndShowDialog.setSecondButton("拒绝", (dialog, which) -> dialog.dismiss());
+            buildAndShowDialog.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
             buildAndShowDialog.buildAndShowDialog();
         }
     }
