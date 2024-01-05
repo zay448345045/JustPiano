@@ -1,9 +1,12 @@
 package ly.pp.justpiano3.service;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
 import android.os.Binder;
@@ -128,11 +131,19 @@ public final class ConnectionService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
-            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle(NOTIFY_CONTENT_TITLE)
                     .setContentText(NOTIFY_CONTENT_TEXT)
-                    .setSmallIcon(R.drawable.icon)
-                    .build();
+                    .setSmallIcon(R.drawable.icon);
+            Activity topActivity = JPStack.top();
+            if (topActivity != null) {
+                Intent targetIntent = new Intent(this, topActivity.getClass());
+                targetIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, targetIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+                notificationBuilder.setContentIntent(pendingIntent);
+            }
+            Notification notification = notificationBuilder.build();
             int type = 0;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 type = ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
@@ -276,6 +287,8 @@ public final class ConnectionService extends Service {
         try {
             stopForeground(true);
             stopSelf();
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(NOTIFICATION_ID);
         } catch (Exception e) {
             e.printStackTrace();
         }
