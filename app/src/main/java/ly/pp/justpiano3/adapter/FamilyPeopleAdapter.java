@@ -103,10 +103,11 @@ public final class FamilyPeopleAdapter extends BaseAdapter {
 
         final LinearLayout linearLayout = view.findViewById(R.id.ol_family_people);
         linearLayout.setOnClickListener(v -> {
-            PopupWindow popupWindow = olFamily.loadInfoPopupWindow(name, userPosition);
+            PopupWindow userInfoPopupWindow = olFamily.loadUserInfoPopupWindow(name, userPosition);
             int[] iArr = new int[2];
             linearLayout.getLocationOnScreen(iArr);
-            popupWindow.showAtLocation(linearLayout, Gravity.TOP | Gravity.START, iArr[0] + linearLayout.getWidth(), iArr[1]);
+            userInfoPopupWindow.showAtLocation(linearLayout, Gravity.TOP | Gravity.START,
+                    iArr[0] + linearLayout.getWidth() / 2, iArr[1]);
         });
         return view;
     }

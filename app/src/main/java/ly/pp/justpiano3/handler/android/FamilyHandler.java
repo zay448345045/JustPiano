@@ -34,7 +34,7 @@ public final class FamilyHandler extends Handler {
         try {
             switch (message.what) {
                 case 1 -> post(() -> {
-                    family.peopleList.clear();
+                    family.userList.clear();
                     Bundle bundle = message.getData();
                     int size = bundle.size() - 6;
                     if (size == 0) {
@@ -46,7 +46,7 @@ public final class FamilyHandler extends Handler {
                         hashMap.put("P", "");
                         hashMap.put("S", "");
                         hashMap.put("D", "");
-                        family.peopleList.add(hashMap);
+                        family.userList.add(hashMap);
                     } else {
                         for (int i = 0; i < size; i++) {
                             HashMap<String, String> hashMap = new HashMap<>();
@@ -57,20 +57,20 @@ public final class FamilyHandler extends Handler {
                             hashMap.put("P", bundle.getBundle(String.valueOf(i)).getString("P"));
                             hashMap.put("S", bundle.getBundle(String.valueOf(i)).getString("S"));
                             hashMap.put("D", bundle.getBundle(String.valueOf(i)).getString("D"));
-                            family.peopleList.add(hashMap);
+                            family.userList.add(hashMap);
                         }
                     }
-                    family.bindFamilyPeopleListViewAdapter(family.peopleListView, family.peopleList);
+                    family.bindFamilyPeopleListViewAdapter(family.userListView, family.userList);
                     family.declarationTextView.setText("家族宣言:\n" + bundle.getString("D"));
                     family.infoTextView.setText("家族名称:" + bundle.getString("N")
                             + "\n家族成立日期:" + bundle.getString("T")
                             + "\n族长:" + bundle.getString("Z")
                             + "\n家族总贡献:" + bundle.getString("C"));
                     switch (Objects.requireNonNull(bundle.getString("P"))) {
-                        case "族长" -> family.position = FamilyPositionEnum.LEADER;
-                        case "副族长" -> family.position = FamilyPositionEnum.VICE_LEADER;
-                        case "族员" -> family.position = FamilyPositionEnum.MEMBER;
-                        default -> family.position = FamilyPositionEnum.NOT_IN_FAMILY;
+                        case "族长" -> family.familyPositionEnum = FamilyPositionEnum.LEADER;
+                        case "副族长" -> family.familyPositionEnum = FamilyPositionEnum.VICE_LEADER;
+                        case "族员" -> family.familyPositionEnum = FamilyPositionEnum.MEMBER;
+                        default -> family.familyPositionEnum = FamilyPositionEnum.NOT_IN_FAMILY;
                     }
                     family.positionHandle();
                 });
@@ -78,8 +78,8 @@ public final class FamilyHandler extends Handler {
                     family.jpprogressBar.dismiss();
                     String info = message.getData().getString("I");
                     Toast.makeText(family, info, Toast.LENGTH_SHORT).show();
-                    if (family.infoWindow != null && family.infoWindow.isShowing()) {
-                        family.infoWindow.dismiss();
+                    if (family.userInfoPopupWindow != null && family.userInfoPopupWindow.isShowing()) {
+                        family.userInfoPopupWindow.dismiss();
                     }
                     OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                     if (info.equals("您所在的家族已解散")) {

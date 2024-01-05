@@ -46,12 +46,12 @@ import protobuf.dto.OnlineUserInfoDialogDTO;
 
 public final class OLFamily extends OLBaseActivity implements OnClickListener {
     public JPProgressBar jpprogressBar;
-    public FamilyPositionEnum position;
+    public FamilyPositionEnum familyPositionEnum;
     public TextView declarationTextView;
     public TextView infoTextView;
     public FamilyHandler familyHandler;
     public String familyID;
-    private String peopleNow;  // 目前选择人的名字
+    private String currentUserName;  // 目前选择人的名字
     private List<Map<String, Object>> familyList;
     private int familyPageNum;
     private String myFamilyPosition;
@@ -60,17 +60,17 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
     private String myFamilyName;
     private int listPosition;
     private byte[] myFamilyPicArray;
-    public List<Map<String, String>> peopleList = new ArrayList<>();
-    public ListView peopleListView;
-    public PopupWindow infoWindow;
+    public List<Map<String, String>> userList = new ArrayList<>();
+    public ListView userListView;
+    public PopupWindow userInfoPopupWindow;
     private LayoutInflater layoutinflater;
-    private Button manageFamily;
+    private Button manageFamilyButton;
     private Button inOutButton;
 
     public void positionHandle() {
-        switch (position) {
+        switch (familyPositionEnum) {
             case LEADER -> {
-                manageFamily.setEnabled(true);
+                manageFamilyButton.setEnabled(true);
                 inOutButton.setText("解散家族");
             }
             case VICE_LEADER, MEMBER -> inOutButton.setText("退出家族");
@@ -80,7 +80,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
 
     private void inOutFamily() {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-        switch (position) {
+        switch (familyPositionEnum) {
             case LEADER -> jpDialogBuilder.setTitle("警告").setMessage("确定要解散家族吗?");
             case VICE_LEADER, MEMBER ->
                     jpDialogBuilder.setTitle("警告").setMessage("确定要退出家族吗?");
@@ -113,7 +113,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         button.setOnClickListener(this);
         inflate.findViewById(R.id.ol_family_changepic).setOnClickListener(this);
         inflate.findViewById(R.id.ol_family_changetest).setOnClickListener(this);
-        popupWindow.showAtLocation(manageFamily, Gravity.CENTER, 0, 0);
+        popupWindow.showAtLocation(manageFamilyButton, Gravity.CENTER, 0, 0);
     }
 
     /**
@@ -192,18 +192,18 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             builder.setFamilyId(Integer.parseInt(familyID));
             sendMsg(OnlineProtocolType.FAMILY, builder.build());
         } else if (id == R.id.in_out) {
-            if (infoWindow != null && infoWindow.isShowing()) {
-                infoWindow.dismiss();
+            if (userInfoPopupWindow != null && userInfoPopupWindow.isShowing()) {
+                userInfoPopupWindow.dismiss();
             }
             inOutFamily();
         } else if (id == R.id.ol_chat_b) {
-            if (infoWindow != null && infoWindow.isShowing()) {
-                infoWindow.dismiss();
+            if (userInfoPopupWindow != null && userInfoPopupWindow.isShowing()) {
+                userInfoPopupWindow.dismiss();
             }
-            showSendDialog(peopleNow, 0);
+            showSendDialog(currentUserName, 0);
         } else if (id == R.id.ol_kickout_b) {
-            if (infoWindow != null && infoWindow.isShowing()) {
-                infoWindow.dismiss();
+            if (userInfoPopupWindow != null && userInfoPopupWindow.isShowing()) {
+                userInfoPopupWindow.dismiss();
             }
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
             jpDialogBuilder.setTitle("提示");
@@ -211,7 +211,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                         OnlineFamilyDTO.Builder familyBuilder = OnlineFamilyDTO.newBuilder();
                         familyBuilder.setType(6);
-                        familyBuilder.setUserName(peopleNow);
+                        familyBuilder.setUserName(currentUserName);
                         familyBuilder.setStatus(1);
                         sendMsg(OnlineProtocolType.FAMILY, familyBuilder.build());
                         dialog.dismiss();
@@ -219,26 +219,26 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
                     })
                     .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } else if (id == R.id.ol_showinfo_b) {
-            if (infoWindow != null && infoWindow.isShowing()) {
-                infoWindow.dismiss();
+            if (userInfoPopupWindow != null && userInfoPopupWindow.isShowing()) {
+                userInfoPopupWindow.dismiss();
             }
             if (OnlineUtil.getConnectionService() != null) {
                 OnlineUserInfoDialogDTO.Builder builder1 = OnlineUserInfoDialogDTO.newBuilder();
-                builder1.setName(peopleNow);
+                builder1.setName(currentUserName);
                 sendMsg(OnlineProtocolType.USER_INFO_DIALOG, builder1.build());
             }
         } else if (id == R.id.ol_couple_b) {  // 提升/撤职副族长
-            if (infoWindow != null && infoWindow.isShowing()) {
-                infoWindow.dismiss();
+            if (userInfoPopupWindow != null && userInfoPopupWindow.isShowing()) {
+                userInfoPopupWindow.dismiss();
             }
             jpprogressBar.show();
             OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
             builder.setType(7);
-            builder.setUserName(peopleNow);
+            builder.setUserName(currentUserName);
             sendMsg(OnlineProtocolType.FAMILY, builder.build());
         } else if (id == R.id.ol_chat_black) {  // 族长转移
-            if (infoWindow != null && infoWindow.isShowing()) {
-                infoWindow.dismiss();
+            if (userInfoPopupWindow != null && userInfoPopupWindow.isShowing()) {
+                userInfoPopupWindow.dismiss();
             }
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
             jpDialogBuilder.setTitle("提示");
@@ -246,7 +246,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                         OnlineFamilyDTO.Builder familyBuilder = OnlineFamilyDTO.newBuilder();
                         familyBuilder.setType(11);
-                        familyBuilder.setUserName(peopleNow);
+                        familyBuilder.setUserName(currentUserName);
                         familyBuilder.setStatus(0);
                         sendMsg(OnlineProtocolType.FAMILY, familyBuilder.build());
                         dialog.dismiss();
@@ -269,13 +269,13 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             builder.setType(10);
             sendMsg(OnlineProtocolType.FAMILY, builder.build());
         } else if (id == R.id.column_position) {
-            Collections.sort(peopleList, (map1, map2) -> map1.get("P").compareTo(map2.get("P")));
-            bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+            Collections.sort(userList, (map1, map2) -> map1.get("P").compareTo(map2.get("P")));
+            bindFamilyPeopleListViewAdapter(userListView, userList);
         } else if (id == R.id.column_family_name) {
-            Collections.sort(peopleList, (map1, map2) -> map2.get("O").compareTo(map1.get("O")));
-            bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+            Collections.sort(userList, (map1, map2) -> map2.get("O").compareTo(map1.get("O")));
+            bindFamilyPeopleListViewAdapter(userListView, userList);
         } else if (id == R.id.column_last_login_time) {
-            Collections.sort(peopleList, new Comparator<>() {
+            Collections.sort(userList, new Comparator<>() {
                 private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
                 @Override
@@ -288,15 +288,15 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
                     return 0;
                 }
             });
-            bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+            bindFamilyPeopleListViewAdapter(userListView, userList);
         } else if (id == R.id.column_level) {
-            Collections.sort(peopleList, (map1, map2) -> Integer.compare(
+            Collections.sort(userList, (map1, map2) -> Integer.compare(
                     Integer.parseInt(map2.get("L")), Integer.parseInt(map1.get("L"))));
-            bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+            bindFamilyPeopleListViewAdapter(userListView, userList);
         } else if (id == R.id.column_contribution) {
-            Collections.sort(peopleList, (map1, map2) -> Integer.compare(
+            Collections.sort(userList, (map1, map2) -> Integer.compare(
                     Integer.parseInt(map2.get("C")), Integer.parseInt(map1.get("C"))));
-            bindFamilyPeopleListViewAdapter(peopleListView, peopleList);
+            bindFamilyPeopleListViewAdapter(userListView, userList);
         }
     }
 
@@ -324,9 +324,9 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         sendMsg(OnlineProtocolType.FAMILY, builder.build());
         inOutButton = findViewById(R.id.in_out);
         inOutButton.setOnClickListener(this);
-        manageFamily = findViewById(R.id.manage_family);
-        manageFamily.setOnClickListener(this);
-        peopleListView = findViewById(R.id.family_people_list);
+        manageFamilyButton = findViewById(R.id.manage_family);
+        manageFamilyButton.setOnClickListener(this);
+        userListView = findViewById(R.id.family_people_list);
         declarationTextView = findViewById(R.id.declaration);
         infoTextView = findViewById(R.id.info_text);
         findViewById(R.id.column_position).setOnClickListener(this);
@@ -340,8 +340,8 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         }
     }
 
-    public PopupWindow loadInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
-        PopupWindow popupWindow = new JPPopupWindow(this);
+    public PopupWindow loadUserInfoPopupWindow(String name, FamilyPositionEnum userPosition) {
+        PopupWindow userInfoPopupWindow = new JPPopupWindow(this);
         View userOperationView = LayoutInflater.from(this).inflate(R.layout.ol_room_user_operation, null);
         Button showInfoButton = userOperationView.findViewById(R.id.ol_showinfo_b);  // 个人资料
         Button mailSendButton = userOperationView.findViewById(R.id.ol_chat_b);  // 私信
@@ -352,17 +352,17 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         kickOutButton.setText("移出家族");
         leaderChangeButton.setText("族长转移");
         userOperationView.findViewById(R.id.ol_closepos_b).setVisibility(View.GONE);
-        popupWindow.setContentView(userOperationView);
-        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-        if (position == FamilyPositionEnum.MEMBER || position == FamilyPositionEnum.NOT_IN_FAMILY
-                || (position == FamilyPositionEnum.VICE_LEADER && userPosition != FamilyPositionEnum.MEMBER)) {
+        userInfoPopupWindow.setContentView(userOperationView);
+        userInfoPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+        if (familyPositionEnum == FamilyPositionEnum.MEMBER || familyPositionEnum == FamilyPositionEnum.NOT_IN_FAMILY
+                || (familyPositionEnum == FamilyPositionEnum.VICE_LEADER && userPosition != FamilyPositionEnum.MEMBER)) {
             kickOutButton.setVisibility(View.GONE);
         }
         if (name.equals(OLBaseActivity.getKitiName())) {
             kickOutButton.setVisibility(View.GONE);
             mailSendButton.setVisibility(View.GONE);
         }
-        if (position != FamilyPositionEnum.LEADER) {
+        if (familyPositionEnum != FamilyPositionEnum.LEADER) {
             positionChangeButton.setVisibility(View.GONE);
             leaderChangeButton.setVisibility(View.GONE);
         } else {
@@ -373,7 +373,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             }
             positionChangeButton.setOnClickListener(this);
         }
-        if (position == FamilyPositionEnum.NOT_IN_FAMILY) {
+        if (familyPositionEnum == FamilyPositionEnum.NOT_IN_FAMILY) {
             showInfoButton.setVisibility(View.GONE);
             mailSendButton.setVisibility(View.GONE);
         }
@@ -381,9 +381,9 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         showInfoButton.setOnClickListener(this);
         kickOutButton.setOnClickListener(this);
         leaderChangeButton.setOnClickListener(this);
-        peopleNow = name;
-        infoWindow = popupWindow;
-        return popupWindow;
+        currentUserName = name;
+        this.userInfoPopupWindow = userInfoPopupWindow;
+        return userInfoPopupWindow;
     }
 
     // 发送私信和祝语,type = 0 私信，type = 1 改变宣言
