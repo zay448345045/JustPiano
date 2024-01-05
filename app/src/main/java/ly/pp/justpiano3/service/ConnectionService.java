@@ -58,6 +58,7 @@ public final class ConnectionService extends Service {
     public static final String CHANNEL_NAME = "联网模式";
     public static final String NOTIFY_CONTENT_TITLE = "JustPiano keep alive";
     public static final String NOTIFY_CONTENT_TEXT = "联网模式已连接...";
+    public static final int NOTIFICATION_ID = 1;
     private final JPBinder jpBinder = new JPBinder(this);
     private NettyUtil nettyUtil;
 
@@ -136,7 +137,7 @@ public final class ConnectionService extends Service {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 type = ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
             }
-            ServiceCompat.startForeground(this, 1, notification, type);
+            ServiceCompat.startForeground(this, NOTIFICATION_ID, notification, type);
         } catch (Exception e) {
             e.printStackTrace();
         }
