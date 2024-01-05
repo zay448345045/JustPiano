@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 
 public final class ImageLoadUtil {
@@ -219,13 +218,13 @@ public final class ImageLoadUtil {
         return bitmap;
     }
 
-    public static void setBackground(Activity activity) {
+    public static void setBackground(Activity activity, String uri) {
         if (activity == null || activity.getWindow() == null) {
             return;
         }
         Bitmap backgroundBitmap = null;
-        if (!TextUtils.isEmpty(GlobalSetting.getBackgroundPic())) {
-            backgroundBitmap = loadFileImage(activity, Uri.parse(GlobalSetting.getBackgroundPic()));
+        if (!TextUtils.isEmpty(uri)) {
+            backgroundBitmap = loadFileImage(activity, Uri.parse(uri));
         }
         if (backgroundBitmap != null) {
             activity.getWindow().setBackgroundDrawable(new BitmapDrawable(activity.getResources(), backgroundBitmap));

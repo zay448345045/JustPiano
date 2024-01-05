@@ -15,7 +15,7 @@ public class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImageLoadUtil.setBackground(this);
+        ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic());
         fullScreenHandle();
     }
 

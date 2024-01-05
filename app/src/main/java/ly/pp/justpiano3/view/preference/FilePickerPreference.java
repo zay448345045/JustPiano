@@ -16,7 +16,6 @@ import androidx.preference.PreferenceViewHolder;
 
 import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.utils.FilePickerUtil;
-import ly.pp.justpiano3.utils.ImageLoadUtil;
 
 public final class FilePickerPreference extends Preference {
 
@@ -75,7 +74,6 @@ public final class FilePickerPreference extends Preference {
     public void persist(String showName, String value) {
         setSummary(showName);
         persistString(value);
-        ImageLoadUtil.setBackground(activity);
     }
 
     public void setDefaultButtonClickListener(View.OnClickListener onClickListener) {

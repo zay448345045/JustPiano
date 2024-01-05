@@ -38,7 +38,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="left"
+            android:gravity="start"
             android:text="点击选择颜色"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -52,7 +52,8 @@
             android:maxLength="7"
             android:singleLine="true"
             android:inputType="textCapCharacters"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:autofillHints="HEX">
         </EditText>
     </LinearLayout>
 

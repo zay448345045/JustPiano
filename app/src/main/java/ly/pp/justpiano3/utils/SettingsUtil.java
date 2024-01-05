@@ -13,7 +13,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import java.util.HashMap;
 import java.util.Map;
 
-import ly.pp.justpiano3.activity.settings.SettingsFragment;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.FilePickerPreference;
 
@@ -38,7 +37,10 @@ public final class SettingsUtil {
             if (preference instanceof FilePickerPreference filePickerPreference) {
                 filePickerPreference.setActivity(preferenceFragment.getActivity());
                 filePickerPreference.setFolderPicker(folderPicker);
-                filePickerPreference.setDefaultButtonClickListener(view -> filePickerPreference.persist(defaultSummary, ""));
+                filePickerPreference.setDefaultButtonClickListener(view -> {
+                    filePickerPreference.persist(defaultSummary, "");
+                    ImageLoadUtil.setBackground(preferenceFragment.getActivity(), "");
+                });
             }
             filePickerPreferenceMap.put(preference.getKey(), Pair.create(preference, predicate));
         }
@@ -58,8 +60,8 @@ public final class SettingsUtil {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void refreshMidiDevicePreference(SettingsFragment settingsFragment) {
-        Preference preference = settingsFragment.findPreference("midi_device_list");
+    public static void refreshMidiDevicePreference(PreferenceFragmentCompat preferenceFragmentCompat) {
+        Preference preference = preferenceFragmentCompat.findPreference("midi_device_list");
         if (preference instanceof MidiDeviceListPreference midiDeviceListPreference) {
             midiDeviceListPreference.midiDeviceListRefresh();
         }

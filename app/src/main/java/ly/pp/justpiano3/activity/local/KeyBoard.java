@@ -56,7 +56,7 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
 
     private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
-                ImageLoadUtil.setBackground(this);
+                ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic());
                 firstKeyboardView.changeSkinKeyboardImage(this);
                 secondKeyboardView.changeSkinKeyboardImage(this);
                 KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.getEntries()

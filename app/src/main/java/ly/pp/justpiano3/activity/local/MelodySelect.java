@@ -52,6 +52,7 @@ import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.SongData;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
@@ -156,7 +157,8 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             });
 
     private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> ImageLoadUtil.setBackground(this));
+            new ActivityResultContracts.StartActivityForResult(), result ->
+                    ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic()));
 
     private void buildDoNotShowDialogAndShow(String message, int i) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);

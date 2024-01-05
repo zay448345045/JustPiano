@@ -42,7 +42,8 @@
             android:maxLength="7"
             android:singleLine="true"
             android:inputType="textCapCharacters"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:autofillHints="HEX">
         </EditText>
 
         <TextView

@@ -43,6 +43,7 @@ import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
@@ -78,7 +79,8 @@ public final class OLPlayRoom extends OLRoomActivity {
     private RecyclerView songsRecyclerView;
 
     private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> ImageLoadUtil.setBackground(this));
+            new ActivityResultContracts.StartActivityForResult(), result ->
+                    ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic()));
 
     private void playSongByDegreeRandom(int startDegree, int endDegree) {
         List<Song> songs = JPApplication.getSongDatabase().songDao().getSongByRightHandDegreeWithRandom(startDegree, endDegree);

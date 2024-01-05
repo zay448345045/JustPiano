@@ -30,7 +30,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
 
     private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
-                ImageLoadUtil.setBackground(this);
+                ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic());
                 fullScreenHandle();
             });
 

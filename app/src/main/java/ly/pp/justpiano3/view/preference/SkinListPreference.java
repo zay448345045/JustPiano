@@ -143,7 +143,7 @@ public final class SkinListPreference extends DialogPreference {
         @Override
         public void onDialogClosed(boolean positiveResult) {
             skinListPreference.persistString(skinListPreference.skinKey);
-            ImageLoadUtil.setBackground((Activity) skinListPreference.getContext());
+            ImageLoadUtil.setBackground((Activity) skinListPreference.getContext(), GlobalSetting.getBackgroundPic());
             GlobalSetting.loadSettings(skinListPreference.getContext(), false);
             FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(skinListPreference.getContext(), Uri.parse(skinListPreference.skinKey));
             skinListPreference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认皮肤" : uriInfo.getDisplayName());

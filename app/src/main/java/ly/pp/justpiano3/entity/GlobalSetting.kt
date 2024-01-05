@@ -28,6 +28,7 @@ object GlobalSetting {
      */
     @JvmStatic
     var backgroundPic: String = ""
+        private set
 
     /**
      * 当前皮肤名称

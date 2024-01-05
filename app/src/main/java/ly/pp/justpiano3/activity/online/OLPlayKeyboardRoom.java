@@ -94,7 +94,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
-                ImageLoadUtil.setBackground(this);
+                ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic());
                 keyboardView.changeSkinKeyboardImage(this);
                 keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries()
                         .get(GlobalSetting.getKeyboardOctaveTagType()));

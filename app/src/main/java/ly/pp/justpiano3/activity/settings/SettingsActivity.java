@@ -33,7 +33,7 @@ import ly.pp.justpiano3.view.preference.SoundListPreference;
 
 public final class SettingsActivity extends BaseActivity implements MidiDeviceUtil.MidiDeviceListener {
 
-    private static final SettingsFragment settingsFragment = new SettingsFragment();
+    private static final PreferenceFragmentCompat settingsFragment = new SettingsFragment();
 
     private static final Map<String, PreferenceFragmentCompat> preferenceFragmentMap = new HashMap<>() {{
         put("settings_piano_play", new PianoPlaySettingsFragment());
@@ -52,7 +52,7 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
                     skinListPreference.skinKey = skinListPreference.getPersistedString();
                     skinListPreference.closeDialog();
                 }
-                ImageLoadUtil.setBackground(this);
+                ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic());
             });
 
     public final ActivityResultLauncher<Intent> soundSelectLauncher = registerForActivityResult(
@@ -95,8 +95,7 @@ public final class SettingsActivity extends BaseActivity implements MidiDeviceUt
                     new SoundListPreferenceTask(soundListPreference).execute(uriInfo.getUri().toString());
                 }
                 if (preference != null && Objects.equals(preference.getKey(), "background_pic")) {
-                    GlobalSetting.setBackgroundPic(uriInfo.getUri().toString());
-                    ImageLoadUtil.setBackground(this);
+                    ImageLoadUtil.setBackground(this, uriInfo.getUri().toString());
                 }
             });
 

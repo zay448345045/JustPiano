@@ -21,6 +21,7 @@ import java.io.File;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.listener.SkinDownloadClick;
 import ly.pp.justpiano3.task.SkinDownloadTask;
 import ly.pp.justpiano3.utils.FileUtil;
@@ -158,7 +159,7 @@ public final class SkinDownload extends BaseActivity implements Callback {
                     linearLayout.setVisibility(View.GONE);
                     jpProgressBar.dismiss();
                     Toast.makeText(getApplicationContext(), "皮肤设置成功!", Toast.LENGTH_SHORT).show();
-                    ImageLoadUtil.setBackground(this);
+                    ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic());
                 }
             }
         }
