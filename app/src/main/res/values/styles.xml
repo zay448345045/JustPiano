@@ -11,6 +11,10 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="android:focusable">false</item>
         <item name="android:textColor">#ffffffff</item>
+        <item name="android:paddingLeft">@dimen/dimen_6dp</item>
+        <item name="android:paddingRight">@dimen/dimen_8dp</item>
+        <item name="android:paddingTop">@dimen/dimen_1dp</item>
+        <item name="android:paddingBottom">@dimen/dimen_1dp</item>
         <item name="android:colorBackgroundCacheHint">#00000000</item>
     </style>
 
