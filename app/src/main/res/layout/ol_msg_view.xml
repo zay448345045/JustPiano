@@ -19,18 +19,6 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/ol_user_mao"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:singleLine="true"
-        android:text="@string/ol_msg_view_mao"
-        android:textColor="@color/white1"
-        android:textColorHighlight="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
     <ImageView
         android:id="@+id/ol_express_image"
         android:adjustViewBounds="true"

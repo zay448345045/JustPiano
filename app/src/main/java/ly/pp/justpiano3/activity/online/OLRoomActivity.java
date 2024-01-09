@@ -725,11 +725,11 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         } else if (id == R.id.ol_changecolor) {
             changeColorClick();
         } else if (id == R.id.white) {
-            changeChatColor(0, 48, 0xffffffff);
+            changeChatColor(0, 48, Color.WHITE);
         } else if (id == R.id.yellow) {
             changeChatColor(10, 1, 0xFFFFFACD);
         } else if (id == R.id.blue) {
-            changeChatColor(14, 2, 0xFF00FFFF);
+            changeChatColor(14, 2, Color.CYAN);
         } else if (id == R.id.red) {
             changeChatColor(18, 3, 0xFFFF6666);
         } else if (id == R.id.orange) {
@@ -743,7 +743,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         } else if (id == R.id.green) {
             changeChatColor(40, 8, 0xFFB7FF72);
         } else if (id == R.id.black) {
-            changeChatColor(50, 9, 0xFF000000);
+            changeChatColor(50, 9, Color.BLACK);
         } else if (id == R.id.room_title) {
             changeRoomTitleClick();
         }

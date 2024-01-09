@@ -89,6 +89,4 @@ public final class DateUtil {
     public static int milliSecond() {
         return Calendar.getInstance().get(Calendar.MILLISECOND);
     }
-
-
 }
