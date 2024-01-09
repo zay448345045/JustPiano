@@ -455,7 +455,6 @@ public final class OLPlayRoom extends OLRoomActivity {
         songNameScrollTextView.setOnClickListener(this);
         PopupWindow moreSongsPopupWindow = new JPPopupWindow(this);
         View roomSongRandView = LayoutInflater.from(this).inflate(R.layout.ol_room_song_rand, null);
-        moreSongsPopupWindow.setContentView(roomSongRandView);
         roomSongRandView.findViewById(R.id.rand_all).setOnClickListener(this);
         roomSongRandView.findViewById(R.id.add_favor).setOnClickListener(this);
         roomSongRandView.findViewById(R.id.favor).setOnClickListener(this);
@@ -468,6 +467,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         roomSongRandView.findViewById(R.id.type_d).setOnClickListener(this);
         roomSongRandView.findViewById(R.id.type_e).setOnClickListener(this);
         roomSongRandView.findViewById(R.id.type_h).setOnClickListener(this);
+        moreSongsPopupWindow.setContentView(roomSongRandView);
         moreSongsPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
         this.moreSongsPopupWindow = moreSongsPopupWindow;
         switch (RoomModeEnum.ofCode(roomMode, RoomModeEnum.NORMAL)) {

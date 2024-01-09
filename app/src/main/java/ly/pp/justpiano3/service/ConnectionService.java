@@ -117,8 +117,6 @@ public final class ConnectionService extends Service {
                 if (manager != null) {
                     manager.createNotificationChannel(serviceChannel);
                 }
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(new Intent(this, ConnectionService.class));
             } else {
                 startService(new Intent(this, ConnectionService.class));

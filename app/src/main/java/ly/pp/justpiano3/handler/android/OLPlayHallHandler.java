@@ -30,7 +30,6 @@ import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
-import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import protobuf.dto.OnlineClTestDTO;
@@ -55,7 +54,7 @@ public final class OLPlayHallHandler extends Handler {
                 }
                 String time = "";
                 if (GlobalSetting.getShowChatTime()) {
-                    time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.getShowChatTimeModes());
+                    time = DateUtil.format(new Date(), GlobalSetting.getShowChatTimeModes());
                 }
                 message.getData().putString("TIME", time);
                 // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示

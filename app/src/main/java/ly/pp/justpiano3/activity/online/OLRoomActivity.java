@@ -61,7 +61,6 @@ import ly.pp.justpiano3.utils.BizUtil;
 import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
-import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
@@ -116,60 +115,62 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     private int colorNum = 99;
     private ImageView changeColorButton;
 
-    protected void showCpDialog(String str, String str2) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_couple_dialog, findViewById(R.id.dialog));
+    protected void showCpDialog(String title, String content) {
+        View coupleDialogView = getLayoutInflater().inflate(R.layout.ol_couple_dialog, findViewById(R.id.dialog));
         try {
-            JSONObject jSONObject = new JSONObject(str2);
-            JSONObject jSONObject2 = jSONObject.getJSONObject("P");
-            User user = new User(jSONObject2.getString("N"), jSONObject2.getInt("D_H"),
-                    jSONObject2.getInt("D_E"), jSONObject2.getInt("D_J"),
-                    jSONObject2.getInt("D_T"), jSONObject2.getInt("D_S"),
-                    jSONObject2.getString("S"), jSONObject2.getInt("L"), jSONObject2.getInt("C"));
-            JSONObject jSONObject3 = jSONObject.getJSONObject("C");
-            User user2 = new User(jSONObject3.getString("N"), jSONObject3.getInt("D_H"),
-                    jSONObject3.getInt("D_E"), jSONObject3.getInt("D_J"),
-                    jSONObject3.getInt("D_T"), jSONObject3.getInt("D_S"),
-                    jSONObject3.getString("S"), jSONObject3.getInt("L"), jSONObject3.getInt("C"));
-            JSONObject jSONObject4 = jSONObject.getJSONObject("I");
-            TextView textView = inflate.findViewById(R.id.ol_player_level);
-            TextView textView2 = inflate.findViewById(R.id.ol_player_class);
-            TextView textView3 = inflate.findViewById(R.id.ol_player_clname);
-            TextView textView4 = inflate.findViewById(R.id.ol_couple_name);
-            TextView textView5 = inflate.findViewById(R.id.ol_couple_level);
-            TextView textView6 = inflate.findViewById(R.id.ol_couple_class);
-            TextView textView7 = inflate.findViewById(R.id.ol_couple_clname);
-            ImageView imageView = inflate.findViewById(R.id.ol_player_mod);
-            ImageView imageView2 = inflate.findViewById(R.id.ol_player_trousers);
-            ImageView imageView3 = inflate.findViewById(R.id.ol_player_jacket);
-            ImageView imageView4 = inflate.findViewById(R.id.ol_player_hair);
-            ImageView imageView4e = inflate.findViewById(R.id.ol_player_eye);
-            ImageView imageView5 = inflate.findViewById(R.id.ol_player_shoes);
-            ImageView imageView6 = inflate.findViewById(R.id.ol_couple_mod);
-            ImageView imageView7 = inflate.findViewById(R.id.ol_couple_trousers);
-            ImageView imageView8 = inflate.findViewById(R.id.ol_couple_jacket);
-            ImageView imageView9 = inflate.findViewById(R.id.ol_couple_hair);
-            ImageView imageView9e = inflate.findViewById(R.id.ol_couple_eye);
-            ImageView imageView10 = inflate.findViewById(R.id.ol_couple_shoes);
-            TextView textView8 = inflate.findViewById(R.id.couple_bless);
-            ImageView imageView11 = inflate.findViewById(R.id.couple_type);
-            ((TextView) inflate.findViewById(R.id.ol_player_name)).setText(user.getPlayerName());
-            textView.setText("LV." + user.getLevel());
-            textView2.setText("CL." + user.getCl());
-            textView3.setText(Consts.nameCL[user.getCl()]);
-            textView4.setText(user2.getPlayerName());
-            textView5.setText("LV." + user2.getLevel());
-            textView6.setText("CL." + user2.getCl());
-            textView7.setText(Consts.nameCL[user2.getCl()]);
-            textView8.setText(jSONObject4.getString("B"));
-            imageView11.setImageResource(Consts.couples[jSONObject4.getInt("T")]);
-            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
-            ImageLoadUtil.setUserDressImageBitmap(this, user2, imageView6, imageView7, imageView8, imageView9, imageView9e, imageView10);
-            new JPDialogBuilder(this).setWidth(232).setTitle(str).loadInflate(inflate)
-                    .setFirstButton("祝福:" + jSONObject4.getInt("P"), (dialog, which) -> {
+            JSONObject jSONObject = new JSONObject(content);
+            JSONObject userInfo = jSONObject.getJSONObject("P");
+            User user = new User(userInfo.getString("N"), userInfo.getInt("D_H"),
+                    userInfo.getInt("D_E"), userInfo.getInt("D_J"),
+                    userInfo.getInt("D_T"), userInfo.getInt("D_S"),
+                    userInfo.getString("S"), userInfo.getInt("L"), userInfo.getInt("C"));
+            JSONObject coupleInfo = jSONObject.getJSONObject("C");
+            User coupleUser = new User(coupleInfo.getString("N"), coupleInfo.getInt("D_H"),
+                    coupleInfo.getInt("D_E"), coupleInfo.getInt("D_J"),
+                    coupleInfo.getInt("D_T"), coupleInfo.getInt("D_S"),
+                    coupleInfo.getString("S"), coupleInfo.getInt("L"), coupleInfo.getInt("C"));
+            JSONObject blessInfo = jSONObject.getJSONObject("I");
+            TextView lvTextView = coupleDialogView.findViewById(R.id.ol_player_level);
+            TextView clTextView = coupleDialogView.findViewById(R.id.ol_player_class);
+            TextView clNameTextView = coupleDialogView.findViewById(R.id.ol_player_clname);
+            TextView coupleNameTextView = coupleDialogView.findViewById(R.id.ol_couple_name);
+            TextView coupleLvTextView = coupleDialogView.findViewById(R.id.ol_couple_level);
+            TextView coupleClTextView = coupleDialogView.findViewById(R.id.ol_couple_class);
+            TextView coupleClNameTextView = coupleDialogView.findViewById(R.id.ol_couple_clname);
+            ImageView modImageView = coupleDialogView.findViewById(R.id.ol_player_mod);
+            ImageView trousersImageView = coupleDialogView.findViewById(R.id.ol_player_trousers);
+            ImageView jacketImageView = coupleDialogView.findViewById(R.id.ol_player_jacket);
+            ImageView hairImageView = coupleDialogView.findViewById(R.id.ol_player_hair);
+            ImageView eyeImageView = coupleDialogView.findViewById(R.id.ol_player_eye);
+            ImageView shoesImageView = coupleDialogView.findViewById(R.id.ol_player_shoes);
+            ImageView coupleModImageView = coupleDialogView.findViewById(R.id.ol_couple_mod);
+            ImageView coupleTrousersImageView = coupleDialogView.findViewById(R.id.ol_couple_trousers);
+            ImageView coupleJacketImageView = coupleDialogView.findViewById(R.id.ol_couple_jacket);
+            ImageView coupleHairImageView = coupleDialogView.findViewById(R.id.ol_couple_hair);
+            ImageView coupleEyeImageView = coupleDialogView.findViewById(R.id.ol_couple_eye);
+            ImageView coupleShoesImageView = coupleDialogView.findViewById(R.id.ol_couple_shoes);
+            TextView coupleBlessTextView = coupleDialogView.findViewById(R.id.couple_bless);
+            ImageView coupleTypeImageView = coupleDialogView.findViewById(R.id.couple_type);
+            ((TextView) coupleDialogView.findViewById(R.id.ol_player_name)).setText(user.getPlayerName());
+            lvTextView.setText("LV." + user.getLevel());
+            clTextView.setText("CL." + user.getCl());
+            clNameTextView.setText(Consts.nameCL[user.getCl()]);
+            coupleNameTextView.setText(coupleUser.getPlayerName());
+            coupleLvTextView.setText("LV." + coupleUser.getLevel());
+            coupleClTextView.setText("CL." + coupleUser.getCl());
+            coupleClNameTextView.setText(Consts.nameCL[coupleUser.getCl()]);
+            coupleBlessTextView.setText(blessInfo.getString("B"));
+            coupleTypeImageView.setImageResource(Consts.couples[blessInfo.getInt("T")]);
+            ImageLoadUtil.setUserDressImageBitmap(this, user, modImageView, trousersImageView, jacketImageView,
+                    hairImageView, eyeImageView, shoesImageView);
+            ImageLoadUtil.setUserDressImageBitmap(this, coupleUser, coupleModImageView, coupleTrousersImageView,
+                    coupleJacketImageView, coupleHairImageView, coupleEyeImageView, coupleShoesImageView);
+            new JPDialogBuilder(this).setWidth(232).setTitle(title).loadInflate(coupleDialogView)
+                    .setFirstButton("祝福:" + blessInfo.getInt("P"), (dialog, which) -> {
                         try {
                             OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
                             builder.setType(5);
-                            builder.setRoomPosition(jSONObject4.getInt("I"));
+                            builder.setRoomPosition(blessInfo.getInt("I"));
                             sendMsg(OnlineProtocolType.COUPLE, builder.build());
                             dialog.dismiss();
                         } catch (Exception e) {
@@ -181,11 +182,11 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         }
     }
 
-    public void showInfoDialog(Bundle b) {
+    public void showInfoDialog(Bundle bundle) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
-            User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
-                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
+            User user = new User(bundle.getString("U"), bundle.getInt("DR_H"), bundle.getInt("DR_E"), bundle.getInt("DR_J"),
+                    bundle.getInt("DR_T"), bundle.getInt("DR_S"), bundle.getString("S"), bundle.getInt("LV"), bundle.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
@@ -195,15 +196,15 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
-            int lv = b.getInt("LV");
-            textView.setText("用户名称:" + b.getString("U")
+            int lv = bundle.getInt("LV");
+            textView.setText("用户名称:" + bundle.getString("U")
                     + "\n用户等级:LV." + lv
-                    + "\n经验进度:" + b.getInt("E") + "/" + BizUtil.getTargetExp(lv)
-                    + "\n考级进度:CL." + b.getInt("CL")
-                    + "\n所在家族:" + b.getString("F")
-                    + "\n在线曲库冠军数:" + b.getInt("W")
-                    + "\n在线曲库弹奏总分:" + b.getInt("SC"));
-            textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
+                    + "\n经验进度:" + bundle.getInt("E") + "/" + BizUtil.getTargetExp(lv)
+                    + "\n考级进度:CL." + bundle.getInt("CL")
+                    + "\n所在家族:" + bundle.getString("F")
+                    + "\n在线曲库冠军数:" + bundle.getInt("W")
+                    + "\n在线曲库弹奏总分:" + bundle.getInt("SC"));
+            textView2.setText("个性签名:\n" + (bundle.getString("P").isEmpty() ? "无" : bundle.getString("P")));
             new JPDialogBuilder(this).setWidth(288).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
                     .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
@@ -276,18 +277,18 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     protected void sendMessageClick(boolean isBroadcast) {
         OnlineRoomChatDTO.Builder builder = OnlineRoomChatDTO.newBuilder();
         builder.setIsBroadcast(isBroadcast);
-        String str = String.valueOf(sendTextView.getText());
-        if (!str.startsWith(userTo) || str.length() <= userTo.length()) {
+        String userName = String.valueOf(sendTextView.getText());
+        if (!userName.startsWith(userTo) || userName.length() <= userTo.length()) {
             builder.setUserName("");
-            builder.setMessage(str);
+            builder.setMessage(userName);
         } else {
             builder.setUserName(userTo);
-            str = str.substring(userTo.length());
-            builder.setMessage(str);
+            userName = userName.substring(userTo.length());
+            builder.setMessage(userName);
         }
         sendTextView.setText("");
         builder.setColor(colorNum);
-        if (!str.isEmpty()) {
+        if (!userName.isEmpty()) {
             sendMsg(OnlineProtocolType.ROOM_CHAT, builder.build());
         }
         userTo = "";
@@ -307,13 +308,13 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     protected void changeRoomTitleClick() {
         if (!positionStatus.equals("G")) {
-            View inflate = getLayoutInflater().inflate(R.layout.ol_room_title_change, findViewById(R.id.dialog));
-            EditText text1 = inflate.findViewById(R.id.text_1);
+            View roonTitleChangeView = getLayoutInflater().inflate(R.layout.ol_room_title_change, findViewById(R.id.dialog));
+            EditText roomNameEditText = roonTitleChangeView.findViewById(R.id.text_1);
             // 填充当前房间名称
-            text1.setText(roomName);
-            EditText text2 = inflate.findViewById(R.id.text_2);
-            new JPDialogBuilder(this).setTitle("修改房名").loadInflate(inflate)
-                    .setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2))
+            roomNameEditText.setText(roomName);
+            EditText roomPasswordEditText = roonTitleChangeView.findViewById(R.id.text_2);
+            new JPDialogBuilder(this).setTitle("修改房名").loadInflate(roonTitleChangeView)
+                    .setFirstButton("修改", new ChangeRoomNameClick(this, roomNameEditText, roomPasswordEditText))
                     .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         }
     }
@@ -399,7 +400,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         }
         String time = "";
         if (GlobalSetting.getShowChatTime()) {
-            time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.getShowChatTimeModes());
+            time = DateUtil.format(new Date(), GlobalSetting.getShowChatTimeModes());
         }
         message.getData().putString("TIME", time);
         // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
