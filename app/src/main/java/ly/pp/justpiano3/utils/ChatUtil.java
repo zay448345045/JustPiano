@@ -165,13 +165,13 @@ public class ChatUtil {
                 String msg = message.getData().getString("M");
                 if (outputStream != null && msg != null && !msg.startsWith("//")) {
                     if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
-                        outputStream.write((time + "[私]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+                        outputStream.write((time + "[私]" + message.getData().getString("U") + msg + '\n').getBytes());
                     } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {
-                        outputStream.write((time + "[公]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+                        outputStream.write((time + "[公]" + message.getData().getString("U") + msg + '\n').getBytes());
                     } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE) {
-                        outputStream.write((time + "[全服消息]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+                        outputStream.write((time + "[全服消息]" + message.getData().getString("U") + msg + '\n').getBytes());
                     } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE) {
-                        outputStream.write((time + "[荐]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
+                        outputStream.write((time + "[荐]" + message.getData().getString("U") + msg + '\n').getBytes());
                     }
                 }
             } catch (Exception e) {
