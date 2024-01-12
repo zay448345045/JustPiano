@@ -62,16 +62,24 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
     private String account;
     private EditText debugIpEditText;
 
-    public void loginSuccess(int i, String message, String title) {
+    public void loginSuccess(int i, String message, String title, String newVersion) {
+        if (!TextUtils.isEmpty(newVersion)) {
+            addVersionUpdateDialog(i, message, newVersion, false);
+        } else {
+            doLoginSuccess(i, message, title);
+        }
+    }
+
+    private void doLoginSuccess(int i, String message, String title) {
         Intent intent = new Intent(this, OLMainMode.class);
-        String string = sharedPreferences.getString("accountList", "");
+        String accountList = sharedPreferences.getString("accountList", "");
         try {
             Editor edit = sharedPreferences.edit();
             JSONObject jSONObject;
-            if (string.isEmpty()) {
+            if (accountList.isEmpty()) {
                 jSONObject = new JSONObject();
             } else {
-                jSONObject = new JSONObject(string);
+                jSONObject = new JSONObject(accountList);
             }
             if (rememAccount.isChecked() && rememPassword.isChecked()) {
                 jSONObject.put(accountX, password);
@@ -243,15 +251,20 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
         }
     }
 
-    public void addVersionUpdateDialog(String str3, String newVersion) {
+    public void addVersionUpdateDialog(int i, String updateMessage, String newVersion, boolean forceUpdate) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setTitle("版本更新");
-        jpDialogBuilder.setMessage(str3);
+        jpDialogBuilder.setMessage(updateMessage);
         jpDialogBuilder.setFirstButton("下载更新", (dialog, which) -> {
             dialog.dismiss();
             ThreadPoolUtil.execute(() -> downloadApk(newVersion));
         });
-        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
+        jpDialogBuilder.setSecondButton("取消", (dialog, which) -> {
+            dialog.dismiss();
+            if (!forceUpdate) {
+                doLoginSuccess(i, "", "");
+            }
+        });
         jpDialogBuilder.buildAndShowDialog();
     }
 
@@ -272,7 +285,7 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
             jpProgressBar.setCancelable(false);
             jpProgressBar.setText(version + "版本准备开始下载，请稍候");
             jpProgressBar.show();
-            Toast.makeText(LoginActivity.this, version + "版本开始下载", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, version + "版本开始下载", Toast.LENGTH_SHORT).show();
         });
         Request request = new Request.Builder().url(getApkUrlByVersion(version)).build();
         try (Response response = OkHttpUtil.client().newCall(request).execute()) {
@@ -293,7 +306,7 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
             if (jpProgressBar.isShowing()) {
                 jpProgressBar.dismiss();
             }
-            Toast.makeText(LoginActivity.this, version + "版本下载失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, version + "版本下载失败", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -316,7 +329,7 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
                     runOnUiThread(() -> jpProgressBar.setText(detail));
                 }
             }
-            installApk(LoginActivity.this, file);
+            installApk(this, file);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -330,11 +343,8 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
 
     /**
      * 启动安装apk
-     *
-     * @param context
-     * @param appFile
      */
-    private void installApk(Context context, File appFile) {
+    private void installApk(Context context, File apkFile) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -345,10 +355,10 @@ public final class LoginActivity extends BaseActivity implements OnClickListener
         }
         Uri fileUri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            fileUri = FileProvider.getUriForFile(context, getPackageName() + ".fileProvider", appFile);
+            fileUri = FileProvider.getUriForFile(context, getPackageName() + ".fileProvider", apkFile);
             intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
         } else {
-            intent.setDataAndType(Uri.fromFile(appFile), "application/vnd.android.package-archive");
+            intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
         }
         context.startActivity(intent);
     }

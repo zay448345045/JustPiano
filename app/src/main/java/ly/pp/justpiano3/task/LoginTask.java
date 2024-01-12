@@ -32,9 +32,7 @@ public final class LoginTask extends AsyncTask<Void, Void, String> {
         loginActivity.password = loginActivity.passwordTextView.getText().toString();
         if (!loginActivity.accountX.isEmpty() && !loginActivity.password.isEmpty()) {
             return OkHttpUtil.sendPostRequest("LoginServlet", new FormBody.Builder()
-                    .add("versionName", "4.3")
                     .add("packageNames", loginActivity.getPackageName())
-                    .add("versionCode", String.valueOf(41))
                     .add("username", loginActivity.accountX)
                     .add("password", loginActivity.password)
                     .add("local", BuildConfig.VERSION_NAME)
@@ -56,7 +54,7 @@ public final class LoginTask extends AsyncTask<Void, Void, String> {
             try {
                 newVersion = jSONObject.getString("version");
             } catch (JSONException ignored) {
-
+                // nothing
             }
             i = jSONObject.getInt("is");
             try {
@@ -75,10 +73,10 @@ public final class LoginTask extends AsyncTask<Void, Void, String> {
             loginActivity.jpProgressBar.dismiss();
         }
         switch (i) {
-            case 0, 4, 5 -> loginActivity.loginSuccess(i, message, title);
+            case 0, 4, 5 -> loginActivity.loginSuccess(i, message, title, newVersion);
             case 1, 2 -> {
                 if (!TextUtils.isEmpty(newVersion)) {
-                    loginActivity.addVersionUpdateDialog(message, newVersion);
+                    loginActivity.addVersionUpdateDialog(i, message, newVersion, true);
                 } else {
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(loginActivity);
                     jpDialogBuilder.setTitle("提示");
