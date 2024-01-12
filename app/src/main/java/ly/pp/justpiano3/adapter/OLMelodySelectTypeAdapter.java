@@ -12,8 +12,8 @@ import ly.pp.justpiano3.constant.Consts;
 public final class OLMelodySelectTypeAdapter extends BaseAdapter {
     private final OLMelodySelect olMelodySelect;
 
-    public OLMelodySelectTypeAdapter(OLMelodySelect oLMelodySelect) {
-        olMelodySelect = oLMelodySelect;
+    public OLMelodySelectTypeAdapter(OLMelodySelect olMelodySelect) {
+        this.olMelodySelect = olMelodySelect;
     }
 
     @Override

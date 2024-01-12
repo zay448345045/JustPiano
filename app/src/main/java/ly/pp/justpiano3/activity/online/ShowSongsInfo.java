@@ -73,7 +73,7 @@ public final class ShowSongsInfo extends BaseActivity implements OnClickListener
     public void updateSongInfo(int i) {
         if (showSongsInfoAdapter != null && songsList != null) {
             songsList.remove(i);
-            showSongsInfoAdapter.mo3500a(songsList);
+            showSongsInfoAdapter.updateSongList(songsList);
             showSongsInfoAdapter.notifyDataSetChanged();
         }
     }

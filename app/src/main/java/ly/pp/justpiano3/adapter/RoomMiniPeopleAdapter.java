@@ -12,9 +12,9 @@ public final class RoomMiniPeopleAdapter extends BaseAdapter {
     private final Context context;
     private final int[] genderResource;
 
-    RoomMiniPeopleAdapter(Context context, int[] iArr) {
+    RoomMiniPeopleAdapter(Context context, int[] genderResource) {
         this.context = context;
-        genderResource = iArr;
+        this.genderResource = genderResource;
     }
 
     @Override

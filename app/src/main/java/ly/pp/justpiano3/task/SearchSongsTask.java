@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.activity.online.SearchSongs;
-import ly.pp.justpiano3.adapter.SearchPeopleAdapter;
+import ly.pp.justpiano3.adapter.SearchUserAdapter;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.OkHttpUtil;
 import okhttp3.FormBody;
@@ -54,7 +54,7 @@ public final class SearchSongsTask extends AsyncTask<Void, Void, String> {
             } else if (searchSongs.get().headType == 6) {
                 try {
                     if (searchSongs.get().songsListView != null) {
-                        searchSongs.get().songsListView.setAdapter(new SearchPeopleAdapter(
+                        searchSongs.get().songsListView.setAdapter(new SearchUserAdapter(
                                 searchSongs.get(), searchSongs.get().userListHandle(GZIPUtil.ZIPTo(new JSONObject(str).getString("L")))));
                         searchSongs.get().songsListView.setCacheColorHint(Color.TRANSPARENT);
                     }

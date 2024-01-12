@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.task;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
@@ -19,26 +20,26 @@ public final class PopUserInfoTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... v) {
-        if (!popUserInfo.get().kitiName.isEmpty()) {
+        if (!TextUtils.isEmpty(popUserInfo.get().userName)) {
             return OkHttpUtil.sendPostRequest("GetUserInfo", new FormBody.Builder()
                     .add("head", String.valueOf(popUserInfo.get().headType))
                     .add("version", BuildConfig.VERSION_NAME)
                     .add("keywords", popUserInfo.get().keywords)
-                    .add("userName", popUserInfo.get().kitiName)
+                    .add("userName", popUserInfo.get().userName)
                     .build());
         }
         return "";
     }
 
     @Override
-    protected void onPostExecute(String str) {
+    protected void onPostExecute(String result) {
         if (popUserInfo.get().headType != 1) {
             popUserInfo.get().jpprogressBar.cancel();
             Toast.makeText(popUserInfo.get(), "发送成功!", Toast.LENGTH_SHORT).show();
-        } else if (str.length() > 3) {
-            PopUserInfo.showUserInfo(popUserInfo.get(), str);
+        } else if (result.length() > 3) {
+            popUserInfo.get().showUserInfo(result);
             popUserInfo.get().jpprogressBar.cancel();
-        } else if (str.equals("[]")) {
+        } else if (result.equals("[]")) {
             popUserInfo.get().jpprogressBar.cancel();
             Toast.makeText(popUserInfo.get(), "数据出错!", Toast.LENGTH_SHORT).show();
         } else {

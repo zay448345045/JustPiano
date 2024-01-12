@@ -52,35 +52,31 @@ public final class RoomTitleAdapter extends BaseAdapter {
         if (view == null) {
             view = layoutInflater.inflate(R.layout.ol_room_view, null);
         }
-        String name = list.get(i).getString("N");
-        int i2 = list.get(i).getInt("V");
-        byte b = list.get(i).getByte("I");
-        ((TextView) view.findViewById(R.id.ol_room_id)).setText(String.valueOf(b));
-        boolean isFull = list.get(i).getBoolean("IF");
-        int i3 = list.get(i).getInt("IP");
-        int i4 = list.get(i).getInt("D");
-        int i5 = list.get(i).getInt("PA");
-        ((GridView) view.findViewById(R.id.ol_player_grid)).setAdapter(new RoomMiniPeopleAdapter(olPlayHall, list.get(i).getIntArray("UA")));
+        byte roomId = list.get(i).getByte("I");
+        ((TextView) view.findViewById(R.id.ol_room_id)).setText(String.valueOf(roomId));
+        int hasPassword = list.get(i).getInt("PA");
+        ((GridView) view.findViewById(R.id.ol_player_grid)).setAdapter(
+                new RoomMiniPeopleAdapter(olPlayHall, list.get(i).getIntArray("UA")));
         TextView textView = view.findViewById(R.id.ol_room_name);
-        textView.setText(name);
-        textView.setBackgroundResource(ColorUtil.userColor[i2]);
-        textView.setOnClickListener(v -> olPlayHall.loadInRoomUserInfo(b));
+        textView.setText(list.get(i).getString("N"));
+        textView.setBackgroundResource(ColorUtil.userColor[list.get(i).getInt("V")]);
+        textView.setOnClickListener(v -> olPlayHall.loadInRoomUserInfo(roomId));
         Button button = view.findViewById(R.id.ol_getin_button);
-        if (i3 == 1) {
+        if (list.get(i).getInt("IP") == 1) {
             button.setText("弹奏中");
             button.setOnClickListener(null);
-        } else if (isFull) {
+        } else if (list.get(i).getBoolean("IF")) {
             button.setText("已满");
             button.setOnClickListener(null);
-        } else if (i5 == 1) {
+        } else if (hasPassword == 1) {
             button.setText("加密");
-            button.setOnClickListener(v -> olPlayHall.enterRoomHandle(i5, b));
-        } else if (i5 == 0) {
+            button.setOnClickListener(v -> olPlayHall.enterRoomHandle(hasPassword, roomId));
+        } else if (hasPassword == 0) {
             button.setText("进入");
-            button.setOnClickListener(v -> olPlayHall.enterRoomHandle(i5, b));
+            button.setOnClickListener(v -> olPlayHall.enterRoomHandle(hasPassword, roomId));
         }
         TextView roomModeTextView = view.findViewById(R.id.ol_room_mode);
-        RoomModeEnum roomMode = RoomModeEnum.ofCode(i4, RoomModeEnum.NORMAL);
+        RoomModeEnum roomMode = RoomModeEnum.ofCode(list.get(i).getInt("D"), RoomModeEnum.NORMAL);
         roomModeTextView.setBackgroundResource(Consts.groupModeColor[roomMode.getCode()]);
         roomModeTextView.setText(roomMode.getSimpleName());
         return view;

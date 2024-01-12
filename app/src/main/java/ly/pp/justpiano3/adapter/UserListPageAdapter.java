@@ -3,7 +3,6 @@ package ly.pp.justpiano3.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,20 +46,19 @@ public final class UserListPageAdapter extends BaseAdapter {
         if (view == null) {
             view = userListPage.getLayoutInflater().inflate(R.layout.friend_view, null);
         }
-        TextView nameTextView = view.findViewById(R.id.friend_name);
         // 这里使用等级标签显示时间
-        TextView timeTextView = view.findViewById(R.id.friend_level);
-        ImageView genderImageView = view.findViewById(R.id.friend_sex);
-        Button deleteButton = view.findViewById(R.id.friend_dele);
-        nameTextView.setText(simpleUser.getName());
-        timeTextView.setText("加入屏蔽时间：" + DateUtil.format(simpleUser.getDate(), DateUtil.TEMPLATE_DEFAULT));
-        genderImageView.setImageResource(Objects.equals(simpleUser.getGender(), "f") ? R.drawable.f : R.drawable.m);
-        deleteButton.setOnClickListener(v -> new JPDialogBuilder(userListPage)
+        ((TextView) view.findViewById(R.id.friend_name)).setText(simpleUser.getName());
+        ((TextView) view.findViewById(R.id.friend_level)).setText(
+                "加入屏蔽时间：" + DateUtil.format(simpleUser.getDate(), DateUtil.TEMPLATE_DEFAULT));
+        ((ImageView) view.findViewById(R.id.friend_sex)).setImageResource(
+                Objects.equals(simpleUser.getGender(), "f") ? R.drawable.f : R.drawable.m);
+        view.findViewById(R.id.friend_dele).setOnClickListener(v -> new JPDialogBuilder(userListPage)
                 .setTitle("删除用户")
                 .setMessage("从聊天屏蔽名单中刪除用户[" + simpleUser.getName() + "]?")
                 .setFirstButton("确定", (dialogInterface, i1) -> {
                     ChatUtil.chatBlackListRemoveUser(userListPage, simpleUser.getName());
-                    userListPage.listView.setAdapter(new UserListPageAdapter(userListPage, ChatUtil.getChatBlackList(userListPage)));
+                    userListPage.listView.setAdapter(new UserListPageAdapter(userListPage,
+                            ChatUtil.getChatBlackList(userListPage)));
                     dialogInterface.dismiss();
                 })
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog());

@@ -17,20 +17,20 @@ import ly.pp.justpiano3.activity.online.PopUserInfo;
 import ly.pp.justpiano3.activity.online.SearchSongs;
 import ly.pp.justpiano3.thread.PictureHandle;
 
-public final class SearchPeopleAdapter extends BaseAdapter {
+public final class SearchUserAdapter extends BaseAdapter {
     final SearchSongs searchSongs;
-    private final List<Map<String, Object>> peopleList;
+    private final List<Map<String, Object>> userList;
 
-    public SearchPeopleAdapter(SearchSongs searchSongs, List<Map<String, Object>> list) {
+    public SearchUserAdapter(SearchSongs searchSongs, List<Map<String, Object>> list) {
         this.searchSongs = searchSongs;
-        peopleList = list;
+        userList = list;
         searchSongs.searchSongsHandler = new Handler(searchSongs);
         searchSongs.pictureHandle = new PictureHandle(searchSongs.searchSongsHandler, 0);
     }
 
     @Override
     public int getCount() {
-        return peopleList.size();
+        return userList.size();
     }
 
     @Override
@@ -53,18 +53,18 @@ public final class SearchPeopleAdapter extends BaseAdapter {
         TextView numTextView = view.findViewById(R.id.ol_nuns_top);
         ImageView avatarImageView = view.findViewById(R.id.user_face);
         ((TextView) view.findViewById(R.id.ol_position_top)).setText(String.valueOf(i));
-        avatarImageView.setTag(peopleList.get(i).get("faceID").toString());
+        avatarImageView.setTag(userList.get(i).get("faceID").toString());
         searchSongs.pictureHandle.setBitmap(avatarImageView, searchSongs.loadNailFace(searchSongs));
-        String userName = peopleList.get(i).get("userName").toString();
+        String userName = userList.get(i).get("userName").toString();
         userNameTextView.setText(userName);
         ImageView genderImageView = view.findViewById(R.id.ol_user_sex);
-        genderImageView.setImageResource(Objects.equals(peopleList.get(i).get("userSex"), "f") ? R.drawable.f : R.drawable.m);
-        scoreTextView.setText("总分:" + peopleList.get(i).get("userScore"));
-        numTextView.setText("冠军:" + peopleList.get(i).get("userNuns"));
+        genderImageView.setImageResource(Objects.equals(userList.get(i).get("userSex"), "f") ? R.drawable.f : R.drawable.m);
+        scoreTextView.setText("总分:" + userList.get(i).get("userScore"));
+        numTextView.setText("冠军:" + userList.get(i).get("userNuns"));
         view.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.putExtra("head", 1);
-            intent.putExtra("userKitiName", userName);
+            intent.putExtra("userName", userName);
             intent.setClass(searchSongs, PopUserInfo.class);
             searchSongs.startActivity(intent);
         });

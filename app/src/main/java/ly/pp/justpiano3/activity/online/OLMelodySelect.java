@@ -137,12 +137,12 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
         return arrayList;
     }
 
-    public void bindAdapter(ListView listView, int i, int i2) {
+    public void bindAdapter(ListView listView, int orderByType, int songCount) {
         List<Map<String, Object>> list = songList;
         if (list != null && !list.isEmpty()) {
-            Collections.sort(list, new SongsComparator(this, i));
+            Collections.sort(list, new SongsComparator(this, orderByType));
         }
-        listView.setAdapter(new OLMelodySelectAdapter(this, i2, list));
+        listView.setAdapter(new OLMelodySelectAdapter(this, songCount, list));
     }
 
     @Override

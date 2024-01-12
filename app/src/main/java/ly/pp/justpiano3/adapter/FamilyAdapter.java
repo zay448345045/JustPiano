@@ -69,24 +69,24 @@ public final class FamilyAdapter extends BaseAdapter {
             return view;
         }
         String contribution = (String) list.get(i).get("C");
-        String id = (String) list.get(i).get("I");
+        String familyId = (String) list.get(i).get("I");
         String count = list.get(i).get("U") + "/" + list.get(i).get("T");
-        TextView positionText = view.findViewById(R.id.ol_family_position);
-        TextView nameText = view.findViewById(R.id.ol_family_name);
-        TextView contributionText = view.findViewById(R.id.ol_family_contribution);
-        TextView countText = view.findViewById(R.id.ol_family_count);
-        countText.setText(count);
-        nameText.setText(name);
-        contributionText.setText(contribution);
+        TextView positionTextView = view.findViewById(R.id.ol_family_position);
+        TextView nameTextView = view.findViewById(R.id.ol_family_name);
+        TextView contributionTextView = view.findViewById(R.id.ol_family_contribution);
+        TextView countTextView = view.findViewById(R.id.ol_family_count);
+        countTextView.setText(count);
+        nameTextView.setText(name);
+        contributionTextView.setText(contribution);
         String position = (String) list.get(i).get("P");
-        positionText.setText(position);
+        positionTextView.setText(position);
         ImageView img = view.findViewById(R.id.ol_family_pic);
         if (position == null || position.equals("0")) {
             img.setImageResource(R.drawable.null_pic);
         }
         view.setOnClickListener(v -> {
             Intent intent = new Intent(olPlayHallRoom, OLFamily.class);
-            intent.putExtra("familyID", id);
+            intent.putExtra("familyID", familyId);
             intent.putExtra("position", i);
             intent.putExtra("pageNum", olPlayHallRoom.familyPageNum);
             intent.putExtra("myFamilyPosition", olPlayHallRoom.myFamilyPosition.getText().toString());
@@ -99,37 +99,37 @@ public final class FamilyAdapter extends BaseAdapter {
             olPlayHallRoom.finish();
         });
         byte[] pic = ((byte[]) list.get(i).get("J"));
-        if (pic == null || pic.length <= 1) {
-            ImageLoadUtil.familyBitmapCacheMap.put(id, null);
+        if (pic == null || pic.length == 0) {
+            ImageLoadUtil.familyBitmapCacheMap.put(familyId, null);
             img.setImageResource(R.drawable.family);
         } else {
             Bitmap familyBitmap = BitmapFactory.decodeByteArray(pic, 0, pic.length);
             img.setImageBitmap(familyBitmap);
-            ImageLoadUtil.familyBitmapCacheMap.put(id, familyBitmap);
+            ImageLoadUtil.familyBitmapCacheMap.put(familyId, familyBitmap);
             ThreadPoolUtil.execute(() -> {
-                File file1 = new File(olPlayHallRoom.getFilesDir(), id + ".webp");
+                File file = new File(olPlayHallRoom.getFilesDir(), familyId + ".webp");
                 try {
-                    if (!file1.exists()) {
-                        file1.createNewFile();
+                    if (!file.exists()) {
+                        file.createNewFile();
                     }
-                    OutputStream outputStream1 = new FileOutputStream(file1);
-                    outputStream1.write(pic);
-                    outputStream1.close();
+                    OutputStream outputStream = new FileOutputStream(file);
+                    outputStream.write(pic);
+                    outputStream.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
         }
         if (i >= 0 && i < Consts.positionColor.length) {
-            nameText.setTextColor(Consts.positionColor[i]);
-            contributionText.setTextColor(Consts.positionColor[i]);
-            countText.setTextColor(Consts.positionColor[i]);
-            positionText.setTextColor(Consts.positionColor[i]);
+            nameTextView.setTextColor(Consts.positionColor[i]);
+            contributionTextView.setTextColor(Consts.positionColor[i]);
+            countTextView.setTextColor(Consts.positionColor[i]);
+            positionTextView.setTextColor(Consts.positionColor[i]);
         } else {
-            nameText.setTextColor(Color.WHITE);
-            contributionText.setTextColor(Color.WHITE);
-            countText.setTextColor(Color.WHITE);
-            positionText.setTextColor(Color.WHITE);
+            nameTextView.setTextColor(Color.WHITE);
+            contributionTextView.setTextColor(Color.WHITE);
+            countTextView.setTextColor(Color.WHITE);
+            positionTextView.setTextColor(Color.WHITE);
         }
         return view;
     }

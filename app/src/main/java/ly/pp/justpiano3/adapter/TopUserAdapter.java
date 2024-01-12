@@ -49,16 +49,14 @@ public final class TopUserAdapter extends BaseAdapter {
         if (view == null) {
             view = showTopInfo.layoutInflater.inflate(R.layout.ol_top_view, null);
         }
-        TextView positionTextView = view.findViewById(R.id.ol_position_top);
-        TextView userNameTextView = view.findViewById(R.id.ol_user_top);
         TextView scoreTextView = view.findViewById(R.id.ol_score_top);
         TextView numTextView = view.findViewById(R.id.ol_nuns_top);
         ImageView avatarImageView = view.findViewById(R.id.user_face);
         avatarImageView.setTag(list.get(i).get("faceID").toString());
         showTopInfo.pictureHandle.setBitmap(avatarImageView, showTopInfo.setDefaultAvatar(showTopInfo));
-        positionTextView.setText(String.valueOf(showTopInfo.position + i));
+        ((TextView) view.findViewById(R.id.ol_position_top)).setText(String.valueOf(showTopInfo.position + i));
         String userName = list.get(i).get("userName").toString();
-        userNameTextView.setText(userName);
+        ((TextView) view.findViewById(R.id.ol_user_top)).setText(userName);
         ImageView genderImageView = view.findViewById(R.id.ol_user_sex);
         genderImageView.setImageResource(Objects.equals(list.get(i).get("userSex"), "f") ? R.drawable.f : R.drawable.m);
         int intValue = (Integer) list.get(i).get("userScore");
@@ -86,13 +84,13 @@ public final class TopUserAdapter extends BaseAdapter {
             }
             case 10 -> {
                 numTextView.setText("等级:" + list.get(i).get("userNuns"));
-                scoreTextView.setText(String.valueOf(intValue / 10) + "级" + ((intValue % 10)) + "阶");
+                scoreTextView.setText(intValue / 10 + "级" + ((intValue % 10)) + "阶");
             }
         }
         view.setOnClickListener(v -> {
             Intent intent = new Intent(showTopInfo, PopUserInfo.class);
             intent.putExtra("head", 1);
-            intent.putExtra("userKitiName", userName);
+            intent.putExtra("userName", userName);
             showTopInfo.startActivity(intent);
         });
         return view;

@@ -46,24 +46,24 @@ public final class ChallengeListAdapter extends BaseAdapter {
         if (name == null) {
             return view;
         }
-        TextView positionText = view.findViewById(R.id.ol_challenge_position);
-        TextView nameText = view.findViewById(R.id.ol_challenge_user);
-        TextView scoreText = view.findViewById(R.id.ol_challenge_score);
-        TextView timeText = view.findViewById(R.id.ol_challenge_time);
-        nameText.setText(name);
-        scoreText.setText(list.get(i).get("S"));
-        timeText.setText(list.get(i).get("T"));
-        positionText.setText(list.get(i).get("P"));
+        TextView positionTextView = view.findViewById(R.id.ol_challenge_position);
+        TextView userNameTextView = view.findViewById(R.id.ol_challenge_user);
+        TextView scoreTextView = view.findViewById(R.id.ol_challenge_score);
+        TextView timeTextView = view.findViewById(R.id.ol_challenge_time);
+        userNameTextView.setText(name);
+        scoreTextView.setText(list.get(i).get("S"));
+        timeTextView.setText(list.get(i).get("T"));
+        positionTextView.setText(list.get(i).get("P"));
         if (i >= 0 && i < Consts.positionColor.length) {
-            nameText.setTextColor(Consts.positionColor[i]);
-            scoreText.setTextColor(Consts.positionColor[i]);
-            timeText.setTextColor(Consts.positionColor[i]);
-            positionText.setTextColor(Consts.positionColor[i]);
+            positionTextView.setTextColor(Consts.positionColor[i]);
+            userNameTextView.setTextColor(Consts.positionColor[i]);
+            scoreTextView.setTextColor(Consts.positionColor[i]);
+            timeTextView.setTextColor(Consts.positionColor[i]);
         } else {
-            nameText.setTextColor(Color.WHITE);
-            scoreText.setTextColor(Color.WHITE);
-            timeText.setTextColor(Color.WHITE);
-            positionText.setTextColor(Color.WHITE);
+            positionTextView.setTextColor(Color.WHITE);
+            userNameTextView.setTextColor(Color.WHITE);
+            scoreTextView.setTextColor(Color.WHITE);
+            timeTextView.setTextColor(Color.WHITE);
         }
         return view;
     }
