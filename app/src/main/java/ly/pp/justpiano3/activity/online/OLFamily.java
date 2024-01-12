@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.adapter.FamilyPeopleAdapter;
+import ly.pp.justpiano3.adapter.FamilyUserAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.User;
 import ly.pp.justpiano3.enums.FamilyPositionEnum;
@@ -100,20 +100,20 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
 
     public void loadManageFamilyPopupWindow(Bundle bundle) {
         View inflate = LayoutInflater.from(this).inflate(R.layout.ol_family_manage, null);
-        Button button = inflate.findViewById(R.id.ol_family_levelup);
+        Button levelUpButton = inflate.findViewById(R.id.ol_family_levelup);
         if (bundle.getInt("R", 0) == 1) {
-            button.setEnabled(true);
+            levelUpButton.setEnabled(true);
         }
         TextView info = inflate.findViewById(R.id.ol_family_levelup_info);
         info.setText(bundle.getString("I", "不断提升您的等级与考级，即可将您的家族升级为人数更多、规模更大的家族!"));
-        PopupWindow popupWindow = new JPPopupWindow(this);
-        popupWindow.setContentView(inflate);
-        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
+        PopupWindow manageFamilyPopupWindow = new JPPopupWindow(this);
+        manageFamilyPopupWindow.setContentView(inflate);
+        manageFamilyPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
         inflate.findViewById(R.id.ol_family_changedecl).setOnClickListener(this);
-        button.setOnClickListener(this);
+        levelUpButton.setOnClickListener(this);
         inflate.findViewById(R.id.ol_family_changepic).setOnClickListener(this);
         inflate.findViewById(R.id.ol_family_changetest).setOnClickListener(this);
-        popupWindow.showAtLocation(manageFamilyButton, Gravity.CENTER, 0, 0);
+        manageFamilyPopupWindow.showAtLocation(manageFamilyButton, Gravity.CENTER, 0, 0);
     }
 
     /**
@@ -262,7 +262,6 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             jpDialogBuilder.setMessage("当前版本不支持家族族徽的上传，请至官网上传");
             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
             jpDialogBuilder.buildAndShowDialog();
-        } else if (id == R.id.ol_family_changetest) {
         } else if (id == R.id.ol_family_levelup) {
             OnlineFamilyDTO.Builder builder;
             builder = OnlineFamilyDTO.newBuilder();
@@ -270,10 +269,10 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             sendMsg(OnlineProtocolType.FAMILY, builder.build());
         } else if (id == R.id.column_position) {
             Collections.sort(userList, (map1, map2) -> map1.get("P").compareTo(map2.get("P")));
-            bindFamilyPeopleListViewAdapter(userListView, userList);
+            bindFamilyUserListViewAdapter(userListView, userList);
         } else if (id == R.id.column_family_name) {
             Collections.sort(userList, (map1, map2) -> map2.get("O").compareTo(map1.get("O")));
-            bindFamilyPeopleListViewAdapter(userListView, userList);
+            bindFamilyUserListViewAdapter(userListView, userList);
         } else if (id == R.id.column_last_login_time) {
             Collections.sort(userList, new Comparator<>() {
                 private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -288,15 +287,15 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
                     return 0;
                 }
             });
-            bindFamilyPeopleListViewAdapter(userListView, userList);
+            bindFamilyUserListViewAdapter(userListView, userList);
         } else if (id == R.id.column_level) {
             Collections.sort(userList, (map1, map2) -> Integer.compare(
                     Integer.parseInt(map2.get("L")), Integer.parseInt(map1.get("L"))));
-            bindFamilyPeopleListViewAdapter(userListView, userList);
+            bindFamilyUserListViewAdapter(userListView, userList);
         } else if (id == R.id.column_contribution) {
             Collections.sort(userList, (map1, map2) -> Integer.compare(
                     Integer.parseInt(map2.get("C")), Integer.parseInt(map1.get("C"))));
-            bindFamilyPeopleListViewAdapter(userListView, userList);
+            bindFamilyUserListViewAdapter(userListView, userList);
         }
     }
 
@@ -414,8 +413,8 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
-    public void bindFamilyPeopleListViewAdapter(ListView listView, List<Map<String, String>> list) {
-        listView.setAdapter(new FamilyPeopleAdapter(list, layoutinflater, this));
+    public void bindFamilyUserListViewAdapter(ListView listView, List<Map<String, String>> list) {
+        listView.setAdapter(new FamilyUserAdapter(list, layoutinflater, this));
     }
 
     public void sendMsg(int type, MessageLite msg) {

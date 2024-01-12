@@ -23,7 +23,7 @@ public final class PianoPlayHandler extends Handler {
 
     @Override
     public void handleMessage(Message message) {
-        final PianoPlay pianoPlay = (PianoPlay) weakReference.get();
+        PianoPlay pianoPlay = (PianoPlay) weakReference.get();
         switch (message.what) {
             case 1 -> post(() -> {
                 pianoPlay.gradeList.clear();

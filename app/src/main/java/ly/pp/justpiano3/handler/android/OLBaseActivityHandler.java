@@ -19,7 +19,7 @@ public final class OLBaseActivityHandler extends Handler {
 
     @Override
     public void handleMessage(Message message) {
-        final OLBaseActivity olBaseActivity = (OLBaseActivity) weakReference.get();
+        OLBaseActivity olBaseActivity = (OLBaseActivity) weakReference.get();
         if (message.what == 0) {
             post(() -> {
                 olBaseActivity.setOnline(false);

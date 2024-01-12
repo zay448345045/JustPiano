@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import ly.pp.justpiano3.activity.online.OLFamily;
@@ -30,81 +31,77 @@ public final class FamilyHandler extends Handler {
 
     @Override
     public void handleMessage(@NonNull Message message) {
-        final OLFamily family = (OLFamily) weakReference.get();
-        try {
-            switch (message.what) {
-                case 1 -> post(() -> {
-                    family.userList.clear();
-                    Bundle bundle = message.getData();
-                    int size = bundle.size() - 6;
-                    if (size == 0) {
-                        HashMap<String, String> hashMap = new HashMap<>();
-                        hashMap.put("C", "");
-                        hashMap.put("N", "(入族后可显示族员)");
-                        hashMap.put("L", "");
-                        hashMap.put("O", "");
-                        hashMap.put("P", "");
-                        hashMap.put("S", "");
-                        hashMap.put("D", "");
-                        family.userList.add(hashMap);
-                    } else {
-                        for (int i = 0; i < size; i++) {
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("C", bundle.getBundle(String.valueOf(i)).getString("C"));
-                            hashMap.put("N", bundle.getBundle(String.valueOf(i)).getString("N"));
-                            hashMap.put("L", bundle.getBundle(String.valueOf(i)).getString("L"));
-                            hashMap.put("O", bundle.getBundle(String.valueOf(i)).getString("O"));
-                            hashMap.put("P", bundle.getBundle(String.valueOf(i)).getString("P"));
-                            hashMap.put("S", bundle.getBundle(String.valueOf(i)).getString("S"));
-                            hashMap.put("D", bundle.getBundle(String.valueOf(i)).getString("D"));
-                            family.userList.add(hashMap);
-                        }
+        OLFamily olFamily = (OLFamily) weakReference.get();
+        switch (message.what) {
+            case 1 -> post(() -> {
+                olFamily.userList.clear();
+                Bundle bundle = message.getData();
+                int size = bundle.size() - 6;
+                if (size == 0) {
+                    Map<String, String> familyUserMap = new HashMap<>();
+                    familyUserMap.put("C", "");
+                    familyUserMap.put("N", "(入族后可显示族员)");
+                    familyUserMap.put("L", "");
+                    familyUserMap.put("O", "");
+                    familyUserMap.put("P", "");
+                    familyUserMap.put("S", "");
+                    familyUserMap.put("D", "");
+                    olFamily.userList.add(familyUserMap);
+                } else {
+                    for (int i = 0; i < size; i++) {
+                        Map<String, String> familyUserMap = new HashMap<>();
+                        familyUserMap.put("C", bundle.getBundle(String.valueOf(i)).getString("C"));
+                        familyUserMap.put("N", bundle.getBundle(String.valueOf(i)).getString("N"));
+                        familyUserMap.put("L", bundle.getBundle(String.valueOf(i)).getString("L"));
+                        familyUserMap.put("O", bundle.getBundle(String.valueOf(i)).getString("O"));
+                        familyUserMap.put("P", bundle.getBundle(String.valueOf(i)).getString("P"));
+                        familyUserMap.put("S", bundle.getBundle(String.valueOf(i)).getString("S"));
+                        familyUserMap.put("D", bundle.getBundle(String.valueOf(i)).getString("D"));
+                        olFamily.userList.add(familyUserMap);
                     }
-                    family.bindFamilyPeopleListViewAdapter(family.userListView, family.userList);
-                    family.declarationTextView.setText("家族宣言:\n" + bundle.getString("D"));
-                    family.infoTextView.setText("家族名称:" + bundle.getString("N")
-                            + "\n家族成立日期:" + bundle.getString("T")
-                            + "\n族长:" + bundle.getString("Z")
-                            + "\n家族总贡献:" + bundle.getString("C"));
-                    switch (Objects.requireNonNull(bundle.getString("P"))) {
-                        case "族长" -> family.familyPositionEnum = FamilyPositionEnum.LEADER;
-                        case "副族长" -> family.familyPositionEnum = FamilyPositionEnum.VICE_LEADER;
-                        case "族员" -> family.familyPositionEnum = FamilyPositionEnum.MEMBER;
-                        default -> family.familyPositionEnum = FamilyPositionEnum.NOT_IN_FAMILY;
-                    }
-                    family.positionHandle();
-                });
-                case 5 -> post(() -> {
-                    family.jpprogressBar.dismiss();
-                    String info = message.getData().getString("I");
-                    Toast.makeText(family, info, Toast.LENGTH_SHORT).show();
-                    if (family.userInfoPopupWindow != null && family.userInfoPopupWindow.isShowing()) {
-                        family.userInfoPopupWindow.dismiss();
-                    }
-                    OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
-                    if (info.equals("您所在的家族已解散")) {
-                        builder.setType(0);
-                        family.sendMsg(OnlineProtocolType.FAMILY, builder.build());
-                        Intent intent = new Intent(family, OLPlayHallRoom.class);
-                        intent.putExtra("HEAD", 16);
-                        family.startActivity(intent);
-                        family.finish();
-                    } else {
-                        builder.setType(1);
-                        builder.setFamilyId(Integer.parseInt(family.familyID));
-                        family.sendMsg(OnlineProtocolType.FAMILY, builder.build());
-                    }
-                });
-                case 8 -> post(() -> {
-                    family.jpprogressBar.dismiss();
-                    family.loadManageFamilyPopupWindow(message.getData());
-                });
-                case 23 -> post(() -> family.showInfoDialog(message.getData()));
-                default -> {
                 }
+                olFamily.bindFamilyUserListViewAdapter(olFamily.userListView, olFamily.userList);
+                olFamily.declarationTextView.setText("家族宣言:\n" + bundle.getString("D"));
+                olFamily.infoTextView.setText("家族名称:" + bundle.getString("N")
+                        + "\n家族成立日期:" + bundle.getString("T")
+                        + "\n族长:" + bundle.getString("Z")
+                        + "\n家族总贡献:" + bundle.getString("C"));
+                switch (Objects.requireNonNull(bundle.getString("P"))) {
+                    case "族长" -> olFamily.familyPositionEnum = FamilyPositionEnum.LEADER;
+                    case "副族长" -> olFamily.familyPositionEnum = FamilyPositionEnum.VICE_LEADER;
+                    case "族员" -> olFamily.familyPositionEnum = FamilyPositionEnum.MEMBER;
+                    default -> olFamily.familyPositionEnum = FamilyPositionEnum.NOT_IN_FAMILY;
+                }
+                olFamily.positionHandle();
+            });
+            case 5 -> post(() -> {
+                olFamily.jpprogressBar.dismiss();
+                String info = message.getData().getString("I");
+                Toast.makeText(olFamily, info, Toast.LENGTH_SHORT).show();
+                if (olFamily.userInfoPopupWindow != null && olFamily.userInfoPopupWindow.isShowing()) {
+                    olFamily.userInfoPopupWindow.dismiss();
+                }
+                OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+                if (Objects.equals(info, "您所在的家族已解散")) {
+                    builder.setType(0);
+                    olFamily.sendMsg(OnlineProtocolType.FAMILY, builder.build());
+                    Intent intent = new Intent(olFamily, OLPlayHallRoom.class);
+                    intent.putExtra("HEAD", 16);
+                    olFamily.startActivity(intent);
+                    olFamily.finish();
+                } else {
+                    builder.setType(1);
+                    builder.setFamilyId(Integer.parseInt(olFamily.familyID));
+                    olFamily.sendMsg(OnlineProtocolType.FAMILY, builder.build());
+                }
+            });
+            case 8 -> post(() -> {
+                olFamily.jpprogressBar.dismiss();
+                olFamily.loadManageFamilyPopupWindow(message.getData());
+            });
+            case 23 -> post(() -> olFamily.showInfoDialog(message.getData()));
+            default -> {
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

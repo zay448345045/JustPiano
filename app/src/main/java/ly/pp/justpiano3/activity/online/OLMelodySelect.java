@@ -66,7 +66,7 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
     private boolean songNameOrderByReverse = true;
     private boolean itemOrderByReverse = true;
     private boolean playCountOrderByReverse = true;
-    private PopupWindow popupWindow;
+    private PopupWindow optionsPopupWindow;
     private final List<String> pageList = new ArrayList<>();
     private boolean firstLoadFocusFinish;
     public List<Map<String, Object>> songList;
@@ -153,7 +153,7 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
                 int i = data.getInt("selIndex");
                 pageButton.setText(" " + pageList.get(i) + " ");
                 index = i;
-                popupWindow.dismiss();
+                optionsPopupWindow.dismiss();
                 new OLMelodySelectTask(this).execute();
             }
             case 2 -> {
@@ -218,8 +218,7 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
             finish();
         } else if (id == R.id.ol_top_next) {
             if (firstLoadFocusFinish) {
-                popupWindow.showAsDropDown(pageButton);
-                return;
+                optionsPopupWindow.showAsDropDown(pageButton);
             }
         }
     }
@@ -276,15 +275,12 @@ public final class OLMelodySelect extends BaseActivity implements Callback, OnCl
     @Override
     public void onWindowFocusChanged(boolean z) {
         while (!firstLoadFocusFinish) {
-            Handler handler = new Handler(this);
-            int width = pageButton.getWidth() + 40;
             fillPageList(pageNum);
-            View inflate = getLayoutInflater().inflate(R.layout.options, null);
-            ListView listView = inflate.findViewById(R.id.list);
-            popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, pageList, 1);
-            listView.setAdapter(popupWindowSelectAdapter);
-            popupWindow = new JPPopupWindow(inflate, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-            popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_face, getTheme()));
+            View optionsView = getLayoutInflater().inflate(R.layout.options, null);
+            popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, new Handler(this), pageList, 1);
+            ((ListView)optionsView.findViewById(R.id.list)).setAdapter(popupWindowSelectAdapter);
+            optionsPopupWindow = new JPPopupWindow(optionsView,pageButton.getWidth() + 40, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            optionsPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_face, getTheme()));
             firstLoadFocusFinish = true;
         }
     }

@@ -76,7 +76,6 @@ public final class NettyUtil {
         mMainHandler = new Handler(Looper.getMainLooper());
         mHandlerThread = new HandlerThread(NettyUtil.class.getSimpleName());
         mHandlerThread.start();
-
         mHandler = new Handler(mHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {

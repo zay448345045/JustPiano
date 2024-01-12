@@ -66,7 +66,6 @@ public final class ImageLoader {
     private boolean mIsDiskLruCacheCreated = false;
     private final LruCache<String, Bitmap> mMemoryCache;
     private DiskLruCache mDiskLruCache = null;
-    private ImageResizerUtil mImageResizerUtil;
     // Handler
     private final Handler mMainHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -191,7 +190,7 @@ public final class ImageLoader {
         if (snapShot != null) {
             FileInputStream fileInputStream = (FileInputStream) snapShot.getInputStream(DISK_CACHE_INDEX);
             FileDescriptor fileDescriptor = fileInputStream.getFD();
-            mImageResizerUtil = new ImageResizerUtil(mContext);
+            ImageResizerUtil mImageResizerUtil = new ImageResizerUtil(mContext);
             bitmap = mImageResizerUtil.decodeSampledBitmapFromFileDescriptor(fileDescriptor);
             if (bitmap != null) {
                 // 读取磁盘缓存时 往内存中放一份
