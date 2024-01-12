@@ -236,13 +236,13 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
             builder.setType(7);
             builder.setUserName(currentUserName);
             sendMsg(OnlineProtocolType.FAMILY, builder.build());
-        } else if (id == R.id.ol_chat_black) {  // 族长转移
+        } else if (id == R.id.ol_chat_black) {  // 族长转让
             if (userInfoPopupWindow != null && userInfoPopupWindow.isShowing()) {
                 userInfoPopupWindow.dismiss();
             }
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
             jpDialogBuilder.setTitle("提示");
-            jpDialogBuilder.setMessage("确定要把族长转移给Ta吗?");
+            jpDialogBuilder.setMessage("确定花费50音符将族长转让给Ta吗?");
             jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
                         OnlineFamilyDTO.Builder familyBuilder = OnlineFamilyDTO.newBuilder();
                         familyBuilder.setType(11);
@@ -346,10 +346,10 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         Button mailSendButton = userOperationView.findViewById(R.id.ol_chat_b);  // 私信
         Button kickOutButton = userOperationView.findViewById(R.id.ol_kickout_b);  // 移出家族
         Button positionChangeButton = userOperationView.findViewById(R.id.ol_couple_b);  // 提升/撤职副族长
-        Button leaderChangeButton = userOperationView.findViewById(R.id.ol_chat_black);  // 转移族长
+        Button leaderChangeButton = userOperationView.findViewById(R.id.ol_chat_black);  // 族长转让
         mailSendButton.setText("发送私信");
         kickOutButton.setText("移出家族");
-        leaderChangeButton.setText("族长转移");
+        leaderChangeButton.setText("族长转让");
         userOperationView.findViewById(R.id.ol_closepos_b).setVisibility(View.GONE);
         userInfoPopupWindow.setContentView(userOperationView);
         userInfoPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
