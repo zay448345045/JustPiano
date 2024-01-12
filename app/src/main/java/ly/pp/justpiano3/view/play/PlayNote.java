@@ -106,7 +106,8 @@ public final class PlayNote {
         posiAdd15AddAnim = posiAdd15 + playView.progress;
         if (posiAdd15AddAnim >= playView.halfHeightSub20) {
             if (newNote && hide) {
-                playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) (volume * GlobalSetting.getChordVolume()));
+                int handledVolume = Math.max(0, Math.min(Byte.MAX_VALUE, (int) (volume * GlobalSetting.getChordVolume())));
+                playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) handledVolume);
                 newNote = false;
                 return posiAdd15AddAnim;
             } else if ((double) posiAdd15AddAnim >= playView.whiteKeyHeightAdd90) {
@@ -124,12 +125,14 @@ public final class PlayNote {
         if (posiAdd15AddAnim >= playView.halfHeightSub20) {
             if (GlobalSetting.getAutoPlay()) {
                 if (newNote && ((track != hand || hide) && GlobalSetting.isOpenChord())) {
-                    playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) (volume * GlobalSetting.getChordVolume()));
+                    int handledVolume = Math.max(0, Math.min(Byte.MAX_VALUE, (int) (volume * GlobalSetting.getChordVolume())));
+                    playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) handledVolume);
                     newNote = false;
                     return posiAdd15AddAnim;
                 }
             } else if (newNote && track != hand && GlobalSetting.isOpenChord()) {
-                playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) (volume * GlobalSetting.getChordVolume()));
+                int handledVolume = Math.max(0, Math.min(Byte.MAX_VALUE, (int) (volume * GlobalSetting.getChordVolume())));
+                playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) handledVolume);
                 newNote = false;
                 return posiAdd15AddAnim;
             }

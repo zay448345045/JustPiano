@@ -119,7 +119,7 @@ public final class SoundEngineUtil {
     }
 
     public static void playSound(byte pitch, byte volume) {
-        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH || volume <= 0) {
             return;
         }
         triggerDown(MidiUtil.MAX_PIANO_MIDI_PITCH - pitch, volume);
