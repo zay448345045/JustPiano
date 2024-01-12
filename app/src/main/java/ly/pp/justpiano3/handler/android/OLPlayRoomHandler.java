@@ -45,10 +45,10 @@ public final class OLPlayRoomHandler extends Handler {
                         songFilePath = "songs/" + songFilePath + ".pm";
                         olPlayRoom.currentPlaySongPath = songFilePath;
                         String[] simpleSongInfo = olPlayRoom.querySongNameAndDiffByPath(songFilePath);
-                        String string = simpleSongInfo[0];
-                        String str2 = simpleSongInfo[1];
-                        if (string != null) {
-                            olPlayRoom.songNameScrollTextView.setText(string + "[难度:" + str2 + "]");
+                        String songName = simpleSongInfo[0];
+                        String songDegree = simpleSongInfo[1];
+                        if (songName != null) {
+                            olPlayRoom.songNameScrollTextView.setText(songName + "[难度:" + songDegree + "]");
                             if (olPlayRoom.getMode() == RoomModeEnum.NORMAL.getCode()) {
                                 if (tune > 0) {
                                     olPlayRoom.settingButton.setText(olPlayRoom.settingButton.getText().toString().charAt(0) + "+" + tune);
@@ -63,12 +63,12 @@ public final class OLPlayRoomHandler extends Handler {
                             }
                         }
                     }
-                    int i = message.getData().getBoolean("MSG_I") ? 1 : 0;
-                    int i2 = message.getData().getInt("MSG_CT");
-                    byte b = (byte) message.getData().getInt("MSG_CI");
-                    String string = message.getData().getString("MSG_C");
-                    if (!TextUtils.isEmpty(string)) {
-                        olPlayRoom.buildNewCoupleDialog(i, string, i2, b);
+                    int dialogType = message.getData().getBoolean("MSG_I") ? 1 : 0;
+                    int coupleType = message.getData().getInt("MSG_CT");
+                    byte couplePosition = (byte) message.getData().getInt("MSG_CI");
+                    String dialogMessage = message.getData().getString("MSG_C");
+                    if (!TextUtils.isEmpty(dialogMessage)) {
+                        olPlayRoom.buildAndShowCpDialog(dialogType, dialogMessage, coupleType, couplePosition);
                     }
                 });
                 case 2, 4 -> post(() -> olPlayRoom.handleChat(message));
@@ -155,12 +155,12 @@ public final class OLPlayRoomHandler extends Handler {
                 case 16 -> post(() -> olPlayRoom.handleSetUserInfo(message));
                 case 21 -> post(olPlayRoom::handleOffline);
                 case 22 -> post(() -> {
-                    int i = message.getData().getInt("MSG_T");
-                    int i2 = message.getData().getInt("MSG_CT");
-                    byte b = (byte) message.getData().getInt("MSG_CI");
-                    String string = message.getData().getString("MSG_C");
-                    if (i != 0) {
-                        olPlayRoom.buildNewCoupleDialog(i, string, i2, b);
+                    int dialogType = message.getData().getInt("MSG_T");
+                    int coupleType = message.getData().getInt("MSG_CT");
+                    byte couplePosition = (byte) message.getData().getInt("MSG_CI");
+                    String dialogMessage = message.getData().getString("MSG_C");
+                    if (dialogType != 0) {
+                        olPlayRoom.buildAndShowCpDialog(dialogType, dialogMessage, coupleType, couplePosition);
                     }
                 });
                 case 23 -> post(() -> olPlayRoom.showInfoDialog(message.getData()));

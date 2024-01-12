@@ -77,7 +77,7 @@ public final class ChattingAdapter extends BaseAdapter {
         }
         userNameTextView.setText(userNameTextView.getText() + ": ");
         // 投递通知到房间内处理
-        if (type != OnlineProtocolType.MsgType.SYSTEM_MESSAGE && userNameTextView != null) {
+        if (type != OnlineProtocolType.MsgType.SYSTEM_MESSAGE) {
             userNameTextView.setOnClickListener(v -> {
                 if (activity instanceof OLRoomActivity olRoomActivity && userName != null) {
                     olRoomActivity.setPrivateChatUserName(userName);
@@ -175,78 +175,82 @@ public final class ChattingAdapter extends BaseAdapter {
             }
             msgTextView.setText(message);
         } else if (message != null) {
-            ImageView expressImageView = (ImageView) view.findViewById(R.id.ol_express_image);
+            ImageView expressImageView = view.findViewById(R.id.ol_express_image);
             userNameTextView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + userName);
             try {
                 expressImageView.setImageResource(Consts.expressions[Integer.parseInt(message.substring(2))]);
             } catch (Exception e) {
-                switch (message) {
-                    case "//dalao0" ->
-                            expressImageView.setImageResource(R.drawable.dalao0);
-                    case "//7yxg" ->
-                            expressImageView.setImageResource(R.drawable.qiyexingguo);
-                    case "//family" ->
-                            expressImageView.setImageResource(R.drawable.family);
-                    case "//redheart" ->
-                            expressImageView.setImageResource(R.drawable.couple_1);
-                    case "//greenheart" ->
-                            expressImageView.setImageResource(R.drawable.couple_2);
-                    case "//purpleheart" ->
-                            expressImageView.setImageResource(R.drawable.couple_3);
-                    case "//crawl" ->
-                            expressImageView.setImageResource(R.drawable.pazou);
-                    case "//greencircle" ->
-                            expressImageView.setImageResource(R.drawable.greenlight);
-                    case "//jpgq" ->
-                            expressImageView.setImageResource(R.drawable.icon);
-                    case "//soundstop" ->
-                            expressImageView.setImageResource(R.drawable.stop);
-                    case "//greensquare" ->
-                            expressImageView.setImageResource(R.drawable.button_down);
-                    case "//blacksquare" ->
-                            expressImageView.setImageResource(R.drawable.button_up);
-                    case "//rightarrow" ->
-                            expressImageView.setImageResource(R.drawable.for_arrow);
-                    case "//leftarrow" ->
-                            expressImageView.setImageResource(R.drawable.back_arrow);
-                    case "//music" ->
-                            expressImageView.setImageResource(R.drawable.music);
-                    case "//bluecircle" ->
-                            expressImageView.setImageResource(R.drawable.redlight);
-                    case "//jpgq1" ->
-                            expressImageView.setImageResource(R.drawable.jpgq1);
-                    case "//huaji" ->
-                            expressImageView.setImageResource(R.drawable.huaji);
-                    case "//bugaoxing" ->
-                            expressImageView.setImageResource(R.drawable.bugaoxing);
-                    case "//yingyingying" ->
-                            expressImageView.setImageResource(R.drawable.yingyingying);
-                    case "//..." ->
-                            expressImageView.setImageResource(R.drawable.shenglve);
-                    case "//momotou" ->
-                            expressImageView.setImageResource(R.drawable.momotou);
-                    case "//heguozhi" ->
-                            expressImageView.setImageResource(R.drawable.heguozhi);
-                    case "//hen6" ->
-                            expressImageView.setImageResource(R.drawable.hen6);
-                    case "//buyaozheyang" ->
-                            expressImageView.setImageResource(R.drawable.buyaozheyang);
-                    case "//chigua" ->
-                            expressImageView.setImageResource(R.drawable.chigua);
-                    case "//waku" ->
-                            expressImageView.setImageResource(R.drawable.waku);
-                    case "//sleep" ->
-                            expressImageView.setImageResource(R.drawable.sleep);
-                    case "//bailan" ->
-                            expressImageView.setImageResource(R.drawable.bailan);
-                    case "//duili" ->
-                            expressImageView.setImageResource(R.drawable.duili);
-                    default -> {
-                        userNameTextView.setTextColor(Color.WHITE);
-                        msgTextView.setTextColor(Color.WHITE);
-                        msgTextView.setText(message);
-                    }
-                }
+                picExpressHandle(userNameTextView, msgTextView, message, expressImageView);
+            }
+        }
+    }
+
+    private static void picExpressHandle(TextView userNameTextView, TextView msgTextView, String message, ImageView expressImageView) {
+        switch (message) {
+            case "//dalao0" ->
+                    expressImageView.setImageResource(R.drawable.dalao0);
+            case "//7yxg" ->
+                    expressImageView.setImageResource(R.drawable.qiyexingguo);
+            case "//family" ->
+                    expressImageView.setImageResource(R.drawable.family);
+            case "//redheart" ->
+                    expressImageView.setImageResource(R.drawable.couple_1);
+            case "//greenheart" ->
+                    expressImageView.setImageResource(R.drawable.couple_2);
+            case "//purpleheart" ->
+                    expressImageView.setImageResource(R.drawable.couple_3);
+            case "//crawl" ->
+                    expressImageView.setImageResource(R.drawable.pazou);
+            case "//greencircle" ->
+                    expressImageView.setImageResource(R.drawable.greenlight);
+            case "//jpgq" ->
+                    expressImageView.setImageResource(R.drawable.icon);
+            case "//soundstop" ->
+                    expressImageView.setImageResource(R.drawable.stop);
+            case "//greensquare" ->
+                    expressImageView.setImageResource(R.drawable.button_down);
+            case "//blacksquare" ->
+                    expressImageView.setImageResource(R.drawable.button_up);
+            case "//rightarrow" ->
+                    expressImageView.setImageResource(R.drawable.for_arrow);
+            case "//leftarrow" ->
+                    expressImageView.setImageResource(R.drawable.back_arrow);
+            case "//music" ->
+                    expressImageView.setImageResource(R.drawable.music);
+            case "//bluecircle" ->
+                    expressImageView.setImageResource(R.drawable.redlight);
+            case "//jpgq1" ->
+                    expressImageView.setImageResource(R.drawable.jpgq1);
+            case "//huaji" ->
+                    expressImageView.setImageResource(R.drawable.huaji);
+            case "//bugaoxing" ->
+                    expressImageView.setImageResource(R.drawable.bugaoxing);
+            case "//yingyingying" ->
+                    expressImageView.setImageResource(R.drawable.yingyingying);
+            case "//..." ->
+                    expressImageView.setImageResource(R.drawable.shenglve);
+            case "//momotou" ->
+                    expressImageView.setImageResource(R.drawable.momotou);
+            case "//heguozhi" ->
+                    expressImageView.setImageResource(R.drawable.heguozhi);
+            case "//hen6" ->
+                    expressImageView.setImageResource(R.drawable.hen6);
+            case "//buyaozheyang" ->
+                    expressImageView.setImageResource(R.drawable.buyaozheyang);
+            case "//chigua" ->
+                    expressImageView.setImageResource(R.drawable.chigua);
+            case "//waku" ->
+                    expressImageView.setImageResource(R.drawable.waku);
+            case "//sleep" ->
+                    expressImageView.setImageResource(R.drawable.sleep);
+            case "//bailan" ->
+                    expressImageView.setImageResource(R.drawable.bailan);
+            case "//duili" ->
+                    expressImageView.setImageResource(R.drawable.duili);
+            default -> {
+                userNameTextView.setTextColor(Color.WHITE);
+                msgTextView.setTextColor(Color.WHITE);
+                msgTextView.setText(message);
             }
         }
     }

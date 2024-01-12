@@ -94,7 +94,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public List<Map<String, Object>> familyList = new ArrayList<>();
     public PullUpdateListView pullUpdateListView;
     public int familyPageNum;
-    public int cp;
+    public int coupleType;
     public boolean pageIsEnd;
     public OLPlayHallRoomHandler olPlayHallRoomHandler = new OLPlayHallRoomHandler(this);
     public int pageNum;
@@ -383,7 +383,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         } else if (id == R.id.ol_breakup_button) {
             deleteCp(false);
         } else if (id == R.id.ol_setblessing_button) {
-            if (cp > 0) {
+            if (coupleType > 0) {
                 sendMail("", 1);
             }
         } else if (id == R.id.ol_myfamily_button) {
@@ -405,7 +405,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     }
 
     public void deleteCp(boolean flag) {
-        if (cp > 0) {
+        if (coupleType > 0) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
             jpDialogBuilder.setTitle("警告");
             jpDialogBuilder.setMessage("确定要解除搭档关系吗?");

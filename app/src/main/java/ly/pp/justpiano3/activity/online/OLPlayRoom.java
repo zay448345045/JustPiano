@@ -124,7 +124,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         moreSongsPopupWindow.dismiss();
     }
 
-    public void buildNewCoupleDialog(int dialogType, String message, int coupleType, byte couplePosition) {
+    public void buildAndShowCpDialog(int dialogType, String message, int coupleType, byte couplePosition) {
         String title;
         String buttonText;
         String coupleTypeText = "情意绵绵的情侣";

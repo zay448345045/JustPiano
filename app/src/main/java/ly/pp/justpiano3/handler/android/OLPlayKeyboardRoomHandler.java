@@ -104,11 +104,11 @@ public final class OLPlayKeyboardRoomHandler extends Handler {
                 case 16 -> post(() -> olPlayKeyboardRoom.handleSetUserInfo(message));
                 case 21 -> post(olPlayKeyboardRoom::handleOffline);
                 case 22 -> post(() -> {
-                    int i = message.getData().getInt("MSG_T");
-                    int i2 = message.getData().getInt("MSG_CT");
-                    String string = message.getData().getString("MSG_C");
-                    if (i != 0) {
-                        olPlayKeyboardRoom.buildAndShowCpDialog(i, string, i2);
+                    int dialogType = message.getData().getInt("MSG_T");
+                    int coupleType = message.getData().getInt("MSG_CT");
+                    String dialogMessage = message.getData().getString("MSG_C");
+                    if (dialogType != 0) {
+                        olPlayKeyboardRoom.buildAndShowCpDialog(dialogType, dialogMessage, coupleType);
                     }
                 });
                 case 23 -> post(() -> olPlayKeyboardRoom.showInfoDialog(message.getData()));

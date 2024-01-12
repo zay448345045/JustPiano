@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.User;
@@ -91,7 +92,7 @@ public final class ImageLoadUtil {
                                                ImageView bodyImageView, ImageView trousersImageView, ImageView jacketImageView,
                                                ImageView hairImageView, ImageView eyeImageView, ImageView shoesImageView) {
         Bitmap noneModBitmap = dressBitmapCacheMap.get("mod/_none.webp");
-        bodyImageView.setImageBitmap(dressBitmapCacheMap.get(gender.equals("f") ? "mod/f_m0.webp" : "mod/m_m0.webp"));
+        bodyImageView.setImageBitmap(dressBitmapCacheMap.get(Objects.equals(gender, "f") ? "mod/f_m0.webp" : "mod/m_m0.webp"));
 
         try {
             if (trousers <= 0) {
@@ -169,7 +170,7 @@ public final class ImageLoadUtil {
                 } catch (Exception e1) {
                     try {
                         return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".webp"));
-                    } catch (IOException e2) {
+                    } catch (Exception e2) {
                         e2.printStackTrace();
                     }
                 }
@@ -186,13 +187,6 @@ public final class ImageLoadUtil {
         }
     }
 
-    public static Bitmap loadFileImage(String filePath) {
-        if (filePath == null || filePath.isEmpty()) {
-            return null;
-        }
-        return loadFileImage(new File(filePath));
-    }
-
     public static Bitmap loadFileImage(Context context, Uri uri) {
         if (uri == null) {
             return null;
@@ -202,18 +196,6 @@ public final class ImageLoadUtil {
             bitmap = BitmapFactory.decodeStream(fis);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return bitmap;
-    }
-
-    public static Bitmap loadFileImage(File file) {
-        Bitmap bitmap = null;
-        if (file.exists()) {
-            try (FileInputStream fis = new FileInputStream(file)) {
-                bitmap = BitmapFactory.decodeStream(fis);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         return bitmap;
     }

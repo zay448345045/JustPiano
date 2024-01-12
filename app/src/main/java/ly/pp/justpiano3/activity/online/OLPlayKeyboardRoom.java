@@ -139,21 +139,21 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 + roomPositionSub1);
     }
 
-    public void buildAndShowCpDialog(int i, String str, int i2) {
-        String str5 = "情意绵绵的情侣";
-        switch (i2) {
+    public void buildAndShowCpDialog(int dialogType, String message, int coupleType) {
+        String coupleTypeText = "情意绵绵的情侣";
+        switch (coupleType) {
             case 0 -> {
                 return;
             }
-            case 1 -> str5 = "情意绵绵的情侣";
-            case 2 -> str5 = "基情四射的基友";
-            case 3 -> str5 = "百年好合的百合";
+            case 1 -> coupleTypeText = "情意绵绵的情侣";
+            case 2 -> coupleTypeText = "基情四射的基友";
+            case 3 -> coupleTypeText = "百年好合的百合";
         }
-        if (i == 4) {
-            showCpDialog(str5.substring(str5.length() - 2) + "证书", str);
-        } else if (i == 5) {
+        if (dialogType == 4) {
+            showCpDialog(coupleTypeText.substring(coupleTypeText.length() - 2) + "证书", message);
+        } else if (dialogType == 5) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-            jpDialogBuilder.setTitle("提示").setMessage(str).setFirstButton("确定", (dialog, which) -> dialog.dismiss())
+            jpDialogBuilder.setTitle("提示").setMessage(message).setFirstButton("确定", (dialog, which) -> dialog.dismiss())
                     .setCancelableFalse().setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         }
     }
