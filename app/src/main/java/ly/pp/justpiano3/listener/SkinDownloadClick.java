@@ -16,22 +16,22 @@ import ly.pp.justpiano3.utils.ThreadPoolUtil;
 public final class SkinDownloadClick implements OnClickListener {
     private final SkinDownload skinDownload;
     private final int type;
-    private final String url;
-    private final String name;
+    private final String skinId;
+    private final String skinName;
 
-    public SkinDownloadClick(SkinDownload skinDownload, int type, String url, String name) {
+    public SkinDownloadClick(SkinDownload skinDownload, int type, String skinId, String skinName) {
         this.skinDownload = skinDownload;
         this.type = type;
-        this.url = url;
-        this.name = name;
+        this.skinId = skinId;
+        this.skinName = skinName;
     }
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         dialogInterface.dismiss();
         switch (type) {
-            case 0 -> ThreadPoolUtil.execute(() -> skinDownload.downloadSkin(url, name));
-            case 1 -> ThreadPoolUtil.execute(() -> skinDownload.changeSkin(name + ".ps"));
+            case 0 -> ThreadPoolUtil.execute(() -> skinDownload.downloadSkin(skinId, skinName));
+            case 1 -> ThreadPoolUtil.execute(() -> skinDownload.changeSkin(skinName + ".ps"));
             case 2 -> {
                 Editor edit = PreferenceManager.getDefaultSharedPreferences(skinDownload).edit();
                 edit.putString("skin_select", "original");

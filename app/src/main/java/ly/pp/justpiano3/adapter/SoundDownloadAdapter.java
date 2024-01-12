@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.local.SoundDownload;
 import ly.pp.justpiano3.utils.ImageLoader;
@@ -48,46 +50,46 @@ public final class SoundDownloadAdapter extends BaseAdapter {
             view = soundDownload.layoutInflater.inflate(R.layout.skin_view, null);
         }
         view.setBackgroundResource(R.drawable.selector_ol_orange);
-        ScrollTextView scrollTextView = view.findViewById(R.id.skin_name);
-        TextView textView = view.findViewById(R.id.skin_author);
-        TextView textView2 = view.findViewById(R.id.download_count);
-        TextView textView3 = view.findViewById(R.id.skin_size);
-        ImageView imageView = view.findViewById(R.id.skin_image);
+        ScrollTextView nameTextView = view.findViewById(R.id.skin_name);
+        TextView authorTextView = view.findViewById(R.id.skin_author);
+        TextView downloadCountTextView = view.findViewById(R.id.download_count);
+        TextView sizeTextView = view.findViewById(R.id.skin_size);
+        ImageView picImageView = view.findViewById(R.id.skin_image);
         if (i == 0) {
-            imageView.setImageResource(R.drawable.icon);
-            scrollTextView.setText("还原默认音源");
-            textView.setText("还原极品钢琴默认音源");
-            textView3.setText("");
-            textView2.setText("");
-            view.setOnClickListener(v -> soundDownload.handleSound(2, "还原默认音源", "", 0, "", ".ss"));
+            picImageView.setImageResource(R.drawable.icon);
+            nameTextView.setText("还原默认音源");
+            authorTextView.setText("还原极品钢琴默认音源");
+            sizeTextView.setText("");
+            downloadCountTextView.setText("");
+            view.setOnClickListener(v -> soundDownload.handleSound(2, "还原默认音源",
+                    "", "", "", ".ss"));
         } else {
             try {
                 JSONObject jSONObject = jsonArray.getJSONObject(i - 1);
                 String soundId = jSONObject.getString("I");
-                imageView.setTag(soundId);
+                picImageView.setTag(soundId);
                 String soundName = jSONObject.getString("N");
                 String soundAuthor = jSONObject.getString("A");
-                int soundSize = jSONObject.getInt("S");
                 String soundType = ".ss";
                 try {
                     soundType = jSONObject.getString("T");
                 } catch (Exception ignore) {
                     // nothing
                 }
-                imageView.setImageResource(R.drawable.icon);
-                imageLoader.bindBitmap("http://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + ".jpg", imageView);
-                scrollTextView.setText(soundName);
-                textView.setText("by:" + soundAuthor);
-                float sizeInMega = ((float) soundSize /1024);
-                textView3.setText(String.format("%.2f",sizeInMega)  + "MB");
+                picImageView.setImageResource(R.drawable.icon);
+                imageLoader.bindBitmap("http://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + ".jpg", picImageView);
+                nameTextView.setText(soundName);
+                authorTextView.setText("by:" + soundAuthor);
+                String size = String.format(Locale.getDefault(), "%.2f", jSONObject.getInt("S") / 1024f);
+                sizeTextView.setText(size + "MB");
                 int downloadNum = jSONObject.getInt("D");
                 if (downloadNum > 10000) {
-                    textView2.setText("下载:" + (downloadNum / 10000) + "万次");
+                    downloadCountTextView.setText("下载:" + (downloadNum / 10000) + "万次");
                 } else {
-                    textView2.setText("下载:" + downloadNum + "次");
+                    downloadCountTextView.setText("下载:" + downloadNum + "次");
                 }
                 String finalSoundType = soundType;
-                view.setOnClickListener(v -> soundDownload.handleSound(0, soundName, soundId, soundSize, soundAuthor, finalSoundType));
+                view.setOnClickListener(v -> soundDownload.handleSound(0, soundName, soundId, size, soundAuthor, finalSoundType));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

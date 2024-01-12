@@ -27,10 +27,13 @@ import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.task.SoundDownloadTask;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
+import okhttp3.FormBody;
 
 public final class SoundDownload extends BaseActivity implements Callback {
     public JPProgressBar jpProgressBar;
@@ -64,12 +67,13 @@ public final class SoundDownload extends BaseActivity implements Callback {
                     if (handler != null) {
                         handler.sendMessage(message1);
                     }
-                }, () -> downloadSuccessHandle(soundName, soundType), this::downloadFailHandle);
+                }, () -> downloadSuccessHandle(soundId, soundName, soundType), this::downloadFailHandle);
     }
 
-    private void downloadSuccessHandle(String soundName, String soundType) {
+    private void downloadSuccessHandle(String soundId, String soundName, String soundType) {
         Message successMessage = Message.obtain(handler);
         successMessage.what = 2;
+        successMessage.arg1 = Integer.parseInt(soundId);
         if (handler != null) {
             Bundle bundle = new Bundle();
             bundle.putString("name", soundName);
@@ -85,17 +89,17 @@ public final class SoundDownload extends BaseActivity implements Callback {
         handler.sendMessage(failMessage);
     }
 
-    public void handleSound(int eventType, String soundFileName, String soundId, int soundSize, String soundAuthor, String soundType) {
+    public void handleSound(int type, String soundName, String soundId, String soundSize, String soundAuthor, String soundType) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         String buttonText = "使用";
         jpDialogBuilder.setTitle("提示");
-        switch (eventType) {
+        switch (type) {
             case 0 -> {
-                jpDialogBuilder.setMessage("名称:" + soundFileName + "\n作者:" + soundAuthor + "\n大小:" + soundSize + "KB\n您要下载并使用吗?");
+                jpDialogBuilder.setMessage("名称:" + soundName + "\n作者:" + soundAuthor + "\n大小:" + soundSize + "MB\n您要下载并使用吗?");
                 buttonText = "下载";
             }
             case 1 -> {
-                jpDialogBuilder.setMessage("[" + soundFileName + "]音源已下载，是否使用?");
+                jpDialogBuilder.setMessage("[" + soundName + "]音源已下载，是否使用?");
                 buttonText = "使用";
             }
             case 2 -> {
@@ -103,7 +107,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
                 buttonText = "确定";
             }
         }
-        jpDialogBuilder.setFirstButton(buttonText, new SoundDownloadClick(this, eventType, soundId, soundFileName, soundType));
+        jpDialogBuilder.setFirstButton(buttonText, new SoundDownloadClick(this, type, soundId, soundName, soundType));
         jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
@@ -173,8 +177,11 @@ public final class SoundDownload extends BaseActivity implements Callback {
                 case 2 -> {
                     linearLayout.setVisibility(View.GONE);
                     downloadText.setVisibility(View.GONE);
+                    // 下载成功，调用接口增加下载数量统计
+                    ThreadPoolUtil.execute(() -> OkHttpUtil.sendPostRequest(
+                            "Sound/Statistics/" + message.arg1 , new FormBody.Builder().build()));
                     handleSound(1, message.getData().getString("name"), "",
-                            0, "", message.getData().getString("type"));
+                            "", "", message.getData().getString("type"));
                 }
                 case 3 -> {
                     linearLayout.setVisibility(View.GONE);
