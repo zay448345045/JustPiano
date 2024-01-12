@@ -81,6 +81,9 @@ public final class FamilyHandler extends Handler {
                 if (olFamily.userInfoPopupWindow != null && olFamily.userInfoPopupWindow.isShowing()) {
                     olFamily.userInfoPopupWindow.dismiss();
                 }
+                if (olFamily.manageFamilyPopupWindow != null && olFamily.manageFamilyPopupWindow.isShowing()) {
+                    olFamily.manageFamilyPopupWindow.dismiss();
+                }
                 OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
                 if (Objects.equals(info, "您所在的家族已解散")) {
                     builder.setType(0);

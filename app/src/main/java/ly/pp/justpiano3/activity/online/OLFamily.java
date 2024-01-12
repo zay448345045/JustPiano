@@ -63,6 +63,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
     public List<Map<String, String>> userList = new ArrayList<>();
     public ListView userListView;
     public PopupWindow userInfoPopupWindow;
+    public PopupWindow manageFamilyPopupWindow;
     private LayoutInflater layoutinflater;
     private Button manageFamilyButton;
     private Button inOutButton;
@@ -106,7 +107,7 @@ public final class OLFamily extends OLBaseActivity implements OnClickListener {
         }
         TextView info = inflate.findViewById(R.id.ol_family_levelup_info);
         info.setText(bundle.getString("I", "不断提升您的等级与考级，即可将您的家族升级为人数更多、规模更大的家族!"));
-        PopupWindow manageFamilyPopupWindow = new JPPopupWindow(this);
+        manageFamilyPopupWindow = new JPPopupWindow(this);
         manageFamilyPopupWindow.setContentView(inflate);
         manageFamilyPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
         inflate.findViewById(R.id.ol_family_changedecl).setOnClickListener(this);
