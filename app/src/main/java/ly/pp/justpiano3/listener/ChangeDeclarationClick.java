@@ -29,7 +29,7 @@ public final class ChangeDeclarationClick implements OnClickListener {
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         String text = String.valueOf(textView.getText());
-        if (TextUtils.isEmpty(text) || "'".equals(text)) {
+        if (TextUtils.isEmpty(text) || "'".equals(text) || "''".equals(text) || "'''".equals(text)) {
             Toast.makeText(family, "请输入内容!", Toast.LENGTH_SHORT).show();
         } else if (text.length() > Consts.MAX_MESSAGE_COUNT) {
             Toast.makeText(family, "确定在五百字之内!", Toast.LENGTH_SHORT).show();

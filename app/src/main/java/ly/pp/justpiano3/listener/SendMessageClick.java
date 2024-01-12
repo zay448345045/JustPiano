@@ -27,18 +27,18 @@ public final class SendMessageClick implements OnClickListener {
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        String valueOf = String.valueOf(textView.getText());
+        String text = String.valueOf(textView.getText());
         JSONObject jSONObject = new JSONObject();
         try {
-            if (valueOf.isEmpty() || valueOf.equals("'")) {
-                Toast.makeText(popUserInfo, "请输入消息内容!", Toast.LENGTH_SHORT).show();
-            } else if (valueOf.length() > Consts.MAX_MESSAGE_COUNT) {
+            if (text.isEmpty() || "'".equals(text) || "''".equals(text) || "'''".equals(text)) {
+                Toast.makeText(popUserInfo, "请输入内容!", Toast.LENGTH_SHORT).show();
+            } else if (text.length() > Consts.MAX_MESSAGE_COUNT) {
                 Toast.makeText(popUserInfo, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
             } else {
                 jSONObject.put("H", 0);
                 jSONObject.put("T", userName);
                 jSONObject.put("F", account);
-                jSONObject.put("M", valueOf);
+                jSONObject.put("M", text);
                 if (!userName.isEmpty() && !account.isEmpty()) {
                     popUserInfo.keywords = jSONObject.toString();
                     new PopUserInfoTask(popUserInfo).execute();

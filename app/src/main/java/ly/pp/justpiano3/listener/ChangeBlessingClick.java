@@ -40,7 +40,7 @@ public final class ChangeBlessingClick implements OnClickListener {
     public void onClick(DialogInterface dialogInterface, int i) {
         dialogInterface.dismiss();
         String text = String.valueOf(textView.getText());
-        if (text.isEmpty() || text.equals("'")) {
+        if (text.isEmpty() || "'".equals(text) || "''".equals(text) || "'''".equals(text)) {
             Toast.makeText(olPlayHallRoom, "请输入内容!", Toast.LENGTH_SHORT).show();
         } else if (text.length() > Consts.MAX_MESSAGE_COUNT) {
             Toast.makeText(olPlayHallRoom, "确定在五百字之内!", Toast.LENGTH_SHORT).show();

@@ -25,8 +25,8 @@ public final class SendMailClick implements OnClickListener {
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         String text = String.valueOf(textView.getText());
-        if (text.isEmpty() || text.equals("'")) {
-            Toast.makeText(context, "请输入信件内容!", Toast.LENGTH_SHORT).show();
+        if (text.isEmpty() || "'".equals(text) || "''".equals(text) || "'''".equals(text)) {
+            Toast.makeText(context, "请输入内容!", Toast.LENGTH_SHORT).show();
         } else if (text.length() > Consts.MAX_MESSAGE_COUNT) {
             Toast.makeText(context, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
         } else {
