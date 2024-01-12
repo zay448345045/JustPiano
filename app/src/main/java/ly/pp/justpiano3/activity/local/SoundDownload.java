@@ -179,7 +179,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
                     downloadText.setVisibility(View.GONE);
                     // 下载成功，调用接口增加下载数量统计
                     ThreadPoolUtil.execute(() -> OkHttpUtil.sendPostRequest(
-                            "Sound/Statistics/" + message.arg1 , new FormBody.Builder().build()));
+                            "StatisticsSound" + message.arg1 , new FormBody.Builder().build()));
                     handleSound(1, message.getData().getString("name"), "",
                             "", "", message.getData().getString("type"));
                 }

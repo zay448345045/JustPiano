@@ -150,7 +150,7 @@ public final class SkinDownload extends BaseActivity implements Callback {
                     downloadText.setVisibility(View.GONE);
                     // 下载成功，调用接口增加下载数量统计
                     ThreadPoolUtil.execute(() -> OkHttpUtil.sendPostRequest(
-                            "Skin/Statistics/" + message.arg1 , new FormBody.Builder().build()));
+                            "StatisticsSkin" + message.arg1 , new FormBody.Builder().build()));
                     handleSkin(1, message.getData().getString("name"), "", "", "");
                 }
                 case 3 -> {
