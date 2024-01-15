@@ -9,7 +9,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.SettingsUtil;
 
-public class WaterfallSettingsFragment extends BaseSettingsFragment {
+public final class WaterfallSettingsFragment extends BaseSettingsFragment {
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {

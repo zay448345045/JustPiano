@@ -13,6 +13,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 
+import java.util.Objects;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
@@ -132,7 +134,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
         if (newHelp) {
             findViewById(R.id.new_help).setVisibility(View.VISIBLE);
         }
-//        newVersionFirstTimeDialogShowHandle(sharedPreferences);
+        newVersionFirstTimeDialogShowHandle(sharedPreferences);
         findViewById(R.id.local_game).setOnClickListener(this);
         findViewById(R.id.online_game).setOnClickListener(this);
         findViewById(R.id.settings).setOnClickListener(this);
@@ -149,12 +151,14 @@ public final class MainMode extends BaseActivity implements OnClickListener {
         int newVersionFirstTime = sharedPreferences.getInt("new_version_first_time", 0);
         if (newVersionFirstTime < BuildConfig.VERSION_CODE) {
             sharedPreferences.edit().putInt("new_version_first_time", BuildConfig.VERSION_CODE).apply();
-            new JPDialogBuilder(this).setCheckMessageUrl(true)
-                    .setTitle(BuildConfig.VERSION_NAME + "版本存储位置变更")
-                    .setMessage("为响应APP合规要求，保护用户隐私，4.9版本已移除SD卡完全访问权限，原JustPiano目录默认不会再进行读取。" +
-                            "用户可在设置中查看/设定存储位置及选择文件\n除非用户手动同意，否则APP技术上无法做到，也不会私自访问您的敏感信息")
-                    .setFirstButton("确定", ((dialog, which) -> dialog.dismiss()))
-                    .buildAndShowDialog();
+            if (Objects.equals(newVersionFirstTime, 0)) {
+                new JPDialogBuilder(this).setCheckMessageUrl(true)
+                        .setTitle(BuildConfig.VERSION_NAME + "版本存储位置变更")
+                        .setMessage("为响应APP合规要求，保护用户隐私，4.9+版本已移除SD卡完全访问权限，原JustPiano目录默认不会再进行读取。" +
+                                "用户可在设置中查看/设定存储位置及选择文件\n除非用户手动同意，否则APP技术上无法做到，也不会私自访问您的敏感信息")
+                        .setFirstButton("确定", ((dialog, which) -> dialog.dismiss()))
+                        .buildAndShowDialog();
+            }
         }
     }
 }

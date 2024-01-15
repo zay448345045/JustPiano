@@ -26,7 +26,7 @@ import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.SkinListPreference;
 import ly.pp.justpiano3.view.preference.SoundListPreference;
 
-public class SettingsFragment extends BaseSettingsFragment {
+public final class SettingsFragment extends BaseSettingsFragment {
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {

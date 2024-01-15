@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 
 import ly.pp.justpiano3.R;
 
-public class PianoPlaySettingsFragment extends BaseSettingsFragment {
+public final class PianoPlaySettingsFragment extends BaseSettingsFragment {
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {

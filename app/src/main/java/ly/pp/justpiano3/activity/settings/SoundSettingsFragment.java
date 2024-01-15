@@ -9,7 +9,7 @@ import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
 
-public class SoundSettingsFragment extends BaseSettingsFragment {
+public final class SoundSettingsFragment extends BaseSettingsFragment {
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
