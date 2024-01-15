@@ -35,7 +35,7 @@ public final class OLMainModeHandler extends Handler {
             case 2 -> post(() -> oLMainMode.addDialog("提示", "确定", "连接服务器失败"));
             case 3 -> post(() -> oLMainMode.addDialog("提示", "确定", "服务器未响应!"));
             case 4 ->
-                    post(() -> oLMainMode.addDialog("提示", "确定", "账号不存在，请尝试返回主界面重新登录"));
+                    post(() -> oLMainMode.addDialog("提示", "确定", "登录过期，请尝试返回主界面重新登录"));
             case 5 -> post(() -> oLMainMode.addDialog("提示", "确定", "该账号已在别处登录!"));
             case 6 ->
                     post(() -> oLMainMode.addDialog("提示", "确定", "您的版本过低，请下载最新版本"));
