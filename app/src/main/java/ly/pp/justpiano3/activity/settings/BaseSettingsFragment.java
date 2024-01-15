@@ -2,15 +2,17 @@ package ly.pp.justpiano3.activity.settings;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceDialogFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat;
 
-import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.SeekBarPreference;
 import ly.pp.justpiano3.view.preference.SkinListPreference;
@@ -21,6 +23,15 @@ public class BaseSettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
         // nothing
+    }
+
+    @NonNull
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        view.setPadding(view.getPaddingLeft() + UnitConvertUtil.dp2px(requireContext(), 20),
+                view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
+        return view;
     }
 
     @Override
@@ -37,7 +48,6 @@ public class BaseSettingsFragment extends PreferenceFragmentCompat {
             dialogFragmentCompat = seekBarPreference.newDialog();
         }
         if (dialogFragmentCompat != null) {
-            dialogFragmentCompat.setStyle(DialogFragment.STYLE_NORMAL, R.style.SettingDialogTheme);
             dialogFragmentCompat.setTargetFragment(this, 0);
             dialogFragmentCompat.show(getParentFragmentManager(), "PreferenceDialogFragmentCompat");
         } else {
