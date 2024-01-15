@@ -230,6 +230,8 @@ public final class ImageLoadUtil {
             }
             if (bitmap != null) {
                 activity.getWindow().setBackgroundDrawable(new BitmapDrawable(activity.getResources(), bitmap));
+            } else {
+                activity.getWindow().setBackgroundDrawableResource(R.drawable.ground);
             }
         } else {
             activity.getWindow().setBackgroundDrawableResource(R.drawable.ground);

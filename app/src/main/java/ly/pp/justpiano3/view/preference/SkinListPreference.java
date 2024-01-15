@@ -93,7 +93,7 @@ public final class SkinListPreference extends DialogPreference {
         return getPersistedString("original");
     }
 
-    public DialogFragmentCompat newDialog() {
+    public PreferenceDialogFragmentCompat newDialog() {
         dialogFragmentCompat = new DialogFragmentCompat(this);
         return dialogFragmentCompat;
     }

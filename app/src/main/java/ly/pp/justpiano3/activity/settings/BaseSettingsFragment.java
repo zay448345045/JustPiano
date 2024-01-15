@@ -5,9 +5,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceDialogFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat;
 
+import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.view.MidiDeviceListPreference;
 import ly.pp.justpiano3.view.preference.SeekBarPreference;
 import ly.pp.justpiano3.view.preference.SkinListPreference;
@@ -22,23 +25,21 @@ public class BaseSettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onDisplayPreferenceDialog(@NonNull Preference preference) {
+        PreferenceDialogFragmentCompat dialogFragmentCompat = null;
         if (preference instanceof SkinListPreference skinListPreference) {
-            SkinListPreference.DialogFragmentCompat dialogFragmentCompat = skinListPreference.newDialog();
-            dialogFragmentCompat.setTargetFragment(this, 0);
-            dialogFragmentCompat.show(getParentFragmentManager(), "SkinListPreference");
+            dialogFragmentCompat = skinListPreference.newDialog();
         } else if (preference instanceof SoundListPreference soundListPreference) {
-            SoundListPreference.DialogFragmentCompat dialogFragmentCompat = soundListPreference.newDialog();
-            dialogFragmentCompat.setTargetFragment(this, 0);
-            dialogFragmentCompat.show(getParentFragmentManager(), "SoundListPreference");
+            dialogFragmentCompat = soundListPreference.newDialog();
         } else if (preference instanceof MidiDeviceListPreference midiDeviceListPreference
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            MidiDeviceListPreference.DialogFragmentCompat dialogFragmentCompat = midiDeviceListPreference.newDialog();
-            dialogFragmentCompat.setTargetFragment(this, 0);
-            dialogFragmentCompat.show(getParentFragmentManager(), "MidiDeviceListPreference");
+            dialogFragmentCompat = midiDeviceListPreference.newDialog();
         } else if (preference instanceof SeekBarPreference seekBarPreference) {
-            SeekBarPreference.DialogFragmentCompat dialogFragmentCompat = seekBarPreference.newDialog();
+            dialogFragmentCompat = seekBarPreference.newDialog();
+        }
+        if (dialogFragmentCompat != null) {
+            dialogFragmentCompat.setStyle(DialogFragment.STYLE_NORMAL, R.style.SettingDialogTheme);
             dialogFragmentCompat.setTargetFragment(this, 0);
-            dialogFragmentCompat.show(getParentFragmentManager(), "SeekBarPreference");
+            dialogFragmentCompat.show(getParentFragmentManager(), "PreferenceDialogFragmentCompat");
         } else {
             super.onDisplayPreferenceDialog(preference);
         }

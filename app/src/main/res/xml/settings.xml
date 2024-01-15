@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="弹奏、音块及界面">
         <ly.pp.justpiano3.view.preference.SkinListPreference
+            android:defaultValue="original"
             android:dialogTitle="设置管理皮肤"
             android:key="skin_select"
             android:summary="默认皮肤"
@@ -46,6 +47,7 @@
 
     <PreferenceCategory android:title="键盘、声音及MIDI设备">
         <ly.pp.justpiano3.view.preference.SoundListPreference
+            android:defaultValue="original"
             android:dialogTitle="设置管理音源"
             android:key="sound_select"
             android:summary="默认音源"

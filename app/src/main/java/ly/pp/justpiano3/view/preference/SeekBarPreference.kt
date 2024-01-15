@@ -74,7 +74,7 @@ class SeekBarPreference(context: Context, attrs: AttributeSet) : DialogPreferenc
 
     override fun onStopTrackingTouch(seek: SeekBar) {}
 
-    fun newDialog(): DialogFragmentCompat {
+    fun newDialog(): PreferenceDialogFragmentCompat {
         dialogFragmentCompat = DialogFragmentCompat(this)
         return dialogFragmentCompat as DialogFragmentCompat
     }

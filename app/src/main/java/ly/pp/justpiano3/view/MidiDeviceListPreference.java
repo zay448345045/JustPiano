@@ -61,7 +61,7 @@ public final class MidiDeviceListPreference extends DialogPreference {
         }
     }
 
-    public DialogFragmentCompat newDialog() {
+    public PreferenceDialogFragmentCompat newDialog() {
         return new DialogFragmentCompat(this);
     }
 
