@@ -132,7 +132,7 @@ public final class MainMode extends BaseActivity implements OnClickListener {
         if (newHelp) {
             findViewById(R.id.new_help).setVisibility(View.VISIBLE);
         }
-        newVersionFirstTimeDialogShowHandle(sharedPreferences);
+//        newVersionFirstTimeDialogShowHandle(sharedPreferences);
         findViewById(R.id.local_game).setOnClickListener(this);
         findViewById(R.id.online_game).setOnClickListener(this);
         findViewById(R.id.settings).setOnClickListener(this);
