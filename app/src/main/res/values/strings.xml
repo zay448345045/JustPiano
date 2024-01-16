@@ -5,7 +5,7 @@
 	<string name="app_name">极品钢琴</string>
 	<string name="update_log">更新日志</string>
 	<string name="about">
-		2024-01-15 极品钢琴V4.91版本更新日志：\n
+		2024-01-16 极品钢琴V4.91版本更新日志：\n
 		1.增强后台网络保活，增加保持唤醒、忽略电池优化设置\n
 		2.模拟器x86设备支持启动app\n
 		3.本地模式瀑布流支持录音\n
