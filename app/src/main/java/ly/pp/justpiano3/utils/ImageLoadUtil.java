@@ -6,9 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.widget.ImageView;
+
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,14 +17,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
 
-public class ImageLoadUtil {
+public final class ImageLoadUtil {
 
     public static final Map<String, Bitmap> familyBitmapCacheMap = new HashMap<>(128);
+
     public static final Map<String, Bitmap> dressBitmapCacheMap = new HashMap<>(256);
 
     private static final StringBuilder stringBuilderCache = new StringBuilder();
@@ -90,7 +92,7 @@ public class ImageLoadUtil {
                                                ImageView bodyImageView, ImageView trousersImageView, ImageView jacketImageView,
                                                ImageView hairImageView, ImageView eyeImageView, ImageView shoesImageView) {
         Bitmap noneModBitmap = dressBitmapCacheMap.get("mod/_none.webp");
-        bodyImageView.setImageBitmap(dressBitmapCacheMap.get(gender.equals("f") ? "mod/f_m0.webp" : "mod/m_m0.webp"));
+        bodyImageView.setImageBitmap(dressBitmapCacheMap.get(Objects.equals(gender, "f") ? "mod/f_m0.webp" : "mod/m_m0.webp"));
 
         try {
             if (trousers <= 0) {
@@ -168,7 +170,7 @@ public class ImageLoadUtil {
                 } catch (Exception e1) {
                     try {
                         return BitmapFactory.decodeStream(context.getResources().getAssets().open("drawable/" + str + ".webp"));
-                    } catch (IOException e2) {
+                    } catch (Exception e2) {
                         e2.printStackTrace();
                     }
                 }
@@ -185,13 +187,6 @@ public class ImageLoadUtil {
         }
     }
 
-    public static Bitmap loadFileImage(String filePath) {
-        if (filePath == null || filePath.isEmpty()) {
-            return null;
-        }
-        return loadFileImage(new File(filePath));
-    }
-
     public static Bitmap loadFileImage(Context context, Uri uri) {
         if (uri == null) {
             return null;
@@ -205,25 +200,13 @@ public class ImageLoadUtil {
         return bitmap;
     }
 
-    public static Bitmap loadFileImage(File file) {
-        Bitmap bitmap = null;
-        if (file.exists()) {
-            try (FileInputStream fis = new FileInputStream(file)) {
-                bitmap = BitmapFactory.decodeStream(fis);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return bitmap;
-    }
-
-    public static void setBackground(Activity activity) {
+    public static void setBackground(Activity activity, String uri) {
         if (activity == null || activity.getWindow() == null) {
             return;
         }
         Bitmap backgroundBitmap = null;
-        if (!TextUtils.isEmpty(GlobalSetting.INSTANCE.getBackgroundPic())) {
-            backgroundBitmap = loadFileImage(activity, Uri.parse(GlobalSetting.INSTANCE.getBackgroundPic()));
+        if (!TextUtils.isEmpty(uri)) {
+            backgroundBitmap = loadFileImage(activity, Uri.parse(uri));
         }
         if (backgroundBitmap != null) {
             activity.getWindow().setBackgroundDrawable(new BitmapDrawable(activity.getResources(), backgroundBitmap));
@@ -247,6 +230,8 @@ public class ImageLoadUtil {
             }
             if (bitmap != null) {
                 activity.getWindow().setBackgroundDrawable(new BitmapDrawable(activity.getResources(), bitmap));
+            } else {
+                activity.getWindow().setBackgroundDrawableResource(R.drawable.ground);
             }
         } else {
             activity.getWindow().setBackgroundDrawableResource(R.drawable.ground);

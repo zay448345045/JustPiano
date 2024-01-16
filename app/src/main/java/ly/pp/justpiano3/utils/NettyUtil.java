@@ -18,7 +18,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
-public class NettyUtil {
+public final class NettyUtil {
 
     public interface OnConnectListener {
         void onSuccess();
@@ -76,7 +76,6 @@ public class NettyUtil {
         mMainHandler = new Handler(Looper.getMainLooper());
         mHandlerThread = new HandlerThread(NettyUtil.class.getSimpleName());
         mHandlerThread.start();
-
         mHandler = new Handler(mHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {

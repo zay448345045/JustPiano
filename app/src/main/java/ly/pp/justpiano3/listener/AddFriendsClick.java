@@ -11,9 +11,9 @@ import ly.pp.justpiano3.utils.OnlineUtil;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class AddFriendsClick implements OnClickListener {
-    private OLRoomActivity olRoomActivity = null;
-    private OLPlayHall olPlayHall = null;
-    private OLPlayHallRoom olPlayHallRoom = null;
+    private OLRoomActivity olRoomActivity;
+    private OLPlayHall olPlayHall;
+    private OLPlayHallRoom olPlayHallRoom;
     private final String name;
 
     public AddFriendsClick(OLRoomActivity olRoomActivity, String name) {

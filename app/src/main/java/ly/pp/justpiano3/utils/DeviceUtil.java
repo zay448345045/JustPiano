@@ -14,7 +14,7 @@ import ly.pp.justpiano3.BuildConfig;
  * @author Jhpz
  * @since create(2023 / 7 / 26)
  **/
-public class DeviceUtil {
+public final class DeviceUtil {
     /**
      * 获取设备的AndroidId
      *
@@ -56,5 +56,17 @@ public class DeviceUtil {
     public static String getAppAndDeviceInfo() {
         return BuildConfig.VERSION_NAME + '-' + BuildConfig.BUILD_TIME + '-'
                 + BuildConfig.BUILD_TYPE + ' ' + getDeviceBrandAndModel() + ' ' + getAndroidVersion();
+    }
+
+    /**
+     * 是否为X86设备
+     */
+    public static boolean isX86() {
+        for (String abi : Build.SUPPORTED_ABIS) {
+            if ("x86".equalsIgnoreCase(abi) || "x86_64".equalsIgnoreCase(abi)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -2,22 +2,24 @@ package ly.pp.justpiano3.activity.local;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 import java.util.concurrent.Executors;
@@ -26,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.FileUtil;
@@ -51,11 +54,20 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
     private String recordFilePath;
     private String recordFileName;
 
+    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic());
+                firstKeyboardView.changeSkinKeyboardImage(this);
+                secondKeyboardView.changeSkinKeyboardImage(this);
+                KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.getEntries()
+                        .get(GlobalSetting.getKeyboardOctaveTagType());
+                firstKeyboardView.setOctaveTagType(octaveTagType);
+                secondKeyboardView.setOctaveTagType(octaveTagType);
+            });
+
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.setClass(this, PlayModeSelect.class);
-        startActivity(intent);
+        startActivity(new Intent(this, PlayModeSelect.class));
         finish();
     }
 
@@ -91,41 +103,41 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, keyboardWeight));
         keyboard2Layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1 - keyboardWeight));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.setMidiConnectionListener(this);
         }
     }
 
     private void initKeyboardView(KeyboardView keyboardView) {
-        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
+        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries().get(GlobalSetting.getKeyboardOctaveTagType()));
         keyboardView.setKeyboardListener(new KeyboardView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
-                SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
-                if (GlobalSetting.INSTANCE.getSoundVibration()) {
-                    VibrationUtil.vibrateOnce(KeyBoard.this, GlobalSetting.INSTANCE.getSoundVibrationTime());
+                SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.getKeyboardSoundTune()), volume);
+                if (GlobalSetting.getSoundVibration()) {
+                    VibrationUtil.vibrateOnce(KeyBoard.this, GlobalSetting.getSoundVibrationTime());
                 }
             }
 
             @Override
             public void onKeyUp(byte pitch) {
-                SoundEngineUtil.stopPlaySound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()));
+                SoundEngineUtil.stopPlaySound((byte) (pitch + GlobalSetting.getKeyboardSoundTune()));
             }
         });
     }
 
     @Override
     public void onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.removeMidiConnectionListener();
         }
         if (recordStart) {
             recordStart = false;
             SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-            Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                    GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
-            if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
+            Uri desUri = FileUtil.getOrCreateFileByUriFolder(this,
+                    GlobalSetting.getRecordsSavePath(), "Records", recordFileName);
+            if (FileUtil.moveFileToUri(this, srcFile, desUri)) {
                 Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
@@ -208,41 +220,34 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
     private final Handler handler = new Handler(new Handler.Callback() {
 
         @Override
-        public boolean handleMessage(Message msg) {
+        public boolean handleMessage(@NonNull Message message) {
             SharedPreferences.Editor edit = sharedPreferences.edit();
-            if (msg.what == R.id.keyboard1_count_down) {
+            if (message.what == R.id.keyboard1_count_down) {
                 firstKeyboardView.setWhiteKeyNum(firstKeyboardView.getWhiteKeyNum() - 1);
                 edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard2_count_down) {
+            } else if (message.what == R.id.keyboard2_count_down) {
                 secondKeyboardView.setWhiteKeyNum(secondKeyboardView.getWhiteKeyNum() - 1);
                 edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard1_count_up) {
+            } else if (message.what == R.id.keyboard1_count_up) {
                 firstKeyboardView.setWhiteKeyNum(firstKeyboardView.getWhiteKeyNum() + 1);
                 edit.putInt("keyboard1_white_key_num", firstKeyboardView.getWhiteKeyNum());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard2_count_up) {
+            } else if (message.what == R.id.keyboard2_count_up) {
                 secondKeyboardView.setWhiteKeyNum(secondKeyboardView.getWhiteKeyNum() + 1);
                 edit.putInt("keyboard2_white_key_num", secondKeyboardView.getWhiteKeyNum());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard1_move_left) {
+            } else if (message.what == R.id.keyboard1_move_left) {
                 firstKeyboardView.setWhiteKeyOffset(firstKeyboardView.getWhiteKeyOffset() - 1);
                 edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard2_move_left) {
+            } else if (message.what == R.id.keyboard2_move_left) {
                 secondKeyboardView.setWhiteKeyOffset(secondKeyboardView.getWhiteKeyOffset() - 1);
                 edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard1_move_right) {
+            } else if (message.what == R.id.keyboard1_move_right) {
                 firstKeyboardView.setWhiteKeyOffset(firstKeyboardView.getWhiteKeyOffset() + 1);
                 edit.putInt("keyboard1_white_key_offset", firstKeyboardView.getWhiteKeyOffset());
-                edit.apply();
-            } else if (msg.what == R.id.keyboard2_move_right) {
+            } else if (message.what == R.id.keyboard2_move_right) {
                 secondKeyboardView.setWhiteKeyOffset(secondKeyboardView.getWhiteKeyOffset() + 1);
                 edit.putInt("keyboard2_white_key_offset", secondKeyboardView.getWhiteKeyOffset());
-                edit.apply();
             }
+            edit.apply();
             return false;
         }
     });
@@ -260,25 +265,10 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this);
-            firstKeyboardView.changeSkinKeyboardImage(this);
-            secondKeyboardView.changeSkinKeyboardImage(this);
-            KeyboardView.OctaveTagType octaveTagType = KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()];
-            firstKeyboardView.setOctaveTagType(octaveTagType);
-            secondKeyboardView.setOctaveTagType(octaveTagType);
-        }
-    }
-
-    @Override
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.keyboard_setting) {
-            Intent intent = new Intent();
-            intent.setClass(this, SettingsMode.class);
-            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+            settingsLauncher.launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.keyboard_record) {
             try {
                 Button recordButton = (Button) view;
@@ -308,9 +298,9 @@ public final class KeyBoard extends BaseActivity implements View.OnTouchListener
                     recordStart = false;
                     SoundEngineUtil.setRecord(false);
                     File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-                    Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                            GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
-                    if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
+                    Uri desUri = FileUtil.getOrCreateFileByUriFolder(this,
+                            GlobalSetting.getRecordsSavePath(), "Records", recordFileName);
+                    if (FileUtil.moveFileToUri(this, srcFile, desUri)) {
                         Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();

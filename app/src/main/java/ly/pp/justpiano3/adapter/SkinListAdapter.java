@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,13 +14,14 @@ import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.local.SkinDownload;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.task.SkinListPreferenceTask;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 import ly.pp.justpiano3.view.preference.SkinListPreference;
 
 public final class SkinListAdapter extends BaseAdapter {
     public final SkinListPreference skinListPreference;
-    public Context context;
+    private final Context context;
     private CharSequence[] skinNameList;
     private CharSequence[] skinKeyList;
 
@@ -74,11 +74,10 @@ public final class SkinListAdapter extends BaseAdapter {
         }
         setButton.setOnClickListener(v -> {
             if (skinKey.equals("more")) {
-                Intent intent = new Intent();
-                intent.setClass(context, SkinDownload.class);
-                ((Activity) (context)).startActivityForResult(intent, SkinDownload.SKIN_DOWNLOAD_REQUEST_CODE);
+                ((SettingsActivity) (context)).skinSelectLauncher.launch(new Intent(context, SkinDownload.class));
             } else if (skinKey.equals("select")) {
-                FilePickerUtil.openFilePicker((Activity) context, false, "skin_select");
+                FilePickerUtil.openFilePicker(context, false,
+                        "skin_select", ((SettingsActivity) context).filePickerLauncher);
             } else {
                 skinListPreference.skinKey = skinKey;
                 skinListPreference.skinFile = Objects.equals("original", skinKey) ? null : Uri.parse(skinKey);

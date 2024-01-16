@@ -18,7 +18,7 @@ import ly.pp.justpiano3.constant.Consts;
 /**
  * 框框颜色处理工具
  */
-public class ColorUtil {
+public final class ColorUtil {
 
     public static final int[] filledUserColor = new int[]{R.drawable.filled_msg, R.drawable.filled_v1, R.drawable.filled_v2, R.drawable.filled_v3,
             R.drawable.filled_v4, R.drawable.filled_v5, R.drawable.filled_v6, R.drawable.filled_v7,

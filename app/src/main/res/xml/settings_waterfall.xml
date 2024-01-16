@@ -40,21 +40,21 @@
             android:summaryOff="&lt;关闭&gt;隐藏八度虚线"
             android:summaryOn="&lt;打开&gt;显示八度虚线"
             android:title="显示八度虚线" />
-        <net.margaritov.preference.colorpicker.ColorPickerPreference
+        <ly.pp.justpiano3.view.preference.ColorPickerPreference
             alphaSlider="false"
             hexValue="true"
             android:defaultValue="0xFF2BBBFB"
             android:key="waterfall_left_hand_color"
             android:summary="左手音块颜色"
             android:title="左手音块颜色" />
-        <net.margaritov.preference.colorpicker.ColorPickerPreference
+        <ly.pp.justpiano3.view.preference.ColorPickerPreference
             alphaSlider="false"
             hexValue="true"
             android:defaultValue="0xFFFF802D"
             android:key="waterfall_right_hand_color"
             android:summary="右手音块颜色"
             android:title="右手音块颜色" />
-        <net.margaritov.preference.colorpicker.ColorPickerPreference
+        <ly.pp.justpiano3.view.preference.ColorPickerPreference
             alphaSlider="false"
             hexValue="true"
             android:defaultValue="0xFFFFFF00"

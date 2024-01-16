@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -53,9 +52,9 @@ public final class ChangeAccountAdapter extends BaseAdapter {
             view = layoutInflater.inflate(R.layout.account_name, null);
         }
         String account = list.get(i);
-        TextView accountName = view.findViewById(R.id.account_name_text);
-        accountName.setText(account);
-        accountName.setOnClickListener(v -> {
+        TextView accountNameTextView = view.findViewById(R.id.account_name_text);
+        accountNameTextView.setText(account);
+        accountNameTextView.setOnClickListener(v -> {
             try {
                 loginActivity.accountTextView.setText(account);
                 loginActivity.passwordTextView.setText(jsonObject.getString(account));
@@ -64,8 +63,7 @@ public final class ChangeAccountAdapter extends BaseAdapter {
             }
             dialog.dismiss();
         });
-        Button accountDelete = view.findViewById(R.id.account_delete);
-        accountDelete.setOnClickListener(v -> {
+        view.findViewById(R.id.account_delete).setOnClickListener(v -> {
             jsonObject.remove(account);
             SharedPreferences.Editor edit = loginActivity.sharedPreferences.edit();
             edit.putString("accountList", jsonObject.toString());

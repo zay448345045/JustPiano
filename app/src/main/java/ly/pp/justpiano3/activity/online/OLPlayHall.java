@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
@@ -54,6 +53,7 @@ import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.CreateRoomClick;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayHallTabChange;
+import ly.pp.justpiano3.utils.BizUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
@@ -114,11 +114,11 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         roomTitleMap.put(b, room);
     }
 
-    public void showInfoDialog(Bundle b) {
+    public void showInfoDialog(Bundle bundle) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
-            User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
-                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
+            User user = new User(bundle.getString("U"), bundle.getInt("DR_H"), bundle.getInt("DR_E"), bundle.getInt("DR_J"),
+                    bundle.getInt("DR_T"), bundle.getInt("DR_S"), bundle.getString("S"), bundle.getInt("LV"), bundle.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
@@ -128,17 +128,16 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
-            int lv = b.getInt("LV");
-            int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
-            textView.setText("用户名称:" + b.getString("U")
+            int lv = bundle.getInt("LV");
+            textView.setText("用户名称:" + bundle.getString("U")
                     + "\n用户等级:LV." + lv
-                    + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:CL." + b.getInt("CL")
-                    + "\n所在家族:" + b.getString("F")
-                    + "\n在线曲库冠军数:" + b.getInt("W")
-                    + "\n在线曲库弹奏总分:" + b.getInt("SC"));
-            textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+                    + "\n经验进度:" + bundle.getInt("E") + "/" + BizUtil.getTargetExp(lv)
+                    + "\n考级进度:CL." + bundle.getInt("CL")
+                    + "\n所在家族:" + bundle.getString("F")
+                    + "\n在线曲库冠军数:" + bundle.getInt("W")
+                    + "\n在线曲库弹奏总分:" + bundle.getInt("SC"));
+            textView2.setText("个性签名:\n" + (bundle.getString("P").isEmpty() ? "无" : bundle.getString("P")));
+            new JPDialogBuilder(this).setWidth(288).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
                     .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
@@ -303,8 +302,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             jpprogressBar.show();
             sendMsg(OnlineProtocolType.CL_TEST, builder2.build());
         } else if (id == R.id.ol_challenge_b) {
-            Intent intent = new Intent();
-            intent.setClass(this, OLChallenge.class);
+            Intent intent = new Intent(this, OLChallenge.class);
             intent.putExtra("hallID", hallID);
             intent.putExtra("hallName", hallName);
             startActivity(intent);
@@ -377,9 +375,9 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
         hallID = hallInfoBundle.getByte("hallID");
         layoutInflater1 = LayoutInflater.from(this);
         layoutInflater2 = LayoutInflater.from(this);
-        GlobalSetting.INSTANCE.loadSettings(this, true);
+        GlobalSetting.loadSettings(this, true);
         setContentView(R.layout.ol_room_list);
-        GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         findViewById(R.id.ol_send_b).setOnClickListener(this);
         findViewById(R.id.ol_send_b).setOnLongClickListener(this);
         findViewById(R.id.ol_createroom_b).setOnClickListener(this);
@@ -432,7 +430,7 @@ public final class OLPlayHall extends OLBaseActivity implements Callback, OnClic
             tabHost.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             playHallTitleView.getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             TextView tv = tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            tv.setTextColor(0xffffffff);
+            tv.setTextColor(Color.WHITE);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);

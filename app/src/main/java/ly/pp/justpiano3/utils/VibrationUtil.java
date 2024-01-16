@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 
-public class VibrationUtil {
+public final class VibrationUtil {
 
     /**
      * 震动一次，持续时间由参数指定

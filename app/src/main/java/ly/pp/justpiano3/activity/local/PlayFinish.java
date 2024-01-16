@@ -14,7 +14,6 @@ import java.util.List;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
-import ly.pp.justpiano3.activity.local.PianoPlay;
 import ly.pp.justpiano3.activity.online.OLMelodySelect;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.task.PlayFinishTask;
@@ -27,7 +26,7 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
     public String scoreArray = "";
     public JPProgressBar jpprogressBar;
     private String name = "";
-    public String songID;
+    public String songId;
     private int comboScore;
     private int perfect;
     private int cool;
@@ -36,8 +35,8 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
     private int miss;
     private int clickNum;
     private int combo;
-    private double nandu;
-    private double leftNandu;
+    private double rightHandDegree;
+    private double leftHandDegree;
     private int hand;
     private int songsTime;
     private String path = "";
@@ -55,9 +54,8 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, PianoPlay.class);
         OLMelodySelect.songBytes = null;
-        setResult(-1, intent);
+        setResult(-1, new Intent(this, PianoPlay.class));
         finish();
     }
 
@@ -73,16 +71,15 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
             switch (head) {
                 case 0 -> {
                     setResult(-1, intent);
-                    intent = new Intent();
-                    intent.setClass(this, PianoPlay.class);
+                    intent = new Intent(this, PianoPlay.class);
                     intent.putExtra("head", head);
                     intent.putExtra("hand", hand);
                     intent.putExtra("name", name);
                     intent.putExtra("path", path);
-                    intent.putExtra("nandu", nandu);
-                    intent.putExtra("leftnandu", leftNandu);
-                    intent.putExtra("songstime", songsTime);
-                    intent.putExtra("isrecord", false);
+                    intent.putExtra("rightHandDegree", rightHandDegree);
+                    intent.putExtra("leftHandDegree", leftHandDegree);
+                    intent.putExtra("songsTime", songsTime);
+                    intent.putExtra("isOpenRecord", false);
                     intent.putExtra("score", topScore);
                     startActivity(intent);
                     finish();
@@ -90,13 +87,12 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
                 case 1 -> {
                     if (OLMelodySelect.songBytes != null) {
                         setResult(-1, intent);
-                        intent = new Intent();
-                        intent.setClass(this, PianoPlay.class);
+                        intent = new Intent(this, PianoPlay.class);
                         intent.putExtra("head", head);
                         intent.putExtra("songName", name);
-                        intent.putExtra("degree", nandu);
+                        intent.putExtra("degree", rightHandDegree);
                         intent.putExtra("songBytes", OLMelodySelect.songBytes);
-                        intent.putExtra("songID", songID);
+                        intent.putExtra("songID", songId);
                         intent.putExtra("topScore", topScore);
                         startActivity(intent);
                         finish();
@@ -125,9 +121,9 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
                 miss = extras.getInt("miss");
                 name = extras.getString("name");
                 path = extras.getString("path");
-                nandu = extras.getDouble("nandu");
-                leftNandu = extras.getDouble("leftnandu");
-                songsTime = extras.getInt("songstime");
+                rightHandDegree = extras.getDouble("rightHandDegree");
+                leftHandDegree = extras.getDouble("leftHandDegree");
+                songsTime = extras.getInt("songsTime");
                 hand = extras.getInt("hand");
                 combo = extras.getInt("top_combo");
                 comboScore = extras.getInt("combo_scr");
@@ -164,9 +160,9 @@ public final class PlayFinish extends BaseActivity implements OnClickListener {
                 bad = extras.getInt("bad");
                 miss = extras.getInt("miss");
                 name = extras.getString("name");
-                songID = extras.getString("songID");
+                songId = extras.getString("songID");
                 path = extras.getString("path");
-                nandu = extras.getDouble("nandu");
+                rightHandDegree = extras.getDouble("rightHandDegree");
                 combo = extras.getInt("top_combo");
                 comboScore = extras.getInt("combo_scr");
                 try {

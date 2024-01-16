@@ -10,15 +10,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-public class StreamUtil {
+public final class StreamUtil {
 
     /**
      * 序列化List
      */
     public static <T> boolean writeObject(List<T> list, Context context, Uri uri) {
-        T[] array = (T[]) list.toArray();
         try (ObjectOutputStream out = new ObjectOutputStream(context.getContentResolver().openOutputStream(uri, "w"))) {
-            out.writeObject(array);
+            out.writeObject((T[]) list.toArray());
             out.flush();
             return true;
         } catch (IOException e) {
@@ -31,10 +30,8 @@ public class StreamUtil {
      * 反序列化List
      */
     public static <T> List<T> readObjectForList(Context context, Uri uri) {
-        T[] object;
         try (ObjectInputStream out = new ObjectInputStream(context.getContentResolver().openInputStream(uri))) {
-            object = (T[]) out.readObject();
-            return Arrays.asList(object);
+            return Arrays.asList((T[]) out.readObject());
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

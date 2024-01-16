@@ -19,7 +19,7 @@ import java.io.FileDescriptor;
  * <p>
  * 本类主要提供两种类型的位图压缩，资源id类型、文件类型。
  */
-public class ImageResizerUtil {
+public final class ImageResizerUtil {
     private static final String TAG = "ImageResizer";
     private final Context context;
 

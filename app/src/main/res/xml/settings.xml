@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="弹奏、音块及界面">
         <ly.pp.justpiano3.view.preference.SkinListPreference
+            android:defaultValue="original"
             android:dialogTitle="设置管理皮肤"
             android:key="skin_select"
             android:summary="默认皮肤"
@@ -12,7 +13,7 @@
             android:title="弹奏设置">
             <intent
                 android:data="settings_piano_play"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.settings.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <PreferenceScreen
@@ -20,7 +21,7 @@
             android:title="音块设置">
             <intent
                 android:data="settings_play_note"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.settings.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <PreferenceScreen
@@ -28,7 +29,7 @@
             android:title="瀑布流设置">
             <intent
                 android:data="settings_waterfall"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.settings.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <SwitchPreference
@@ -46,6 +47,7 @@
 
     <PreferenceCategory android:title="键盘、声音及MIDI设备">
         <ly.pp.justpiano3.view.preference.SoundListPreference
+            android:defaultValue="original"
             android:dialogTitle="设置管理音源"
             android:key="sound_select"
             android:summary="默认音源"
@@ -61,7 +63,7 @@
             android:title="声音效果设置">
             <intent
                 android:data="settings_sound"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.settings.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <PreferenceScreen
@@ -69,7 +71,7 @@
             android:title="钢琴键盘设置">
             <intent
                 android:data="settings_keyboard"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.settings.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <ly.pp.justpiano3.view.preference.FilePickerPreference
@@ -80,12 +82,29 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="联网模式">
+        <Preference
+            android:title="保持后台网络连接"
+            android:summary="点击手动操作，在系统应用设置中取消极品钢琴的自动启动管理，并允许后台启动，尽可能维持后台网络连接【后台可能会持续耗电，请谨慎开启】"
+            android:key="background_keep_alive" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:title="忽略电池优化"
+            android:enabled="false"
+            android:summaryOff="&lt;关闭&gt;忽略电池优化后，系统可在低电量模式下进一步维持后台网络连接，点击授权开启"
+            android:summaryOn="&lt;打开&gt;已忽略电池优化，点击手动操作移除"
+            android:key="battery_keep_alive" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:title="保持唤醒状态"
+            android:summaryOff="&lt;关闭&gt;点击开启保持唤醒状态，防止手机锁屏时进入待机模式，一定程度上维持锁屏时的网络连接"
+            android:summaryOn="&lt;打开&gt;已保持唤醒状态，推荐在不需要时关闭，以减少电量消耗"
+            android:key="wake_lock" />
         <PreferenceScreen
             android:summary="聊天记录、聊天音效、字体大小等"
             android:title="聊天设置">
             <intent
                 android:data="settings_online_chat"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.settings.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <SwitchPreference
@@ -94,15 +113,6 @@
             android:summaryOff="&lt;关闭&gt;每隔一段时间，将所有按键操作统一广播，缺乏实时性，低能耗，单人独奏更流畅"
             android:summaryOn="&lt;打开&gt;检测到每个按键操作时，立即广播数据，低延迟，高能耗，适合多人合奏"
             android:title="联网键盘协奏模式" />
-        <ly.pp.justpiano3.view.preference.SeekBarPreference
-            android:defaultValue="100"
-            android:dialogTitle="联网模式瀑布流背景透明度"
-            android:key="online_waterfall_alpha"
-            android:summary="设置联网模式瀑布流背景透明度，值越小，越趋向于透明"
-            android:title="联网模式瀑布流背景透明度"
-            app:floatNumber="false"
-            app:maxValue="150"
-            app:minValue="50" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="关于">
@@ -111,7 +121,7 @@
             android:title="软件版本">
             <intent
                 android:data="settings_easter_egg"
-                android:targetClass="ly.pp.justpiano3.activity.local.SettingsMode"
+                android:targetClass="ly.pp.justpiano3.activity.settings.SettingsActivity"
                 android:targetPackage="ly.pp.justpiano3" />
         </PreferenceScreen>
         <Preference

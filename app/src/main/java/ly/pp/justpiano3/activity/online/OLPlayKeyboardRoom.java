@@ -2,14 +2,12 @@ package ly.pp.justpiano3.activity.online;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.midi.MidiDeviceInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,9 +18,12 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 import java.util.Collections;
@@ -40,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 
 import kotlin.Pair;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.local.SettingsMode;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.adapter.KeyboardPlayerImageAdapter;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
@@ -91,8 +92,24 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     private String recordFileName;
     private int tabTitleHeight;
 
+    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic());
+                keyboardView.changeSkinKeyboardImage(this);
+                keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries()
+                        .get(GlobalSetting.getKeyboardOctaveTagType()));
+                waterfallView.setViewAlpha(GlobalSetting.getWaterfallOnlineAlpha());
+                waterfallView.setShowOctaveLine(GlobalSetting.getWaterfallOctaveLine());
+                waterfallView.setNoteFallDownSpeed(GlobalSetting.getWaterfallDownSpeed());
+                if (GlobalSetting.getKeyboardRealtime()) {
+                    stopNotesSchedule();
+                } else {
+                    openNotesSchedule();
+                }
+            });
+
     private void broadNote(byte pitch, byte volume) {
-        if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
+        if (GlobalSetting.getKeyboardRealtime()) {
             olNoteCacheDataMap.put((long) pitch, (long) volume);
             if (System.currentTimeMillis() - realTimeLastMessageSendTime > PmSongUtil.PM_GLOBAL_SPEED) {
                 realTimeLastMessageSendTime = System.currentTimeMillis();
@@ -122,21 +139,21 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 + roomPositionSub1);
     }
 
-    public void buildAndShowCpDialog(int i, String str, int i2) {
-        String str5 = "情意绵绵的情侣";
-        switch (i2) {
+    public void buildAndShowCpDialog(int dialogType, String message, int coupleType) {
+        String coupleTypeText = "情意绵绵的情侣";
+        switch (coupleType) {
             case 0 -> {
                 return;
             }
-            case 1 -> str5 = "情意绵绵的情侣";
-            case 2 -> str5 = "基情四射的基友";
-            case 3 -> str5 = "百年好合的百合";
+            case 1 -> coupleTypeText = "情意绵绵的情侣";
+            case 2 -> coupleTypeText = "基情四射的基友";
+            case 3 -> coupleTypeText = "百年好合的百合";
         }
-        if (i == 4) {
-            showCpDialog(str5.substring(str5.length() - 2) + "证书", str);
-        } else if (i == 5) {
+        if (dialogType == 4) {
+            showCpDialog(coupleTypeText.substring(coupleTypeText.length() - 2) + "证书", message);
+        } else if (dialogType == 5) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-            jpDialogBuilder.setTitle("提示").setMessage(str).setFirstButton("确定", (dialog, which) -> dialog.dismiss())
+            jpDialogBuilder.setTitle("提示").setMessage(message).setFirstButton("确定", (dialog, which) -> dialog.dismiss())
                     .setCancelableFalse().setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         }
     }
@@ -144,13 +161,13 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
     public void initPlayer(GridView gridView, Bundle bundle) {
         if (roomPositionSub1 < 0) {
             // 初次加载完成，确认用户已经进入房间内，再开始MIDI监听和记录弹奏，开启瀑布流等
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            if (MidiDeviceUtil.isSupportMidiDevice(this)) {
                 MidiDeviceUtil.setMidiConnectionListener(this);
             }
-            if (!GlobalSetting.INSTANCE.getKeyboardRealtime()) {
+            if (!GlobalSetting.getKeyboardRealtime()) {
                 openNotesSchedule();
             }
-            waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.INSTANCE.getWaterfallDownSpeed());
+            waterfallView.startPlay(new WaterfallNote[0], GlobalSetting.getWaterfallDownSpeed());
             RelativeLayout.LayoutParams waterfallViewLayoutParams = (RelativeLayout.LayoutParams) waterfallView.getLayoutParams();
             waterfallViewLayoutParams.height = playerLayout.getHeight() - tabTitleHeight;
             waterfallView.setLayoutParams(waterfallViewLayoutParams);
@@ -195,20 +212,17 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         if (message.what == R.id.keyboard_count_down) {
             keyboardView.setWhiteKeyNum(keyboardView.getWhiteKeyNum() - 1);
             edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
-            edit.apply();
         } else if (message.what == R.id.keyboard_count_up) {
             keyboardView.setWhiteKeyNum(keyboardView.getWhiteKeyNum() + 1);
             edit.putInt("ol_keyboard_white_key_num", keyboardView.getWhiteKeyNum());
-            edit.apply();
         } else if (message.what == R.id.keyboard_move_left) {
             keyboardView.setWhiteKeyOffset(keyboardView.getWhiteKeyOffset() - 1);
             edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
-            edit.apply();
         } else if (message.what == R.id.keyboard_move_right) {
             keyboardView.setWhiteKeyOffset(keyboardView.getWhiteKeyOffset() + 1);
             edit.putInt("ol_keyboard_white_key_offset", keyboardView.getWhiteKeyOffset());
-            edit.apply();
         }
+        edit.apply();
         onlineWaterfallViewNoteWidthUpdateHandle();
         return false;
     }
@@ -220,7 +234,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 for (int i = freeStyleNoteList.size() - 1; i >= 0; i--) {
                     WaterfallNote waterfallNote = freeStyleNoteList.get(i);
                     if (waterfallNote != null) {
-                        Pair<Float, Float> result = WaterfallUtil.Companion.convertToWaterfallWidth(
+                        Pair<Float, Float> result = WaterfallUtil.convertToWaterfallWidth(
                                 keyboardView, waterfallNote.getPitch());
                         waterfallNote.setLeft(result.getFirst());
                         waterfallNote.setRight(result.getSecond());
@@ -235,9 +249,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         super.onClick(view);
         int id = view.getId();
         if (id == R.id.keyboard_setting) {
-            Intent intent = new Intent();
-            intent.setClass(this, SettingsMode.class);
-            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+            settingsLauncher.launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.keyboard_record) {
             try {
                 Button recordButton = (Button) view;
@@ -267,9 +279,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     recordStart = false;
                     SoundEngineUtil.setRecord(false);
                     File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-                    Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                            GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
-                    if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
+                    Uri desUri = FileUtil.getOrCreateFileByUriFolder(this,
+                            GlobalSetting.getRecordsSavePath(), "Records", recordFileName);
+                    if (FileUtil.moveFileToUri(this, srcFile, desUri)) {
                         Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
@@ -277,23 +289,6 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this);
-            keyboardView.changeSkinKeyboardImage(this);
-            waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
-            waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
-            waterfallView.setNoteFallDownSpeed(GlobalSetting.INSTANCE.getWaterfallDownSpeed());
-            if (GlobalSetting.INSTANCE.getKeyboardRealtime()) {
-                stopNotesSchedule();
-            } else {
-                openNotesSchedule();
             }
         }
     }
@@ -325,17 +320,17 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             olKeyboardStates.put(i, new OLKeyboardState(false, false, false));
         }
         keyboardView = findViewById(R.id.keyboard_view);
-        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.values()[GlobalSetting.INSTANCE.getKeyboardOctaveTagType()]);
+        keyboardView.setOctaveTagType(KeyboardView.OctaveTagType.getEntries().get(GlobalSetting.getKeyboardOctaveTagType()));
         keyboardView.setKeyboardListener(new KeyboardView.KeyboardListener() {
             @Override
             public void onKeyDown(byte pitch, byte volume) {
                 OLKeyboardState olKeyboardState = olKeyboardStates.get(roomPositionSub1);
                 if (roomPositionSub1 >= 0 && olKeyboardState != null) {
                     if (!olKeyboardState.getMuted()) {
-                        SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()), volume);
+                        SoundEngineUtil.playSound((byte) (pitch + GlobalSetting.getKeyboardSoundTune()), volume);
                     }
-                    if (GlobalSetting.INSTANCE.getSoundVibration()) {
-                        VibrationUtil.vibrateOnce(OLPlayKeyboardRoom.this, GlobalSetting.INSTANCE.getSoundVibrationTime());
+                    if (GlobalSetting.getSoundVibration()) {
+                        VibrationUtil.vibrateOnce(OLPlayKeyboardRoom.this, GlobalSetting.getSoundVibrationTime());
                     }
                     blinkView(roomPositionSub1);
                 }
@@ -343,12 +338,12 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                     broadNote(pitch, volume);
                 }
                 onlineWaterfallKeyDownHandle(pitch, volume, keyboardView.getNoteOnColor() == null ?
-                        GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardView.getNoteOnColor());
+                        GlobalSetting.getWaterfallFreeStyleColor() : keyboardView.getNoteOnColor());
             }
 
             @Override
             public void onKeyUp(byte pitch) {
-                SoundEngineUtil.stopPlaySound((byte) (pitch + GlobalSetting.INSTANCE.getKeyboardSoundTune()));
+                SoundEngineUtil.stopPlaySound((byte) (pitch + GlobalSetting.getKeyboardSoundTune()));
                 if (roomPositionSub1 >= 0) {
                     blinkView(roomPositionSub1);
                 }
@@ -379,8 +374,8 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
         }
         waterfallView = findViewById(R.id.ol_waterfall_view);
         waterfallView.setTranslationY(tabTitleHeight);
-        waterfallView.setViewAlpha(GlobalSetting.INSTANCE.getWaterfallOnlineAlpha());
-        waterfallView.setShowOctaveLine(GlobalSetting.INSTANCE.getWaterfallOctaveLine());
+        waterfallView.setViewAlpha(GlobalSetting.getWaterfallOnlineAlpha());
+        waterfallView.setShowOctaveLine(GlobalSetting.getWaterfallOctaveLine());
         roomTabs.setCurrentTab(1);
         // 注意这里在向服务端发消息
         sendMsg(OnlineProtocolType.LOAD_ROOM_POSITION, OnlineLoadRoomPositionDTO.getDefaultInstance());
@@ -388,7 +383,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     public void onlineWaterfallKeyDownHandle(byte pitch, byte volume, int color) {
         if (waterfallView != null) {
-            Pair<Float, Float> result = WaterfallUtil.Companion.convertToWaterfallWidth(
+            Pair<Float, Float> result = WaterfallUtil.convertToWaterfallWidth(
                     keyboardView, pitch);
             waterfallView.addFreeStyleWaterfallNote(
                     result.getFirst(),
@@ -407,7 +402,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
 
     @Override
     protected void onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.removeMidiConnectionListener();
         }
         stopNotesSchedule();
@@ -415,9 +410,9 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
             recordStart = false;
             SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordFilePath.replace(".raw", ".wav"));
-            Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                    GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", recordFileName);
-            if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
+            Uri desUri = FileUtil.getOrCreateFileByUriFolder(this,
+                    GlobalSetting.getRecordsSavePath(), "Records", recordFileName);
+            if (FileUtil.moveFileToUri(this, srcFile, desUri)) {
                 Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
@@ -473,7 +468,7 @@ public final class OLPlayKeyboardRoom extends OLRoomActivity implements View.OnT
                 broadNote(pitch, volume);
             }
             onlineWaterfallKeyDownHandle(pitch, volume, keyboardView.getNoteOnColor() == null ?
-                    GlobalSetting.INSTANCE.getWaterfallFreeStyleColor() : keyboardView.getNoteOnColor());
+                    GlobalSetting.getWaterfallFreeStyleColor() : keyboardView.getNoteOnColor());
         } else {
             if (roomPositionSub1 >= 0 && roomPositionSub1 < Room.CAPACITY && olKeyboardState != null) {
                 if (!olKeyboardState.getMuted()) {

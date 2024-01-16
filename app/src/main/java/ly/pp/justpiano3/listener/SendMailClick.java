@@ -24,15 +24,15 @@ public final class SendMailClick implements OnClickListener {
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        String valueOf = String.valueOf(textView.getText());
-        if (valueOf.isEmpty() || valueOf.equals("'")) {
-            Toast.makeText(context, "请输入信件内容!", Toast.LENGTH_SHORT).show();
-        } else if (valueOf.length() > Consts.MAX_MESSAGE_COUNT) {
+        String text = String.valueOf(textView.getText());
+        if (text.isEmpty() || "'".equals(text) || "''".equals(text) || "'''".equals(text)) {
+            Toast.makeText(context, "请输入内容!", Toast.LENGTH_SHORT).show();
+        } else if (text.length() > Consts.MAX_MESSAGE_COUNT) {
             Toast.makeText(context, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
         } else {
             OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
             builder.setName(userName);
-            builder.setMessage(valueOf);
+            builder.setMessage(text);
             if (!userName.isEmpty()) {
                 OnlineUtil.getConnectionService().writeData(OnlineProtocolType.SEND_MAIL, builder.build());
             }

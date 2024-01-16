@@ -1,7 +1,6 @@
 package ly.pp.justpiano3.activity.local;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -27,6 +26,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -44,12 +45,14 @@ import java.util.Objects;
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.adapter.LocalSongsAdapter;
 import ly.pp.justpiano3.adapter.LocalSongsItemAdapter;
 import ly.pp.justpiano3.adapter.PopupWindowSelectAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.SongData;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.task.LocalDataImportExportTask;
@@ -66,7 +69,6 @@ import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class MelodySelect extends BaseActivity implements Callback, OnClickListener {
     private SharedPreferences sharedPreferences;
-    public LayoutInflater layoutInflater1;
     public JPProgressBar jpProgressBar;
     public String songsPath = "";
     public CheckBox isRecord;
@@ -88,6 +90,75 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
     public LiveData<PagedList<Song>> pagedListLiveData;
     private final MutableLiveData<SongDao.TotalSongInfo> totalSongInfoMutableLiveData = new MutableLiveData<>();
     public int songsPositionInListView;
+
+    private final ActivityResultLauncher<Intent> midiImportLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
+                    return;
+                }
+                List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, result.getData());
+                if (uriInfoList.size() != 1) {
+                    return;
+                }
+                FileUtil.UriInfo uriInfo = uriInfoList.get(0);
+                if (uriInfo.getUri() == null || uriInfo.getDisplayName() == null
+                        || !(uriInfo.getDisplayName().endsWith(".mid") || uriInfo.getDisplayName().endsWith(".midi"))) {
+                    Toast.makeText(this, "请选择合法的midi格式文件", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String songName = uriInfo.getDisplayName().substring(0, uriInfo.getDisplayName().indexOf('.'));
+                File pmFile = new File(getFilesDir().getAbsolutePath() + "/ImportSongs/" + songName + ".pm");
+                if (pmFile.exists()) {
+                    Toast.makeText(this, "不能重复导入曲谱，请删除同名曲谱后再试", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (pmFile.getParentFile() != null && !pmFile.getParentFile().exists()) {
+                    pmFile.getParentFile().mkdirs();
+                }
+                if (uriInfo.getFileSize() != null && uriInfo.getFileSize() > 2 * 1024 * 1024) {
+                    Toast.makeText(this, "不接受大小超过2M的midi文件", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (uriInfo.getFileSize() != null && uriInfo.getFileSize() > 256 * 1024) {
+                    Toast.makeText(this, "midi文件建议小于256KB，文件过大可能导致加载过慢或出现异常", Toast.LENGTH_SHORT).show();
+                }
+                jpProgressBar.setCancelable(false);
+                jpProgressBar.show();
+                ThreadPoolUtil.execute(() -> importMidi(this, uriInfo, songName, pmFile));
+            });
+
+    private final ActivityResultLauncher<Intent> dbImportLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
+                    return;
+                }
+                List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, result.getData());
+                if (uriInfoList.size() != 1) {
+                    return;
+                }
+                FileUtil.UriInfo uriInfo = uriInfoList.get(0);
+                if (uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !uriInfo.getDisplayName().endsWith(".db")) {
+                    Toast.makeText(this, "请选择合法的db格式文件", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                new LocalDataImportExportTask(this, uriInfo.getUri(), false).execute();
+            });
+
+    private final ActivityResultLauncher<Intent> dbExportLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
+                    return;
+                }
+                FileUtil.UriInfo uriInfo = FileUtil.getFolderUriInfo(this, result.getData().getData());
+                if (uriInfo.getUri() == null) {
+                    Toast.makeText(this, "导出错误，请提交反馈或联系开发者", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                new LocalDataImportExportTask(this, uriInfo.getUri(), true).execute();
+            });
+
+    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result ->
+                    ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic()));
 
     private void buildDoNotShowDialogAndShow(String message, int i) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
@@ -124,70 +195,13 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         return false;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this);
-        } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK
-                && Objects.equals(FilePickerUtil.extra, "midi_import")) {
-            List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, data);
-            if (uriInfoList.size() != 1) {
-                return;
-            }
-            FileUtil.UriInfo uriInfo = uriInfoList.get(0);
-            if (uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !(uriInfo.getDisplayName().endsWith(".mid") || uriInfo.getDisplayName().endsWith(".midi"))) {
-                Toast.makeText(this, "请选择合法的midi格式文件", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            String songName = uriInfo.getDisplayName().substring(0, uriInfo.getDisplayName().indexOf('.'));
-            File pmFile = new File(getFilesDir().getAbsolutePath() + "/ImportSongs/" + songName + ".pm");
-            if (pmFile.exists()) {
-                Toast.makeText(this, "不能重复导入曲谱，请删除同名曲谱后再试", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (pmFile.getParentFile() != null && !pmFile.getParentFile().exists()) {
-                pmFile.getParentFile().mkdirs();
-            }
-            if (uriInfo.getFileSize() != null && uriInfo.getFileSize() > 2 * 1024 * 1024) {
-                Toast.makeText(this, "不接受大小超过2M的midi文件", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (uriInfo.getFileSize() != null && uriInfo.getFileSize() > 256 * 1024) {
-                Toast.makeText(this, "midi文件建议小于256KB，文件过大可能导致加载过慢或出现异常", Toast.LENGTH_SHORT).show();
-            }
-            jpProgressBar.setCancelable(false);
-            jpProgressBar.show();
-            ThreadPoolUtil.execute(() -> importMidi(this, uriInfo, songName, pmFile));
-        } else if (requestCode == FilePickerUtil.PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK
-                && Objects.equals(FilePickerUtil.extra, "db_import")) {
-            List<FileUtil.UriInfo> uriInfoList = FilePickerUtil.getUriFromIntent(this, data);
-            if (uriInfoList.size() != 1) {
-                return;
-            }
-            FileUtil.UriInfo uriInfo = uriInfoList.get(0);
-            if (uriInfo.getUri() == null || uriInfo.getDisplayName() == null || !uriInfo.getDisplayName().endsWith(".db")) {
-                Toast.makeText(this, "请选择合法的db格式文件", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            new LocalDataImportExportTask(this, uriInfo.getUri(), false).execute();
-        } else if (requestCode == FilePickerUtil.PICK_FOLDER_REQUEST_CODE && resultCode == Activity.RESULT_OK
-                && Objects.equals(FilePickerUtil.extra, "db_export")) {
-            FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getFolderUriInfo(this, data.getData());
-            if (uriInfo.getUri() == null) {
-                Toast.makeText(this, "导出错误，请提交反馈或联系开发者", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            new LocalDataImportExportTask(this, uriInfo.getUri(), true).execute();
-        }
-    }
-
     private static void importMidi(MelodySelect melodySelect, FileUtil.UriInfo uriInfo, String songName, File pmFile) {
         if (uriInfo.getDisplayName() == null || uriInfo.getUri() == null) {
             return;
         }
         String message = "成功导入曲目《" + songName + "》，可点击“本地导入”分类查看";
         try {
-            SongData songData = PmSongUtil.INSTANCE.midiFileToPmFile(melodySelect, uriInfo.getDisplayName(), uriInfo.getUri(), pmFile);
+            SongData songData = PmSongUtil.midiFileToPmFile(melodySelect, uriInfo.getDisplayName(), uriInfo.getUri(), pmFile);
             if (!pmFile.exists()) {
                 throw new RuntimeException("导入《" + songName + "》失败，请确认midi文件是否合法");
             }
@@ -234,24 +248,24 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             pagedListLiveData.observe(this, ((LocalSongsAdapter) (Objects.requireNonNull(songsListView.getAdapter())))::submitList);
             sortButton.setEnabled(false);
         } else if (id == R.id.list_sort_b) {
-            PopupWindow popupWindow = new JPPopupWindow(this);
-            View inflate = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
-            popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-            popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-            popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-            inflate.findViewById(R.id.lo_songs_order_name_asc).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_name_des).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_new).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_recent).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_diff_asc).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_diff_des).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_score_asc).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_score_des).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_length_asc).setOnClickListener(this);
-            inflate.findViewById(R.id.lo_songs_order_length_des).setOnClickListener(this);
-            popupWindow.setContentView(inflate);
-            sortPopupWindow = popupWindow;
-            popupWindow.showAsDropDown(sortButton, Gravity.CENTER, 0, 0);
+            PopupWindow sortPopupWindow = new JPPopupWindow(this);
+            View songOrderView = LayoutInflater.from(this).inflate(R.layout.lo_songs_order, null);
+            sortPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+            sortPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+            sortPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+            songOrderView.findViewById(R.id.lo_songs_order_name_asc).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_name_des).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_new).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_recent).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_diff_asc).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_diff_des).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_score_asc).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_score_des).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_length_asc).setOnClickListener(this);
+            songOrderView.findViewById(R.id.lo_songs_order_length_des).setOnClickListener(this);
+            sortPopupWindow.setContentView(songOrderView);
+            this.sortPopupWindow = sortPopupWindow;
+            sortPopupWindow.showAsDropDown(sortButton, Gravity.CENTER, 0, 0);
         } else if (id == R.id.lo_songs_order_name_asc) {
             songsSort(0);
         } else if (id == R.id.lo_songs_order_name_des) {
@@ -273,30 +287,28 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
         } else if (id == R.id.lo_songs_order_length_des) {
             songsSort(9);
         } else if (id == R.id.menu_list_fast) {
-            PopupWindow popupWindow2 = new JPPopupWindow(this);
-            View inflate2 = LayoutInflater.from(this).inflate(R.layout.lo_extra_func, null);
-            popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-            popupWindow2.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-            popupWindow2.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-            inflate2.findViewById(R.id.lo_extra_func_settings).setOnClickListener(this);
-            inflate2.findViewById(R.id.lo_extra_func_sync).setOnClickListener(this);
-            inflate2.findViewById(R.id.lo_extra_func_midi_import).setOnClickListener(this);
-            inflate2.findViewById(R.id.lo_extra_func_data_export).setOnClickListener(this);
-            popupWindow2.setContentView(inflate2);
-            menuPopupWindow = popupWindow2;
-            popupWindow2.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
+            PopupWindow menuPopupWindow = new JPPopupWindow(this);
+            View extraFunctionView = LayoutInflater.from(this).inflate(R.layout.lo_extra_func, null);
+            menuPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+            menuPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+            menuPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+            extraFunctionView.findViewById(R.id.lo_extra_func_settings).setOnClickListener(this);
+            extraFunctionView.findViewById(R.id.lo_extra_func_sync).setOnClickListener(this);
+            extraFunctionView.findViewById(R.id.lo_extra_func_midi_import).setOnClickListener(this);
+            extraFunctionView.findViewById(R.id.lo_extra_func_data_export).setOnClickListener(this);
+            menuPopupWindow.setContentView(extraFunctionView);
+            this.menuPopupWindow = menuPopupWindow;
+            menuPopupWindow.showAsDropDown(menuListButton, Gravity.CENTER, 0, 0);
         } else if (id == R.id.lo_extra_func_settings) {
             menuPopupWindow.dismiss();
-            SongPlay.INSTANCE.stopPlay();
-            Intent intent = new Intent();
-            intent.setClass(this, SettingsMode.class);
-            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+            SongPlay.stopPlay();
+            settingsLauncher.launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.lo_extra_func_sync) {
             menuPopupWindow.dismiss();
             new SongSyncTask(this).execute();
         } else if (id == R.id.lo_extra_func_midi_import) {
             menuPopupWindow.dismiss();
-            FilePickerUtil.openFilePicker(this, false, "midi_import");
+            FilePickerUtil.openFilePicker(this, false, "midi_import", midiImportLauncher);
         } else if (id == R.id.lo_extra_func_data_export) {
             menuPopupWindow.dismiss();
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
@@ -317,9 +329,9 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             jpDialogBuilder.addRadioButton(radioButton).setFirstButton("执行", (dialog, which) -> {
                 dialog.dismiss();
                 if (jpDialogBuilder.getRadioGroupCheckedId() == 2) {
-                    FilePickerUtil.openFilePicker(this, false, "db_import");
+                    FilePickerUtil.openFilePicker(this, false, "db_import", dbImportLauncher);
                 } else if (jpDialogBuilder.getRadioGroupCheckedId() == 1) {
-                    FilePickerUtil.openFolderPicker(this, "db_export");
+                    FilePickerUtil.openFolderPicker("db_export", dbExportLauncher);
                 }
             });
             jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
@@ -331,12 +343,10 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
-        SongPlay.INSTANCE.setCallBack(this::autoPlayNextSong);
+        setContentView(LayoutInflater.from(this).inflate(R.layout.lo_melody_list, null));
+        SongPlay.setPlaySongsMode(PlaySongsModeEnum.ONCE);
+        SongPlay.setCallBack(this::autoPlayNextSong);
         jpProgressBar = new JPProgressBar(this);
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater1 = LayoutInflater.from(this);
-        setContentView(layoutInflater.inflate(R.layout.lo_melody_list, null));
         sortButton = findViewById(R.id.list_sort_b);
         sortButton.setOnClickListener(this);
         totalSongCountTextView = findViewById(R.id.all_mel);
@@ -415,7 +425,7 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
                 if (song != null) {
                     songsPath = song.getFilePath();
                     songsPositionInListView++;
-                    SongPlay.INSTANCE.startPlay(this, song.getFilePath(), 0);
+                    SongPlay.startPlay(this, song.getFilePath(), 0);
                 }
             }
         }
@@ -423,8 +433,8 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
 
     @Override
     protected void onDestroy() {
-        SongPlay.INSTANCE.stopPlay();
-        SongPlay.INSTANCE.setCallBack(null);
+        SongPlay.stopPlay();
+        SongPlay.setCallBack(null);
         super.onDestroy();
     }
 
@@ -435,20 +445,18 @@ public final class MelodySelect extends BaseActivity implements Callback, OnClic
             Handler handler = new Handler(this);
             List<String> sortNamesList = new ArrayList<>();
             Collections.addAll(sortNamesList, Consts.sortNames);
-            View inflate = getLayoutInflater().inflate(R.layout.options, null);
-            ListView listView = inflate.findViewById(R.id.list);
-            PopupWindowSelectAdapter popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, sortNamesList, 1);
-            listView.setAdapter(popupWindowSelectAdapter);
-            sortPopupWindow = new JPPopupWindow(inflate, sortButton.getWidth() + 100, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            View optionView = getLayoutInflater().inflate(R.layout.options, null);
+            ListView listView = optionView.findViewById(R.id.list);
+            listView.setAdapter(new PopupWindowSelectAdapter(this, handler, sortNamesList, 1));
+            sortPopupWindow = new JPPopupWindow(optionView, sortButton.getWidth() + 100, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             sortPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             List<String> menuListNames = new ArrayList<>();
             Collections.addAll(menuListNames, Consts.localMenuListNames);
-            inflate = getLayoutInflater().inflate(R.layout.options, null);
-            listView = inflate.findViewById(R.id.list);
-            popupWindowSelectAdapter = new PopupWindowSelectAdapter(this, handler, menuListNames, 2);
-            listView.setAdapter(popupWindowSelectAdapter);
+            optionView = getLayoutInflater().inflate(R.layout.options, null);
+            listView = optionView.findViewById(R.id.list);
+            listView.setAdapter(new PopupWindowSelectAdapter(this, handler, menuListNames, 2));
             listView.setDivider(null);
-            menuPopupWindow = new JPPopupWindow(inflate, sortButton.getWidth() + 50, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            menuPopupWindow = new JPPopupWindow(optionView, sortButton.getWidth() + 50, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             menuPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
             firstLoadFocusFinish = true;
         }

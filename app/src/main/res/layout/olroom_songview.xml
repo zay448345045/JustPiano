@@ -22,18 +22,25 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/song_name"
+                <HorizontalScrollView
                     android:layout_width="@dimen/dimen_0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="7"
+                    android:fillViewport="true"
+                    android:scrollbars="none"
+                    android:layout_weight="7">
 
-                    android:gravity="start"
-                    android:maxLines="1"
-                    android:text="@string/c_view_name"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/white1"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/song_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:scrollHorizontally="true"
+                        android:gravity="start"
+                        android:maxLines="1"
+                        android:text="@string/c_view_name"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="@color/white1"
+                        android:textSize="16sp" />
+                </HorizontalScrollView>
 
                 <ImageView
                     android:id="@+id/song_favor"
@@ -51,7 +58,6 @@
                     android:id="@+id/ol_sound_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:text="@string/c_view_length"
                     android:textColor="@color/white1"
                     android:textSize="12sp" />
@@ -60,7 +66,6 @@
                     android:id="@+id/nandu_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:text="@string/ol_hand_list_r"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white1"
@@ -79,7 +84,6 @@
                     android:id="@+id/nandu_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:text="@string/melodylist1_hand"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white1"
@@ -96,5 +100,4 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

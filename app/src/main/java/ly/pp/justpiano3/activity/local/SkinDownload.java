@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridView;
@@ -15,21 +14,27 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+
 import java.io.File;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.listener.SkinDownloadClick;
 import ly.pp.justpiano3.task.SkinDownloadTask;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
+import okhttp3.FormBody;
 
 public final class SkinDownload extends BaseActivity implements Callback {
-    public static final int SKIN_DOWNLOAD_REQUEST_CODE = 99;
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;
@@ -53,7 +58,7 @@ public final class SkinDownload extends BaseActivity implements Callback {
         if (handler != null) {
             handler.sendMessage(message);
         }
-        FileUtil.INSTANCE.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/skins/" + skinId + ".ps",
+        FileUtil.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/skins/" + skinId + ".ps",
                 file, progress -> {
                     this.progress = progress;
                     Message message1 = Message.obtain(handler);
@@ -61,12 +66,13 @@ public final class SkinDownload extends BaseActivity implements Callback {
                     if (handler != null) {
                         handler.sendMessage(message1);
                     }
-                }, () -> downloadSuccessHandle(skinName), this::downloadFailHandle);
+                }, () -> downloadSuccessHandle(skinId, skinName), this::downloadFailHandle);
     }
 
-    private void downloadSuccessHandle(String skinName) {
+    private void downloadSuccessHandle(String skinId, String skinName) {
         Message successMessage = Message.obtain(handler);
         successMessage.what = 2;
+        successMessage.arg1 = Integer.parseInt(skinId);
         if (handler != null) {
             Bundle bundle = new Bundle();
             bundle.putString("name", skinName);
@@ -81,21 +87,21 @@ public final class SkinDownload extends BaseActivity implements Callback {
         handler.sendMessage(failMessage);
     }
 
-    public void handleSkin(int i, String name, String str2, int size, String author) {
+    public void handleSkin(int type, String skinName, String skinId, String skinSize, String skinAuthor) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         String buttonName = "使用";
         jpDialogBuilder.setTitle("提示");
-        if (i == 0) {
-            jpDialogBuilder.setMessage("名称:" + name + "\n作者:" + author + "\n大小:" + size + "KB\n您要下载并使用吗?");
+        if (type == 0) {
+            jpDialogBuilder.setMessage("名称:" + skinName + "\n作者:" + skinAuthor + "\n大小:" + skinSize + "MB\n您要下载并使用吗?");
             buttonName = "下载";
-        } else if (i == 1) {
-            jpDialogBuilder.setMessage("[" + name + "]皮肤已下载，是否使用?");
+        } else if (type == 1) {
+            jpDialogBuilder.setMessage("[" + skinName + "]皮肤已下载，是否使用?");
             buttonName = "使用";
-        } else if (i == 2) {
+        } else if (type == 2) {
             jpDialogBuilder.setMessage("您要还原默认的皮肤吗?");
             buttonName = "使用";
         }
-        jpDialogBuilder.setFirstButton(buttonName, new SkinDownloadClick(this, i, str2, name));
+        jpDialogBuilder.setFirstButton(buttonName, new SkinDownloadClick(this, type, skinId, skinName));
         jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
@@ -128,7 +134,7 @@ public final class SkinDownload extends BaseActivity implements Callback {
     }
 
     @Override
-    public boolean handleMessage(Message message) {
+    public boolean handleMessage(@NonNull Message message) {
         if (!Thread.currentThread().isInterrupted()) {
             switch (message.what) {
                 case 0 -> {
@@ -142,7 +148,10 @@ public final class SkinDownload extends BaseActivity implements Callback {
                 case 2 -> {
                     linearLayout.setVisibility(View.GONE);
                     downloadText.setVisibility(View.GONE);
-                    handleSkin(1, message.getData().getString("name"), "", 0, "");
+                    // 下载成功，调用接口增加下载数量统计
+                    ThreadPoolUtil.execute(() -> OkHttpUtil.sendPostRequest(
+                            "StatisticsSkin" + message.arg1 , new FormBody.Builder().build()));
+                    handleSkin(1, message.getData().getString("name"), "", "", "");
                 }
                 case 3 -> {
                     linearLayout.setVisibility(View.GONE);
@@ -157,7 +166,7 @@ public final class SkinDownload extends BaseActivity implements Callback {
                     linearLayout.setVisibility(View.GONE);
                     jpProgressBar.dismiss();
                     Toast.makeText(getApplicationContext(), "皮肤设置成功!", Toast.LENGTH_SHORT).show();
-                    ImageLoadUtil.setBackground(this);
+                    ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic());
                 }
             }
         }
@@ -171,9 +180,7 @@ public final class SkinDownload extends BaseActivity implements Callback {
             jpProgressBar.dismiss();
         }
         if (getIntent().getFlags() == Intent.FLAG_GRANT_READ_URI_PERMISSION) {
-            Intent intent = new Intent();
-            intent.setClass(this, MainMode.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MainMode.class));
         }
         finish();
     }

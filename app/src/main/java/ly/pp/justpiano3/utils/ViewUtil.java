@@ -2,11 +2,12 @@ package ly.pp.justpiano3.utils;
 
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.TextView;
 
 /**
  * view相关工具
  */
-public class ViewUtil {
+public final class ViewUtil {
 
     /**
      * 设置view的布局完成回调
@@ -22,5 +23,16 @@ public class ViewUtil {
                 view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+    }
+
+    /**
+     * 设置TextView的文本字体大小
+     */
+    public static void setTextViewFontSize(int textSize, TextView... textViews) {
+        if (textViews != null) {
+            for (TextView textView : textViews) {
+                textView.setTextSize(textSize);
+            }
+        }
     }
 }

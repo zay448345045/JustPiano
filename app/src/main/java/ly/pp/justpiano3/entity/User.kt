@@ -18,7 +18,7 @@ class User : Serializable {
     var eye = 0
     val cl: Int
     var hand = 0
-    var cpKind = 0
+    var coupleType = 0
     var shoes = 0
     var familyID = "0"
 
@@ -50,7 +50,7 @@ class User : Serializable {
         level = i
         cl = i3
         hand = i4
-        cpKind = i5
+        coupleType = i5
         this.familyID = familyID
     }
 

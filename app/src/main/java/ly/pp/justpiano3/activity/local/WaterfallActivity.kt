@@ -1,6 +1,5 @@
 package ly.pp.justpiano3.activity.local
 
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -9,12 +8,16 @@ import android.os.Message
 import android.text.TextUtils
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import ly.pp.justpiano3.R
 import ly.pp.justpiano3.activity.BaseActivity
 import ly.pp.justpiano3.entity.GlobalSetting
+import ly.pp.justpiano3.entity.GlobalSetting.recordsSavePath
 import ly.pp.justpiano3.entity.PmSongData
 import ly.pp.justpiano3.entity.WaterfallNote
+import ly.pp.justpiano3.utils.FileUtil.getOrCreateFileByUriFolder
+import ly.pp.justpiano3.utils.FileUtil.moveFileToUri
 import ly.pp.justpiano3.utils.MidiDeviceUtil
 import ly.pp.justpiano3.utils.PmSongUtil
 import ly.pp.justpiano3.utils.SoundEngineUtil
@@ -24,8 +27,9 @@ import ly.pp.justpiano3.utils.ViewUtil
 import ly.pp.justpiano3.utils.WaterfallUtil
 import ly.pp.justpiano3.view.JPProgressBar
 import ly.pp.justpiano3.view.KeyboardView
-import ly.pp.justpiano3.view.ScrollText
+import ly.pp.justpiano3.view.ScrollTextView
 import ly.pp.justpiano3.view.WaterfallView
+import java.io.File
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -34,12 +38,12 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
     /**
      * 瀑布流view
      */
-    private lateinit var waterfallView: WaterfallView
+    private var waterfallView: WaterfallView? = null
 
     /**
      * 钢琴键盘view
      */
-    private lateinit var keyboardView: KeyboardView
+    private var keyboardView: KeyboardView? = null
 
     /**
      * 定时任务执行器，用于播放动画
@@ -54,27 +58,50 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
     /**
      * 进度条
      */
-    private lateinit var progressBar: JPProgressBar
+    private var progressBar: JPProgressBar? = null
 
     /**
      * 是否为自由演奏（钢琴键盘按键时，是否产生自下而上的音块）
      */
     private var freeStyle = false
 
+    /**
+     * 是否开启录音
+     */
+    private var isOpenRecord = false
+
+    /**
+     * 是否开始录音
+     */
+    private var recordStart = false
+
+    /**
+     * 录音文件路径
+     */
+    private var recordWavPath: String? = null
+
+    /**
+     * 曲谱名称
+     */
+    private var songsName: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.waterfall)
         // 初始化进度条
         progressBar = JPProgressBar(this)
-        progressBar.setCancelable(false)
+        progressBar!!.setCancelable(false)
         // 从extras中的数据确定曲目，解析pm文件
         val pmSongData = parseParamsFromIntentExtras()
-        val songNameView = findViewById<ScrollText>(R.id.waterfall_song_name)
+        isOpenRecord = intent.extras?.getBoolean("isOpenRecord") == true
+        songsName = intent.extras?.getString("songName")
+        val songNameView = findViewById<ScrollTextView>(R.id.waterfall_song_name)
         songNameView.text = if (freeStyle) "自由演奏" else pmSongData?.songName
         waterfallView = findViewById(R.id.waterfall_view)
+        keyboardView = findViewById(R.id.waterfall_keyboard)
         if (!freeStyle) {
             // 瀑布流设置监听某个瀑布音符到达屏幕底部或完全离开屏幕底部时的动作
-            waterfallView.setNoteFallListener(object : WaterfallView.NoteFallListener {
+            waterfallView!!.setNoteFallListener(object : WaterfallView.NoteFallListener {
                 override fun onNoteAppear(waterfallNote: WaterfallNote) {
                     // 瀑布流音符在瀑布流view的顶端出现，目前无操作
                 }
@@ -82,7 +109,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
                 override fun onNoteFallDown(waterfallNote: WaterfallNote) {
                     // 瀑布流音符到达瀑布流view的底部，播放声音并触发键盘view的琴键按压效果
                     SoundEngineUtil.playSound(waterfallNote.pitch, waterfallNote.volume)
-                    keyboardView.fireKeyDown(
+                    keyboardView!!.fireKeyDown(
                         waterfallNote.pitch,
                         waterfallNote.volume,
                         waterfallNote.color
@@ -92,27 +119,26 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
                 override fun onNoteLeave(waterfallNote: WaterfallNote) {
                     // 瀑布流音符完全离开瀑布流view，停止播放声音并触发键盘view的琴键抬起效果
                     SoundEngineUtil.stopPlaySound(waterfallNote.pitch)
-                    keyboardView.fireKeyUp(waterfallNote.pitch)
+                    keyboardView!!.fireKeyUp(waterfallNote.pitch)
                 }
             })
         }
-        keyboardView = findViewById(R.id.waterfall_keyboard)
-        keyboardView.octaveTagType =
-            KeyboardView.OctaveTagType.values()[GlobalSetting.keyboardOctaveTagType]
+        keyboardView!!.octaveTagType =
+            KeyboardView.OctaveTagType.entries.toTypedArray()[GlobalSetting.keyboardOctaveTagType]
         // 监听键盘view布局完成，布局完成后，瀑布流即可生成并开始
         ViewUtil.registerViewLayoutObserver(keyboardView) {
             // 传入根据键盘view获取的所有八度坐标，用于绘制八度虚线
-            waterfallView.showOctaveLine = GlobalSetting.waterfallOctaveLine
-            waterfallView.octaveLineXList = keyboardView.allOctaveLineX
+            waterfallView!!.showOctaveLine = GlobalSetting.waterfallOctaveLine
+            waterfallView!!.octaveLineXList = keyboardView!!.allOctaveLineX
             // 设置音块下落速率，播放速度、移调
-            waterfallView.notePlaySpeed = GlobalSetting.waterfallSongSpeed
+            waterfallView!!.notePlaySpeed = GlobalSetting.waterfallSongSpeed
             // 开启增减白键数量、移动键盘按钮的监听
             findViewById<View>(R.id.waterfall_sub_key).setOnTouchListener(this@WaterfallActivity)
             findViewById<View>(R.id.waterfall_add_key).setOnTouchListener(this@WaterfallActivity)
             findViewById<View>(R.id.waterfall_key_move_left).setOnTouchListener(this@WaterfallActivity)
             findViewById<View>(R.id.waterfall_key_move_right).setOnTouchListener(this@WaterfallActivity)
             // 设置键盘的点击监听
-            keyboardView.keyboardListener = (object : KeyboardView.KeyboardListener {
+            keyboardView!!.keyboardListener = (object : KeyboardView.KeyboardListener {
                 override fun onKeyDown(pitch: Byte, volume: Byte) {
                     SoundEngineUtil.playSound(
                         (pitch + GlobalSetting.keyboardSoundTune).toByte(),
@@ -135,16 +161,16 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
             ThreadPoolUtil.execute {
                 // 将pm文件的解析结果转换为瀑布流音符数组，传入view后开始瀑布流绘制
                 val waterfallNotes = convertToWaterfallNote(pmSongData, keyboardView)
-                waterfallView.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed)
+                waterfallView!!.startPlay(waterfallNotes, GlobalSetting.waterfallDownSpeed)
                 runOnUiThread {
-                    progressBar.dismiss()
+                    progressBar!!.dismiss()
                 }
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
-            ) {
+            if (MidiDeviceUtil.isSupportMidiDevice(this)) {
                 MidiDeviceUtil.setMidiConnectionListener(this@WaterfallActivity)
             }
+            // 如果有录音，启动录音
+            startRecord()
         }
     }
 
@@ -152,11 +178,11 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
      * 重新确定瀑布流音符长条的左侧和右侧的坐标值
      */
     private fun updateWaterfallNoteLeftRightLocation() {
-        for (waterfallNote in waterfallView.waterfallNotes) {
-            recomputeWaterfallNoteLeftAndRight(waterfallNote)
+        waterfallView?.waterfallNotes?.forEach {
+            recomputeWaterfallNoteLeftAndRight(it)
         }
         // 自由演奏的音符也重新计算
-        for (freeStyleNoteList in waterfallView.freeStyleNotes.values) {
+        waterfallView?.freeStyleNotes?.values?.forEach { freeStyleNoteList ->
             for (i in freeStyleNoteList.size - 1 downTo 0) {
                 freeStyleNoteList.getOrNull(i)?.let {
                     recomputeWaterfallNoteLeftAndRight(it)
@@ -164,7 +190,7 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
             }
         }
         // 强制补帧
-        waterfallView.doDrawFrame()
+        waterfallView?.doDrawFrame()
     }
 
     private fun recomputeWaterfallNoteLeftAndRight(waterfallNote: WaterfallNote) {
@@ -189,14 +215,13 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
     }
 
     override fun onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-            && packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
-        ) {
+        finishRecord()
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.removeMidiConnectionListener()
         }
         // 停止播放，释放资源
-        waterfallView.stopPlay()
-        waterfallView.destroy()
+        waterfallView?.stopPlay()
+        waterfallView?.destroy()
         SoundEngineUtil.stopPlayAllSounds()
         super.onDestroy()
     }
@@ -247,11 +272,11 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
                 if (System.currentTimeMillis() - startTime > 200) {
                     startTime = System.currentTimeMillis()
                     runOnUiThread {
-                        progressBar.text = String.format(
+                        progressBar?.text = String.format(
                             "瀑布流正在加载中...%.2f%%", 100f * i / it.pitchArray.size
                         )
-                        if (!progressBar.isShowing) {
-                            progressBar.show()
+                        if (progressBar?.isShowing == false) {
+                            progressBar?.show()
                         }
                     }
                 }
@@ -370,22 +395,22 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
     private val handler = Handler(Looper.getMainLooper()) { msg ->
         when (msg.what) {
             R.id.waterfall_sub_key -> {
-                keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum - 1)
+                keyboardView?.setWhiteKeyNum(keyboardView!!.whiteKeyNum - 1)
             }
 
             R.id.waterfall_add_key -> {
-                keyboardView.setWhiteKeyNum(keyboardView.whiteKeyNum + 1)
+                keyboardView?.setWhiteKeyNum(keyboardView!!.whiteKeyNum + 1)
             }
 
             R.id.waterfall_key_move_left -> {
-                keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset - 1)
+                keyboardView?.setWhiteKeyOffset(keyboardView!!.whiteKeyOffset - 1)
             }
 
             R.id.waterfall_key_move_right -> {
-                keyboardView.setWhiteKeyOffset(keyboardView.whiteKeyOffset + 1)
+                keyboardView?.setWhiteKeyOffset(keyboardView!!.whiteKeyOffset + 1)
             }
         }
-        waterfallView.octaveLineXList = keyboardView.allOctaveLineX
+        waterfallView?.octaveLineXList = keyboardView?.allOctaveLineX
         updateWaterfallNoteLeftRightLocation()
         false
     }
@@ -395,18 +420,18 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
         if (volume > 0) {
             SoundEngineUtil.playSound(pitch, volume)
             freeStyleKeyDownHandle(pitch, volume)
-            keyboardView.fireKeyDown(pitch, volume, null)
+            keyboardView?.fireKeyDown(pitch, volume, null)
         } else {
             SoundEngineUtil.stopPlaySound(pitch)
             freeStyleKeyUpHandle(pitch)
-            keyboardView.fireKeyUp(pitch)
+            keyboardView?.fireKeyUp(pitch)
         }
     }
 
     fun freeStyleKeyDownHandle(pitch: Byte, volume: Byte) {
         if (freeStyle) {
             val (left, right) = WaterfallUtil.convertToWaterfallWidth(keyboardView, pitch)
-            waterfallView.addFreeStyleWaterfallNote(
+            waterfallView?.addFreeStyleWaterfallNote(
                 left,
                 right,
                 pitch,
@@ -418,7 +443,37 @@ class WaterfallActivity : BaseActivity(), View.OnTouchListener, MidiDeviceUtil.M
 
     fun freeStyleKeyUpHandle(pitch: Byte) {
         if (freeStyle) {
-            waterfallView.stopFreeStyleWaterfallNote(pitch)
+            waterfallView?.stopFreeStyleWaterfallNote(pitch)
+        }
+    }
+
+    private fun startRecord() {
+        recordWavPath = filesDir.absolutePath + "/Records/" + songsName + ".raw"
+        if (isOpenRecord && !recordStart) {
+            recordStart = true
+            SoundEngineUtil.setRecordFilePath(recordWavPath)
+            SoundEngineUtil.setRecord(true)
+            Toast.makeText(this, "开始录音...", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun finishRecord() {
+        if (isOpenRecord && recordStart) {
+            isOpenRecord = false
+            recordStart = false
+            SoundEngineUtil.setRecord(false)
+            val srcFile = recordWavPath?.replace(".raw", ".wav")?.let { File(it) }
+            val desUri = getOrCreateFileByUriFolder(
+                this,
+                recordsSavePath, "Records", "$songsName.wav"
+            )
+            srcFile?.let {
+                if (moveFileToUri(this, it, desUri)) {
+                    Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity.local;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -20,6 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 
 import com.google.protobuf.MessageLite;
@@ -66,12 +69,12 @@ import protobuf.dto.OnlineQuitRoomDTO;
 public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.MidiDeviceListener {
     public HorizontalListView horizontalListView;
     public TextView showHideGrade;
-    private boolean isOpenRecord;
+    public boolean isOpenRecord;
     public PianoPlayHandler pianoPlayHandler = new PianoPlayHandler(this);
     public View pausedPlay;
     public int times;
     public String songsName;
-    public TextView songName;
+    public TextView songNameTextView;
     public TextView rightHandDegreeTextView;
     public TextView highScoreTextView;
     public ListView gradeListView;
@@ -100,8 +103,18 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     private double localRightHandDegree;
     private double localLeftHandDegree;
     private int localSongsTime;
-    public int playKind;
+    public int playType;
     private final Map<Byte, Pair<Byte, Long>> playingPitchMap = new ConcurrentHashMap<>();
+
+    public final ActivityResultLauncher<Intent> playFinishLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    if (isOpenRecord) {
+                        recordFinish();
+                    }
+                    finish();
+                }
+            });
 
     private List<Bundle> sortByField(List<Bundle> list, String field) {
         if (list != null && !list.isEmpty()) {
@@ -123,7 +136,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             }
             highScoreTextView.setVisibility(View.VISIBLE);
             startPlayButton.setVisibility(View.VISIBLE);
-            songName.setText(songsName);
+            songNameTextView.setText(songsName);
             return;
         }
         isShowingSongsInfo = true;
@@ -131,7 +144,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             ((ViewGroup) (pausedPlay.getParent())).removeView(pausedPlay);
         }
         addContentView(pausedPlay, layoutParams2);
-        songName = findViewById(R.id.m_name);
+        songNameTextView = findViewById(R.id.m_name);
         progressbar = findViewById(R.id.m_progress);
         rightHandDegreeTextView = findViewById(R.id.m_nandu);
         TextView leftHandDegreeTextView = findViewById(R.id.l_nandu);
@@ -139,7 +152,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         highScoreTextView = findViewById(R.id.m_score);
         highScoreTextView.setText("最高纪录:" + score);
         startPlayButton = findViewById(R.id.p_start);
-        songName.setText(songsName);
+        songNameTextView.setText(songsName);
         switch (i) {
             case 0 -> {    // 本地
                 startPlayButton.setOnClickListener(v -> {
@@ -166,7 +179,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 leftHandDegreeTextView.setVisibility(View.GONE);
             }
             case 2 -> {    // 联网对战
-                songName.setText("请稍后...");
+                songNameTextView.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
                 rightHandDegreeTextView.setVisibility(View.GONE);
                 leftHandDegreeTextView.setVisibility(View.GONE);
@@ -192,10 +205,10 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 finishView.findViewById(R.id.ol_share).setOnClickListener(v -> ShareUtil.share(this));
                 finishView.setVisibility(View.GONE);
                 sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance());
-                songName.setOnClickListener(v -> sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance()));
+                songNameTextView.setOnClickListener(v -> sendMsg(OnlineProtocolType.LOAD_PLAY_USER, OnlineLoadPlayUserDTO.getDefaultInstance()));
             }
             case 3 -> {    // 考级
-                songName.setText("请稍后...");
+                songNameTextView.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
                 rightHandDegreeTextView.setVisibility(View.GONE);
                 highScoreTextView.setVisibility(View.GONE);
@@ -207,12 +220,12 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 }
                 addContentView(miniScoreView, layoutparams);
                 miniScoreView.setVisibility(View.VISIBLE);
-                OnlineClTestDTO.Builder builder = OnlineClTestDTO.newBuilder();
-                builder.setType(2);
-                sendMsg(OnlineProtocolType.CL_TEST, builder.build());
+                OnlineClTestDTO.Builder clTextBuilder = OnlineClTestDTO.newBuilder();
+                clTextBuilder.setType(2);
+                sendMsg(OnlineProtocolType.CL_TEST, clTextBuilder.build());
             }
             case 4 -> {    // 挑战
-                songName.setText("请稍后...");
+                songNameTextView.setText("请稍后...");
                 progressbar.setVisibility(View.VISIBLE);
                 rightHandDegreeTextView.setVisibility(View.GONE);
                 highScoreTextView.setVisibility(View.GONE);
@@ -224,9 +237,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 }
                 addContentView(miniScoreView, layoutparams);
                 miniScoreView.setVisibility(View.VISIBLE);
-                OnlineChallengeDTO.Builder builder1 = OnlineChallengeDTO.newBuilder();
-                builder1.setType(3);
-                sendMsg(OnlineProtocolType.CHALLENGE, builder1.build());
+                OnlineChallengeDTO.Builder challengeBuilder = OnlineChallengeDTO.newBuilder();
+                challengeBuilder.setType(3);
+                sendMsg(OnlineProtocolType.CHALLENGE, challengeBuilder.build());
             }
             default -> {
             }
@@ -286,9 +299,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
             recordStart = false;
             SoundEngineUtil.setRecord(false);
             File srcFile = new File(recordWavPath.replace(".raw", ".wav"));
-            Uri desUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(this,
-                    GlobalSetting.INSTANCE.getRecordsSavePath(), "Records", songsName + ".wav");
-            if (FileUtil.INSTANCE.moveFileToUri(this, srcFile, desUri)) {
+            Uri desUri = FileUtil.getOrCreateFileByUriFolder(this,
+                    GlobalSetting.getRecordsSavePath(), "Records", songsName + ".wav");
+            if (FileUtil.moveFileToUri(this, srcFile, desUri)) {
                 Toast.makeText(this, "录音完毕，文件已存储", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "录音文件存储失败", Toast.LENGTH_SHORT).show();
@@ -297,38 +310,11 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     }
 
     @Override
-    protected void onActivityResult(int i, int i2, Intent intent) {
-        if (i2 == -1) {
-            if (isOpenRecord) {
-                recordFinish();
-            }
-            finish();
-            super.onActivityResult(i, i2, intent);
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-        switch (playKind) {
-            case 0 -> {
-                playTypeAndShowHandle(playKind, true);
-                if (!isShowingSongsInfo) {
-                    playView.startFirstNoteTouching = false;
-                    isShowingSongsInfo = true;
-                    pausedPlay.setVisibility(View.VISIBLE);
-                    return;
-                } else {
-                    isShowingSongsInfo = false;
-                    pausedPlay.setVisibility(View.GONE);
-                    playView.startFirstNoteTouching = false;
-                    isPlayingStart = false;
-                    isBack = true;
-                    finish();
-                }
-            }
-            case 1 -> {
-                playTypeAndShowHandle(playKind, true);
+        switch (playType) {
+            case 0, 1 -> {
+                playTypeAndShowHandle(playType, true);
                 if (!isShowingSongsInfo) {
                     playView.startFirstNoteTouching = false;
                     isShowingSongsInfo = true;
@@ -366,6 +352,9 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     isPlayingStart = false;
                     isBack = true;
                     dialog.dismiss();
+                    OnlineClTestDTO.Builder clTextBuilder = OnlineClTestDTO.newBuilder();
+                    clTextBuilder.setType(4);
+                    sendMsg(OnlineProtocolType.CL_TEST, clTextBuilder.build());
                     finish();
                 });
                 jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
@@ -400,7 +389,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         isShowingSongsInfo = false;
         isBack = false;
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        GlobalSetting.INSTANCE.loadSettings(this, true);
+        GlobalSetting.loadSettings(this, true);
         pausedPlay = LayoutInflater.from(this).inflate(R.layout.paused_play, null);
         layoutParams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams2.gravity = android.view.Gravity.CENTER;
@@ -408,18 +397,18 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         layoutparams.topMargin = 0;
         layoutparams.leftMargin = 0;
         Bundle extras = getIntent().getExtras();
-        playKind = extras.getInt("head");
-        switch (playKind) {
+        playType = extras.getInt("head");
+        switch (playType) {
             case 0 -> {    //本地模式
                 String songsPath = extras.getString("path");
                 songsName = extras.getString("name");
-                localRightHandDegree = BigDecimal.valueOf(extras.getDouble("nandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
-                localLeftHandDegree = BigDecimal.valueOf(extras.getDouble("leftnandu")).setScale(1, RoundingMode.HALF_UP).doubleValue();
-                localSongsTime = extras.getInt("songstime");
+                localRightHandDegree = BigDecimal.valueOf(extras.getDouble("rightHandDegree")).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                localLeftHandDegree = BigDecimal.valueOf(extras.getDouble("leftHandDegree")).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                localSongsTime = extras.getInt("songsTime");
                 score = extras.getInt("score");
-                isOpenRecord = extras.getBoolean("isrecord");
+                isOpenRecord = extras.getBoolean("isOpenRecord");
                 int hand = extras.getInt("hand");
-                playView = new PlayView(this, songsPath, this, localRightHandDegree, localLeftHandDegree, score, playKind, hand, 30, localSongsTime, 0);
+                playView = new PlayView(this, songsPath, this, localRightHandDegree, localLeftHandDegree, score, playType, hand, 30, localSongsTime, 0);
             }
             case 1 -> {    //在线曲库
                 songsName = extras.getString("songName");
@@ -452,7 +441,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 finishSongName = finishView.findViewById(R.id.ol_song_name);
                 gradeListView = finishView.findViewById(R.id.ol_finish_list);
                 gradeListView.setCacheColorHint(Color.TRANSPARENT);
-                playView = new PlayView(this, songsPath, this, onlineRightHandDegree, onlineRightHandDegree, score, playKind, hand, 30, 0, tune);
+                playView = new PlayView(this, songsPath, this, onlineRightHandDegree, onlineRightHandDegree, score, playType, hand, 30, 0, tune);
             }    //大厅考级
             case 3, 4 -> {    //挑战
                 roomBundle = extras.getBundle("bundle");
@@ -467,7 +456,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                 showHideGrade.setOnClickListener(new ShowOrHideMiniGradeClick(this));
                 gradeList.clear();
                 String songBytes = extras.getString("songBytes");
-                playView = new PlayView(this, songBytes.getBytes(), this, onlineRightHandDegree, score, playKind, hand, "");
+                playView = new PlayView(this, songBytes.getBytes(), this, onlineRightHandDegree, score, playType, hand, "");
             }
         }
         if (isOpenRecord) {
@@ -477,8 +466,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
 
     private void checkAnJian() {
         final PackageManager packageManager = getPackageManager();
-        final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER);
         final List<ResolveInfo> apps = packageManager.queryIntentActivities(mainIntent, 0);
         for (ResolveInfo app : apps) {
             String name = app.activityInfo.packageName;
@@ -493,7 +481,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         if (isOpenRecord) {
             recordFinish();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        if (MidiDeviceUtil.isSupportMidiDevice(this)) {
             MidiDeviceUtil.removeMidiConnectionListener();
         }
         SoundEngineUtil.stopPlayAllSounds();
@@ -505,7 +493,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
         super.onPause();
         Bundle bundle = new Bundle();
         Intent intent;
-        switch (playKind) {
+        switch (playType) {
             case 0, 1 -> {
                 isShowingSongsInfo = false;
                 if (playView != null) {
@@ -532,9 +520,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                         bundle.putByte("hallID", hallBundle.getByte("hallID"));
                         intent.putExtras(bundle);
                         startActivity(intent);
-                        return;
                     }
-                    return;
                 }
             }
             case 3 -> {
@@ -550,7 +536,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     bundle.putByte("hallID", hallBundle.getByte("hallID"));
                     intent.putExtras(bundle);
                     startActivity(intent);
-                    return;
                 }
             }
             case 4 -> {
@@ -566,7 +551,6 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
                     bundle.putByte("hallID", hallBundle.getByte("hallID"));
                     intent.putExtras(bundle);
                     startActivity(intent);
-                    return;
                 }
             }
             default -> {
@@ -617,7 +601,7 @@ public final class PianoPlay extends OLBaseActivity implements MidiDeviceUtil.Mi
     }
 
     public void updateKeyboardPrefer() {
-        if (GlobalSetting.INSTANCE.getKeyboardPrefer()) {
+        if (GlobalSetting.getKeyboardPrefer()) {
             Message obtainMessage = pianoPlayHandler.obtainMessage();
             obtainMessage.what = 4;
             pianoPlayHandler.handleMessage(obtainMessage);

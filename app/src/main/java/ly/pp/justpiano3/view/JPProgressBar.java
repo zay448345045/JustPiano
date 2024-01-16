@@ -72,7 +72,7 @@ public final class JPProgressBar extends Dialog {
     @Override
     public void show() {
         super.show();
-        if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+        if (GlobalSetting.getAllFullScreenShow()) {
             WindowUtil.fullScreenHandle(getWindow());
         } else {
             WindowUtil.exitFullScreenHandle(getWindow());

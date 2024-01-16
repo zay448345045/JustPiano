@@ -3,27 +3,38 @@ package ly.pp.justpiano3.activity.local;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.preference.PreferenceManager;
+
+import java.util.Objects;
+
 import ly.pp.justpiano3.BuildConfig;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
 import ly.pp.justpiano3.activity.online.LoginActivity;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.task.FeedbackTask;
 import ly.pp.justpiano3.utils.DeviceUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
-import ly.pp.justpiano3.utils.WindowUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 
 public final class MainMode extends BaseActivity implements OnClickListener {
     private boolean pressAgain;
+
+    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic());
+                fullScreenHandle();
+            });
 
     @Override
     public void onBackPressed() {
@@ -77,8 +88,8 @@ public final class MainMode extends BaseActivity implements OnClickListener {
             intent.setClass(this, ChatFiles.class);
             startActivity(intent);
         } else if (id == R.id.settings) {
-            intent.setClass(this, SettingsMode.class);
-            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+            intent.setClass(this, SettingsActivity.class);
+            settingsLauncher.launch(intent);
         } else if (id == R.id.feed_back) {
             View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
             TextView textView = inflate.findViewById(R.id.text_1);
@@ -113,22 +124,9 @@ public final class MainMode extends BaseActivity implements OnClickListener {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this);
-            if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
-                WindowUtil.fullScreenHandle(getWindow());
-            } else {
-                WindowUtil.exitFullScreenHandle(getWindow());
-            }
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalSetting.INSTANCE.loadSettings(this, false);
+        GlobalSetting.loadSettings(this, false);
         pressAgain = false;
         setContentView(R.layout.main_mode);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -153,12 +151,14 @@ public final class MainMode extends BaseActivity implements OnClickListener {
         int newVersionFirstTime = sharedPreferences.getInt("new_version_first_time", 0);
         if (newVersionFirstTime < BuildConfig.VERSION_CODE) {
             sharedPreferences.edit().putInt("new_version_first_time", BuildConfig.VERSION_CODE).apply();
-            new JPDialogBuilder(this).setCheckMessageUrl(true)
-                    .setTitle(BuildConfig.VERSION_NAME + "版本存储位置变更")
-                    .setMessage("为响应APP合规要求，保护用户隐私，4.9版本已移除SD卡完全访问权限，原JustPiano目录默认不会再进行读取。" +
-                            "用户可在设置中查看/设定存储位置及选择文件\n除非用户手动同意，否则APP技术上无法做到，也不会私自访问您的敏感信息")
-                    .setFirstButton("确定", ((dialog, which) -> dialog.dismiss()))
-                    .buildAndShowDialog();
+            if (Objects.equals(newVersionFirstTime, 0)) {
+                new JPDialogBuilder(this).setCheckMessageUrl(true)
+                        .setTitle(BuildConfig.VERSION_NAME + "版本存储位置变更")
+                        .setMessage("为响应APP合规要求，保护用户隐私，4.9+版本已移除SD卡完全访问权限，原JustPiano目录默认不会再进行读取。" +
+                                "用户可在设置中查看/设定存储位置及选择文件\n除非用户手动同意，否则APP技术上无法做到，也不会私自访问您的敏感信息")
+                        .setFirstButton("确定", ((dialog, which) -> dialog.dismiss()))
+                        .buildAndShowDialog();
+            }
         }
     }
 }

@@ -65,6 +65,7 @@ object PmSongUtil {
     /**
      * 根据pm文件路径获取曲谱分类
      */
+    @JvmStatic
     fun getPmSongCategoryByFilePath(filePath: String): String? {
         val matcher: Matcher = pattern.matcher(filePath)
         if (matcher.find()) {
@@ -73,6 +74,7 @@ object PmSongUtil {
         return null
     }
 
+    @JvmStatic
     fun parsePmDataByFilePath(context: Context, filePath: String): PmSongData? {
         val inputStream = getPmFileInputStream(context, filePath)
         inputStream?.let { stream ->
@@ -106,6 +108,7 @@ object PmSongUtil {
         }
     }
 
+    @JvmStatic
     fun parsePmDataByBytes(pmData: ByteArray): PmSongData? {
         try {
             // 获取曲谱名称
@@ -173,10 +176,11 @@ object PmSongUtil {
     /**
      * midi文件转pm文件
      *
-     * @param midiFile midi文件
+     * @param midiUri midi文件uri
      * @param pmFile   pm文件
      * @return 曲谱信息
      */
+    @JvmStatic
     fun midiFileToPmFile(context: Context, name: String, midiUri: Uri, pmFile: File): SongData {
         val originalNoteList = parseMidiOriginalNote(context, midiUri)
             .sortedBy { originalNote -> originalNote.playTime }

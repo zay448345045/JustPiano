@@ -8,12 +8,12 @@ import android.net.Uri;
 
 import java.io.IOException;
 
-public class SoundEffectPlayUtil {
+public final class SoundEffectPlayUtil {
 
     /**
      * 默认聊天音效名称
      */
-    public static final String CHAT_SOUND_FILE_NAME = "chat_b5.wav";
+    private static final String CHAT_SOUND_FILE_NAME = "chat_b5.wav";
     private static MediaPlayer mediaPlayer;
     private static boolean isPlaying = false;
 

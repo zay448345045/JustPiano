@@ -1,10 +1,9 @@
 package ly.pp.justpiano3.view.preference;
 
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
-import android.preference.DialogPreference;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
@@ -13,6 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.preference.DialogPreference;
+import androidx.preference.PreferenceDialogFragmentCompat;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -25,7 +29,7 @@ import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.view.JPProgressBar;
 
 public final class SoundListPreference extends DialogPreference {
-    public Context context;
+    private DialogFragmentCompat dialogFragmentCompat;
     public String soundKey = "";
     public JPProgressBar jpProgressBar;
     private CharSequence[] soundNameList;
@@ -34,16 +38,14 @@ public final class SoundListPreference extends DialogPreference {
 
     public SoundListPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.context = context;
     }
 
     public SoundListPreference(Context context) {
         super(context, null);
-        this.context = context;
     }
 
     private void loadSoundList() {
-        File soundsDir = new File(context.getExternalFilesDir(null), "Sounds");
+        File soundsDir = new File(getContext().getExternalFilesDir(null), "Sounds");
         if (!soundsDir.exists()) {
             soundsDir.mkdirs();
         }
@@ -78,53 +80,75 @@ public final class SoundListPreference extends DialogPreference {
     }
 
     public void deleteFiles(String str) {
-        FileUtil.INSTANCE.deleteFileUsingUri(context, Uri.parse(str));
+        FileUtil.deleteFileUsingUri(getContext(), Uri.parse(str));
         loadSoundList();
         soundListAdapter.updateSoundList(soundNameList, soundKeyList);
         soundListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onDialogClosed(boolean z) {
-        super.onDialogClosed(z);
-        if (!TextUtils.isEmpty(soundKey)) {
-            persistString(soundKey);
-        }
-        GlobalSetting.INSTANCE.loadSettings(context, false);
-        FileUtil.UriInfo uriInfo = FileUtil.INSTANCE.getUriInfo(context, Uri.parse(soundKey));
-        setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认音源" : uriInfo.getDisplayName());
-    }
-
-    @Override
-    protected void onPrepareDialogBuilder(Builder builder) {
-        loadSoundList();
-        jpProgressBar = new JPProgressBar(new ContextThemeWrapper(context, R.style.JustPianoTheme));
-        LinearLayout linearLayout = new LinearLayout(context);
-        linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.setMinimumWidth(400);
-        linearLayout.setPadding(20, 20, 20, 20);
-        linearLayout.setBackgroundColor(Color.WHITE);
-        TextView textView = new TextView(context);
-        textView.setTextSize(14);
-        textView.setTextColor(Color.BLACK);
-        textView.setText("下载音源存储位置：SD卡/Android/data/ly.pp.justpiano3/files/Sounds，卸载APP时将删除所有文件");
-        linearLayout.addView(textView);
-        ListView listView = new ListView(context);
-        listView.setDivider(null);
-        soundListAdapter = new SoundListAdapter(this, context, soundNameList, soundKeyList);
-        listView.setAdapter(soundListAdapter);
-        linearLayout.addView(listView);
-        builder.setView(linearLayout);
     }
 
     public String getPersistedString() {
         return getPersistedString("original");
     }
 
+    public PreferenceDialogFragmentCompat newDialog() {
+        dialogFragmentCompat = new DialogFragmentCompat(this);
+        return dialogFragmentCompat;
+    }
+
     public void closeDialog() {
-        if (getDialog() != null && getDialog().isShowing()) {
-            getDialog().dismiss();
+        if (dialogFragmentCompat != null) {
+            dialogFragmentCompat.closeDialog();
+        }
+    }
+
+    public static class DialogFragmentCompat extends PreferenceDialogFragmentCompat {
+
+        private final SoundListPreference soundListPreference;
+
+        public DialogFragmentCompat(SoundListPreference soundListPreference) {
+            this.soundListPreference = soundListPreference;
+            Bundle bundle = new Bundle(1);
+            bundle.putString(ARG_KEY, soundListPreference.getKey());
+            setArguments(bundle);
+        }
+
+        @Override
+        protected void onPrepareDialogBuilder(@NonNull AlertDialog.Builder builder) {
+            super.onPrepareDialogBuilder(builder);
+            soundListPreference.loadSoundList();
+            soundListPreference.jpProgressBar = new JPProgressBar(new ContextThemeWrapper(soundListPreference.getContext(), R.style.JustPianoTheme));
+            LinearLayout linearLayout = new LinearLayout(soundListPreference.getContext());
+            linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            linearLayout.setMinimumWidth(400);
+            linearLayout.setPadding(20, 20, 20, 20);
+            linearLayout.setBackgroundColor(Color.WHITE);
+            TextView textView = new TextView(soundListPreference.getContext());
+            textView.setTextSize(14);
+            textView.setTextColor(Color.BLACK);
+            textView.setText("下载音源存储位置：SD卡/Android/data/ly.pp.justpiano3/files/Sounds，卸载APP时将删除所有文件");
+            linearLayout.addView(textView);
+            ListView listView = new ListView(soundListPreference.getContext());
+            listView.setDivider(null);
+            soundListPreference.soundListAdapter = new SoundListAdapter(soundListPreference,
+                    soundListPreference.getContext(), soundListPreference.soundNameList, soundListPreference.soundKeyList);
+            listView.setAdapter(soundListPreference.soundListAdapter);
+            linearLayout.addView(listView);
+            builder.setView(linearLayout);
+        }
+
+        @Override
+        public void onDialogClosed(boolean positiveResult) {
+            soundListPreference.persistString(soundListPreference.soundKey);
+            GlobalSetting.loadSettings(soundListPreference.getContext(), false);
+            FileUtil.UriInfo uriInfo = FileUtil.getUriInfo(soundListPreference.getContext(), Uri.parse(soundListPreference.soundKey));
+            soundListPreference.setSummary(TextUtils.isEmpty(uriInfo.getDisplayName()) ? "默认音源" : uriInfo.getDisplayName());
+        }
+
+        public void closeDialog() {
+            if (getDialog() != null && getDialog().isShowing()) {
+                getDialog().dismiss();
+            }
         }
     }
 }

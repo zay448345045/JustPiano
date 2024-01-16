@@ -17,7 +17,7 @@
             android:background="@drawable/wait_back"
             android:orientation="horizontal">
 
-            <ly.pp.justpiano3.view.ScrollText
+            <ly.pp.justpiano3.view.ScrollTextView
                 android:id="@+id/s_n"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

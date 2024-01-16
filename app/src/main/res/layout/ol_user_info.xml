@@ -19,7 +19,6 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:background="@drawable/ol_transparent"
-            android:keepScreenOn="true"
             android:textStyle="bold"
             android:text="@string/user_info_title"
             android:textSize="20sp"

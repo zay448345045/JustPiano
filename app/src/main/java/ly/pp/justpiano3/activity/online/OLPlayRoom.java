@@ -20,6 +20,8 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
@@ -34,13 +36,14 @@ import java.util.Objects;
 
 import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
-import ly.pp.justpiano3.activity.local.SettingsMode;
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.adapter.OLRoomSongsAdapter;
 import ly.pp.justpiano3.adapter.PlayerImageAdapter;
 import ly.pp.justpiano3.constant.Consts;
 import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.dao.SongDao;
 import ly.pp.justpiano3.database.entity.Song;
+import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.enums.RoomModeEnum;
 import ly.pp.justpiano3.handler.android.OLPlayRoomHandler;
@@ -49,7 +52,7 @@ import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.UnitConvertUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPPopupWindow;
-import ly.pp.justpiano3.view.ScrollText;
+import ly.pp.justpiano3.view.ScrollTextView;
 import protobuf.dto.OnlineChangeRoomHandDTO;
 import protobuf.dto.OnlineChangeRoomUserStatusDTO;
 import protobuf.dto.OnlineCoupleDTO;
@@ -61,7 +64,7 @@ public final class OLPlayRoom extends OLRoomActivity {
     public OLPlayRoomHandler olPlayRoomHandler = new OLPlayRoomHandler(this);
     public LiveData<PagedList<Song>> pagedListLiveData;
     public String currentPlaySongPath;
-    public ScrollText songNameScrollText;
+    public ScrollTextView songNameScrollTextView;
     public Button settingButton;
     public Button playButton;
     public int currentHand;
@@ -74,6 +77,10 @@ public final class OLPlayRoom extends OLRoomActivity {
     private PopupWindow coupleModePopupWindow;
     private PopupWindow playSongsModePopupWindow;
     private RecyclerView songsRecyclerView;
+
+    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result ->
+                    ImageLoadUtil.setBackground(this, GlobalSetting.getBackgroundPic()));
 
     private void playSongByDegreeRandom(int startDegree, int endDegree) {
         List<Song> songs = JPApplication.getSongDatabase().songDao().getSongByRightHandDegreeWithRandom(startDegree, endDegree);
@@ -117,50 +124,47 @@ public final class OLPlayRoom extends OLRoomActivity {
         moreSongsPopupWindow.dismiss();
     }
 
-    public void mo2860a(int i, String str, int i2, byte b) {
-        String str2 = "";
-        String str3 = "";
-        String str4 = "";
-        String str5 = "情意绵绵的情侣";
-        switch (i2) {
+    public void buildAndShowCpDialog(int dialogType, String message, int coupleType, byte couplePosition) {
+        String title;
+        String buttonText;
+        String coupleTypeText = "情意绵绵的情侣";
+        switch (coupleType) {
             case 0 -> {
                 return;
             }
-            case 1 -> str5 = "情意绵绵的情侣";
-            case 2 -> str5 = "基情四射的基友";
-            case 3 -> str5 = "百年好合的百合";
+            case 1 -> coupleTypeText = "情意绵绵的情侣";
+            case 2 -> coupleTypeText = "基情四射的基友";
+            case 3 -> coupleTypeText = "百年好合的百合";
         }
-        if (i == 1) {
-            str3 = "搭档请求";
-            str4 = "邀请";
-            str = "您与“" + str + "”在双人模式中最高连击总和超过200,是否邀请对方结为一对" + str5 + "?";
-        } else if (i == 2) {
-            str3 = "搭档请求";
-            str4 = "同意";
-            str = str + "请求与您结为一对" + str5 + ",是否同意?";
-        } else if (i == 3) {
-            str3 = "喜告";
-            str4 = "确定";
-            str = "祝贺" + str + "成为一对" + str5 + "!";
-        } else if (i == 4) {
-            showCpDialog(str5.substring(str5.length() - 2) + "证书", str);
+        if (dialogType == 1) {
+            title = "搭档请求";
+            buttonText = "邀请";
+            message = "您与[" + message + "]在双人模式中最高连击总和超过200,是否邀请对方结为一对" + coupleTypeText + '?';
+        } else if (dialogType == 2) {
+            title = "搭档请求";
+            buttonText = "同意";
+            message = message + "请求与您结为一对" + coupleTypeText + ",是否同意?";
+        } else if (dialogType == 3) {
+            title = "喜告";
+            buttonText = "确定";
+            message = "祝贺" + message + "成为一对" + coupleTypeText + '!';
+        } else if (dialogType == 4) {
+            showCpDialog(coupleTypeText.substring(coupleTypeText.length() - 2) + "证书", message);
             return;
-        } else if (i == 5) {
-            str3 = "提示";
-            str4 = "确定";
+        } else if (dialogType == 5) {
+            title = "提示";
+            buttonText = "确定";
         } else {
-            str = str4;
-            str4 = str3;
-            str3 = str2;
+            return;
         }
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         jpDialogBuilder.setCancelableFalse();
-        jpDialogBuilder.setTitle(str3).setMessage(str).setFirstButton(str4, (dialog, which) -> {
-            if (i == 1 || i == 2) {
+        jpDialogBuilder.setTitle(title).setMessage(message).setFirstButton(buttonText, (dialog, which) -> {
+            if (dialogType == 1 || dialogType == 2) {
                 OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
-                builder.setType(i + 1);
-                builder.setCoupleType(i2);
-                builder.setCoupleRoomPosition(b);
+                builder.setType(dialogType + 1);
+                builder.setCoupleType(coupleType);
+                builder.setCoupleRoomPosition(couplePosition);
                 sendMsg(OnlineProtocolType.COUPLE, builder.build());
             }
             dialog.dismiss();
@@ -198,7 +202,7 @@ public final class OLPlayRoom extends OLRoomActivity {
     }
 
     public String getPlayerKind() {
-        return playerKind;
+        return positionStatus;
     }
 
     public int getMode() {
@@ -272,9 +276,7 @@ public final class OLPlayRoom extends OLRoomActivity {
             if (normalModePopupWindow != null) {
                 normalModePopupWindow.dismiss();
             }
-            Intent intent = new Intent();
-            intent.setClass(this, SettingsMode.class);
-            startActivityForResult(intent, SettingsMode.SETTING_MODE_CODE);
+            settingsLauncher.launch(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.rand_0) {
             playSongByDegreeRandom(2, 4);
         } else if (id == R.id.rand_all) {
@@ -287,8 +289,8 @@ public final class OLPlayRoom extends OLRoomActivity {
             playSongByDegreeRandom(8, 10);
         } else if (id == R.id.add_favor) {
             if (!TextUtils.isEmpty(currentPlaySongPath)) {
-                if (JPApplication.getSongDatabase().songDao().updateFavoriteSong(currentPlaySongPath, 1) > 0) {
-                    Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameScrollText.getText()), Toast.LENGTH_SHORT).show();
+                if (songDao.updateFavoriteSong(currentPlaySongPath, 1) > 0) {
+                    Toast.makeText(this, String.format("已将曲目《%s》加入本地收藏", songNameScrollTextView.getText()), Toast.LENGTH_SHORT).show();
                 }
             }
             moreSongsPopupWindow.dismiss();
@@ -311,56 +313,58 @@ public final class OLPlayRoom extends OLRoomActivity {
             DataSource.Factory<Integer, Song> songByNameKeywords = songDao.getSongsByNameKeywordsWithDataSource(keywords);
             pagedListLiveData.removeObservers(this);
             pagedListLiveData = songDao.getPageListByDatasourceFactory(songByNameKeywords);
-            pagedListLiveData.observe(this, (pagedList) -> {
-                Toast.makeText(this, "搜索到" +
-                        (pagedList.getLoadedCount() >= SongDao.PAGE_SIZE ? SongDao.PAGE_SIZE + "+" : String.valueOf(pagedList.getLoadedCount()))
-                        + "首与" + keywords + " 有关的曲目!", Toast.LENGTH_SHORT).show();
+            pagedListLiveData.observe(this, pagedList -> {
                 ((OLRoomSongsAdapter) (Objects.requireNonNull(songsRecyclerView.getAdapter()))).submitList(pagedList);
+                if (pagedList.getLoadedCount() > 0) {
+                    Toast.makeText(this, "搜索到" +
+                            (pagedList.getLoadedCount() >= SongDao.PAGE_SIZE ? SongDao.PAGE_SIZE + "+" : String.valueOf(pagedList.getLoadedCount()))
+                            + "首与" + keywords + " 有关的曲目!", Toast.LENGTH_SHORT).show();
+                }
             });
         } else if (id == R.id.ol_soundstop) {
-            SongPlay.INSTANCE.stopPlay();
+            SongPlay.stopPlay();
         } else if (id == R.id.onetimeplay) {
-            if (playerKind.equals("H")) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
+            if (positionStatus.equals("H")) {
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.ONCE);
                 Toast.makeText(this, PlaySongsModeEnum.ONCE.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
             }
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.circulateplay) {
-            if (playerKind.equals("H")) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RECYCLE);
+            if (positionStatus.equals("H")) {
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.RECYCLE);
                 Toast.makeText(this, PlaySongsModeEnum.RECYCLE.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
             }
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.randomplay) {
-            if (playerKind.equals("H")) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.RANDOM);
+            if (positionStatus.equals("H")) {
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.RANDOM);
                 Toast.makeText(this, PlaySongsModeEnum.RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
             }
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.favorplay) {
-            if (playerKind.equals("H")) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR_RANDOM);
+            if (positionStatus.equals("H")) {
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.FAVOR_RANDOM);
                 Toast.makeText(this, PlaySongsModeEnum.FAVOR_RANDOM.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
             }
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.favorlist) {
-            if (playerKind.equals("H")) {
-                SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.FAVOR);
+            if (positionStatus.equals("H")) {
+                SongPlay.setPlaySongsMode(PlaySongsModeEnum.FAVOR);
                 Toast.makeText(this, PlaySongsModeEnum.FAVOR.getDesc(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "您不是房主，不能设置播放模式!", Toast.LENGTH_SHORT).show();
             }
             playSongsModePopupWindow.dismiss();
         } else if (id == R.id.ol_ready_b) {
-            if (playerKind.equals("G")) {
+            if (positionStatus.equals("G")) {
                 String status = Objects.equals("准备", playButton.getText().toString()) ? "N" : "R";
                 sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus(status).build());
             } else {
@@ -370,18 +374,18 @@ public final class OLPlayRoom extends OLRoomActivity {
             moreSongsPopupWindow.showAtLocation(playSongsModeButton, Gravity.CENTER, 0, 0);
         } else if (id == R.id.ol_group_b) {
             if (roomMode == RoomModeEnum.NORMAL.getCode()) {
-                PopupWindow popupWindow2 = new JPPopupWindow(this);
-                View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_room_hand_select, null);
-                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-                inflate2.findViewById(R.id.left_hand).setOnClickListener(this);
-                inflate2.findViewById(R.id.right_hand).setOnClickListener(this);
-                inflate2.findViewById(R.id.shengdiao).setOnClickListener(this);
-                inflate2.findViewById(R.id.jiangdiao).setOnClickListener(this);
-                inflate2.findViewById(R.id.changeScreenOrientation).setOnClickListener(this);
-                inflate2.findViewById(R.id.ol_more_settings).setOnClickListener(this);
-                popupWindow2.setContentView(inflate2);
-                normalModePopupWindow = popupWindow2;
-                popupWindow2.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
+                PopupWindow normalModePopupWindow = new JPPopupWindow(this);
+                View roomHandSelectView = LayoutInflater.from(this).inflate(R.layout.ol_room_hand_select, null);
+                normalModePopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
+                roomHandSelectView.findViewById(R.id.left_hand).setOnClickListener(this);
+                roomHandSelectView.findViewById(R.id.right_hand).setOnClickListener(this);
+                roomHandSelectView.findViewById(R.id.shengdiao).setOnClickListener(this);
+                roomHandSelectView.findViewById(R.id.jiangdiao).setOnClickListener(this);
+                roomHandSelectView.findViewById(R.id.changeScreenOrientation).setOnClickListener(this);
+                roomHandSelectView.findViewById(R.id.ol_more_settings).setOnClickListener(this);
+                normalModePopupWindow.setContentView(roomHandSelectView);
+                this.normalModePopupWindow = normalModePopupWindow;
+                normalModePopupWindow.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
             } else if (roomMode == RoomModeEnum.TEAM.getCode() && groupModePopupWindow != null) {
                 groupModePopupWindow.showAtLocation(settingButton, Gravity.CENTER, 0, 0);
             } else if (roomMode == RoomModeEnum.COUPLE.getCode() && coupleModePopupWindow != null) {
@@ -391,10 +395,10 @@ public final class OLPlayRoom extends OLRoomActivity {
             if (playSongsModePopupWindow != null) {
                 int[] iArr = new int[2];
                 playSongsModeButton.getLocationOnScreen(iArr);
-                playSongsModePopupWindow.showAtLocation(songNameScrollText, Gravity.TOP | Gravity.START, iArr[0], (int) (iArr[1] * 0.43f));
+                playSongsModePopupWindow.showAtLocation(songNameScrollTextView, Gravity.TOP | Gravity.START, iArr[0], (int) (iArr[1] * 0.43f));
             }
         } else if (id == R.id.shengdiao) {
-            if (playerKind.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
+            if (positionStatus.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
                 tune = Math.min(6, tune + 1);
                 updateNewSongPlay(currentPlaySongPath);
             } else {
@@ -404,7 +408,7 @@ public final class OLPlayRoom extends OLRoomActivity {
                 normalModePopupWindow.dismiss();
             }
         } else if (id == R.id.jiangdiao) {
-            if (playerKind.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
+            if (positionStatus.equals("H") && !TextUtils.isEmpty(currentPlaySongPath)) {
                 tune = Math.max(-6, tune - 1);
                 updateNewSongPlay(currentPlaySongPath);
             } else {
@@ -417,19 +421,10 @@ public final class OLPlayRoom extends OLRoomActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SettingsMode.SETTING_MODE_CODE) {
-            ImageLoadUtil.setBackground(this);
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        SongPlay.INSTANCE.setPlaySongsMode(PlaySongsModeEnum.ONCE);
-        SongPlay.INSTANCE.setCallBack(this::updateNewSongPlay);
+        SongPlay.setCallBack(this::updateNewSongPlay);
         setContentView(R.layout.ol_play_room);
         initRoomActivity(savedInstanceState);
         findViewById(R.id.ol_search_b).setOnClickListener(this);
@@ -439,7 +434,7 @@ public final class OLPlayRoom extends OLRoomActivity {
         playSongsModeButton.setOnClickListener(this);
         settingButton = findViewById(R.id.ol_group_b);
         settingButton.setOnClickListener(this);
-        playButton.setText(playerKind.equals("H") ? "开始" : "准备");
+        playButton.setText(positionStatus.equals("H") ? "开始" : "准备");
         searchTextView = findViewById(R.id.ol_search_text);
         findViewById(R.id.ol_soundstop).setOnClickListener(this);
         songsRecyclerView = findViewById(R.id.ol_song_list);
@@ -450,70 +445,70 @@ public final class OLPlayRoom extends OLRoomActivity {
         DataSource.Factory<Integer, Song> allSongs = songDao.getAllSongsWithDataSource();
         pagedListLiveData = songDao.getPageListByDatasourceFactory(allSongs);
         pagedListLiveData.observe(this, olRoomSongsAdapter::submitList);
-        songNameScrollText = findViewById(R.id.ol_songlist_b);
-        songNameScrollText.setSingleLine(true);
-        songNameScrollText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        songNameScrollText.setMarqueeRepeatLimit(-1);
-        songNameScrollText.setSelected(true);
-        songNameScrollText.setFocusable(true);
-        songNameScrollText.setFocusableInTouchMode(true);
-        songNameScrollText.setOnClickListener(this);
-        PopupWindow popupWindow2 = new JPPopupWindow(this);
-        View inflate2 = LayoutInflater.from(this).inflate(R.layout.ol_room_song_rand, null);
-        popupWindow2.setContentView(inflate2);
-        inflate2.findViewById(R.id.rand_all).setOnClickListener(this);
-        inflate2.findViewById(R.id.add_favor).setOnClickListener(this);
-        inflate2.findViewById(R.id.favor).setOnClickListener(this);
-        inflate2.findViewById(R.id.rand_0).setOnClickListener(this);
-        inflate2.findViewById(R.id.rand_3).setOnClickListener(this);
-        inflate2.findViewById(R.id.rand_5).setOnClickListener(this);
-        inflate2.findViewById(R.id.rand_7).setOnClickListener(this);
-        inflate2.findViewById(R.id.type_j).setOnClickListener(this);
-        inflate2.findViewById(R.id.type_l).setOnClickListener(this);
-        inflate2.findViewById(R.id.type_d).setOnClickListener(this);
-        inflate2.findViewById(R.id.type_e).setOnClickListener(this);
-        inflate2.findViewById(R.id.type_h).setOnClickListener(this);
-        popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-        moreSongsPopupWindow = popupWindow2;
+        songNameScrollTextView = findViewById(R.id.ol_songlist_b);
+        songNameScrollTextView.setSingleLine(true);
+        songNameScrollTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        songNameScrollTextView.setMarqueeRepeatLimit(-1);
+        songNameScrollTextView.setSelected(true);
+        songNameScrollTextView.setFocusable(true);
+        songNameScrollTextView.setFocusableInTouchMode(true);
+        songNameScrollTextView.setOnClickListener(this);
+        PopupWindow moreSongsPopupWindow = new JPPopupWindow(this);
+        View roomSongRandView = LayoutInflater.from(this).inflate(R.layout.ol_room_song_rand, null);
+        roomSongRandView.findViewById(R.id.rand_all).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.add_favor).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.favor).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.rand_0).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.rand_3).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.rand_5).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.rand_7).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.type_j).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.type_l).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.type_d).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.type_e).setOnClickListener(this);
+        roomSongRandView.findViewById(R.id.type_h).setOnClickListener(this);
+        moreSongsPopupWindow.setContentView(roomSongRandView);
+        moreSongsPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
+        this.moreSongsPopupWindow = moreSongsPopupWindow;
         switch (RoomModeEnum.ofCode(roomMode, RoomModeEnum.NORMAL)) {
             case NORMAL -> {
                 currentHand = this.roomInfoBundle.getInt("myHand");
                 settingButton.setText((currentHand == 0 ? "右" : "左") + "00");
             }
             case TEAM -> {
-                popupWindow2 = new JPPopupWindow(this);
-                View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_room_group_select, null);
-                popupWindow2.setContentView(inflate3);
-                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-                inflate3.findViewById(R.id.group_1).setOnClickListener(this);
-                inflate3.findViewById(R.id.group_2).setOnClickListener(this);
-                inflate3.findViewById(R.id.group_3).setOnClickListener(this);
-                groupModePopupWindow = popupWindow2;
+                PopupWindow groupModePopupWindow = new JPPopupWindow(this);
+                View roomGroupView = LayoutInflater.from(this).inflate(R.layout.ol_room_group_select, null);
+                groupModePopupWindow.setContentView(roomGroupView);
+                groupModePopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
+                roomGroupView.findViewById(R.id.group_1).setOnClickListener(this);
+                roomGroupView.findViewById(R.id.group_2).setOnClickListener(this);
+                roomGroupView.findViewById(R.id.group_3).setOnClickListener(this);
+                this.groupModePopupWindow = groupModePopupWindow;
             }
             case COUPLE -> {
-                popupWindow2 = new JPPopupWindow(this);
-                View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_room_couple_select, null);
-                popupWindow2.setContentView(inflate4);
-                popupWindow2.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-                inflate4.findViewById(R.id.couple_1).setOnClickListener(this);
-                inflate4.findViewById(R.id.couple_2).setOnClickListener(this);
-                inflate4.findViewById(R.id.couple_3).setOnClickListener(this);
-                inflate4.findViewById(R.id.couple_4).setOnClickListener(this);
-                inflate4.findViewById(R.id.couple_5).setOnClickListener(this);
-                inflate4.findViewById(R.id.couple_6).setOnClickListener(this);
-                coupleModePopupWindow = popupWindow2;
+                PopupWindow coupleModePopupWindow = new JPPopupWindow(this);
+                View coupleGroupView = LayoutInflater.from(this).inflate(R.layout.ol_room_couple_select, null);
+                coupleModePopupWindow.setContentView(coupleGroupView);
+                coupleModePopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
+                coupleGroupView.findViewById(R.id.couple_1).setOnClickListener(this);
+                coupleGroupView.findViewById(R.id.couple_2).setOnClickListener(this);
+                coupleGroupView.findViewById(R.id.couple_3).setOnClickListener(this);
+                coupleGroupView.findViewById(R.id.couple_4).setOnClickListener(this);
+                coupleGroupView.findViewById(R.id.couple_5).setOnClickListener(this);
+                coupleGroupView.findViewById(R.id.couple_6).setOnClickListener(this);
+                this.coupleModePopupWindow = coupleModePopupWindow;
             }
         }
-        PopupWindow popupWindow4 = new JPPopupWindow(this);
-        View inflate4 = LayoutInflater.from(this).inflate(R.layout.ol_playsongsmode, null);
-        popupWindow4.setContentView(inflate4);
-        popupWindow4.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
-        inflate4.findViewById(R.id.onetimeplay).setOnClickListener(this);
-        inflate4.findViewById(R.id.circulateplay).setOnClickListener(this);
-        inflate4.findViewById(R.id.randomplay).setOnClickListener(this);
-        inflate4.findViewById(R.id.favorplay).setOnClickListener(this);
-        inflate4.findViewById(R.id.favorlist).setOnClickListener(this);
-        playSongsModePopupWindow = popupWindow4;
+        PopupWindow playSongsModePopupWindow = new JPPopupWindow(this);
+        View playSongsModeView = LayoutInflater.from(this).inflate(R.layout.ol_playsongsmode, null);
+        playSongsModePopupWindow.setContentView(playSongsModeView);
+        playSongsModePopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.filled_box, getTheme()));
+        playSongsModeView.findViewById(R.id.onetimeplay).setOnClickListener(this);
+        playSongsModeView.findViewById(R.id.circulateplay).setOnClickListener(this);
+        playSongsModeView.findViewById(R.id.randomplay).setOnClickListener(this);
+        playSongsModeView.findViewById(R.id.favorplay).setOnClickListener(this);
+        playSongsModeView.findViewById(R.id.favorlist).setOnClickListener(this);
+        this.playSongsModePopupWindow = playSongsModePopupWindow;
         TabSpec newTabSpec = roomTabs.newTabSpec("tab3");
         newTabSpec.setContent(R.id.songs_tab);
         newTabSpec.setIndicator("曲目");
@@ -531,13 +526,13 @@ public final class OLPlayRoom extends OLRoomActivity {
                 roomTabs.getTabWidget().getChildTabViewAt(i).getLayoutParams().height = (displayMetrics.heightPixels * 45) / 960;
                 if (UnitConvertUtil.px2dp(this, displayMetrics.widthPixels) <= 360) {
                     int height = UnitConvertUtil.sp2px(this, 20) + UnitConvertUtil.dp2px(this, 224) + dm.widthPixels / 3;
-                    RelativeLayout rs = this.findViewById(R.id.RelativeLayout1);
-                    rs.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
+                    RelativeLayout relativeLayout = findViewById(R.id.RelativeLayout1);
+                    relativeLayout.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
                     playerGrid.setNumColumns(3);
                 } else {
                     int height = UnitConvertUtil.sp2px(this, 20) + UnitConvertUtil.dp2px(this, 76) + dm.widthPixels / 6;
-                    RelativeLayout rs = this.findViewById(R.id.RelativeLayout1);
-                    rs.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
+                    RelativeLayout relativeLayout = findViewById(R.id.RelativeLayout1);
+                    relativeLayout.setLayoutParams(new LinearLayout.LayoutParams(dm.widthPixels, height));
                     playerGrid.setNumColumns(6);
                 }
             } else {
@@ -554,7 +549,7 @@ public final class OLPlayRoom extends OLRoomActivity {
 
     @Override
     protected void onDestroy() {
-        SongPlay.INSTANCE.setCallBack(null);
+        SongPlay.setCallBack(null);
         super.onDestroy();
     }
 

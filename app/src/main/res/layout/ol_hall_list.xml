@@ -3,7 +3,6 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
-    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -39,7 +38,6 @@
                 android:layout_alignParentTop="true"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:keepScreenOn="true"
                 android:text="@string/olplayhallroom_ti"
                 android:textColor="@color/yellow_r"
                 android:textSize="18sp"
@@ -703,7 +701,7 @@
                                 </LinearLayout>
                             </LinearLayout>
 
-                            <ly.pp.justpiano3.view.FamilyListView
+                            <ly.pp.justpiano3.view.PullUpdateListView
                                 android:id="@+id/ol_family_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"

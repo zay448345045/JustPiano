@@ -32,7 +32,7 @@ public final class RecordFiles extends BaseActivity {
     private RecordFilesAdapter recordFilesAdapter;
 
     private void loadRecordFiles(String recordsSaveUri) {
-        Pair<DocumentFile, String> documentFile = FileUtil.INSTANCE.getDirectoryDocumentFile(this,
+        Pair<DocumentFile, String> documentFile = FileUtil.getDirectoryDocumentFile(this,
                 recordsSaveUri, "Records", "（默认）SD卡/Android/data/ly.pp.justpiano3/files/Records\n【警告】您未设置其他存储位置，使用默认位置存储的文件将在APP卸载时删除");
         DocumentFile[] recordFiles = documentFile.component1().listFiles();
         tipsTextView.setText("录音文件存储文件夹：" + documentFile.component2());
@@ -82,7 +82,7 @@ public final class RecordFiles extends BaseActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setAction(Intent.ACTION_VIEW);
-            intent.setDataAndType(documentFile.getUri(), "audio/*");
+            intent.setDataAndType(FileUtil.getContentUriFromDocumentFile(this, documentFile), "audio/*");
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(this, "打开文件失败，请使用系统文件管理器打开", Toast.LENGTH_SHORT).show();
@@ -97,6 +97,6 @@ public final class RecordFiles extends BaseActivity {
         listView = findViewById(R.id.listFile);
         listView.setCacheColorHint(Color.TRANSPARENT);
         tipsTextView = findViewById(R.id.txt1);
-        loadRecordFiles(GlobalSetting.INSTANCE.getRecordsSavePath());
+        loadRecordFiles(GlobalSetting.getRecordsSavePath());
     }
 }

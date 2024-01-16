@@ -34,7 +34,8 @@ public final class ChangePasswordClick implements OnClickListener {
         String confirmPassword = String.valueOf(confirmPasswordTextView.getText());
         if (originalPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(userInfo, "请填写完全部的密码框!", Toast.LENGTH_SHORT).show();
-        } else if (newPassword.length() <= 5 || confirmPassword.length() <= 5 || newPassword.length() > 20 || confirmPassword.length() > 20) {
+        } else if (newPassword.length() <= 5 || confirmPassword.length() <= 5
+                || newPassword.length() > 20 || confirmPassword.length() > 20) {
             Toast.makeText(userInfo, "新密码长度应在5-20个字符", Toast.LENGTH_SHORT).show();
         } else if (newPassword.equals(confirmPassword)) {
             userInfo.autoLogin = autoLoginCheckBox.isChecked();

@@ -14,7 +14,8 @@ class WaterfallUtil {
          * 根据一个键盘view的琴键坐标信息，计算出（瀑布流音块）长条的坐标和宽度（略小于琴键的宽度）
          * 返回值为瀑布流音符横坐标的左边界和右边界
          */
-        fun convertToWaterfallWidth(keyboardView: KeyboardView, pitch: Byte): Pair<Float, Float> {
+        @JvmStatic
+        fun convertToWaterfallWidth(keyboardView: KeyboardView?, pitch: Byte): Pair<Float, Float> {
             val rectF = convertPitchToReact(keyboardView, pitch) ?: return Pair(-1f, -1f)
             // 根据比例计算瀑布流的宽度
             val waterfallWidth =
@@ -41,20 +42,27 @@ class WaterfallUtil {
          * 根据midi音高值，获取对应琴键的绘制绝对坐标位置，供外界取用
          * 注意黑键和白键的绝对坐标位置的宽度有差异
          */
-        private fun convertPitchToReact(keyboardView: KeyboardView, pitch: Byte): RectF? {
+        private fun convertPitchToReact(keyboardView: KeyboardView?, pitch: Byte): RectF? {
+            if (keyboardView?.notesOnArray == null) {
+                return null
+            }
             val pitchInScreen = keyboardView.getPitchInScreen(pitch)
             // 入参的音高不在键盘view所绘制的琴键范围内，返回空
-            if (pitchInScreen < 0 || pitchInScreen >= keyboardView.notesOnArray.size) {
+            if (pitchInScreen < 0 || pitchInScreen >= keyboardView.notesOnArray!!.size) {
                 return null
             }
             val octaveI = pitchInScreen / KeyboardView.NOTES_PER_OCTAVE
             val noteI = pitchInScreen % KeyboardView.NOTES_PER_OCTAVE
             return if (KeyboardView.KEY_IMAGE_TYPE[noteI] == KeyboardView.KeyImageTypeEnum.BLACK_KEY) {
-                keyboardView.blackKeyRectArray[KeyboardView.OCTAVE_PITCH_TO_KEY_INDEX[noteI] +
-                        octaveI * KeyboardView.BLACK_NOTES_PER_OCTAVE]
+                keyboardView.blackKeyRectArray?.get(
+                    KeyboardView.OCTAVE_PITCH_TO_KEY_INDEX[noteI] +
+                            octaveI * KeyboardView.BLACK_NOTES_PER_OCTAVE
+                )
             } else {
-                keyboardView.whiteKeyRectArray[KeyboardView.OCTAVE_PITCH_TO_KEY_INDEX[noteI] +
-                        octaveI * KeyboardView.WHITE_NOTES_PER_OCTAVE]
+                keyboardView.whiteKeyRectArray?.get(
+                    KeyboardView.OCTAVE_PITCH_TO_KEY_INDEX[noteI] +
+                            octaveI * KeyboardView.WHITE_NOTES_PER_OCTAVE
+                )
             }
         }
 

@@ -51,6 +51,25 @@ class OLRoomSongsAdapter(
         private val rightHandDegreeRatingBar: RatingBar
         private val leftHandDegreeRatingBar: RatingBar
 
+        init {
+            songNameTextView = songView.findViewById(R.id.song_name)
+            songFavorImageView = songView.findViewById(R.id.song_favor)
+            rightHandDegreeRatingBar = songView.findViewById(R.id.song_degree)
+            leftHandDegreeRatingBar = songView.findViewById(R.id.song_degree2)
+            timeTextView = songView.findViewById(R.id.ol_sound_time)
+            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1)
+            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2)
+            songView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    getItem(position)?.let {
+                        olPlayRoom.currentPlaySongPath = it.filePath
+                        olPlayRoom.updateNewSongPlay(it.filePath)
+                    }
+                }
+            }
+        }
+
         fun bindData(song: Song) {
             songNameTextView.text = song.name
             songNameTextView.movementMethod = ScrollingMovementMethod.getInstance()
@@ -83,25 +102,6 @@ class OLRoomSongsAdapter(
             leftHandDegreeRatingBar.numStars = 5
             leftHandDegreeRatingBar.isClickable = false
             leftHandDegreeRatingBar.rating = song.leftHandDegree / 2
-        }
-
-        init {
-            songNameTextView = songView.findViewById(R.id.song_name)
-            songFavorImageView = songView.findViewById(R.id.song_favor)
-            rightHandDegreeRatingBar = songView.findViewById(R.id.song_degree)
-            leftHandDegreeRatingBar = songView.findViewById(R.id.song_degree2)
-            timeTextView = songView.findViewById(R.id.ol_sound_time)
-            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1)
-            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2)
-            songView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    getItem(position)?.let {
-                        olPlayRoom.currentPlaySongPath = it.filePath
-                        olPlayRoom.updateNewSongPlay(it.filePath)
-                    }
-                }
-            }
         }
     }
 }

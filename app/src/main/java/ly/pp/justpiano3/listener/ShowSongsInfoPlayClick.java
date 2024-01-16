@@ -12,31 +12,30 @@ public final class ShowSongsInfoPlayClick implements OnClickListener {
 
     private final ShowSongsInfoAdapter showSongsInfoAdapter;
     private String songName;
-    private final String songID;
+    private final String songId;
     private int score;
     private double degree;
     private final Intent intent;
 
-    public ShowSongsInfoPlayClick(ShowSongsInfoAdapter showSongsInfoAdapter, String str, String l, int i, double d) {
+    public ShowSongsInfoPlayClick(ShowSongsInfoAdapter showSongsInfoAdapter, String songName, String songId, int score, double degree) {
         this.showSongsInfoAdapter = showSongsInfoAdapter;
-        songName = str;
-        songID = l;
-        score = i;
-        degree = d;
-        this.intent = new Intent();
-        intent.setClass(showSongsInfoAdapter.showSongsInfo, PianoPlay.class);
+        this.songName = songName;
+        this.songId = songId;
+        this.score = score;
+        this.degree = degree;
+        intent = new Intent(showSongsInfoAdapter.showSongsInfo, PianoPlay.class);
     }
 
     public ShowSongsInfoPlayClick(ShowSongsInfoAdapter showSongsInfoAdapter, String songId, Intent intent) {
         this.showSongsInfoAdapter = showSongsInfoAdapter;
-        songID = songId;
+        this.songId = songId;
         this.intent = intent;
     }
 
     @Override
     public void onClick(View view) {
         showSongsInfoAdapter.showSongsInfo.songName = songName;
-        showSongsInfoAdapter.showSongsInfo.songID = songID;
+        showSongsInfoAdapter.showSongsInfo.songId = songId;
         showSongsInfoAdapter.showSongsInfo.score = score;
         showSongsInfoAdapter.showSongsInfo.degree = degree;
         new ShowSongsInfoPlayTask(showSongsInfoAdapter.showSongsInfo, intent).execute();

@@ -1,8 +1,10 @@
 package ly.pp.justpiano3.adapter;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.OLPlayHall;
@@ -22,6 +25,7 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.JPStack;
+import ly.pp.justpiano3.utils.ViewUtil;
 
 public final class ChattingAdapter extends BaseAdapter {
     public Activity activity;
@@ -50,273 +54,243 @@ public final class ChattingAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        long l = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         Bundle bundle = msgList.get(i);
-        int i2 = bundle.getInt("T");
+        int type = bundle.getInt("T");
         view = layoutInflater.inflate(R.layout.ol_msg_view, null);
-        TextView userText = view.findViewById(R.id.ol_user_text);
-        TextView msgMaoHao = view.findViewById(R.id.ol_user_mao);
-        TextView msgText = view.findViewById(R.id.ol_msg_text);
-        String string = bundle.getString("U");
-        switch (i2) {
+        TextView userNameTextView = view.findViewById(R.id.ol_user_text);
+        TextView msgTextView = view.findViewById(R.id.ol_msg_text);
+        String userName = bundle.getString("U");
+        switch (type) {
             case OnlineProtocolType.MsgType.SONG_RECOMMEND_MESSAGE ->
-                    handleRecommendationMessage(view, userText, msgText, bundle, i);
+                    handleRecommendationMessage(userNameTextView, msgTextView, bundle);
             case OnlineProtocolType.MsgType.PUBLIC_MESSAGE ->
-                    handlePublicMessage(view, userText, msgText, bundle);
+                    handlePublicMessage(view, userNameTextView, msgTextView, bundle);
             case OnlineProtocolType.MsgType.PRIVATE_MESSAGE ->
-                    handlePrivateMessage(view, userText, msgText, bundle);
+                    handlePrivateMessage(userNameTextView, msgTextView, bundle);
             case OnlineProtocolType.MsgType.SYSTEM_MESSAGE ->
-                    handleSystemMessage(view, userText, msgText, bundle);
+                    handleSystemMessage(userNameTextView, msgTextView, bundle);
             case OnlineProtocolType.MsgType.ALL_SERVER_MESSAGE ->
-                    handleServerMessage(view, userText, msgText, bundle);
+                    handleServerMessage(userNameTextView, msgTextView, bundle);
             case OnlineProtocolType.MsgType.STREAM_MESSAGE ->
-                    handleStreamMessage(view, userText, msgText, bundle);
+                    handleStreamMessage(userNameTextView, msgTextView, bundle);
         }
+        userNameTextView.setText(userNameTextView.getText() + ": ");
         // 投递通知到房间内处理
-        if (i2 != 3 && userText != null) {
-            userText.setOnClickListener(v -> {
-                if (activity instanceof OLRoomActivity && string != null) {
-                    ((OLRoomActivity) activity).setPrivateChatUserName(string);
-                } else if (activity instanceof OLPlayHall && string != null) {
-                    ((OLPlayHall) activity).setPrivateChatUserName(string);
+        if (type != OnlineProtocolType.MsgType.SYSTEM_MESSAGE) {
+            userNameTextView.setOnClickListener(v -> {
+                if (activity instanceof OLRoomActivity olRoomActivity && userName != null) {
+                    olRoomActivity.setPrivateChatUserName(userName);
+                } else if (activity instanceof OLPlayHall olPlayHall && userName != null) {
+                    olPlayHall.setPrivateChatUserName(userName);
                 }
             });
         }
         // 处理文本框字体大小
-        setMsgFontSize(userText, msgMaoHao, msgText);
-        Log.d("MYDEBUG", "展示消息列表延迟:" + (System.currentTimeMillis() - l));
+        ViewUtil.setTextViewFontSize(GlobalSetting.getChatTextSize(), userNameTextView, msgTextView);
+        Log.d("ChattingAdapter", "展示消息列表延迟:" + (System.currentTimeMillis() - start));
         return view;
     }
 
-    /**
-     * 设置MsgView的文本字体大小
-     */
-    private void setMsgFontSize(TextView... views) {
-        if (views != null) {
-            for (TextView view : views) {
-                view.setTextSize(GlobalSetting.INSTANCE.getChatTextSize());
-            }
-        }
-    }
-
-    private void handleRecommendationMessage(View view, TextView textView, TextView textView2, Bundle bundle, int i) {
-        String str1 = bundle.getString("I");
+    private void handleRecommendationMessage(TextView userNameTextView, TextView msgTextView, Bundle bundle) {
+        String info = bundle.getString("I");
         String userName = bundle.getString("U");
         String message = bundle.getString("M");
-        if (!str1.isEmpty()) {
-            ((OLPlayRoom) activity).setTune(bundle.getInt("D"));
-            textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[荐]" + userName);
-            textView2.setText(message);
-            textView2.setTextColor(0xffff0000);
-            if (((OLPlayRoom) activity).getPlayerKind().equals("H")) {
-                textView2.append(" (点击选取)");
-                textView2.setOnClickListener(v -> {
-                    Message obtainMessage = ((OLPlayRoom) activity).getHandler().obtainMessage();
+        if (!TextUtils.isEmpty(info) && activity instanceof OLPlayRoom olPlayRoom) {
+            olPlayRoom.setTune(bundle.getInt("D"));
+            userNameTextView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[荐]" + userName);
+            msgTextView.setText(message);
+            msgTextView.setTextColor(Color.RED);
+            if (olPlayRoom.getPlayerKind().equals("H")) {
+                msgTextView.append(" (点击选取)");
+                msgTextView.setOnClickListener(v -> {
+                    Message obtainMessage = olPlayRoom.getHandler().obtainMessage();
                     Bundle songPathBundle = new Bundle();
                     songPathBundle.putString("S", bundle.getString("I"));
                     obtainMessage.setData(songPathBundle);
                     obtainMessage.what = 1;
-                    ((OLPlayRoom) activity).getHandler().sendMessage(obtainMessage);
+                    olPlayRoom.getHandler().sendMessage(obtainMessage);
                 });
             }
         }
     }
 
-    private void handlePublicMessage(View view, TextView textView, TextView textView3, Bundle bundle) {
-        String string = bundle.getString("U");
-        String string2 = bundle.getString("M");
+    private void handlePublicMessage(View view, TextView userNameTextView, TextView msgTextView, Bundle bundle) {
+        String userName = bundle.getString("U");
+        String message = bundle.getString("M");
         int id = bundle.getInt("V");
-        if (!string2.startsWith("//")) {
-            textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
-            TextView textView2 = view.findViewById(R.id.ol_user_mao);
+        if (message != null && !message.startsWith("//")) {
+            userNameTextView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + userName);
             if (activity instanceof OLRoomActivity) {
                 switch (id) {
                     case 1 -> {
-                        textView.setTextColor(0xffFFFACD);
-                        textView2.setTextColor(0xffFFFACD);
-                        textView3.setTextColor(0xffFFFACD);
+                        userNameTextView.setTextColor(0xffFFFACD);
+                        msgTextView.setTextColor(0xffFFFACD);
                     }
                     case 2 -> {
-                        textView.setTextColor(0xff00ffff);
-                        textView2.setTextColor(0xff00ffff);
-                        textView3.setTextColor(0xff00ffff);
+                        userNameTextView.setTextColor(Color.CYAN);
+                        msgTextView.setTextColor(Color.CYAN);
                     }
                     case 3 -> {
-                        textView.setTextColor(0xffFF6666);
-                        textView2.setTextColor(0xffFF6666);
-                        textView3.setTextColor(0xffFF6666);
+                        userNameTextView.setTextColor(0xffFF6666);
+                        msgTextView.setTextColor(0xffFF6666);
                     }
                     case 4 -> {
-                        textView.setTextColor(0xffFFA500);
-                        textView2.setTextColor(0xffFFA500);
-                        textView3.setTextColor(0xffFFA500);
+                        userNameTextView.setTextColor(0xffFFA500);
+                        msgTextView.setTextColor(0xffFFA500);
                     }
                     case 5 -> {
-                        textView.setTextColor(0xffBA55D3);
-                        textView2.setTextColor(0xffBA55D3);
-                        textView3.setTextColor(0xffBA55D3);
+                        userNameTextView.setTextColor(0xffBA55D3);
+                        msgTextView.setTextColor(0xffBA55D3);
                     }
                     case 6 -> {
-                        textView.setTextColor(0xfffa60ea);
-                        textView2.setTextColor(0xfffa60ea);
-                        textView3.setTextColor(0xfffa60ea);
+                        userNameTextView.setTextColor(0xfffa60ea);
+                        msgTextView.setTextColor(0xfffa60ea);
                     }
                     case 7 -> {
-                        textView.setTextColor(0xffFFD700);
-                        textView2.setTextColor(0xffFFD700);
-                        textView3.setTextColor(0xffFFD700);
+                        userNameTextView.setTextColor(0xffFFD700);
+                        msgTextView.setTextColor(0xffFFD700);
                     }
                     case 8 -> {
-                        textView.setTextColor(0xffb7ff72);
-                        textView2.setTextColor(0xffb7ff72);
-                        textView3.setTextColor(0xffb7ff72);
+                        userNameTextView.setTextColor(0xffb7ff72);
+                        msgTextView.setTextColor(0xffb7ff72);
                     }
                     case 9 -> {
-                        textView.setTextColor(0xff000000);
-                        textView2.setTextColor(0xff000000);
-                        textView3.setTextColor(0xff000000);
+                        userNameTextView.setTextColor(Color.BLACK);
+                        msgTextView.setTextColor(Color.BLACK);
                     }
                     default -> {
-                        if (string.equals("琴娘")) {
-                            textView.setTextColor(0xffffd8ec);
-                            textView2.setTextColor(0xffffd8ec);
-                            textView3.setTextColor(0xffffd8ec);
+                        if (Objects.equals(userName, "琴娘")) {
+                            userNameTextView.setTextColor(0xffffd8ec);
+                            msgTextView.setTextColor(0xffffd8ec);
                         } else {
-                            textView.setTextColor(0xffffffff);
-                            textView2.setTextColor(0xffffffff);
-                            textView3.setTextColor(0xffffffff);
+                            userNameTextView.setTextColor(Color.WHITE);
+                            msgTextView.setTextColor(Color.WHITE);
                         }
                     }
                 }
             } else if (activity instanceof OLPlayHall) {
-                textView.setTextColor(0xffFFFACD);
-                textView2.setTextColor(0xffFFFACD);
-                textView3.setTextColor(0xffFFFACD);
+                userNameTextView.setTextColor(0xffFFFACD);
+                msgTextView.setTextColor(0xffFFFACD);
             }
-            textView3.setText(string2);
-        } else {
+            msgTextView.setText(message);
+        } else if (message != null) {
+            ImageView expressImageView = view.findViewById(R.id.ol_express_image);
+            userNameTextView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + userName);
             try {
-                textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
-                ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(Consts.expressions[Integer.parseInt(string2.substring(2))]);
+                expressImageView.setImageResource(Consts.expressions[Integer.parseInt(message.substring(2))]);
             } catch (Exception e) {
-                textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + string);
-                switch (string2) {
-                    case "//dalao0" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.dalao0);
-                    case "//7yxg" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.qiyexingguo);
-                    case "//family" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.family);
-                    case "//redheart" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_1);
-                    case "//greenheart" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_2);
-                    case "//purpleheart" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.couple_3);
-                    case "//crawl" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.pazou);
-                    case "//greencircle" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.greenlight);
-                    case "//jpgq" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.icon);
-                    case "//soundstop" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.stop);
-                    case "//greensquare" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.button_down);
-                    case "//blacksquare" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.button_up);
-                    case "//rightarrow" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.for_arrow);
-                    case "//leftarrow" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.back_arrow);
-                    case "//music" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.music);
-                    case "//bluecircle" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.redlight);
-                    case "//jpgq1" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.jpgq1);
-                    case "//huaji" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.huaji);
-                    case "//bugaoxing" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.bugaoxing);
-                    case "//yingyingying" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.yingyingying);
-                    case "//..." ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.shenglve);
-                    case "//momotou" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.momotou);
-                    case "//heguozhi" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.heguozhi);
-                    case "//hen6" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.hen6);
-                    case "//buyaozheyang" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.buyaozheyang);
-                    case "//chigua" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.chigua);
-                    case "//waku" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.waku);
-                    case "//sleep" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.sleep);
-                    case "//bailan" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.bailan);
-                    case "//duili" ->
-                            ((ImageView) view.findViewById(R.id.ol_express_image)).setImageResource(R.drawable.duili);
-                    default -> {
-                        textView.setTextColor(0xffffffff);
-                        ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xffffffff);
-                        ((TextView) view.findViewById(R.id.ol_msg_text)).setTextColor(0xffffffff);
-                        ((TextView) view.findViewById(R.id.ol_msg_text)).setText(string2);
-                    }
-                }
+                picExpressHandle(userNameTextView, msgTextView, message, expressImageView);
             }
         }
     }
 
-    private void handlePrivateMessage(View view, TextView textView, TextView textView2, Bundle bundle) {
-        String string = bundle.getString("U");
-        String string2 = bundle.getString("M");
-        textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[私]" + string);
-        textView.setTextColor(0xff00ff00);
-        ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ff00);
-        textView2.setText(string2);
-        textView2.setTextColor(0xff00ff00);
+    private static void picExpressHandle(TextView userNameTextView, TextView msgTextView, String message, ImageView expressImageView) {
+        switch (message) {
+            case "//dalao0" ->
+                    expressImageView.setImageResource(R.drawable.dalao0);
+            case "//7yxg" ->
+                    expressImageView.setImageResource(R.drawable.qiyexingguo);
+            case "//family" ->
+                    expressImageView.setImageResource(R.drawable.family);
+            case "//redheart" ->
+                    expressImageView.setImageResource(R.drawable.couple_1);
+            case "//greenheart" ->
+                    expressImageView.setImageResource(R.drawable.couple_2);
+            case "//purpleheart" ->
+                    expressImageView.setImageResource(R.drawable.couple_3);
+            case "//crawl" ->
+                    expressImageView.setImageResource(R.drawable.pazou);
+            case "//greencircle" ->
+                    expressImageView.setImageResource(R.drawable.greenlight);
+            case "//jpgq" ->
+                    expressImageView.setImageResource(R.drawable.icon);
+            case "//soundstop" ->
+                    expressImageView.setImageResource(R.drawable.stop);
+            case "//greensquare" ->
+                    expressImageView.setImageResource(R.drawable.button_down);
+            case "//blacksquare" ->
+                    expressImageView.setImageResource(R.drawable.button_up);
+            case "//rightarrow" ->
+                    expressImageView.setImageResource(R.drawable.for_arrow);
+            case "//leftarrow" ->
+                    expressImageView.setImageResource(R.drawable.back_arrow);
+            case "//music" ->
+                    expressImageView.setImageResource(R.drawable.music);
+            case "//bluecircle" ->
+                    expressImageView.setImageResource(R.drawable.redlight);
+            case "//jpgq1" ->
+                    expressImageView.setImageResource(R.drawable.jpgq1);
+            case "//huaji" ->
+                    expressImageView.setImageResource(R.drawable.huaji);
+            case "//bugaoxing" ->
+                    expressImageView.setImageResource(R.drawable.bugaoxing);
+            case "//yingyingying" ->
+                    expressImageView.setImageResource(R.drawable.yingyingying);
+            case "//..." ->
+                    expressImageView.setImageResource(R.drawable.shenglve);
+            case "//momotou" ->
+                    expressImageView.setImageResource(R.drawable.momotou);
+            case "//heguozhi" ->
+                    expressImageView.setImageResource(R.drawable.heguozhi);
+            case "//hen6" ->
+                    expressImageView.setImageResource(R.drawable.hen6);
+            case "//buyaozheyang" ->
+                    expressImageView.setImageResource(R.drawable.buyaozheyang);
+            case "//chigua" ->
+                    expressImageView.setImageResource(R.drawable.chigua);
+            case "//waku" ->
+                    expressImageView.setImageResource(R.drawable.waku);
+            case "//sleep" ->
+                    expressImageView.setImageResource(R.drawable.sleep);
+            case "//bailan" ->
+                    expressImageView.setImageResource(R.drawable.bailan);
+            case "//duili" ->
+                    expressImageView.setImageResource(R.drawable.duili);
+            default -> {
+                userNameTextView.setTextColor(Color.WHITE);
+                msgTextView.setTextColor(Color.WHITE);
+                msgTextView.setText(message);
+            }
+        }
     }
 
-    private void handleSystemMessage(View view, TextView textView, TextView textView2, Bundle bundle) {
-        String string = bundle.getString("U");
-        String string2 = bundle.getString("M");
-        textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[系统消息]" + string);
-        textView.setTextColor(0xffffff00);
-        ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xffffff00);
-        textView2.setText(string2);
-        textView2.setTextColor(0xffffff00);
-    }
-
-    private void handleServerMessage(View view, TextView textView, TextView textView2, Bundle bundle) {
-        String string = bundle.getString("U");
-        String string2 = bundle.getString("M");
-        textView.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[全服消息]" + string);
-        textView.setTextColor(0xff00ffff);
-        ((TextView) view.findViewById(R.id.ol_user_mao)).setTextColor(0xff00ffff);
-        textView2.setText(string2);
-        textView2.setTextColor(0xff00ffff);
-    }
-
-
-    private void handleStreamMessage(View view, TextView userText, TextView msgText, Bundle bundle) {
-        String sendUserName = bundle.getString("U");
+    private void handlePrivateMessage(TextView userNameTextView, TextView msgTextView, Bundle bundle) {
+        String userName = bundle.getString("U");
         String message = bundle.getString("M");
-        boolean streamStatus = bundle.getBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS, false);
-        if (streamStatus) {
+        userNameTextView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[私]" + userName);
+        userNameTextView.setTextColor(Color.GREEN);
+        msgTextView.setText(message);
+        msgTextView.setTextColor(Color.GREEN);
+    }
+
+    private void handleSystemMessage(TextView userNameTextView, TextView msgTextView, Bundle bundle) {
+        String userName = bundle.getString("U");
+        String message = bundle.getString("M");
+        userNameTextView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[系统消息]" + userName);
+        userNameTextView.setTextColor(Color.YELLOW);
+        msgTextView.setText(message);
+        msgTextView.setTextColor(Color.YELLOW);
+    }
+
+    private void handleServerMessage(TextView userNameTextView, TextView msgTextView, Bundle bundle) {
+        String userName = bundle.getString("U");
+        String message = bundle.getString("M");
+        userNameTextView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[全服消息]" + userName);
+        userNameTextView.setTextColor(Color.CYAN);
+        msgTextView.setText(message);
+        msgTextView.setTextColor(Color.CYAN);
+    }
+
+    private void handleStreamMessage(TextView userNameTextView, TextView msgTextView, Bundle bundle) {
+        String userName = bundle.getString("U");
+        String message = bundle.getString("M");
+        if (bundle.getBoolean(OnlineProtocolType.MsgType.StreamMsg.PARAM_STATUS, false)) {
             message += DateUtil.second() % 2 == 0 ? "🔶" : "🔸";
         }
-        userText.setText((GlobalSetting.INSTANCE.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + sendUserName);
-        msgText.setText(message);
-        // 设置标签颜色
-        TextView maoText = view.findViewById(R.id.ol_user_mao);
-        userText.setTextColor(0xffffd8ec);
-        msgText.setTextColor(0xffffd8ec);
-        maoText.setTextColor(0xffffd8ec);
+        userNameTextView.setText((GlobalSetting.getShowChatTime() ? bundle.getString("TIME") : "") + "[公]" + userName);
+        userNameTextView.setTextColor(0xffffd8ec);
+        msgTextView.setText(message);
+        msgTextView.setTextColor(0xffffd8ec);
     }
-
 }

@@ -2,7 +2,6 @@ package ly.pp.justpiano3.view.preference;
 
 import android.app.Activity;
 import android.content.Context;
-import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -10,11 +9,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.activity.ComponentActivity;
+import androidx.annotation.NonNull;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
+
+import ly.pp.justpiano3.activity.settings.SettingsActivity;
 import ly.pp.justpiano3.utils.FilePickerUtil;
 
 public final class FilePickerPreference extends Preference {
+
     private static final int BUTTON_ID = View.generateViewId();
+
     private Activity activity;
+
     /**
      * 是否是目录选择，默认false
      */
@@ -33,16 +41,16 @@ public final class FilePickerPreference extends Preference {
     }
 
     @Override
-    protected void onBindView(View view) {
-        super.onBindView(view);
-        if (view.findViewById(BUTTON_ID) != null) {
+    public void onBindViewHolder(@NonNull PreferenceViewHolder preferenceViewHolder) {
+        super.onBindViewHolder(preferenceViewHolder);
+        if (preferenceViewHolder.itemView.findViewById(BUTTON_ID) != null) {
             return;
         }
         // 检查按钮是否已经添加到一个父视图，如果是，先从父视图移除
         if (defaultButton.getParent() != null) {
             ((ViewGroup) defaultButton.getParent()).removeView(defaultButton);
         }
-        LinearLayout layout = (LinearLayout) view;
+        LinearLayout layout = (LinearLayout) preferenceViewHolder.itemView;
         layout.setOrientation(LinearLayout.HORIZONTAL);
         layout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -55,7 +63,7 @@ public final class FilePickerPreference extends Preference {
         }
     }
 
-    public void setActivity(Activity activity) {
+    public void setActivity(ComponentActivity activity) {
         this.activity = activity;
     }
 
@@ -77,9 +85,9 @@ public final class FilePickerPreference extends Preference {
         super.onClick();
         if (activity != null) {
             if (folderPicker) {
-                FilePickerUtil.openFolderPicker(activity, getKey());
+                FilePickerUtil.openFolderPicker(getKey(), ((SettingsActivity) activity).folderPickerLauncher);
             } else {
-                FilePickerUtil.openFilePicker(activity, false, getKey());
+                FilePickerUtil.openFilePicker(activity, false, getKey(), ((SettingsActivity) activity).filePickerLauncher);
             }
         }
     }

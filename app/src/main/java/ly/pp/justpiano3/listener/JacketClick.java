@@ -46,8 +46,6 @@ public final class JacketClick implements OnItemClickListener {
                     dialog.dismiss();
                 });
             }
-
-
             if (olPlayDressRoom.jacketTry.contains(i)) {
                 jpDialogBuilder.setSecondButton("取消试穿", (dialog, which) -> {
                     dialog.dismiss();

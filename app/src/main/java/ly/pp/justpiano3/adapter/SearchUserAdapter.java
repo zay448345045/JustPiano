@@ -10,26 +10,27 @@ import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.online.PopUserInfo;
 import ly.pp.justpiano3.activity.online.SearchSongs;
 import ly.pp.justpiano3.thread.PictureHandle;
 
-public final class SearchPeopleAdapter extends BaseAdapter {
+public final class SearchUserAdapter extends BaseAdapter {
     final SearchSongs searchSongs;
-    private final List<Map<String, Object>> peopleList;
+    private final List<Map<String, Object>> userList;
 
-    public SearchPeopleAdapter(SearchSongs searchSongs, List<Map<String, Object>> list) {
+    public SearchUserAdapter(SearchSongs searchSongs, List<Map<String, Object>> list) {
         this.searchSongs = searchSongs;
-        peopleList = list;
+        userList = list;
         searchSongs.searchSongsHandler = new Handler(searchSongs);
         searchSongs.pictureHandle = new PictureHandle(searchSongs.searchSongsHandler, 0);
     }
 
     @Override
     public int getCount() {
-        return peopleList.size();
+        return userList.size();
     }
 
     @Override
@@ -47,28 +48,23 @@ public final class SearchPeopleAdapter extends BaseAdapter {
         if (view == null) {
             view = searchSongs.layoutinflater.inflate(R.layout.ol_top_view, null);
         }
-        view.setKeepScreenOn(true);
-        TextView textView = view.findViewById(R.id.ol_user_top);
-        TextView textView2 = view.findViewById(R.id.ol_score_top);
-        TextView textView3 = view.findViewById(R.id.ol_nuns_top);
-        ImageView imageView = view.findViewById(R.id.user_face);
+        TextView userNameTextView = view.findViewById(R.id.ol_user_top);
+        TextView scoreTextView = view.findViewById(R.id.ol_score_top);
+        TextView numTextView = view.findViewById(R.id.ol_nuns_top);
+        ImageView avatarImageView = view.findViewById(R.id.user_face);
         ((TextView) view.findViewById(R.id.ol_position_top)).setText(String.valueOf(i));
-        imageView.setTag(peopleList.get(i).get("faceID").toString());
-        searchSongs.pictureHandle.setBitmap(imageView, searchSongs.loadNailFace(searchSongs));
-        String str = peopleList.get(i).get("userName").toString();
-        textView.setText(str);
-        ImageView imageView2 = view.findViewById(R.id.ol_user_sex);
-        if (peopleList.get(i).get("userSex").toString().equals("f")) {
-            imageView2.setImageResource(R.drawable.f);
-        } else {
-            imageView2.setImageResource(R.drawable.m);
-        }
-        textView2.setText("总分:" + peopleList.get(i).get("userScore"));
-        textView3.setText("冠军:" + peopleList.get(i).get("userNuns"));
+        avatarImageView.setTag(userList.get(i).get("faceID").toString());
+        searchSongs.pictureHandle.setBitmap(avatarImageView, searchSongs.loadNailFace(searchSongs));
+        String userName = userList.get(i).get("userName").toString();
+        userNameTextView.setText(userName);
+        ImageView genderImageView = view.findViewById(R.id.ol_user_sex);
+        genderImageView.setImageResource(Objects.equals(userList.get(i).get("userSex"), "f") ? R.drawable.f : R.drawable.m);
+        scoreTextView.setText("总分:" + userList.get(i).get("userScore"));
+        numTextView.setText("冠军:" + userList.get(i).get("userNuns"));
         view.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.putExtra("head", 1);
-            intent.putExtra("userKitiName", str);
+            intent.putExtra("userName", userName);
             intent.setClass(searchSongs, PopUserInfo.class);
             searchSongs.startActivity(intent);
         });

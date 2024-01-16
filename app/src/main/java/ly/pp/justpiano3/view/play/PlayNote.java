@@ -106,7 +106,8 @@ public final class PlayNote {
         posiAdd15AddAnim = posiAdd15 + playView.progress;
         if (posiAdd15AddAnim >= playView.halfHeightSub20) {
             if (newNote && hide) {
-                playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) (volume * GlobalSetting.INSTANCE.getChordVolume()));
+                int handledVolume = Math.max(0, Math.min(Byte.MAX_VALUE, (int) (volume * GlobalSetting.getChordVolume())));
+                playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) handledVolume);
                 newNote = false;
                 return posiAdd15AddAnim;
             } else if ((double) posiAdd15AddAnim >= playView.whiteKeyHeightAdd90) {
@@ -122,19 +123,21 @@ public final class PlayNote {
     public float localNotePlayHandle(Canvas canvas) {
         posiAdd15AddAnim = posiAdd15 + playView.progress;
         if (posiAdd15AddAnim >= playView.halfHeightSub20) {
-            if (GlobalSetting.INSTANCE.getAutoPlay()) {
-                if (newNote && ((track != hand || hide) && GlobalSetting.INSTANCE.isOpenChord())) {
-                    playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) (volume * GlobalSetting.INSTANCE.getChordVolume()));
+            if (GlobalSetting.getAutoPlay()) {
+                if (newNote && ((track != hand || hide) && GlobalSetting.isOpenChord())) {
+                    int handledVolume = Math.max(0, Math.min(Byte.MAX_VALUE, (int) (volume * GlobalSetting.getChordVolume())));
+                    playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) handledVolume);
                     newNote = false;
                     return posiAdd15AddAnim;
                 }
-            } else if (newNote && track != hand && GlobalSetting.INSTANCE.isOpenChord()) {
-                playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) (volume * GlobalSetting.INSTANCE.getChordVolume()));
+            } else if (newNote && track != hand && GlobalSetting.isOpenChord()) {
+                int handledVolume = Math.max(0, Math.min(Byte.MAX_VALUE, (int) (volume * GlobalSetting.getChordVolume())));
+                playView.pianoPlay.playNoteSoundHandle(track, pitch, (byte) handledVolume);
                 newNote = false;
                 return posiAdd15AddAnim;
             }
         }
-        if (GlobalSetting.INSTANCE.getAutoPlay()) {
+        if (GlobalSetting.getAutoPlay()) {
             if (canvas != null && track == hand && !hide) {
                 canvas.drawBitmap(image, positionX, posiAdd15AddAnim, null);
             }

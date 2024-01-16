@@ -2,7 +2,6 @@ package ly.pp.justpiano3.activity.online;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -84,7 +83,6 @@ public final class OLChallenge extends OLBaseActivity implements OnClickListener
         jpprogressBar = new JPProgressBar(this);
         jpprogressBar.show();
         layoutinflater = LayoutInflater.from(this);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         Bundle bundle = getIntent().getExtras();
         hallID = bundle.getByte("hallID");
         hallName = bundle.getString("hallName");

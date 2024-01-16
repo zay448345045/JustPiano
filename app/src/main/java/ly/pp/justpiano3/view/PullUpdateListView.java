@@ -5,24 +5,36 @@ import android.util.AttributeSet;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-public class FamilyListView extends ListView implements AbsListView.OnScrollListener {
+public class PullUpdateListView extends ListView implements AbsListView.OnScrollListener {
 
     private int totalItemCounts;
-    private int lassVisible; //上拉
-    private LoadListener loadListener; //接口回调
-    private boolean isLoading;//加载状态
 
-    public FamilyListView(Context context) {
+    /**
+     * 上拉
+     */
+    private int lassVisible;
+
+    /**
+     * 接口回调
+     */
+    private LoadListener loadListener;
+
+    /**
+     * 加载状态
+     */
+    private boolean isLoading;
+
+    public PullUpdateListView(Context context) {
         super(context);
         this.setOnScrollListener(this);
     }
 
-    public FamilyListView(Context context, AttributeSet attrs) {
+    public PullUpdateListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setOnScrollListener(this);
     }
 
-    public FamilyListView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PullUpdateListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.setOnScrollListener(this);
     }
@@ -44,7 +56,9 @@ public class FamilyListView extends ListView implements AbsListView.OnScrollList
         this.totalItemCounts = totalItemCount;
     }
 
-    //加载完成
+    /**
+     * 加载完成
+     */
     public void loadComplete() {
         isLoading = false;
     }
@@ -53,7 +67,9 @@ public class FamilyListView extends ListView implements AbsListView.OnScrollList
         this.loadListener = loadListener;
     }
 
-    //接口回调
+    /**
+     * 接口回调
+     */
     public interface LoadListener {
         void onLoad();
     }

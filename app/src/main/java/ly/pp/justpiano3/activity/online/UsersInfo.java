@@ -1,9 +1,11 @@
 package ly.pp.justpiano3.activity.online;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -14,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
 import org.json.JSONException;
@@ -55,6 +59,24 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
     private TextView scoreText;
     private TextView pSignText;
     private ImageView faceImage;
+
+    private final ActivityResultLauncher<Intent> cropPictureLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Bundle extras = result.getData().getExtras();
+                    if (extras != null) {
+                        Bitmap bitmap = extras.getParcelable("data");
+                        faceImage.setImageDrawable(new BitmapDrawable(bitmap));
+//                    try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
+//                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fileOutputStream);
+//                        new UserFaceChangeTask(this).execute(
+//                                "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/UploadFace", filePath, accountJpg);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+                    }
+                }
+            });
 
     public static void updateUserInfo(UsersInfo usersInfo, String str) {
         JSONObject jsonObject = null;
@@ -152,7 +174,7 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
         intent.putExtra("outputX", 240);
         intent.putExtra("outputY", 240);
         intent.putExtra("return-data", true);
-        startActivityForResult(intent, 2);
+        cropPictureLauncher.launch(intent);
     }
 
     @Override
@@ -161,48 +183,12 @@ public final class UsersInfo extends BaseActivity implements Callback, OnClickLi
     }
 
     @Override
-    protected void onActivityResult(int i, int i2, Intent intent) {
-        if (i2 == -1) {
-            switch (i) {
-                case 0:
-                    cropPicture(intent.getData());
-                    break;
-                case 1:
-                    if (!Environment.getExternalStorageState().equals("mounted")) {
-                        Toast.makeText(this, "未找到存储卡，无法存储照片!", Toast.LENGTH_LONG).show();
-                    } else {
-//                        cropPicture(getUri());
-                    }
-                    break;
-                case 2:
-//                    if (intent != null) {
-//                        Bundle extras = intent.getExtras();
-//                        if (extras != null) {
-//                            Bitmap bitmap = extras.getParcelable("data");
-//                            faceImage.setImageDrawable(new BitmapDrawable(bitmap));
-//                            try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
-//                                bitmap.compress(CompressFormat.JPEG, 80, fileOutputStream);
-//                                new UserFaceChangeTask(this).execute(
-//                                        "http://" + OnlineUtil.server + ":8910/JustPianoServer/server/UploadFace", filePath, accountJpg);
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-            }
-            super.onActivityResult(i, i2, intent);
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         super.onBackPressed();
         if (jpprogressBar.isShowing()) {
             jpprogressBar.dismiss();
         }
-        Intent intent = new Intent();
-        intent.setClass(this, OLMainMode.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLMainMode.class));
         finish();
     }
 

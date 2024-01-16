@@ -38,7 +38,7 @@ import okhttp3.Response;
  * Create by SunnyDay on 2019/04/18
  * 仿写实现ImageLoader的大概功能：三级缓存、图片压缩、同步异步加载。
  */
-public class ImageLoader {
+public final class ImageLoader {
     private static final String TAG = "ImageLoader";
     private static final int IO_BUFFER_SIZE = 8 * 1024;
     private static final long DISK_CACHE_SIZE = 1024 * 1024 * 50;// 磁盘缓存大小50M
@@ -66,7 +66,6 @@ public class ImageLoader {
     private boolean mIsDiskLruCacheCreated = false;
     private final LruCache<String, Bitmap> mMemoryCache;
     private DiskLruCache mDiskLruCache = null;
-    private ImageResizerUtil mImageResizerUtil;
     // Handler
     private final Handler mMainHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -191,7 +190,7 @@ public class ImageLoader {
         if (snapShot != null) {
             FileInputStream fileInputStream = (FileInputStream) snapShot.getInputStream(DISK_CACHE_INDEX);
             FileDescriptor fileDescriptor = fileInputStream.getFD();
-            mImageResizerUtil = new ImageResizerUtil(mContext);
+            ImageResizerUtil mImageResizerUtil = new ImageResizerUtil(mContext);
             bitmap = mImageResizerUtil.decodeSampledBitmapFromFileDescriptor(fileDescriptor);
             if (bitmap != null) {
                 // 读取磁盘缓存时 往内存中放一份

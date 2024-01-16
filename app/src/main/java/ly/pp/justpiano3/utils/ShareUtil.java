@@ -16,7 +16,7 @@ import java.io.FileOutputStream;
 /**
  * 分享Util
  */
-public class ShareUtil {
+public final class ShareUtil {
 
     private static final String JPG_SUFFIX = ".jpg";
 

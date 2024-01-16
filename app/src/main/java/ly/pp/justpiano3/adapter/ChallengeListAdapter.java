@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import ly.pp.justpiano3.R;
+import ly.pp.justpiano3.constant.Consts;
 
 public final class ChallengeListAdapter extends BaseAdapter {
     private final List<Map<String, String>> list;
@@ -44,42 +46,24 @@ public final class ChallengeListAdapter extends BaseAdapter {
         if (name == null) {
             return view;
         }
-        String score = list.get(i).get("S");
-        String time = list.get(i).get("T");
-        String position = list.get(i).get("P");
-        TextView positionText = view.findViewById(R.id.ol_challenge_position);
-        TextView nameText = view.findViewById(R.id.ol_challenge_user);
-        TextView scoreText = view.findViewById(R.id.ol_challenge_score);
-        TextView timeText = view.findViewById(R.id.ol_challenge_time);
-        nameText.setText(name);
-        scoreText.setText(score);
-        timeText.setText(time);
-        positionText.setText(position);
-        switch (i) {
-            case 0 -> {
-                nameText.setTextColor(0xFFFFD700);
-                scoreText.setTextColor(0xFFFFD700);
-                timeText.setTextColor(0xFFFFD700);
-                positionText.setTextColor(0xFFFFD700);
-            }
-            case 1 -> {
-                nameText.setTextColor(0xFFC0C0C0);
-                scoreText.setTextColor(0xFFC0C0C0);
-                timeText.setTextColor(0xFFC0C0C0);
-                positionText.setTextColor(0xFFC0C0C0);
-            }
-            case 2 -> {
-                nameText.setTextColor(0xFFD2B48C);
-                scoreText.setTextColor(0xFFD2B48C);
-                timeText.setTextColor(0xFFD2B48C);
-                positionText.setTextColor(0xFFD2B48C);
-            }
-            default -> {
-                nameText.setTextColor(0xFFFFFFFF);
-                scoreText.setTextColor(0xFFFFFFFF);
-                timeText.setTextColor(0xFFFFFFFF);
-                positionText.setTextColor(0xFFFFFFFF);
-            }
+        TextView positionTextView = view.findViewById(R.id.ol_challenge_position);
+        TextView userNameTextView = view.findViewById(R.id.ol_challenge_user);
+        TextView scoreTextView = view.findViewById(R.id.ol_challenge_score);
+        TextView timeTextView = view.findViewById(R.id.ol_challenge_time);
+        userNameTextView.setText(name);
+        scoreTextView.setText(list.get(i).get("S"));
+        timeTextView.setText(list.get(i).get("T"));
+        positionTextView.setText(list.get(i).get("P"));
+        if (i >= 0 && i < Consts.positionColor.length) {
+            positionTextView.setTextColor(Consts.positionColor[i]);
+            userNameTextView.setTextColor(Consts.positionColor[i]);
+            scoreTextView.setTextColor(Consts.positionColor[i]);
+            timeTextView.setTextColor(Consts.positionColor[i]);
+        } else {
+            positionTextView.setTextColor(Color.WHITE);
+            userNameTextView.setTextColor(Color.WHITE);
+            scoreTextView.setTextColor(Color.WHITE);
+            timeTextView.setTextColor(Color.WHITE);
         }
         return view;
     }

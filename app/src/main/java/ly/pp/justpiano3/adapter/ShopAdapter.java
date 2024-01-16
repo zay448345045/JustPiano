@@ -3,7 +3,6 @@ package ly.pp.justpiano3.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,21 +41,13 @@ public final class ShopAdapter extends BaseAdapter {
             view = olPlayDressRoom.getLayoutInflater().inflate(R.layout.ol_shop_item_view, null);
         }
         ShopProduct shopProduct = olPlayDressRoom.shopProductList.get(i);
-        TextView shopItemNameView = view.findViewById(R.id.ol_shop_item_name);
-        shopItemNameView.setText(shopProduct.getName());
-        TextView shopItemDescriptionView = view.findViewById(R.id.ol_shop_item_desc);
-        shopItemDescriptionView.setText(shopProduct.getDescription());
-        TextView shopItemPrice = view.findViewById(R.id.ol_shop_item_price);
-        shopItemPrice.setText(String.valueOf(shopProduct.getPrice()));
-        ImageView shopItemImageView = view.findViewById(R.id.ol_shop_item_pic);
+        ((TextView) view.findViewById(R.id.ol_shop_item_name)).setText(shopProduct.getName());
+        ((TextView) view.findViewById(R.id.ol_shop_item_desc)).setText(shopProduct.getDescription());
+        ((TextView) view.findViewById(R.id.ol_shop_item_price)).setText(String.valueOf(shopProduct.getPrice()));
         int drawableById = olPlayDressRoom.getDrawableById(shopProduct.getPicture(), R.drawable.class);
-        if (drawableById == 0) {
-            shopItemImageView.setImageResource(R.drawable.family);
-        } else {
-            shopItemImageView.setImageResource(drawableById);
-        }
-        Button shopItemBuyButton = view.findViewById(R.id.ol_shop_item_buy);
-        shopItemBuyButton.setOnClickListener(v -> {
+        ((ImageView) view.findViewById(R.id.ol_shop_item_pic)).setImageResource(
+                drawableById == 0 ? R.drawable.family : drawableById);
+        view.findViewById(R.id.ol_shop_item_buy).setOnClickListener(v -> {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(olPlayDressRoom);
             jpDialogBuilder.setTitle("提示");
             jpDialogBuilder.setMessage("确定花费" + shopProduct.getPrice() + "音符购买此商品吗?");

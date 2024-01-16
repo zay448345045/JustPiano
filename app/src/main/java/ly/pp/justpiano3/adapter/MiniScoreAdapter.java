@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.adapter;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Objects;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.constant.Consts;
@@ -17,10 +19,10 @@ public final class MiniScoreAdapter extends BaseAdapter {
     private final LayoutInflater layoutInflater;
     private final int roomMode;
 
-    public MiniScoreAdapter(List<Bundle> list, LayoutInflater layoutInflater, int i) {
+    public MiniScoreAdapter(List<Bundle> list, LayoutInflater layoutInflater, int roomMode) {
         this.list = list;
         this.layoutInflater = layoutInflater;
-        roomMode = i;
+        this.roomMode = roomMode;
     }
 
     public void changeList(List<Bundle> list) {
@@ -44,50 +46,29 @@ public final class MiniScoreAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        String str;
-        int i2;
-        String str2;
-        view = layoutInflater.inflate(R.layout.ol_play_score_view, null);
-        view.setKeepScreenOn(true);
         try {
-            str2 = (String) list.get((byte) i).get("U");
-            try {
-                str = (String) list.get((byte) i).get("M");
-            } catch (Exception e2) {
-                e2.printStackTrace();
+            view = layoutInflater.inflate(R.layout.ol_play_score_view, null);
+            String score = (String) list.get((byte) i).get("M");
+            int hand = Integer.parseInt((String) Objects.requireNonNull(list.get((byte) i).get("G")));
+            String userName = (String) list.get((byte) i).get("U");
+            if (TextUtils.isEmpty(userName)) {
                 view.setVisibility(View.GONE);
-                return view;
-            }
-            try {
-                i2 = Integer.parseInt((String) list.get((byte) i).get("G"));
-            } catch (Exception e4) {
-                e4.printStackTrace();
-                view.setVisibility(View.GONE);
-                return view;
-            }
-        } catch (Exception e5) {
-            e5.printStackTrace();
-            view.setVisibility(View.GONE);
-            return view;
-        }
-        if (str2 == null || str2.isEmpty()) {
-            view.setVisibility(View.GONE);
-        } else {
-            TextView textView = view.findViewById(R.id.ol_user_text);
-            if (roomMode == 1 && i2 > 0) {
-                textView.setBackgroundResource(Consts.originalRoomModeResource[i2 - 1]);
-            } else if (roomMode == 2 && i2 > 0) {
-                textView.setBackgroundResource(Consts.teamRoomModeResource[i2 - 1]);
-            } else if (roomMode == 0) {
-                if (i2 == 0) {
-                    ((TextView) view.findViewById(R.id.ol_state_text)).setText("右     ");
-                } else {
-                    ((TextView) view.findViewById(R.id.ol_state_text)).setText("左     ");
+            } else {
+                TextView userNameTextView = view.findViewById(R.id.ol_user_text);
+                if (roomMode == 1 && hand > 0) {
+                    userNameTextView.setBackgroundResource(Consts.originalRoomModeResource[hand - 1]);
+                } else if (roomMode == 2 && hand > 0) {
+                    userNameTextView.setBackgroundResource(Consts.teamRoomModeResource[hand - 1]);
+                } else if (roomMode == 0) {
+                    ((TextView) view.findViewById(R.id.ol_state_text)).setText(hand == 0 ? "右     " : "左     ");
+                    userNameTextView.setBackgroundResource(Consts.originalRoomModeResource[0]);
                 }
-                textView.setBackgroundResource(Consts.originalRoomModeResource[0]);
+                userNameTextView.setText(userName);
+                ((TextView) view.findViewById(R.id.ol_score_text)).setText(score);
             }
-            textView.setText(str2);
-            ((TextView) view.findViewById(R.id.ol_score_text)).setText(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+            view.setVisibility(View.GONE);
         }
         return view;
     }

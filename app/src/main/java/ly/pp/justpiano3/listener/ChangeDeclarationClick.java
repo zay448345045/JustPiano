@@ -28,24 +28,24 @@ public final class ChangeDeclarationClick implements OnClickListener {
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        String valueOf = String.valueOf(textView.getText());
-        if (TextUtils.isEmpty(valueOf) || "'".equals(valueOf)) {
+        String text = String.valueOf(textView.getText());
+        if (TextUtils.isEmpty(text) || "'".equals(text) || "''".equals(text) || "'''".equals(text)) {
             Toast.makeText(family, "请输入内容!", Toast.LENGTH_SHORT).show();
-        } else if (valueOf.length() > Consts.MAX_MESSAGE_COUNT) {
+        } else if (text.length() > Consts.MAX_MESSAGE_COUNT) {
             Toast.makeText(family, "确定在五百字之内!", Toast.LENGTH_SHORT).show();
         } else if (type == 0) {
             dialogInterface.dismiss();
             OnlineSendMailDTO.Builder builder = OnlineSendMailDTO.newBuilder();
-            builder.setMessage(valueOf);
+            builder.setMessage(text);
             builder.setName(userName);
             family.sendMsg(OnlineProtocolType.SEND_MAIL, builder.build());
         } else if (type == 1) {
             dialogInterface.dismiss();
             OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
             builder.setType(9);
-            builder.setMessage(valueOf);
+            builder.setMessage(text);
             family.sendMsg(OnlineProtocolType.FAMILY, builder.build());
-            family.declaration.setText("家族宣言:\n" + valueOf);
+            family.declarationTextView.setText("家族宣言:\n" + text);
         }
     }
 }

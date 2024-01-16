@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,16 +51,17 @@ import ly.pp.justpiano3.constant.OnlineProtocolType;
 import ly.pp.justpiano3.database.entity.Song;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.entity.User;
+import ly.pp.justpiano3.enums.PlaySongsModeEnum;
 import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.ChangeRoomNameClick;
 import ly.pp.justpiano3.listener.PlayerImageItemClick;
 import ly.pp.justpiano3.listener.SendMailClick;
 import ly.pp.justpiano3.listener.tab.PlayRoomTabChange;
 import ly.pp.justpiano3.thread.SongPlay;
+import ly.pp.justpiano3.utils.BizUtil;
 import ly.pp.justpiano3.utils.ChatUtil;
 import ly.pp.justpiano3.utils.DateUtil;
 import ly.pp.justpiano3.utils.DialogUtil;
-import ly.pp.justpiano3.utils.EncryptUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEffectPlayUtil;
@@ -85,7 +87,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public byte hallId;
     public String hallName;
     private final List<Bundle> friendPlayerList = new ArrayList<>();
-    private boolean canNotNextPage;
+    private boolean friendCanNotNextPage;
     private EditText sendTextView;
     private List<Bundle> msgList = new ArrayList<>();
     public GridView playerGrid;
@@ -100,7 +102,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public int roomMode;
     public TextView roomNameView;
     public String roomName;
-    public String playerKind = "";
+    public String positionStatus = "";
     public Bundle roomInfoBundle;
     public Bundle hallInfoBundle;
     private boolean timeUpdateRunning;
@@ -114,60 +116,62 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     private int colorNum = 99;
     private ImageView changeColorButton;
 
-    protected void showCpDialog(String str, String str2) {
-        View inflate = getLayoutInflater().inflate(R.layout.ol_couple_dialog, findViewById(R.id.dialog));
+    protected void showCpDialog(String title, String content) {
+        View coupleDialogView = getLayoutInflater().inflate(R.layout.ol_couple_dialog, findViewById(R.id.dialog));
         try {
-            JSONObject jSONObject = new JSONObject(str2);
-            JSONObject jSONObject2 = jSONObject.getJSONObject("P");
-            User user = new User(jSONObject2.getString("N"), jSONObject2.getInt("D_H"),
-                    jSONObject2.getInt("D_E"), jSONObject2.getInt("D_J"),
-                    jSONObject2.getInt("D_T"), jSONObject2.getInt("D_S"),
-                    jSONObject2.getString("S"), jSONObject2.getInt("L"), jSONObject2.getInt("C"));
-            JSONObject jSONObject3 = jSONObject.getJSONObject("C");
-            User user2 = new User(jSONObject3.getString("N"), jSONObject3.getInt("D_H"),
-                    jSONObject3.getInt("D_E"), jSONObject3.getInt("D_J"),
-                    jSONObject3.getInt("D_T"), jSONObject3.getInt("D_S"),
-                    jSONObject3.getString("S"), jSONObject3.getInt("L"), jSONObject3.getInt("C"));
-            JSONObject jSONObject4 = jSONObject.getJSONObject("I");
-            TextView textView = inflate.findViewById(R.id.ol_player_level);
-            TextView textView2 = inflate.findViewById(R.id.ol_player_class);
-            TextView textView3 = inflate.findViewById(R.id.ol_player_clname);
-            TextView textView4 = inflate.findViewById(R.id.ol_couple_name);
-            TextView textView5 = inflate.findViewById(R.id.ol_couple_level);
-            TextView textView6 = inflate.findViewById(R.id.ol_couple_class);
-            TextView textView7 = inflate.findViewById(R.id.ol_couple_clname);
-            ImageView imageView = inflate.findViewById(R.id.ol_player_mod);
-            ImageView imageView2 = inflate.findViewById(R.id.ol_player_trousers);
-            ImageView imageView3 = inflate.findViewById(R.id.ol_player_jacket);
-            ImageView imageView4 = inflate.findViewById(R.id.ol_player_hair);
-            ImageView imageView4e = inflate.findViewById(R.id.ol_player_eye);
-            ImageView imageView5 = inflate.findViewById(R.id.ol_player_shoes);
-            ImageView imageView6 = inflate.findViewById(R.id.ol_couple_mod);
-            ImageView imageView7 = inflate.findViewById(R.id.ol_couple_trousers);
-            ImageView imageView8 = inflate.findViewById(R.id.ol_couple_jacket);
-            ImageView imageView9 = inflate.findViewById(R.id.ol_couple_hair);
-            ImageView imageView9e = inflate.findViewById(R.id.ol_couple_eye);
-            ImageView imageView10 = inflate.findViewById(R.id.ol_couple_shoes);
-            TextView textView8 = inflate.findViewById(R.id.couple_bless);
-            ImageView imageView11 = inflate.findViewById(R.id.couple_type);
-            ((TextView) inflate.findViewById(R.id.ol_player_name)).setText(user.getPlayerName());
-            textView.setText("LV." + user.getLevel());
-            textView2.setText("CL." + user.getCl());
-            textView3.setText(Consts.nameCL[user.getCl()]);
-            textView4.setText(user2.getPlayerName());
-            textView5.setText("LV." + user2.getLevel());
-            textView6.setText("CL." + user2.getCl());
-            textView7.setText(Consts.nameCL[user2.getCl()]);
-            textView8.setText(jSONObject4.getString("B"));
-            imageView11.setImageResource(Consts.couples[jSONObject4.getInt("T")]);
-            ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
-            ImageLoadUtil.setUserDressImageBitmap(this, user2, imageView6, imageView7, imageView8, imageView9, imageView9e, imageView10);
-            new JPDialogBuilder(this).setWidth(288).setTitle(str).loadInflate(inflate)
-                    .setFirstButton("祝福:" + jSONObject4.getInt("P"), (dialog, which) -> {
+            JSONObject jSONObject = new JSONObject(content);
+            JSONObject userInfo = jSONObject.getJSONObject("P");
+            User user = new User(userInfo.getString("N"), userInfo.getInt("D_H"),
+                    userInfo.getInt("D_E"), userInfo.getInt("D_J"),
+                    userInfo.getInt("D_T"), userInfo.getInt("D_S"),
+                    userInfo.getString("S"), userInfo.getInt("L"), userInfo.getInt("C"));
+            JSONObject coupleInfo = jSONObject.getJSONObject("C");
+            User coupleUser = new User(coupleInfo.getString("N"), coupleInfo.getInt("D_H"),
+                    coupleInfo.getInt("D_E"), coupleInfo.getInt("D_J"),
+                    coupleInfo.getInt("D_T"), coupleInfo.getInt("D_S"),
+                    coupleInfo.getString("S"), coupleInfo.getInt("L"), coupleInfo.getInt("C"));
+            JSONObject blessInfo = jSONObject.getJSONObject("I");
+            TextView lvTextView = coupleDialogView.findViewById(R.id.ol_player_level);
+            TextView clTextView = coupleDialogView.findViewById(R.id.ol_player_class);
+            TextView clNameTextView = coupleDialogView.findViewById(R.id.ol_player_clname);
+            TextView coupleNameTextView = coupleDialogView.findViewById(R.id.ol_couple_name);
+            TextView coupleLvTextView = coupleDialogView.findViewById(R.id.ol_couple_level);
+            TextView coupleClTextView = coupleDialogView.findViewById(R.id.ol_couple_class);
+            TextView coupleClNameTextView = coupleDialogView.findViewById(R.id.ol_couple_clname);
+            ImageView modImageView = coupleDialogView.findViewById(R.id.ol_player_mod);
+            ImageView trousersImageView = coupleDialogView.findViewById(R.id.ol_player_trousers);
+            ImageView jacketImageView = coupleDialogView.findViewById(R.id.ol_player_jacket);
+            ImageView hairImageView = coupleDialogView.findViewById(R.id.ol_player_hair);
+            ImageView eyeImageView = coupleDialogView.findViewById(R.id.ol_player_eye);
+            ImageView shoesImageView = coupleDialogView.findViewById(R.id.ol_player_shoes);
+            ImageView coupleModImageView = coupleDialogView.findViewById(R.id.ol_couple_mod);
+            ImageView coupleTrousersImageView = coupleDialogView.findViewById(R.id.ol_couple_trousers);
+            ImageView coupleJacketImageView = coupleDialogView.findViewById(R.id.ol_couple_jacket);
+            ImageView coupleHairImageView = coupleDialogView.findViewById(R.id.ol_couple_hair);
+            ImageView coupleEyeImageView = coupleDialogView.findViewById(R.id.ol_couple_eye);
+            ImageView coupleShoesImageView = coupleDialogView.findViewById(R.id.ol_couple_shoes);
+            TextView coupleBlessTextView = coupleDialogView.findViewById(R.id.couple_bless);
+            ImageView coupleTypeImageView = coupleDialogView.findViewById(R.id.couple_type);
+            ((TextView) coupleDialogView.findViewById(R.id.ol_player_name)).setText(user.getPlayerName());
+            lvTextView.setText("LV." + user.getLevel());
+            clTextView.setText("CL." + user.getCl());
+            clNameTextView.setText(Consts.nameCL[user.getCl()]);
+            coupleNameTextView.setText(coupleUser.getPlayerName());
+            coupleLvTextView.setText("LV." + coupleUser.getLevel());
+            coupleClTextView.setText("CL." + coupleUser.getCl());
+            coupleClNameTextView.setText(Consts.nameCL[coupleUser.getCl()]);
+            coupleBlessTextView.setText(blessInfo.getString("B"));
+            coupleTypeImageView.setImageResource(Consts.couples[blessInfo.getInt("T")]);
+            ImageLoadUtil.setUserDressImageBitmap(this, user, modImageView, trousersImageView, jacketImageView,
+                    hairImageView, eyeImageView, shoesImageView);
+            ImageLoadUtil.setUserDressImageBitmap(this, coupleUser, coupleModImageView, coupleTrousersImageView,
+                    coupleJacketImageView, coupleHairImageView, coupleEyeImageView, coupleShoesImageView);
+            new JPDialogBuilder(this).setWidth(232).setTitle(title).loadInflate(coupleDialogView)
+                    .setFirstButton("祝福:" + blessInfo.getInt("P"), (dialog, which) -> {
                         try {
                             OnlineCoupleDTO.Builder builder = OnlineCoupleDTO.newBuilder();
                             builder.setType(5);
-                            builder.setRoomPosition(jSONObject4.getInt("I"));
+                            builder.setRoomPosition(blessInfo.getInt("I"));
                             sendMsg(OnlineProtocolType.COUPLE, builder.build());
                             dialog.dismiss();
                         } catch (Exception e) {
@@ -179,11 +183,11 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         }
     }
 
-    public void showInfoDialog(Bundle b) {
+    public void showInfoDialog(Bundle bundle) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
-            User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
-                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
+            User user = new User(bundle.getString("U"), bundle.getInt("DR_H"), bundle.getInt("DR_E"), bundle.getInt("DR_J"),
+                    bundle.getInt("DR_T"), bundle.getInt("DR_S"), bundle.getString("S"), bundle.getInt("LV"), bundle.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
@@ -193,17 +197,16 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
-            int lv = b.getInt("LV");
-            int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
-            textView.setText("用户名称:" + b.getString("U")
+            int lv = bundle.getInt("LV");
+            textView.setText("用户名称:" + bundle.getString("U")
                     + "\n用户等级:LV." + lv
-                    + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:CL." + b.getInt("CL")
-                    + "\n所在家族:" + b.getString("F")
-                    + "\n在线曲库冠军数:" + b.getInt("W")
-                    + "\n在线曲库弹奏总分:" + b.getInt("SC"));
-            textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+                    + "\n经验进度:" + bundle.getInt("E") + "/" + BizUtil.getTargetExp(lv)
+                    + "\n考级进度:CL." + bundle.getInt("CL")
+                    + "\n所在家族:" + bundle.getString("F")
+                    + "\n在线曲库冠军数:" + bundle.getInt("W")
+                    + "\n在线曲库弹奏总分:" + bundle.getInt("SC"));
+            textView2.setText("个性签名:\n" + (bundle.getString("P").isEmpty() ? "无" : bundle.getString("P")));
+            new JPDialogBuilder(this).setWidth(288).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
                     .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
@@ -258,7 +261,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         jpDialogBuilder.setFirstButton("确定", (dialog, which) -> {
             onStart = false;
             sendMsg(OnlineProtocolType.QUIT_ROOM, OnlineQuitRoomDTO.getDefaultInstance());
-            SongPlay.INSTANCE.stopPlay();
+            SongPlay.stopPlay();
             Intent intent = new Intent(this, OLPlayHall.class);
             Bundle bundle = new Bundle();
             bundle.putString("hallName", hallName);
@@ -275,18 +278,18 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     protected void sendMessageClick(boolean isBroadcast) {
         OnlineRoomChatDTO.Builder builder = OnlineRoomChatDTO.newBuilder();
         builder.setIsBroadcast(isBroadcast);
-        String str = String.valueOf(sendTextView.getText());
-        if (!str.startsWith(userTo) || str.length() <= userTo.length()) {
+        String userName = String.valueOf(sendTextView.getText());
+        if (!userName.startsWith(userTo) || userName.length() <= userTo.length()) {
             builder.setUserName("");
-            builder.setMessage(str);
+            builder.setMessage(userName);
         } else {
             builder.setUserName(userTo);
-            str = str.substring(userTo.length());
-            builder.setMessage(str);
+            userName = userName.substring(userTo.length());
+            builder.setMessage(userName);
         }
         sendTextView.setText("");
         builder.setColor(colorNum);
-        if (!str.isEmpty()) {
+        if (!userName.isEmpty()) {
             sendMsg(OnlineProtocolType.ROOM_CHAT, builder.build());
         }
         userTo = "";
@@ -305,20 +308,20 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     protected void changeRoomTitleClick() {
-        if (!playerKind.equals("G")) {
-            View inflate = getLayoutInflater().inflate(R.layout.ol_room_title_change, findViewById(R.id.dialog));
-            EditText text1 = inflate.findViewById(R.id.text_1);
+        if (!positionStatus.equals("G")) {
+            View roonTitleChangeView = getLayoutInflater().inflate(R.layout.ol_room_title_change, findViewById(R.id.dialog));
+            EditText roomNameEditText = roonTitleChangeView.findViewById(R.id.text_1);
             // 填充当前房间名称
-            text1.setText(roomName);
-            EditText text2 = inflate.findViewById(R.id.text_2);
-            new JPDialogBuilder(this).setTitle("修改房名").loadInflate(inflate)
-                    .setFirstButton("修改", new ChangeRoomNameClick(this, text1, text2))
+            roomNameEditText.setText(roomName);
+            EditText roomPasswordEditText = roonTitleChangeView.findViewById(R.id.text_2);
+            new JPDialogBuilder(this).setTitle("修改房名").loadInflate(roonTitleChangeView)
+                    .setFirstButton("修改", new ChangeRoomNameClick(this, roomNameEditText, roomPasswordEditText))
                     .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         }
     }
 
     protected void nextFriendPageClick() {
-        if (!canNotNextPage) {
+        if (!friendCanNotNextPage) {
             page += 20;
             if (page >= 0) {
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
@@ -358,23 +361,19 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     private void bindMsgListView() {
-        // 不知道要不要走UI线程，我测试不走也可以
-        runOnUiThread(() -> {
-            int lastPosition = msgListView.getLastVisiblePosition();
-            int count = msgListView.getCount();
-            if (msgListView.getAdapter() != null) {
-                ((ChattingAdapter) msgListView.getAdapter()).notifyDataSetChanged();
-            } else {
-                // 只new一次，msgList是引用，不要重新赋值
-                msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater));
-            }
-            // 如果刷新的时候，位置不在最底部 或 看不到最底部的元素，则不弹回去
-            if (lastPosition == count - 1) {
-                // 这里计算offset很麻烦，就写了一个比较大的数
-                msgListView.smoothScrollToPositionFromTop(lastPosition, -10000, 500);
-            }
-        });
-
+        int lastPosition = msgListView.getLastVisiblePosition();
+        int count = msgListView.getCount();
+        if (msgListView.getAdapter() != null) {
+            ((ChattingAdapter) msgListView.getAdapter()).notifyDataSetChanged();
+        } else {
+            // 只new一次，msgList是引用，不要重新赋值
+            msgListView.setAdapter(new ChattingAdapter(msgList, layoutInflater));
+        }
+        // 如果刷新的时候，位置不在最底部 或 看不到最底部的元素，则不弹回去
+        if (lastPosition == count - 1) {
+            // 这里计算offset很麻烦，就写了一个比较大的数
+            msgListView.smoothScrollToPositionFromTop(lastPosition, -10000, 500);
+        }
     }
 
     public void handleKicked() {
@@ -394,16 +393,15 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     public void handleChat(Message message) {
         // 消息处理（流消息，推荐消息等） 返回值表示是否拦截后续执行
-        boolean isIntercept = specialMessageHandle(message);
-        if (isIntercept) {
+        if (specialMessageHandle(message)) {
             return;
         }
         if (msgList.size() > Consts.MAX_CHAT_SAVE_COUNT) {
             msgList.remove(0);
         }
         String time = "";
-        if (GlobalSetting.INSTANCE.getShowChatTime()) {
-            time = DateUtil.format(new Date(EncryptUtil.getServerTime()), GlobalSetting.INSTANCE.getShowChatTimeModes());
+        if (GlobalSetting.getShowChatTime()) {
+            time = DateUtil.format(new Date(), GlobalSetting.getShowChatTimeModes());
         }
         message.getData().putString("TIME", time);
         // 如果聊天人没在屏蔽名单中，则将聊天消息加入list进行渲染展示
@@ -411,8 +409,8 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             msgList.add(message.getData());
         }
         // 聊天音效播放
-        if (GlobalSetting.INSTANCE.getChatsSound() && !Objects.equals(message.getData().getString("U"), OLBaseActivity.getKitiName())) {
-            SoundEffectPlayUtil.playSoundEffect(this, Uri.parse(GlobalSetting.INSTANCE.getChatsSoundFile()));
+        if (GlobalSetting.getChatsSound() && !Objects.equals(message.getData().getString("U"), OLBaseActivity.getKitiName())) {
+            SoundEffectPlayUtil.playSoundEffect(this, Uri.parse(GlobalSetting.getChatsSoundFile()));
         }
         // 聊天记录存储
         ChatUtil.chatsSaveHandle(message, this, time);
@@ -432,7 +430,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                 String item = data.getString("I");
                 String songName = null;
                 String songDifficulty = null;
-                if (!item.isEmpty()) {
+                if (!TextUtils.isEmpty(item)) {
                     String path = "songs/" + item + ".pm";
                     List<Song> songByFilePath = JPApplication.getSongDatabase().songDao().getSongByFilePath(path);
                     for (Song song : songByFilePath) {
@@ -463,14 +461,14 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     public void handleFriendRequest(Message message) {
-        String string = message.getData().getString("F");
+        String userName = message.getData().getString("F");
         switch (message.getData().getInt("T")) {
             case 0 -> {
-                if (!string.isEmpty()) {
+                if (!TextUtils.isEmpty(userName)) {
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                     jpDialogBuilder.setTitle("好友请求");
-                    jpDialogBuilder.setMessage("[" + string + "]请求加您为好友,同意吗?");
-                    String finalString = string;
+                    jpDialogBuilder.setMessage("[" + userName + "]请求加您为好友,同意吗?");
+                    String finalString = userName;
                     jpDialogBuilder.setFirstButton("同意", (dialog, which) -> {
                         OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                         builder.setType(1);
@@ -492,12 +490,12 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             }
             case 1 -> {
                 DialogUtil.setShowDialog(false);
-                string = message.getData().getString("F");
+                userName = message.getData().getString("F");
                 int i = message.getData().getInt("I");
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setTitle("请求结果");
                 switch (i) {
-                    case 0 -> jpDialogBuilder.setMessage("[" + string + "]同意添加您为好友!");
+                    case 0 -> jpDialogBuilder.setMessage("[" + userName + "]同意添加您为好友!");
                     case 1 -> jpDialogBuilder.setMessage("对方拒绝了你的好友请求!");
                     case 2 -> jpDialogBuilder.setMessage("对方已经是你的好友!");
                     case 3 -> {
@@ -515,9 +513,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     public void handleOffline() {
         Toast.makeText(this, "您已掉线，请检查您的网络再重新登录", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent();
-        intent.setClass(this, OLMainMode.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLMainMode.class));
         finish();
     }
 
@@ -558,7 +554,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             }
             bindViewAdapter(friendsListView, friendPlayerList, 1);
         }
-        canNotNextPage = size < 20;
+        friendCanNotNextPage = size < 20;
     }
 
     public void handleRefreshFriendListWithoutPage(Message message) {
@@ -599,7 +595,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         hallName = hallInfoBundle.getString("hallName");
         roomId = roomInfoBundle.getByte("ID");
         roomName = roomInfoBundle.getString("R");
-        playerKind = roomInfoBundle.getString("isHost");
+        positionStatus = roomInfoBundle.getString("isHost");
         roomMode = roomInfoBundle.getInt("mode");
         roomNameView.setText("[" + roomId + "]" + roomName);
         roomNameView.setOnClickListener(this);
@@ -625,28 +621,28 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         expressImageView.setOnClickListener(this);
         changeColorButton.setOnClickListener(this);
         handler = new Handler(this);
-        PopupWindow popupWindow = new JPPopupWindow(this);
-        View inflate = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
-        popupWindow.setContentView(inflate);
-        ((GridView) inflate.findViewById(R.id.ol_express_grid)).setAdapter(
-                new ExpressAdapter(this, Consts.expressions, popupWindow, OnlineProtocolType.ROOM_CHAT));
-        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-        expressPopupWindow = popupWindow;
-        PopupWindow popupWindow3 = new JPPopupWindow(this);
-        View inflate3 = LayoutInflater.from(this).inflate(R.layout.ol_room_color_pick, null);
-        popupWindow3.setContentView(inflate3);
-        popupWindow3.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
-        inflate3.findViewById(R.id.white).setOnClickListener(this);
-        inflate3.findViewById(R.id.yellow).setOnClickListener(this);
-        inflate3.findViewById(R.id.blue).setOnClickListener(this);
-        inflate3.findViewById(R.id.red).setOnClickListener(this);
-        inflate3.findViewById(R.id.orange).setOnClickListener(this);
-        inflate3.findViewById(R.id.purple).setOnClickListener(this);
-        inflate3.findViewById(R.id.pink).setOnClickListener(this);
-        inflate3.findViewById(R.id.gold).setOnClickListener(this);
-        inflate3.findViewById(R.id.green).setOnClickListener(this);
-        inflate3.findViewById(R.id.black).setOnClickListener(this);
-        changeColorPopupWindow = popupWindow3;
+        PopupWindow expressPopupWindow = new JPPopupWindow(this);
+        View expressView = LayoutInflater.from(this).inflate(R.layout.ol_express_list, null);
+        expressPopupWindow.setContentView(expressView);
+        ((GridView) expressView.findViewById(R.id.ol_express_grid)).setAdapter(
+                new ExpressAdapter(this, Consts.expressions, expressPopupWindow, OnlineProtocolType.ROOM_CHAT));
+        expressPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+        this.expressPopupWindow = expressPopupWindow;
+        PopupWindow changeColorPopupWindow = new JPPopupWindow(this);
+        View roomColorPickView = LayoutInflater.from(this).inflate(R.layout.ol_room_color_pick, null);
+        changeColorPopupWindow.setContentView(roomColorPickView);
+        changeColorPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable._none, getTheme()));
+        roomColorPickView.findViewById(R.id.white).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.yellow).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.blue).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.red).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.orange).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.purple).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.pink).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.gold).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.green).setOnClickListener(this);
+        roomColorPickView.findViewById(R.id.black).setOnClickListener(this);
+        this.changeColorPopupWindow = changeColorPopupWindow;
         roomTabs = findViewById(R.id.tabhost);
         roomTabs.setup();
         TabHost.TabSpec newTabSpec = roomTabs.newTabSpec("tab1");
@@ -674,12 +670,15 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         if (savedInstanceState != null) {
             msgList = savedInstanceState.getParcelableArrayList("msgList");
             bindMsgListView();
+            sendMsg(OnlineProtocolType.CHANGE_ROOM_USER_STATUS, OnlineChangeRoomUserStatusDTO.newBuilder().setStatus("N").build());
+        } else {
+            SongPlay.setPlaySongsMode(PlaySongsModeEnum.ONCE);
         }
     }
 
     protected void setTabTitleViewLayout(int i) {
         TextView textView = roomTabs.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-        textView.setTextColor(0xffffffff);
+        textView.setTextColor(Color.WHITE);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textView.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
@@ -687,7 +686,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
 
     protected void changeScreenOrientation() {
         isChangeScreen = true;
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -727,11 +726,11 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         } else if (id == R.id.ol_changecolor) {
             changeColorClick();
         } else if (id == R.id.white) {
-            changeChatColor(0, 48, 0xffffffff);
+            changeChatColor(0, 48, Color.WHITE);
         } else if (id == R.id.yellow) {
             changeChatColor(10, 1, 0xFFFFFACD);
         } else if (id == R.id.blue) {
-            changeChatColor(14, 2, 0xFF00FFFF);
+            changeChatColor(14, 2, Color.CYAN);
         } else if (id == R.id.red) {
             changeChatColor(18, 3, 0xFFFF6666);
         } else if (id == R.id.orange) {
@@ -745,7 +744,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
         } else if (id == R.id.green) {
             changeChatColor(40, 8, 0xFFB7FF72);
         } else if (id == R.id.black) {
-            changeChatColor(50, 9, 0xFF000000);
+            changeChatColor(50, 9, Color.BLACK);
         } else if (id == R.id.room_title) {
             changeRoomTitleClick();
         }

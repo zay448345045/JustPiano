@@ -20,7 +20,7 @@ import ly.pp.justpiano3.constant.Consts
 import ly.pp.justpiano3.database.entity.Song
 import ly.pp.justpiano3.listener.LocalSongsStartPlayClick
 import ly.pp.justpiano3.thread.SongPlay
-import ly.pp.justpiano3.view.ScrollText
+import ly.pp.justpiano3.view.ScrollTextView
 import java.io.File
 
 class LocalSongsAdapter(
@@ -65,7 +65,22 @@ class LocalSongsAdapter(
         private val leftHandDegreeTextView: TextView
         private val rightHandDegreeRatingBar: RatingBar
         private val leftHandDegreeRatingBar: RatingBar
-        private val songNameScrollText: ScrollText
+        private val songNameScrollTextView: ScrollTextView
+
+        init {
+            listenImageView = songView.findViewById(R.id.play_image)
+            waterFallImageView = songView.findViewById(R.id.play_waterfall)
+            favorImageView = songView.findViewById(R.id.favor)
+            isNewImageView = songView.findViewById(R.id.is_new)
+            playImageView = songView.findViewById(R.id.play)
+            highScoreTextView = songView.findViewById(R.id.highscore)
+            soundTimeTextView = songView.findViewById(R.id.sound_time)
+            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1)
+            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2)
+            rightHandDegreeRatingBar = songView.findViewById(R.id.nandu)
+            leftHandDegreeRatingBar = songView.findViewById(R.id.leftnandu)
+            songNameScrollTextView = songView.findViewById(R.id.s_n)
+        }
 
         fun bindData(position: Int, song: Song) {
             playImageView.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
@@ -83,9 +98,10 @@ class LocalSongsAdapter(
             }
             waterFallImageView.setOnClickListener {
                 SongPlay.stopPlay()
-                val intent = Intent()
+                val intent = Intent(melodySelect, WaterfallActivity::class.java)
                 intent.putExtra("songPath", song.filePath)
-                intent.setClass(melodySelect, WaterfallActivity::class.java)
+                intent.putExtra("songName", song.name)
+                intent.putExtra("isOpenRecord", melodySelect.isRecord.isChecked)
                 melodySelect.startActivity(intent)
             }
             if (song.category == Consts.items[Consts.items.size - 1]) {
@@ -116,10 +132,10 @@ class LocalSongsAdapter(
                     ).show()
                 }
             }
-            songNameScrollText.text = song.name
-            songNameScrollText.movementMethod = ScrollingMovementMethod.getInstance()
-            songNameScrollText.setHorizontallyScrolling(true)
-            songNameScrollText.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
+            songNameScrollTextView.text = song.name
+            songNameScrollTextView.movementMethod = ScrollingMovementMethod.getInstance()
+            songNameScrollTextView.setHorizontallyScrolling(true)
+            songNameScrollTextView.setOnClickListener(LocalSongsStartPlayClick(melodySelect, song))
             val rightHandScore = song.rightHandHighScore
             val leftHandScore = song.leftHandHighScore
             highScoreTextView.text =
@@ -142,21 +158,6 @@ class LocalSongsAdapter(
             leftHandDegreeRatingBar.isClickable = false
             leftHandDegreeRatingBar.rating = leftHandDegree / 2
             isNewImageView.setImageResource(if (song.isNew == 1) R.drawable.s_new else R.drawable.null_pic)
-        }
-
-        init {
-            listenImageView = songView.findViewById(R.id.play_image)
-            waterFallImageView = songView.findViewById(R.id.play_waterfall)
-            favorImageView = songView.findViewById(R.id.favor)
-            isNewImageView = songView.findViewById(R.id.is_new)
-            playImageView = songView.findViewById(R.id.play)
-            highScoreTextView = songView.findViewById(R.id.highscore)
-            soundTimeTextView = songView.findViewById(R.id.sound_time)
-            rightHandDegreeTextView = songView.findViewById(R.id.nandu_1)
-            leftHandDegreeTextView = songView.findViewById(R.id.nandu_2)
-            rightHandDegreeRatingBar = songView.findViewById(R.id.nandu)
-            leftHandDegreeRatingBar = songView.findViewById(R.id.leftnandu)
-            songNameScrollText = songView.findViewById(R.id.s_n)
         }
     }
 }

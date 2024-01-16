@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.adapter;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -34,9 +35,8 @@ public final class LocalSongsItemAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = melodySelect.layoutInflater1.inflate(R.layout.songs_sort_view, null);
+            view = LayoutInflater.from(melodySelect).inflate(R.layout.songs_sort_view, null);
         }
-        view.setKeepScreenOn(true);
         ((TextView) view.findViewById(R.id.ol_s_p)).setText(Consts.items[i]);
         return view;
     }

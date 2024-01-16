@@ -11,10 +11,10 @@ public final class OLSendMailClick implements OnClickListener {
     private final String message;
     private final String to;
 
-    public OLSendMailClick(MainGameAdapter mainGameAdapter, String str, String str2) {
+    public OLSendMailClick(MainGameAdapter mainGameAdapter, String message, String to) {
         this.mainGameAdapter = mainGameAdapter;
-        message = str;
-        to = str2;
+        this.message = message;
+        this.to = to;
     }
 
     @Override
@@ -32,6 +32,7 @@ public final class OLSendMailClick implements OnClickListener {
                 return;
             }
             case "''" -> olPlayHallRoom.letInFamily(to);
+            case "'''" -> olPlayHallRoom.letChangeFamilyLeader(to);
         }
         olPlayHallRoom.sendMail(to, 0);
     }

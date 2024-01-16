@@ -11,14 +11,14 @@ public final class SoundDownloadClick implements OnClickListener {
     private final SoundDownload soundDownload;
     private final int type;
     private final String soundId;
-    private final String name;
+    private final String soundName;
     private final String soundType;
 
-    public SoundDownloadClick(SoundDownload soundDownload, int eventType, String soundId, String soundFileName, String soundType) {
+    public SoundDownloadClick(SoundDownload soundDownload, int type, String soundId, String soundName, String soundType) {
         this.soundDownload = soundDownload;
-        type = eventType;
+        this.type = type;
         this.soundId = soundId;
-        name = soundFileName;
+        this.soundName = soundName;
         this.soundType = soundType;
     }
 
@@ -27,8 +27,8 @@ public final class SoundDownloadClick implements OnClickListener {
         dialogInterface.dismiss();
         switch (type) {
             case 0 -> ThreadPoolUtil.execute(() ->
-                    soundDownload.downloadSound(soundId, name, soundType));
-            case 1 -> ThreadPoolUtil.execute(() -> soundDownload.changeSound(name + soundType));
+                    soundDownload.downloadSound(soundId, soundName, soundType));
+            case 1 -> ThreadPoolUtil.execute(() -> soundDownload.changeSound(soundName + soundType));
             case 2 -> ThreadPoolUtil.execute(() ->
                     SoundEngineUtil.reLoadOriginalSounds(soundDownload.getApplicationContext()));
         }

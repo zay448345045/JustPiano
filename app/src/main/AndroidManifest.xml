@@ -9,7 +9,12 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature android:name="android.hardware.usb.host" />
@@ -32,7 +37,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:exported="true"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan">
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -42,171 +47,173 @@
             android:name=".activity.local.MainMode"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.InfoShowActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.PopUserInfo"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
-            android:name=".activity.local.SettingsMode"
+            android:name=".activity.settings.SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/SettingTheme"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.RecordFiles"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.PlayModeSelect"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.Register"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLMelodySelect"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.SearchSongs"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLMainMode"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.ShowTopInfo"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.ShowSongsInfo"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.UsersInfo"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLTopUser"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLPlayHall"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLPlayRoom"
+            android:configChanges="keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLPlayKeyboardRoom"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLPlayHallRoom"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLPlayDressRoom"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLSongsPage"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.MelodySelect"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustNothing|adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustNothing" />
         <activity
             android:name=".activity.local.PianoPlay"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.KeyBoard"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.PlayFinish"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.PianoHelper"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.UserListPage"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.SkinDownload"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.SoundDownload"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.ChatFiles"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".activity.online.OLBaseActivity" />
         <activity
             android:name=".activity.online.OLChallenge"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.online.OLFamily"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.local.WaterfallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|fontScale"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <service
             android:name=".service.ConnectionService"
+            android:foregroundServiceType="mediaPlayback"
             android:enabled="true" />
 
         <provider

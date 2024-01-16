@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -12,6 +13,8 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import androidx.annotation.NonNull;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
@@ -25,12 +28,12 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
     /**
      * 盘块的奖项
      */
-    private final String[] mStrs = new String[]{"框框", "经验", "祝福", "考级", "挑战", "音符"};
+    private final String[] mTexts = new String[]{"框框", "经验", "祝福", "考级", "挑战", "音符"};
 
     /**
      * 盘块的图片
      */
-    private final int[] mImgs = new int[]{R.drawable.head, R.drawable.exp, R.drawable.favor, R.drawable.nailface, R.drawable.listen_play, R.drawable.gold};
+    private final int[] mImages = new int[]{R.drawable.head, R.drawable.exp, R.drawable.favor, R.drawable.nailface, R.drawable.listen_play, R.drawable.gold};
 
     /**
      * 与图片对应的bitmap数组
@@ -74,13 +77,13 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
     /**
      * 滚动的速度
      */
-    private double mSpeed = 0;
+    private double mSpeed;
 
     /**
      * 可能有两个线程操作
      * 保证线程间变量的可见性
      */
-    private volatile float mStartAngle = 0;
+    private volatile float mStartAngle;
 
     /**
      * 转盘的中心位置
@@ -103,8 +106,6 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
         // 获得焦点
         setFocusable(true);
         setFocusableInTouchMode(true);
-        // 设置常亮
-        setKeepScreenOn(true);
     }
 
     @Override
@@ -120,7 +121,7 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+    public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
         // 初始化绘制盘块的画笔
         mArcPaint = new Paint();
         // 防止边缘的锯齿
@@ -129,25 +130,25 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
         mArcPaint.setDither(true);
         // 初始化绘制文本的画笔
         mTextPaint = new Paint();
-        mTextPaint.setColor(0xff000000);
+        mTextPaint.setColor(Color.BLACK);
         mTextPaint.setTextSize(mTextSize);
         // 初始化盘块绘制的范围
         mRange = new RectF(mPadding, mPadding, mPadding + mRadius, mPadding + mRadius);
         // 初始化图片
         mImgBitmap = new Bitmap[mItemCount];
         for (int i = 0; i < mImgBitmap.length; i++) {
-            mImgBitmap[i] = BitmapFactory.decodeResource(getResources(), mImgs[i]);
+            mImgBitmap[i] = BitmapFactory.decodeResource(getResources(), mImages[i]);
         }
         isRunning = true;
         ThreadPoolUtil.execute(this);
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+    public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i1, int i2) {
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+    public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
         isRunning = false;
     }
 
@@ -172,7 +173,7 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
         try {
             mCanvas = mHolder.lockCanvas();
             if (mCanvas != null) {
-                mCanvas.drawColor(0xff000000);
+                mCanvas.drawColor(Color.BLACK);
                 // 绘制盘块
                 float tmpAngle = mStartAngle;
                 float sweepAngle = 360f / mItemCount;
@@ -187,7 +188,7 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
                     // 第四个参数:画笔
                     mCanvas.drawArc(mRange, tmpAngle, sweepAngle, true, mArcPaint);
                     // 绘制文本
-                    drawText(tmpAngle, sweepAngle, mStrs[i]);
+                    drawText(tmpAngle, sweepAngle, mTexts[i]);
                     // 绘制Icon
                     drawIcon(tmpAngle, mImgBitmap[i]);
                     tmpAngle += sweepAngle;
@@ -242,8 +243,6 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
 
     /**
      * 转盘是否在旋转
-     *
-     * @return
      */
     public boolean isStart() {
         return mSpeed != 0;
@@ -251,9 +250,6 @@ public class DrawPrizeView extends SurfaceView implements SurfaceHolder.Callback
 
     /**
      * 绘制Icon
-     *
-     * @param tmpAngle
-     * @param bitmap
      */
     private void drawIcon(float tmpAngle, Bitmap bitmap) {
         // 设置图片的宽度为直径1/8

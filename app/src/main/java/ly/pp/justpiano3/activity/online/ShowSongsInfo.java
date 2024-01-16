@@ -30,7 +30,7 @@ public final class ShowSongsInfo extends BaseActivity implements OnClickListener
     public LayoutInflater layoutInflater;
     public String keywords = "";
     public String songName = "";
-    public String songID;
+    public String songId;
     public ListView songsListView;
     public JPProgressBar jpprogressBar;
     public double degree;
@@ -73,7 +73,7 @@ public final class ShowSongsInfo extends BaseActivity implements OnClickListener
     public void updateSongInfo(int i) {
         if (showSongsInfoAdapter != null && songsList != null) {
             songsList.remove(i);
-            showSongsInfoAdapter.mo3500a(songsList);
+            showSongsInfoAdapter.updateSongList(songsList);
             showSongsInfoAdapter.notifyDataSetChanged();
         }
     }
@@ -95,9 +95,7 @@ public final class ShowSongsInfo extends BaseActivity implements OnClickListener
         if (jpprogressBar != null) {
             jpprogressBar.dismiss();
         }
-        Intent intent = new Intent();
-        intent.setClass(this, OLSongsPage.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLSongsPage.class));
         finish();
     }
 

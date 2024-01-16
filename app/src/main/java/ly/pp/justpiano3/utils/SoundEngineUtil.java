@@ -8,7 +8,8 @@ import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Process;
-import android.preference.PreferenceManager;
+
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javazoom.jl.converter.Converter;
 import ly.pp.justpiano3.midi.MidiUtil;
 
-public class SoundEngineUtil {
+public final class SoundEngineUtil {
 
     /**
      * 处于延音状态下的音符列表
@@ -32,8 +33,9 @@ public class SoundEngineUtil {
         try {
             System.loadLibrary("soundengine");
         } catch (Error e) {
+            e.printStackTrace();
+            System.exit(0);
             Process.killProcess(Process.myPid());
-            System.exit(1);
         }
         // 注册延音踏板状态变更监听器
         MidiDeviceUtil.setMidiSustainPedalListener(status -> {
@@ -117,7 +119,7 @@ public class SoundEngineUtil {
     }
 
     public static void playSound(byte pitch, byte volume) {
-        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH || volume <= 0) {
             return;
         }
         triggerDown(MidiUtil.MAX_PIANO_MIDI_PITCH - pitch, volume);

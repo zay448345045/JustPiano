@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -93,7 +92,6 @@
                 android:layout_alignParentEnd="true"
                 android:background="@color/back"
                 android:gravity="center"
-                android:keepScreenOn="true"
                 android:maxLines="1"
                 android:textColor="@color/roomtext"
                 android:textSize="14sp" />

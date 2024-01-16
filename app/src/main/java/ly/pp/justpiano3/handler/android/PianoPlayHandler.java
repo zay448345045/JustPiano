@@ -3,6 +3,7 @@ package ly.pp.justpiano3.handler.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
@@ -16,12 +17,13 @@ public final class PianoPlayHandler extends Handler {
     private final WeakReference<Activity> weakReference;
 
     public PianoPlayHandler(PianoPlay pianoPlay) {
+        super(Looper.getMainLooper());
         weakReference = new WeakReference<>(pianoPlay);
     }
 
     @Override
-    public void handleMessage(final Message message) {
-        final PianoPlay pianoPlay = (PianoPlay) weakReference.get();
+    public void handleMessage(Message message) {
+        PianoPlay pianoPlay = (PianoPlay) weakReference.get();
         switch (message.what) {
             case 1 -> post(() -> {
                 pianoPlay.gradeList.clear();
@@ -107,14 +109,14 @@ public final class PianoPlayHandler extends Handler {
                     pianoPlay.rightHandDegreeTextView.setVisibility(View.VISIBLE);
                     pianoPlay.highScoreTextView.setVisibility(View.VISIBLE);
                     pianoPlay.startPlayButton.setVisibility(View.VISIBLE);
-                    pianoPlay.songName.setText(pianoPlay.songsName);
+                    pianoPlay.songNameTextView.setText(pianoPlay.songsName);
                     pianoPlay.isShowingSongsInfo = false;
                     pianoPlay.playView.startFirstNoteTouching = true;
-                    pianoPlay.songName.setEnabled(true);
+                    pianoPlay.songNameTextView.setEnabled(true);
                     return;
                 }
-                pianoPlay.songName.setText(String.valueOf(message.arg1));
-                pianoPlay.songName.setEnabled(false);
+                pianoPlay.songNameTextView.setText(String.valueOf(message.arg1));
+                pianoPlay.songNameTextView.setEnabled(false);
             });
             case 8 -> post(() -> {
                 pianoPlay.finishView.setVisibility(View.VISIBLE);

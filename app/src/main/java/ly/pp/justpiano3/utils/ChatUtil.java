@@ -153,17 +153,17 @@ public class ChatUtil {
      * 聊天记录存储
      */
     public static void chatsSaveHandle(Message message, Context context, String time) {
-        if (GlobalSetting.INSTANCE.getSaveChatRecord()) {
+        if (GlobalSetting.getSaveChatRecord()) {
             String date = DateUtil.format(DateUtil.now(), "yyyy-MM-dd聊天记录");
-            Uri fileUri = FileUtil.INSTANCE.getOrCreateFileByUriFolder(context,
-                    GlobalSetting.INSTANCE.getChatsSavePath(), "Chats", date + ".txt");
+            Uri fileUri = FileUtil.getOrCreateFileByUriFolder(context,
+                    GlobalSetting.getChatsSavePath(), "Chats", date + ".txt");
             if (fileUri == null) {
                 Toast.makeText(context, "聊天记录文件获取失败", Toast.LENGTH_SHORT).show();
                 return;
             }
             try (OutputStream outputStream = context.getContentResolver().openOutputStream(fileUri, "wa")) {
                 String msg = message.getData().getString("M");
-                if (msg != null && !msg.startsWith("//")) {
+                if (outputStream != null && msg != null && !msg.startsWith("//")) {
                     if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PRIVATE_MESSAGE) {
                         outputStream.write((time + "[私]" + message.getData().getString("U") + ":" + msg + '\n').getBytes());
                     } else if (message.getData().getInt("T") == OnlineProtocolType.MsgType.PUBLIC_MESSAGE) {

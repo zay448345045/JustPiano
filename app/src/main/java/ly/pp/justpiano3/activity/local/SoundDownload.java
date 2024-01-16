@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridView;
@@ -15,7 +14,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 
@@ -26,13 +27,15 @@ import ly.pp.justpiano3.midi.MidiUtil;
 import ly.pp.justpiano3.task.SoundDownloadTask;
 import ly.pp.justpiano3.utils.FileUtil;
 import ly.pp.justpiano3.utils.GZIPUtil;
+import ly.pp.justpiano3.utils.OkHttpUtil;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.SoundEngineUtil;
+import ly.pp.justpiano3.utils.ThreadPoolUtil;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
+import okhttp3.FormBody;
 
 public final class SoundDownload extends BaseActivity implements Callback {
-    public static final int SOUND_DOWNLOAD_REQUEST_CODE = 98;
     public JPProgressBar jpProgressBar;
     public LayoutInflater layoutInflater;
     public GridView gridView;
@@ -56,7 +59,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
         if (handler != null) {
             handler.sendMessage(message);
         }
-        FileUtil.INSTANCE.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + soundType,
+        FileUtil.downloadFile("https://" + OnlineUtil.INSIDE_WEBSITE_URL + "/res/sounds/" + soundId + soundType,
                 file, progress -> {
                     this.progress = progress;
                     Message message1 = Message.obtain(handler);
@@ -64,12 +67,13 @@ public final class SoundDownload extends BaseActivity implements Callback {
                     if (handler != null) {
                         handler.sendMessage(message1);
                     }
-                }, () -> downloadSuccessHandle(soundName, soundType), this::downloadFailHandle);
+                }, () -> downloadSuccessHandle(soundId, soundName, soundType), this::downloadFailHandle);
     }
 
-    private void downloadSuccessHandle(String soundName, String soundType) {
+    private void downloadSuccessHandle(String soundId, String soundName, String soundType) {
         Message successMessage = Message.obtain(handler);
         successMessage.what = 2;
+        successMessage.arg1 = Integer.parseInt(soundId);
         if (handler != null) {
             Bundle bundle = new Bundle();
             bundle.putString("name", soundName);
@@ -85,17 +89,17 @@ public final class SoundDownload extends BaseActivity implements Callback {
         handler.sendMessage(failMessage);
     }
 
-    public void handleSound(int eventType, String soundFileName, String soundId, int soundSize, String soundAuthor, String soundType) {
+    public void handleSound(int type, String soundName, String soundId, String soundSize, String soundAuthor, String soundType) {
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
         String buttonText = "使用";
         jpDialogBuilder.setTitle("提示");
-        switch (eventType) {
+        switch (type) {
             case 0 -> {
-                jpDialogBuilder.setMessage("名称:" + soundFileName + "\n作者:" + soundAuthor + "\n大小:" + soundSize + "KB\n您要下载并使用吗?");
+                jpDialogBuilder.setMessage("名称:" + soundName + "\n作者:" + soundAuthor + "\n大小:" + soundSize + "MB\n您要下载并使用吗?");
                 buttonText = "下载";
             }
             case 1 -> {
-                jpDialogBuilder.setMessage("[" + soundFileName + "]音源已下载，是否使用?");
+                jpDialogBuilder.setMessage("[" + soundName + "]音源已下载，是否使用?");
                 buttonText = "使用";
             }
             case 2 -> {
@@ -103,7 +107,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
                 buttonText = "确定";
             }
         }
-        jpDialogBuilder.setFirstButton(buttonText, new SoundDownloadClick(this, eventType, soundId, soundFileName, soundType));
+        jpDialogBuilder.setFirstButton(buttonText, new SoundDownloadClick(this, type, soundId, soundName, soundType));
         jpDialogBuilder.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
@@ -143,7 +147,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
                 }
                 SoundEngineUtil.startAudioStreamNative();
             } else if (soundFileName.endsWith(".sf2")) {
-                String newSf2Path = FileUtil.INSTANCE.copyDocumentFileToAppFilesDir(this, DocumentFile.fromFile(soundFile));
+                String newSf2Path = FileUtil.copyDocumentFileToAppFilesDir(this, DocumentFile.fromFile(soundFile));
                 SoundEngineUtil.teardownAudioStreamNative();
                 SoundEngineUtil.unloadSf2();
                 SoundEngineUtil.setupAudioStreamNative();
@@ -159,7 +163,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
     }
 
     @Override
-    public boolean handleMessage(Message message) {
+    public boolean handleMessage(@NonNull Message message) {
         if (!Thread.currentThread().isInterrupted()) {
             switch (message.what) {
                 case 0 -> {
@@ -173,8 +177,11 @@ public final class SoundDownload extends BaseActivity implements Callback {
                 case 2 -> {
                     linearLayout.setVisibility(View.GONE);
                     downloadText.setVisibility(View.GONE);
+                    // 下载成功，调用接口增加下载数量统计
+                    ThreadPoolUtil.execute(() -> OkHttpUtil.sendPostRequest(
+                            "StatisticsSound" + message.arg1 , new FormBody.Builder().build()));
                     handleSound(1, message.getData().getString("name"), "",
-                            0, "", message.getData().getString("type"));
+                            "", "", message.getData().getString("type"));
                 }
                 case 3 -> {
                     linearLayout.setVisibility(View.GONE);
@@ -203,9 +210,7 @@ public final class SoundDownload extends BaseActivity implements Callback {
             jpProgressBar.dismiss();
         }
         if (getIntent().getFlags() == Intent.FLAG_GRANT_READ_URI_PERMISSION) {
-            Intent intent = new Intent();
-            intent.setClass(this, MainMode.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MainMode.class));
         }
         finish();
     }

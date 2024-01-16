@@ -14,9 +14,7 @@ public final class OLSongsPage extends BaseActivity implements OnClickListener {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.setClass(this, OLMainMode.class);
-        startActivity(intent);
+        startActivity(new Intent(this, OLMainMode.class));
         finish();
     }
 
@@ -69,9 +67,9 @@ public final class OLSongsPage extends BaseActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalSetting.INSTANCE.loadSettings(this, true);
+        GlobalSetting.loadSettings(this, true);
         setContentView(R.layout.ol_songs_page);
-        GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         findViewById(R.id.ol_melodyList_b).setOnClickListener(this);
         findViewById(R.id.ol_hotSongs_b).setOnClickListener(this);
         findViewById(R.id.ol_search_b).setOnClickListener(this);

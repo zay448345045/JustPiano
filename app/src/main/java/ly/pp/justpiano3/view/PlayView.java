@@ -107,7 +107,7 @@ public final class PlayView extends SurfaceView implements Callback {
     private boolean hasTouched;
     private int progressBarHeight;
     private int progressBarWidth;
-    private String songID;
+    private String songId;
     private float perfectStandard;
     private float coolStandard;
     private float greatStandard;
@@ -192,7 +192,7 @@ public final class PlayView extends SurfaceView implements Callback {
         this.pianoPlay = pianoPlay;
         handValue = (i3 + 20) % 2;
         gameType = kind;
-        songID = songId;
+        this.songId = songId;
         rightHandDegree = d;
         score = i;
         try {
@@ -239,7 +239,7 @@ public final class PlayView extends SurfaceView implements Callback {
         fireImage = ImageLoadUtil.loadSkinImage(pianoPlay, "fire");
         longKeyboardImage = ImageLoadUtil.loadSkinImage(pianoPlay, "keyboard_long");
         nullImage = ImageLoadUtil.loadSkinImage(pianoPlay, "null");
-        switch (GlobalSetting.INSTANCE.getRoughLine()) {
+        switch (GlobalSetting.getRoughLine()) {
             case 1 -> roughLineImage = nullImage;
             case 2 -> roughLineImage = ImageLoadUtil.loadSkinImage(pianoPlay, "rough_line1");
             case 3 -> roughLineImage = ImageLoadUtil.loadSkinImage(pianoPlay, "rough_line");
@@ -247,7 +247,7 @@ public final class PlayView extends SurfaceView implements Callback {
         progressBarImage = ImageLoadUtil.loadSkinImage(pianoPlay, "progress_bar");
         progressBarBaseImage = ImageLoadUtil.loadSkinImage(pianoPlay, "progress_bar_base");
         Bitmap bitmap = noteImage;
-        matrix.postScale(GlobalSetting.INSTANCE.getNoteSize(), GlobalSetting.INSTANCE.getNoteSize());
+        matrix.postScale(GlobalSetting.getNoteSize(), GlobalSetting.getNoteSize());
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         noteImage = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
@@ -266,7 +266,7 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     private void loadPm(Context context, String songFilePath, int tune) {
-        PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByFilePath(context, songFilePath);
+        PmSongData pmSongData = PmSongUtil.parsePmDataByFilePath(context, songFilePath);
         if (pmSongData == null) {
             return;
         }
@@ -288,7 +288,7 @@ public final class PlayView extends SurfaceView implements Callback {
     }
 
     private void loadPm(byte[] bArr) {
-        PmSongData pmSongData = PmSongUtil.INSTANCE.parsePmDataByBytes(bArr);
+        PmSongData pmSongData = PmSongUtil.parsePmDataByBytes(bArr);
         if (pmSongData == null) {
             return;
         }
@@ -318,7 +318,7 @@ public final class PlayView extends SurfaceView implements Callback {
             if (i4 < tickArray.length) {
                 tick += tickArray[i4];
                 actualTime = -tick * pm_2;
-                position = (int) (-tick * pm_2 / GlobalSetting.INSTANCE.getTempSpeed() / GlobalSetting.INSTANCE.getNotesDownSpeed());
+                position = (int) (-tick * pm_2 / GlobalSetting.getTempSpeed() / GlobalSetting.getNotesDownSpeed());
                 if (trackArray[i4] != handValue) {
                     notesList.add(new PlayNote(this, noteArray[i4], trackArray[i4],
                             (byte) (volumeArray[i4] * Byte.MAX_VALUE / 100f), position, i3, hideNote, handValue));
@@ -354,10 +354,10 @@ public final class PlayView extends SurfaceView implements Callback {
         if (barImage == null) {
             loadImages();
         }
-        perfectStandard = 200f / GlobalSetting.INSTANCE.getNotesDownSpeed();
-        coolStandard = 300f / GlobalSetting.INSTANCE.getNotesDownSpeed();
-        greatStandard = 400f / GlobalSetting.INSTANCE.getNotesDownSpeed();
-        missStandard = 500f / GlobalSetting.INSTANCE.getNotesDownSpeed();
+        perfectStandard = 200f / GlobalSetting.getNotesDownSpeed();
+        coolStandard = 300f / GlobalSetting.getNotesDownSpeed();
+        greatStandard = 400f / GlobalSetting.getNotesDownSpeed();
+        missStandard = 500f / GlobalSetting.getNotesDownSpeed();
         line.setColor(Color.argb(178, 244, 255, 64));
         line.setStrokeWidth(3);
         screenWidth = getWidth();
@@ -386,12 +386,11 @@ public final class PlayView extends SurfaceView implements Callback {
         }
         pianoPlay.playKeyBoardView = new PlayKeyBoardView(pianoPlay, this);
         pianoPlay.addContentView(pianoPlay.playKeyBoardView, pianoPlay.layoutParams2);
-        pianoPlay.playTypeAndShowHandle(pianoPlay.playKind, false);
+        pianoPlay.playTypeAndShowHandle(pianoPlay.playType, false);
         pianoPlay.isPlayingStart = true;
         if (surfaceholder == null) {
             surfaceholder = getHolder();
             surfaceholder.addCallback(this);
-            surfaceholder.setKeepScreenOn(true);
         }
     }
 
@@ -476,7 +475,7 @@ public final class PlayView extends SurfaceView implements Callback {
             }
             hasTouched = true;
             i3 = i4;
-            if (GlobalSetting.INSTANCE.getNoteDismiss()) {
+            if (GlobalSetting.getNoteDismiss()) {
                 judgingNote.image = nullImage;
                 int index = notesList.indexOf(judgingNote);
                 for (int i1 = 0; i1 < notesList.size(); i1++) {
@@ -656,8 +655,7 @@ public final class PlayView extends SurfaceView implements Callback {
                     pianoPlay.sendMsg(OnlineProtocolType.PLAY_FINISH, builder2.build());
                 }
                 default -> {
-                    Intent intent = new Intent();
-                    intent.setClass(pianoPlay, PlayFinish.class);
+                    Intent intent = new Intent(pianoPlay, PlayFinish.class);
                     intent.putExtra("head", gameType);
                     intent.putExtra("topScore", score);
                     intent.putExtra("perf", perfectNum);
@@ -674,14 +672,14 @@ public final class PlayView extends SurfaceView implements Callback {
                     intent.putExtra("bad", badNum);
                     intent.putExtra("miss", missNum);
                     intent.putExtra("name", songsName);
-                    intent.putExtra("songID", songID);
+                    intent.putExtra("songID", songId);
                     intent.putExtra("path", songsPath);
-                    intent.putExtra("nandu", rightHandDegree);
-                    intent.putExtra("leftnandu", leftHandDegree);
-                    intent.putExtra("songstime", songsTime);
+                    intent.putExtra("rightHandDegree", rightHandDegree);
+                    intent.putExtra("leftHandDegree", leftHandDegree);
+                    intent.putExtra("songsTime", songsTime);
                     intent.putExtra("hand", handValue);
                     intent.putExtra("top_combo", topComboNum);
-                    pianoPlay.startActivityForResult(intent, size2);
+                    pianoPlay.playFinishLauncher.launch(intent);
                 }
             }
         }
@@ -701,18 +699,18 @@ public final class PlayView extends SurfaceView implements Callback {
                     if (!currentPlayNote.image.equals(nullImage)) {
                         judgingNote = currentPlayNote;
                         if (currentPlayNote.posiAdd15AddAnim > -15f) {
-                            if (GlobalSetting.INSTANCE.getShowLine() && canvas != null) {
+                            if (GlobalSetting.getShowLine() && canvas != null) {
                                 canvas.drawLine(currentPlayNote.getHalfWidth() + currentPlayNote.positionX, whiteKeyHeight, currentPlayNote.getHalfWidth() + currentPlayNote.positionX, 15 + currentPlayNote.posiAdd15AddAnim, line);
                             }
-                            if (GlobalSetting.INSTANCE.getChangeNotesColor()) {
+                            if (GlobalSetting.getChangeNotesColor()) {
                                 currentPlayNote.image = playNoteImage;
                             } else if (currentPlayNote.posiAdd15AddAnim >= halfHeightSub20) {
                                 currentPlayNote.image = playNoteImage;
                             }
                         }
                     }
-                    if (GlobalSetting.INSTANCE.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hide
-                            && currentPlayNote.posiAdd15AddAnim > whiteKeyHeight - 100 / GlobalSetting.INSTANCE.getNotesDownSpeed()) {
+                    if (GlobalSetting.getLocalPlayMode() == LocalPlayModeEnum.PRACTISE && !hasTouched && !currentPlayNote.hide
+                            && currentPlayNote.posiAdd15AddAnim > whiteKeyHeight - 100 / GlobalSetting.getNotesDownSpeed()) {
                         isTouchRightNote = false;
                     }
                     noteRightValue = currentPlayNote.pitch;
@@ -737,64 +735,64 @@ public final class PlayView extends SurfaceView implements Callback {
         int i;
         int i2;
         int i3;
-        if (canvas != null && touchNotesList != null && GlobalSetting.INSTANCE.getShowTouchNotesLevel()) {
+        if (canvas != null && touchNotesList != null && GlobalSetting.getShowTouchNotesLevel()) {
             try {
                 for (ShowTouchNotesLevel showTouchNotesLevel : touchNotesList) {
                     Rect rect = f4770bB;
                     RectF rectF = f4771bC;
                     if (showTouchNotesLevel.levelImage != null) {
-                        canvas.drawBitmap(showTouchNotesLevel.levelImage, (showTouchNotesLevel.screenWidth - (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
+                        canvas.drawBitmap(showTouchNotesLevel.levelImage, (showTouchNotesLevel.width - (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.height, null);
                     }
                     if (showTouchNotesLevel.comboNum > 1 && showTouchNotesLevel.comboNum <= 9) {
-                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
+                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.height, null);
                         rect.set((showTouchNotesLevel.comboNum * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, 0, ((showTouchNotesLevel.comboNum + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
-                        rectF.set((float) ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        rectF.set((float) ((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.height, (float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.height + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
                         canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
                     } else if (showTouchNotesLevel.comboNum > 9 && showTouchNotesLevel.comboNum <= 99) {
                         i = showTouchNotesLevel.comboNum % 10;
                         i2 = showTouchNotesLevel.comboNum / 10;
-                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
+                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.height, null);
                         rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i2) / 10, 0, ((i2 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
-                        rectF.set((float) ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        rectF.set((float) ((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.height, (float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.height + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
                         canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
                         rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i) / 10, 0, ((i + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        rectF.set((float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) showTouchNotesLevel.height, (float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (showTouchNotesLevel.height + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
                         canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
                     } else if (showTouchNotesLevel.comboNum > 99 && showTouchNotesLevel.comboNum <= 999) {
                         i = showTouchNotesLevel.comboNum / 100;
                         i2 = (showTouchNotesLevel.comboNum - (i * 100)) / 10;
                         i3 = showTouchNotesLevel.comboNum % 10;
-                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
+                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.height, null);
                         rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i) / 10, 0, ((i + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
-                        rectF.set((float) ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        rectF.set((float) ((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.height, (float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.height + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
                         canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
                         rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i2) / 10, 0, ((i2 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        rectF.set((float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) showTouchNotesLevel.height, (float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (showTouchNotesLevel.height + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
                         canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
                         rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i3) / 10, 0, ((i3 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 3)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        rectF.set((float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) showTouchNotesLevel.height, (float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 3)), (float) (showTouchNotesLevel.height + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
                         canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
                     } else if (showTouchNotesLevel.comboNum > 999 && showTouchNotesLevel.comboNum <= 9999) {
                         i = showTouchNotesLevel.comboNum / 1000;
                         i2 = (showTouchNotesLevel.comboNum - (i * 1000)) / 100;
                         i3 = ((showTouchNotesLevel.comboNum - (i * 1000)) - (i2 * 100)) / 10;
                         int i4 = showTouchNotesLevel.comboNum % 10;
-                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
+                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.height, null);
                         rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i) / 10, 0, ((i + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
-                        rectF.set((float) ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        rectF.set((float) ((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()), (float) showTouchNotesLevel.height, (float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) (showTouchNotesLevel.height + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
                         canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
                         rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i2) / 10, 0, ((i2 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        rectF.set((float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + (showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10)), (float) showTouchNotesLevel.height, (float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) (showTouchNotesLevel.height + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
                         canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
                         rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i3) / 10, 0, ((i3 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 3)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        rectF.set((float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 2)), (float) showTouchNotesLevel.height, (float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 3)), (float) (showTouchNotesLevel.height + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
                         canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
                         rect.set((showTouchNotesLevel.playView.scoreNumImage.getWidth() * i4) / 10, 0, ((i4 + 1) * showTouchNotesLevel.playView.scoreNumImage.getWidth()) / 10, showTouchNotesLevel.playView.scoreNumImage.getHeight());
-                        rectF.set((float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 3)), (float) showTouchNotesLevel.screenHeight, (float) (((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 4)), (float) (showTouchNotesLevel.screenHeight + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
+                        rectF.set((float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 3)), (float) showTouchNotesLevel.height, (float) (((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2)) + showTouchNotesLevel.playView.xImage.getWidth()) + ((showTouchNotesLevel.playView.scoreNumImage.getWidth() / 10) * 4)), (float) (showTouchNotesLevel.height + showTouchNotesLevel.playView.scoreNumImage.getHeight()));
                         canvas.drawBitmap(showTouchNotesLevel.playView.scoreNumImage, rect, rectF, null);
                     } else if (showTouchNotesLevel.comboNum > 9999) {
-                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.screenHeight, null);
-                        canvas.drawBitmap(showTouchNotesLevel.playView.maxImage, ((showTouchNotesLevel.screenWidth + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)) + showTouchNotesLevel.playView.xImage.getWidth()), showTouchNotesLevel.screenHeight, null);
+                        canvas.drawBitmap(showTouchNotesLevel.playView.xImage, (showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)), showTouchNotesLevel.height, null);
+                        canvas.drawBitmap(showTouchNotesLevel.playView.maxImage, ((showTouchNotesLevel.width + (showTouchNotesLevel.playView.perfectImage.getWidth() / 2f)) + showTouchNotesLevel.playView.xImage.getWidth()), showTouchNotesLevel.height, null);
                     }
                 }
             } catch (Exception e) {

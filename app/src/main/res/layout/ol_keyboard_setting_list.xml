@@ -6,7 +6,6 @@
     android:layout_gravity="center"
     android:background="@drawable/filled_bar"
     android:gravity="center"
-    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <TextView

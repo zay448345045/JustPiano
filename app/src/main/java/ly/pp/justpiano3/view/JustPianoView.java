@@ -11,6 +11,8 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 
 import ly.pp.justpiano3.utils.ImageLoadUtil;
@@ -21,11 +23,11 @@ public class JustPianoView extends View {
     private Bitmap logoBitmap;
     private Bitmap progressBarBitmap;
     private Bitmap progressBarBaseBitmap;
-    private String loading = "";
-    private String info = "";
+    private String loading;
+    private String info;
     private final Paint paint;
     private final Rect progressBarDynamicRect;
-    private int progress = 0;
+    private int progress;
 
     // 在构造函数或初始化块中设置Paint的属性
     {
@@ -72,8 +74,8 @@ public class JustPianoView extends View {
 
     public final void updateProgressAndInfo(int progress, String info, String loading) {
         this.progress = progress;
-        this.info = (info == null ? "" : info);
-        this.loading = loading;
+        this.info = info == null ? "" : info;
+        this.loading = loading == null ? "" : loading;
         invalidate();
     }
 
@@ -86,7 +88,7 @@ public class JustPianoView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         if (allScreenRect == null) {
             init();

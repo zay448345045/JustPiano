@@ -19,7 +19,6 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dimen_12dp"
             android:background="@color/translent"
-            android:keepScreenOn="true"
             android:gravity="center"
             android:text="@string/user_msg_title"
             android:textColor="@color/white1"

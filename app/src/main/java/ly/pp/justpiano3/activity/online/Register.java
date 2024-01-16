@@ -2,6 +2,7 @@ package ly.pp.justpiano3.activity.online;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,7 +15,6 @@ import java.util.regex.Pattern;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
-import ly.pp.justpiano3.activity.online.LoginActivity;
 import ly.pp.justpiano3.task.RegisterTask;
 import ly.pp.justpiano3.view.JPProgressBar;
 
@@ -36,9 +36,8 @@ public final class Register extends BaseActivity implements OnClickListener {
     @Override
     public void onBackPressed() {
         jpprogressBar.dismiss();
-        Intent intent = new Intent();
+        Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("no_auto", true);
-        intent.setClass(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -46,9 +45,8 @@ public final class Register extends BaseActivity implements OnClickListener {
     @Override
     public void onClick(View view) {
         if (view == backButton) {
-            Intent intent = new Intent();
+            Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra("no_auto", true);
-            intent.setClass(this, LoginActivity.class);
             startActivity(intent);
             finish();
         } else if (view == registerButton) {
@@ -56,7 +54,8 @@ public final class Register extends BaseActivity implements OnClickListener {
             password = password1TextView.getText().toString();
             String confirmPassword = password2TextView.getText().toString();
             kitiName = kitiNameTextView.getText().toString();
-            if (account.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || kitiName.isEmpty() || sex.isEmpty()) {
+            if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password) ||
+                    TextUtils.isEmpty(confirmPassword) || TextUtils.isEmpty(kitiName) || TextUtils.isEmpty(sex)) {
                 Toast.makeText(this, "请将资料填写完整!", Toast.LENGTH_SHORT).show();
             } else if (account.length() < 3 || account.length() > 12) {
                 Toast.makeText(this, "账号应在3到12个字符之间", Toast.LENGTH_SHORT).show();
@@ -65,7 +64,7 @@ public final class Register extends BaseActivity implements OnClickListener {
             } else if (password.length() < 5) {
                 Toast.makeText(this, "密码应大于5个字符", Toast.LENGTH_SHORT).show();
             } else if (password.equals(confirmPassword)) {
-                if (!account.replaceAll("[a-z]*[A-Z]*\\d*_*", "").isEmpty()) {
+                if (!TextUtils.isEmpty(account.replaceAll("[a-z]*[A-Z]*\\d*_*", ""))) {
                     Toast.makeText(this, "账号只能由字母，数字和下划线组成!", Toast.LENGTH_SHORT).show();
                 } else if (Pattern.compile("['@{}/\"\t]").matcher(kitiName).find()) {
                     Toast.makeText(this, "昵称请不要使用['@{}/\"]这些字符", Toast.LENGTH_SHORT).show();

@@ -12,8 +12,8 @@ import ly.pp.justpiano3.constant.Consts;
 public final class OLMelodySelectTypeAdapter extends BaseAdapter {
     private final OLMelodySelect olMelodySelect;
 
-    public OLMelodySelectTypeAdapter(OLMelodySelect oLMelodySelect) {
-        olMelodySelect = oLMelodySelect;
+    public OLMelodySelectTypeAdapter(OLMelodySelect olMelodySelect) {
+        this.olMelodySelect = olMelodySelect;
     }
 
     @Override
@@ -36,7 +36,6 @@ public final class OLMelodySelectTypeAdapter extends BaseAdapter {
         if (view == null) {
             view = olMelodySelect.layoutInflater1.inflate(R.layout.songs_sort_view, null);
         }
-        view.setKeepScreenOn(true);
         TextView textView = view.findViewById(R.id.ol_s_p);
         textView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         textView.setText(Consts.items[i + 1]);

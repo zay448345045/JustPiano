@@ -219,16 +219,20 @@ public final class JPDialogBuilder {
         try {
             JPDialog dialog = createJPDialog();
             if (!dialog.isShowing()) {
-                Context context = dialog.getContext();
-                dialog.show();
                 Window window = dialog.getWindow();
-                if (GlobalSetting.INSTANCE.getAllFullScreenShow()) {
+                if (GlobalSetting.getAllFullScreenShow()) {
+                    WindowUtil.fullScreenHandle(window);
+                } else {
+                    WindowUtil.exitFullScreenHandle(window);
+                }
+                dialog.show();
+                if (GlobalSetting.getAllFullScreenShow()) {
                     WindowUtil.fullScreenHandle(window);
                 } else {
                     WindowUtil.exitFullScreenHandle(window);
                 }
                 WindowManager.LayoutParams layoutParams = window.getAttributes();
-                layoutParams.width = UnitConvertUtil.dp2px(context, this.width);
+                layoutParams.width = UnitConvertUtil.dp2px(dialog.getContext(), this.width);
                 window.setAttributes(layoutParams);
             }
         } catch (Exception e) {

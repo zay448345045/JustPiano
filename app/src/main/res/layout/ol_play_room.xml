@@ -50,7 +50,7 @@
                     android:layout_marginBottom="@dimen/dimen_1dp"
                     android:gravity="center">
 
-                    <ly.pp.justpiano3.view.ScrollText
+                    <ly.pp.justpiano3.view.ScrollTextView
                         android:id="@+id/ol_songlist_b"
                         style="@style/EditTextStyle"
                         android:layout_width="match_parent"
@@ -99,7 +99,6 @@
                 android:layout_toEndOf="@+id/room_title"
                 android:background="@drawable/selector_list_c"
                 android:gravity="center_vertical|end"
-                android:keepScreenOn="true"
                 android:textColor="#f9f3b8"
                 android:textSize="12sp" />
 
@@ -110,12 +109,11 @@
                 android:layout_alignStart="@+id/ol_player_grid"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/selector_list_c"
-                android:keepScreenOn="true"
                 android:maxLines="1"
                 android:text="@string/ol_room_view_name"
                 android:gravity="center_vertical"
                 android:textColor="@color/roomtext"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
         <RelativeLayout

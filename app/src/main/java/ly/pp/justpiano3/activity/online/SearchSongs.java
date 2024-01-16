@@ -29,9 +29,6 @@ import java.util.Map;
 
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.activity.BaseActivity;
-import ly.pp.justpiano3.activity.online.OLMainMode;
-import ly.pp.justpiano3.activity.online.OLMelodySelect;
-import ly.pp.justpiano3.activity.online.OLSongsPage;
 import ly.pp.justpiano3.adapter.SearchSongsAdapter;
 import ly.pp.justpiano3.task.SearchSongsTask;
 import ly.pp.justpiano3.thread.PictureHandle;
@@ -43,7 +40,7 @@ public final class SearchSongs extends BaseActivity implements Callback, OnClick
     private int length;
     public String keywords = "";
     public String songName = "";
-    public String songID;
+    public String songId;
     public ListView songsListView;
     public JPProgressBar jpprogressBar;
     public double degree;

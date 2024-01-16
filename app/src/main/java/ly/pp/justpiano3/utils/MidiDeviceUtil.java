@@ -1,6 +1,7 @@
 package ly.pp.justpiano3.utils;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.midi.MidiDevice;
 import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
@@ -22,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import ly.pp.justpiano3.entity.GlobalSetting;
 
-public class MidiDeviceUtil {
+public final class MidiDeviceUtil {
 
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -112,6 +113,13 @@ public class MidiDeviceUtil {
                 onMidiMessageReceive(msg[i], msg[i + 1], msg[i + 2]);
             }
         }
+    }
+
+    /**
+     * 检测设备是否支持midi
+     */
+    public static boolean isSupportMidiDevice(Context context) {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -308,13 +316,13 @@ public class MidiDeviceUtil {
             // 音符按下
             if (midiReceiver != null) {
                 midiReceiver.midiDeviceListener.onMidiMessageReceive(
-                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), value3);
+                        (byte) (value2 + GlobalSetting.getMidiKeyboardTune()), value3);
             }
         } else if (midiEventType == 0x80) {
             // 音符抬起
             if (midiReceiver != null) {
                 midiReceiver.midiDeviceListener.onMidiMessageReceive(
-                        (byte) (value2 + GlobalSetting.INSTANCE.getMidiKeyboardTune()), (byte) 0);
+                        (byte) (value2 + GlobalSetting.getMidiKeyboardTune()), (byte) 0);
             }
         } else if (midiEventType == 0xB0 && (value2 & 0xFF) == 64) {
             // 延音踏板，midi的CC控制器64号判断
@@ -327,7 +335,7 @@ public class MidiDeviceUtil {
      */
     private static void changeSustainPedalStatus(boolean currentSustainPedalValue) {
         if (sustainPedal.getAndSet(currentSustainPedalValue) != currentSustainPedalValue
-                && !GlobalSetting.INSTANCE.getForceEnableSustainPedal()
+                && !GlobalSetting.getForceEnableSustainPedal()
                 && midiSustainPedalListener != null) {
             midiSustainPedalListener.onChange(currentSustainPedalValue);
         }
@@ -337,6 +345,6 @@ public class MidiDeviceUtil {
      * 获取延音踏板当前状态
      */
     public static boolean getSustainPedalStatus() {
-        return GlobalSetting.INSTANCE.getForceEnableSustainPedal() || sustainPedal.get();
+        return GlobalSetting.getForceEnableSustainPedal() || sustainPedal.get();
     }
 }

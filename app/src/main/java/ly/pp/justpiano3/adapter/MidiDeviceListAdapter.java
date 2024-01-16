@@ -48,7 +48,7 @@ public final class MidiDeviceListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(midiDeviceListPreference.context).inflate(R.layout.ol_skin_view, null);
+            view = LayoutInflater.from(midiDeviceListPreference.getContext()).inflate(R.layout.ol_skin_view, null);
         }
         ((TextView) view.findViewById(R.id.skin_name_view)).setText(midiDeviceNameList[i]);
         Button enableText = view.findViewById(R.id.set);

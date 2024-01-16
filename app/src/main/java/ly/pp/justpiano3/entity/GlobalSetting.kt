@@ -1,7 +1,7 @@
 package ly.pp.justpiano3.entity
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import ly.pp.justpiano3.enums.LocalPlayModeEnum
 import ly.pp.justpiano3.utils.SoundEngineUtil
 
@@ -13,256 +13,310 @@ object GlobalSetting {
     /**
      * 本地模式
      */
+    @JvmStatic
     var localPlayMode = LocalPlayModeEnum.NORMAL
 
     /**
      * 全面屏适配开关
      */
+    @JvmStatic
     var allFullScreenShow: Boolean = true
         private set
 
     /**
      * 背景图
      */
+    @JvmStatic
     var backgroundPic: String = ""
+        private set
 
     /**
      * 当前皮肤名称
      */
+    @JvmStatic
     var skin: String = "original"
         private set
 
     /**
      * 当前音源名称
      */
+    @JvmStatic
     var sound: String = "original"
         private set
 
     /**
      * 音块变色
      */
+    @JvmStatic
     var changeNotesColor: Boolean = true
         private set
 
     /**
      * 节拍比率
      */
+    @JvmStatic
     var tempSpeed: Float = 1f
         private set
 
     /**
      * 音块消失
      */
+    @JvmStatic
     var noteDismiss: Boolean = false
         private set
 
     /**
      * 音块大小
      */
+    @JvmStatic
     var noteSize: Float = 1f
         private set
 
     /**
      * 音块速率
      */
+    @JvmStatic
     var notesDownSpeed: Float = 1f
         private set
 
     /**
      * MIDI键盘移调
      */
+    @JvmStatic
     var midiKeyboardTune: Int = 0
         private set
 
     /**
      * 触摸键盘移调
      */
+    @JvmStatic
     var keyboardSoundTune: Int = 0
         private set
 
     /**
      * 是否开启和弦
      */
+    @JvmStatic
     var isOpenChord: Boolean = true
         private set
 
     /**
      * 和弦音量
      */
+    @JvmStatic
     var chordVolume: Float = 0.8f
         private set
 
     /**
      * 按键震动
      */
+    @JvmStatic
     var soundVibration: Boolean = false
         private set
 
     /**
      * 按键震动时长
      */
+    @JvmStatic
     var soundVibrationTime: Int = 10
         private set
 
     /**
      * 弹奏时展示等级
      */
+    @JvmStatic
     var showTouchNotesLevel: Boolean = true
         private set
 
     /**
      * 自动弹奏
      */
+    @JvmStatic
     var autoPlay: Boolean = true
         private set
 
     /**
      * 展示判断线
      */
+    @JvmStatic
     var showLine: Boolean = true
         private set
 
     /**
      * 按键效果
      */
+    @JvmStatic
     var keyboardPrefer: Boolean = true
         private set
 
     /**
      * 判断线加粗类型
      */
+    @JvmStatic
     var roughLine: Int = 1
         private set
 
     /**
      * 是否开启聊天音效
      */
+    @JvmStatic
     var chatsSound: Boolean = false
         private set
 
     /**
      * 聊天音效
      */
+    @JvmStatic
     var chatsSoundFile: String = ""
         private set
 
     /**
      * 聊天字体大小
      */
+    @JvmStatic
     var chatTextSize: Int = 15
         private set
 
     /**
      * 瀑布流曲谱播放速度
      */
+    @JvmStatic
     var waterfallSongSpeed: Float = 1f
         private set
 
     /**
      * 瀑布流音块下落速率
      */
+    @JvmStatic
     var waterfallDownSpeed: Float = 0.8f
         private set
 
     /**
      * 瀑布流曲谱播放移调
      */
+    @JvmStatic
     var waterfallTune: Int = 0
         private set
 
     /**
      * 瀑布流左手音块颜色
      */
+    @JvmStatic
     var waterfallLeftHandColor: Int = 0xFF2BBBFB.toInt()
         private set
 
     /**
      * 瀑布流右手音块颜色
      */
+    @JvmStatic
     var waterfallRightHandColor: Int = 0xFFFF802D.toInt()
         private set
 
     /**
      * 瀑布流自由演奏音块颜色
      */
+    @JvmStatic
     var waterfallFreeStyleColor: Int = 0xFFFFFF00.toInt()
         private set
 
     /**
      * 是否存储聊天记录
      */
+    @JvmStatic
     var saveChatRecord: Boolean = false
         private set
 
     /**
      * 聊天记录存储位置
      */
+    @JvmStatic
     var chatsSavePath: String = ""
         private set
 
     /**
      * 录音文件存储位置
      */
+    @JvmStatic
     var recordsSavePath: String = ""
         private set
 
     /**
      * 聊天是否展示时间
      */
+    @JvmStatic
     var showChatTime: Boolean = false
         private set
 
     /**
      * 聊天是否展示时间
      */
+    @JvmStatic
     var showChatTimeModes: String = "MM:ss"
         private set
 
     /**
      * 曲谱播放时是否显示通知栏，目前未使用
      */
+    @JvmStatic
     var showNotification: Boolean = false
         private set
 
     /**
      * 钢琴键盘显示按键标签种类
      */
+    @JvmStatic
     var keyboardOctaveTagType: Int = 0
         private set
 
     /**
      * 联网键盘模式是否实时传输
      */
+    @JvmStatic
     var keyboardRealtime: Boolean = true
         private set
 
     /**
      * 联网键盘模式瀑布流透明度
      */
+    @JvmStatic
     var waterfallOnlineAlpha: Int = 100
         private set
 
     /**
      * 是否强制开启延音踏板
      */
+    @JvmStatic
     var forceEnableSustainPedal: Boolean = false
 
     /**
      * 是否显示瀑布流八度虚线
      */
+    @JvmStatic
     var waterfallOctaveLine: Boolean = true
         private set
 
     /**
      * 瀑布流背景图
      */
+    @JvmStatic
     var waterfallBackgroundPic: String = ""
+        private set
+
+    /**
+     * 唤醒锁
+     */
+    @JvmStatic
+    var wakeLock: Boolean = false
         private set
 
     /**
      * 从sharedPreferences获取设置
      */
-    fun loadSettings(context: Context, online: Boolean) {
+    @JvmStatic
+    fun loadSettings(context: Context?, online: Boolean) {
+        if (context == null) {
+            return
+        }
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         allFullScreenShow = sharedPreferences.getBoolean("all_full_screen_show", true)
         backgroundPic = sharedPreferences.getString("background_pic", "")!!
@@ -317,5 +371,6 @@ object GlobalSetting {
         forceEnableSustainPedal = sharedPreferences.getBoolean("force_enable_sustain_pedal", false)
         waterfallOctaveLine = sharedPreferences.getBoolean("waterfall_octave_line", true)
         waterfallBackgroundPic = sharedPreferences.getString("waterfall_background_pic", "")!!
+        wakeLock = sharedPreferences.getBoolean("wake_lock", false)
     }
 }

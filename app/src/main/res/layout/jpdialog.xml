@@ -1,109 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:background="@drawable/style_dialog"
-              android:minWidth="@dimen/dimen_320dp"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/style_dialog"
+    android:minWidth="@dimen/dimen_320dp"
+    android:orientation="vertical">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dimen_6dp"
-                android:paddingRight="@dimen/dimen_6dp"
-                android:textColor="@color/white1"
-                android:textSize="24sp"/>
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dimen_6dp"
+            android:paddingRight="@dimen/dimen_6dp"
+            android:textColor="@color/white1"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
         <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
             <TextView
-                    android:id="@+id/message"
-                    style="@style/DialogText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/dimen_4dp"
-                    android:textColor="@color/white1"
-                    android:textSize="14sp"/>
+                android:id="@+id/message"
+                style="@style/DialogText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dimen_4dp"
+                android:textColor="@color/white1"
+                android:textSize="14sp" />
         </ScrollView>
 
         <EditText
-                android:id="@+id/Etext"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_0dp"
-                android:layout_weight="1"
-                android:background="@drawable/search_box"
-                android:ems="10"
-                android:hint="@string/null0"
-                android:minWidth="@dimen/dimen_200dp"
-                android:textSize="14sp"
-                android:textColor="@color/white1"
-                android:visibility="gone"/>
+            android:id="@+id/Etext"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_0dp"
+            android:layout_weight="1"
+            android:background="@drawable/search_box"
+            android:ems="10"
+            android:hint="@string/null0"
+            android:textColorHint="@color/white"
+            android:minWidth="@dimen/dimen_200dp"
+            android:textColor="@color/white1"
+            android:textSize="14sp"
+            android:visibility="gone" />
 
         <ly.pp.justpiano3.view.GoldConvertView
-                android:id="@+id/gold_convert"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_80dp"
-                android:visibility="gone"
-                app:textBackground="@drawable/border_input_box"
-                app:stepChangeValue="1"
-                app:defaultValue="0"
-                app:topGoldConvertText="消耗音符:"
-                app:bottomGoldConvertText="好友获得:"/>
+            android:id="@+id/gold_convert"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_80dp"
+            android:visibility="gone"
+            app:bottomGoldConvertText="好友获得:"
+            app:defaultActualValue="0"
+            app:stepChangeValue="1"
+            app:textBackground="@drawable/border_input_box"
+            app:topGoldConvertText="消耗音符:" />
 
         <RadioGroup
-                android:id="@+id/Rgroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"/>
+            android:id="@+id/Rgroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/negativeButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="@dimen/dimen_2dp"
+            android:layout_marginRight="@dimen/dimen_4dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_ol_cancel"
+            android:maxLines="1"
+            android:text="@string/mydialog_cancel"
+            android:textColor="@color/white1"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <Button
-                android:id="@+id/negativeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_3dp"
-                android:layout_marginRight="@dimen/dimen_4dp"
-                android:layout_weight="1"
-                android:background="@drawable/selector_ol_cancel"
-                android:maxLines="1"
-                android:text="@string/mydialog_cancel"
-                android:textColor="@color/white1"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-        <Button
-                android:id="@+id/positiveButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_4dp"
-                android:layout_marginTop="@dimen/dimen_3dp"
-                android:layout_weight="1"
-                android:background="@drawable/selector_ol_ok"
-                android:maxLines="1"
-                android:text="@string/mydialog_ok"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
+            android:id="@+id/positiveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_4dp"
+            android:layout_marginTop="@dimen/dimen_2dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_ol_ok"
+            android:maxLines="1"
+            android:text="@string/mydialog_ok"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

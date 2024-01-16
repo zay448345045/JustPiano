@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.R;
 import ly.pp.justpiano3.entity.GlobalSetting;
 import ly.pp.justpiano3.enums.LocalPlayModeEnum;
@@ -24,9 +23,8 @@ public final class OLMainMode extends OLBaseActivity implements OnClickListener 
         if (jpProgressBar != null) {
             jpProgressBar.dismiss();
         }
-        Intent intent = new Intent();
+        Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("no_auto", true);
-        intent.setClass(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -79,9 +77,9 @@ public final class OLMainMode extends OLBaseActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalSetting.INSTANCE.loadSettings(this, true);
+        GlobalSetting.loadSettings(this, true);
         setContentView(R.layout.ol_main_mode);
-        GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         findViewById(R.id.ol_top_b).setOnClickListener(this);
         findViewById(R.id.ol_users_b).setOnClickListener(this);
         findViewById(R.id.ol_playhall_b).setOnClickListener(this);
@@ -89,7 +87,7 @@ public final class OLMainMode extends OLBaseActivity implements OnClickListener 
         findViewById(R.id.ol_web_b).setOnClickListener(this);
         findViewById(R.id.ol_chatblack_b).setOnClickListener(this);
         findViewById(R.id.ol_finduser_b).setOnClickListener(this);
-        OnlineUtil.outlineConnectionService((JPApplication) getApplication());
+        OnlineUtil.outlineConnectionService(getApplicationContext());
         if (OLBaseActivity.loginResultTitle != null && OLBaseActivity.loginResultMessage != null
                 && !OLBaseActivity.loginResultTitle.isEmpty() && !OLBaseActivity.loginResultMessage.isEmpty()) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);

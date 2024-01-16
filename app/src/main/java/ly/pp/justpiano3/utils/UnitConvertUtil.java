@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * 单位转换
  */
-public class UnitConvertUtil {
+public final class UnitConvertUtil {
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)

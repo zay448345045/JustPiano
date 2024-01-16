@@ -24,8 +24,8 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
             olRoomActivity.roomTabs.getTabWidget().getChildTabViewAt(i).setBackgroundResource(
                     intValue == i ? R.drawable.selector_ol_orange : R.drawable.selector_ol_blue);
         }
-        if (olRoomActivity instanceof OLPlayKeyboardRoom) {
-            ((OLPlayKeyboardRoom) olRoomActivity).waterfallView.setVisibility(View.INVISIBLE);
+        if (olRoomActivity instanceof OLPlayKeyboardRoom olPlayKeyboardRoom) {
+            olPlayKeyboardRoom.waterfallView.setVisibility(View.INVISIBLE);
         }
         switch (str) {
             case "tab1" -> {
@@ -40,12 +40,12 @@ public final class PlayRoomTabChange implements OnTabChangeListener {
                 }
             }
             case "tab3" -> {
-                if (olRoomActivity instanceof OLPlayKeyboardRoom) {
+                if (olRoomActivity instanceof OLPlayKeyboardRoom olPlayKeyboardRoom) {
                     if (olRoomActivity.msgListView != null && olRoomActivity.msgListView.getAdapter() != null) {
                         olRoomActivity.msgListView.smoothScrollToPositionFromTop(olRoomActivity.msgListView.getAdapter().getCount() - 1, -10000);
                     }
-                    ((OLPlayKeyboardRoom) olRoomActivity).waterfallView.setVisibility(View.VISIBLE);
-                    ((OLPlayKeyboardRoom) olRoomActivity).onlineWaterfallViewNoteWidthUpdateHandle();
+                    olPlayKeyboardRoom.waterfallView.setVisibility(View.VISIBLE);
+                    olPlayKeyboardRoom.onlineWaterfallViewNoteWidthUpdateHandle();
                 }
             }
             case "tab4" ->

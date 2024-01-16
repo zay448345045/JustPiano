@@ -9,11 +9,12 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
+import androidx.core.util.Consumer;
+
 import java.util.UUID;
 
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
-import ly.pp.justpiano3.JPApplication;
 import ly.pp.justpiano3.activity.online.OLBaseActivity;
 import ly.pp.justpiano3.activity.online.OLMainMode;
 import ly.pp.justpiano3.service.ConnectionService;
@@ -115,13 +116,13 @@ public class OnlineUtil {
         return channel.attr(MSG_TYPE_ATTRIBUTE_KEY).get();
     }
 
-    public static void outlineConnectionService(JPApplication jpApplication) {
+    public static void outlineConnectionService(Context context) {
         try {
             if (connectionService != null) {
                 connectionService.outLine();
             }
             if (bindService) {
-                jpApplication.unbindService(serviceConnection);
+                context.unbindService(serviceConnection);
                 bindService = false;
             }
         } catch (Exception e) {
@@ -129,12 +130,12 @@ public class OnlineUtil {
         }
     }
 
-    public static void onlineConnectionService(JPApplication jpApplication) {
+    public static void onlineConnectionService(Context context) {
         try {
             if (bindService) {
-                jpApplication.unbindService(serviceConnection);
+                context.unbindService(serviceConnection);
             }
-            bindService = jpApplication.bindService(new Intent(jpApplication, ConnectionService.class),
+            bindService = context.bindService(new Intent(context, ConnectionService.class),
                     serviceConnection, Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,10 +166,10 @@ public class OnlineUtil {
         return autoReconnectTime != null;
     }
 
-    public static void outLineAndDialogWithAutoReconnect(JPApplication jpApplication) {
+    public static void outLineAndDialogWithAutoReconnect(Context context) {
         // 在进入对战页面时掉线，直接强制不重连
         if (JPStack.top() instanceof OLMainMode) {
-            outLineAndDialog(jpApplication);
+            outLineAndDialog(context);
             return;
         }
         Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! autoReconnect:"
@@ -195,11 +196,11 @@ public class OnlineUtil {
             }
             // 每隔一小段时间尝试连接一次
             if (System.currentTimeMillis() - autoReconnectTime >= autoReconnectCount * AUTO_RECONNECT_INTERVAL_TIME) {
-                outlineConnectionService(jpApplication);
+                outlineConnectionService(context);
                 handleOnTopBaseActivity(olBaseActivity -> {
                     if (olBaseActivity.jpProgressBar.isShowing()) {
                         updateProgressBarText(olBaseActivity);
-                        onlineConnectionService(jpApplication);
+                        onlineConnectionService(context);
                         Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! do autoReconnect:"
                                 + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime));
                     }
@@ -207,24 +208,23 @@ public class OnlineUtil {
                 autoReconnectCount = (int) ((System.currentTimeMillis() - autoReconnectTime) / AUTO_RECONNECT_INTERVAL_TIME) + 1;
             }
         } else {
-            outLineAndDialog(jpApplication);
+            outLineAndDialog(context);
         }
     }
 
     private static void updateProgressBarText(OLBaseActivity olBaseActivity) {
         olBaseActivity.jpProgressBar.setText("连接中...等待剩余秒数：" + Math.max(0,
-                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000)
-                + "点击取消");
+                (AUTO_RECONNECT_MAX_WAIT_TIME - System.currentTimeMillis() + autoReconnectTime) / 1000) + "点击取消");
         olBaseActivity.jpProgressBar.setClickableLink("点击取消", () -> {
             olBaseActivity.progressBarDismissAndReInit();
             OLBaseActivity.returnMainMode(olBaseActivity);
         });
     }
 
-    public static void outLineAndDialog(JPApplication jpApplication) {
+    public static void outLineAndDialog(Context context) {
         Log.i(OnlineUtil.class.getSimpleName(), " autoReconnect! fail autoReconnect:"
                 + (autoReconnectTime == null ? "null" : System.currentTimeMillis() - autoReconnectTime) + JPStack.top());
-        outlineConnectionService(jpApplication);
+        outlineConnectionService(context);
         Activity topActivity = JPStack.top();
         if (topActivity instanceof OLBaseActivity olBaseActivity) {
             Message message = Message.obtain(olBaseActivity.olBaseActivityHandler);
@@ -233,17 +233,9 @@ public class OnlineUtil {
         }
     }
 
-    /**
-     * 安卓低版本无法使用Consumer，暂时使用私有接口，配合下面方法入参使用
-     */
-    public interface OLBaseActivityRunner {
-        void run(OLBaseActivity olBaseActivity);
-    }
-
-    public static void handleOnTopBaseActivity(OLBaseActivityRunner consumer, long delayMillis) {
-        Activity topActivity = JPStack.top();
-        if (topActivity instanceof OLBaseActivity olBaseActivity) {
-            olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.run(olBaseActivity), delayMillis);
+    public static void handleOnTopBaseActivity(Consumer<OLBaseActivity> consumer, long delayMillis) {
+        if (JPStack.top() instanceof OLBaseActivity olBaseActivity && !olBaseActivity.isDestroyed()) {
+            olBaseActivity.olBaseActivityHandler.postDelayed(() -> consumer.accept(olBaseActivity), delayMillis);
         }
     }
 }

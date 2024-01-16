@@ -86,16 +86,16 @@ class KeyboardView @JvmOverloads constructor(
     private var viewHeight = 0f
     private var whiteKeyWidth = 0f
     private var blackKeyHeight = 0f
-    private lateinit var keyboardImageRectArray: Array<RectF>
+    private var keyboardImageRectArray: Array<RectF>? = null
 
     // 当前页面中显示的所在八度完整区域内的rect和是否按下的boolean标记
-    lateinit var whiteKeyRectArray: Array<RectF>
+    var whiteKeyRectArray: Array<RectF>? = null
         private set
-    lateinit var blackKeyRectArray: Array<RectF>
+    var blackKeyRectArray: Array<RectF>? = null
         private set
-    lateinit var notesOnArray: BooleanArray
+    var notesOnArray: BooleanArray? = null
         private set
-    private lateinit var notesOnPaintArray: Array<Paint?>
+    private var notesOnPaintArray: Array<Paint?>? = null
     private val mFingerMap: MutableMap<Int, Byte> = HashMap()
     var keyboardListener: KeyboardListener? = null
     var whiteKeyNum = 0
@@ -106,6 +106,10 @@ class KeyboardView @JvmOverloads constructor(
 
     // 按键标签种类
     var octaveTagType = OctaveTagType.NONE
+        set(value) {
+            field = value
+            makeDraw()
+        }
 
     // 按键标签种类枚举
     enum class OctaveTagType {
@@ -186,7 +190,8 @@ class KeyboardView @JvmOverloads constructor(
             typedArray.getInteger(R.styleable.KeyboardView_whiteKeyOffset, DEFAULT_WHITE_KEY_OFFSET)
         pianoKeyTouchable = typedArray.getBoolean(R.styleable.KeyboardView_pianoKeyTouchable, true)
         val octaveTagTypeInt = typedArray.getInteger(R.styleable.KeyboardView_octaveTagType, 0)
-        octaveTagType = OctaveTagType.values().getOrElse(octaveTagTypeInt) { OctaveTagType.NONE }
+        octaveTagType =
+            OctaveTagType.entries.toTypedArray().getOrElse(octaveTagTypeInt) { OctaveTagType.NONE }
         maxOctaveTagFontSize = UnitConvertUtil.sp2px(context, maxOctaveTagFontSize).toFloat()
         typedArray.recycle()
     }
@@ -219,8 +224,8 @@ class KeyboardView @JvmOverloads constructor(
     val allOctaveLineX: List<Float>
         get() {
             val octaveLineXList: MutableList<Float> = ArrayList()
-            for (keyboardImageRect in keyboardImageRectArray) {
-                octaveLineXList.add(keyboardImageRect.left)
+            keyboardImageRectArray?.forEach {
+                octaveLineXList.add(it.left)
             }
             return octaveLineXList
         }
@@ -317,23 +322,26 @@ class KeyboardView @JvmOverloads constructor(
         blackKeyRectArray = blackKeyRectList.toTypedArray()
         notesOnArray = BooleanArray(octaveCount * NOTES_PER_OCTAVE)
         notesOnPaintArray = arrayOfNulls(octaveCount * NOTES_PER_OCTAVE)
-        for (i in notesOnPaintArray.indices) {
-            notesOnPaintArray[i] = Paint(Paint.ANTI_ALIAS_FLAG)
+        for (i in notesOnPaintArray!!.indices) {
+            notesOnPaintArray!![i] = Paint(Paint.ANTI_ALIAS_FLAG)
         }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        if (whiteKeyRectArray == null) {
+            return
+        }
         // 先绘制所有八度的键盘图
-        for (rectF in keyboardImageRectArray) {
-            canvas.drawBitmap(keyboardImage, null, rectF, null)
+        keyboardImageRectArray?.forEach {
+            canvas.drawBitmap(keyboardImage, null, it, null)
         }
         // 特殊逻辑处理，88键钢琴的最低音和最高音在展示时，需要分别叠加绘制最左侧/最右侧的琴键
         if (whiteKeyOffset == MIN_WHITE_KEY_OFFSET) {
             canvas.drawBitmap(
                 leftmostWhiteKeyImage,
                 null,
-                whiteKeyRectArray[MIN_WHITE_KEY_OFFSET],
+                whiteKeyRectArray!![MIN_WHITE_KEY_OFFSET],
                 null
             )
         }
@@ -341,7 +349,7 @@ class KeyboardView @JvmOverloads constructor(
             canvas.drawBitmap(
                 pureWhiteKeyImage,
                 null,
-                whiteKeyRectArray[getPitchInScreen(MidiUtil.MAX_PIANO_MIDI_PITCH) / NOTES_PER_OCTAVE * WHITE_NOTES_PER_OCTAVE],
+                whiteKeyRectArray!![getPitchInScreen(MidiUtil.MAX_PIANO_MIDI_PITCH) / NOTES_PER_OCTAVE * WHITE_NOTES_PER_OCTAVE],
                 null
             )
         }
@@ -352,61 +360,66 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     private fun drawNotesOn(canvas: Canvas) {
-        for ((i, noteOn) in notesOnArray.withIndex()) {
-            // 如果某个琴键处于按下状态，根据具体图片类型来绘制具体琴键按下的图片，叠在键盘图的上面
-            if (noteOn) {
-                // 首先特殊逻辑处理，如果88键钢琴键盘的最低音或最高音琴键被按下，不遵从之后的规律
-                if (whiteKeyOffset == MIN_WHITE_KEY_OFFSET && i == WHITE_KEY_OFFSET[MIN_WHITE_KEY_OFFSET]) {
-                    canvas.drawBitmap(
-                        whiteKeyPressWithoutRightImage,
-                        null,
-                        whiteKeyRectArray[MIN_WHITE_KEY_OFFSET],
-                        notesOnPaintArray[i]
-                    )
-                } else if (whiteKeyOffset + whiteKeyNum == MAX_WHITE_KEY_NUM + MIN_WHITE_KEY_OFFSET
-                    && i == getPitchInScreen(MidiUtil.MAX_PIANO_MIDI_PITCH)
-                ) {
-                    canvas.drawBitmap(
-                        pureWhiteKeyPressImage,
-                        null,
-                        whiteKeyRectArray[getPitchInScreen(MidiUtil.MAX_PIANO_MIDI_PITCH) / NOTES_PER_OCTAVE * WHITE_NOTES_PER_OCTAVE],
-                        notesOnPaintArray[i]
-                    )
-                } else {
-                    val currentOctave = i / NOTES_PER_OCTAVE
-                    val currentPitchInOctave = i % NOTES_PER_OCTAVE
-                    when (KEY_IMAGE_TYPE[currentPitchInOctave]) {
-                        KeyImageTypeEnum.BLACK_KEY -> canvas.drawBitmap(
-                            blackKeyPressImage,
-                            null,
-                            blackKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                    + currentOctave * BLACK_NOTES_PER_OCTAVE],
-                            notesOnPaintArray[i]
-                        )
-
-                        KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT -> canvas.drawBitmap(
-                            whiteKeyPressWithoutLeftImage,
-                            null,
-                            whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                    + currentOctave * WHITE_NOTES_PER_OCTAVE],
-                            notesOnPaintArray[i]
-                        )
-
-                        KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT_AND_RIGHT -> canvas.drawBitmap(
-                            whiteKeyPressWithoutLeftAndRightImage,
-                            null,
-                            whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                    + currentOctave * WHITE_NOTES_PER_OCTAVE],
-                            notesOnPaintArray[i]
-                        )
-
-                        KeyImageTypeEnum.WHITE_KEY_WITHOUT_RIGHT -> canvas.drawBitmap(
+        if (whiteKeyRectArray == null || blackKeyRectArray == null || notesOnPaintArray == null) {
+            return
+        }
+        notesOnArray?.let {
+            for ((i, noteOn) in it.withIndex()) {
+                // 如果某个琴键处于按下状态，根据具体图片类型来绘制具体琴键按下的图片，叠在键盘图的上面
+                if (noteOn) {
+                    // 首先特殊逻辑处理，如果88键钢琴键盘的最低音或最高音琴键被按下，不遵从之后的规律
+                    if (whiteKeyOffset == MIN_WHITE_KEY_OFFSET && i == WHITE_KEY_OFFSET[MIN_WHITE_KEY_OFFSET]) {
+                        canvas.drawBitmap(
                             whiteKeyPressWithoutRightImage,
                             null,
-                            whiteKeyRectArray[OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
-                                    + currentOctave * WHITE_NOTES_PER_OCTAVE],
-                            notesOnPaintArray[i]
+                            whiteKeyRectArray!![MIN_WHITE_KEY_OFFSET],
+                            notesOnPaintArray!![i]
                         )
+                    } else if (whiteKeyOffset + whiteKeyNum == MAX_WHITE_KEY_NUM + MIN_WHITE_KEY_OFFSET
+                        && i == getPitchInScreen(MidiUtil.MAX_PIANO_MIDI_PITCH)
+                    ) {
+                        canvas.drawBitmap(
+                            pureWhiteKeyPressImage,
+                            null,
+                            whiteKeyRectArray!![getPitchInScreen(MidiUtil.MAX_PIANO_MIDI_PITCH) / NOTES_PER_OCTAVE * WHITE_NOTES_PER_OCTAVE],
+                            notesOnPaintArray!![i]
+                        )
+                    } else {
+                        val currentOctave = i / NOTES_PER_OCTAVE
+                        val currentPitchInOctave = i % NOTES_PER_OCTAVE
+                        when (KEY_IMAGE_TYPE[currentPitchInOctave]) {
+                            KeyImageTypeEnum.BLACK_KEY -> canvas.drawBitmap(
+                                blackKeyPressImage,
+                                null,
+                                blackKeyRectArray!![OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                        + currentOctave * BLACK_NOTES_PER_OCTAVE],
+                                notesOnPaintArray!![i]
+                            )
+
+                            KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT -> canvas.drawBitmap(
+                                whiteKeyPressWithoutLeftImage,
+                                null,
+                                whiteKeyRectArray!![OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                        + currentOctave * WHITE_NOTES_PER_OCTAVE],
+                                notesOnPaintArray!![i]
+                            )
+
+                            KeyImageTypeEnum.WHITE_KEY_WITHOUT_LEFT_AND_RIGHT -> canvas.drawBitmap(
+                                whiteKeyPressWithoutLeftAndRightImage,
+                                null,
+                                whiteKeyRectArray!![OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                        + currentOctave * WHITE_NOTES_PER_OCTAVE],
+                                notesOnPaintArray!![i]
+                            )
+
+                            KeyImageTypeEnum.WHITE_KEY_WITHOUT_RIGHT -> canvas.drawBitmap(
+                                whiteKeyPressWithoutRightImage,
+                                null,
+                                whiteKeyRectArray!![OCTAVE_PITCH_TO_KEY_INDEX[currentPitchInOctave]
+                                        + currentOctave * WHITE_NOTES_PER_OCTAVE],
+                                notesOnPaintArray!![i]
+                            )
+                        }
                     }
                 }
             }
@@ -420,21 +433,24 @@ class KeyboardView @JvmOverloads constructor(
             }
 
             OctaveTagType.OCTAVE_C -> {
-                for ((index, rectF) in keyboardImageRectArray.withIndex()) {
-                    canvas.drawText(
-                        OCTAVE_C + (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index - 1),
-                        rectF.left + (rectF.width() / 7 - keyboardTextPaint.measureText(
-                            OCTAVE_TAG_WORD_SAMPLE
-                        )) / 2,
-                        rectF.bottom - keyboardTextPaint.descent(), keyboardTextPaint
-                    )
+                keyboardImageRectArray?.let {
+                    for ((index, rectF) in it.withIndex()) {
+                        canvas.drawText(
+                            OCTAVE_C + (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index - 1),
+                            rectF.left + (rectF.width() / 7 - keyboardTextPaint.measureText(
+                                OCTAVE_TAG_WORD_SAMPLE
+                            )) / 2,
+                            rectF.bottom - keyboardTextPaint.descent(), keyboardTextPaint
+                        )
+                    }
                 }
             }
 
             OctaveTagType.PITCH_NAME -> {
-                for ((index, whiteKeyRect) in whiteKeyRectArray.withIndex()) {
+                whiteKeyRectArray?.forEachIndexed { index, whiteKeyRect ->
                     canvas.drawText(
-                        PITCH_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE] + (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index / WHITE_NOTES_PER_OCTAVE),
+                        PITCH_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE] +
+                                (whiteKeyOffset / WHITE_NOTES_PER_OCTAVE + index / WHITE_NOTES_PER_OCTAVE),
                         whiteKeyRect.left + (whiteKeyRect.width() - keyboardTextPaint.measureText(
                             OCTAVE_TAG_WORD_SAMPLE
                         )) / 2,
@@ -444,7 +460,7 @@ class KeyboardView @JvmOverloads constructor(
             }
 
             OctaveTagType.SYLLABLE_NAME -> {
-                for ((index, whiteKeyRect) in whiteKeyRectArray.withIndex()) {
+                whiteKeyRectArray?.forEachIndexed { index, whiteKeyRect ->
                     val text = SYLLABLE_NAME_ARRAY[index % WHITE_NOTES_PER_OCTAVE]
                     canvas.drawText(
                         text,
@@ -583,41 +599,45 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun fireKeyDown(pitch: Byte, volume: Byte, color: Int?) {
-        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
-            return
-        }
-        val pitchInScreen = getPitchInScreen(pitch)
-        if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
-            return
-        }
-        if (notesOnArray[pitchInScreen]) {
-            return
-        }
-        notesOnArray[pitchInScreen] = true
-        if (notesOnPaintArray[pitchInScreen] == null) {
-            notesOnPaintArray[pitchInScreen] = Paint(Paint.ANTI_ALIAS_FLAG)
-        }
-        val blackKey = isBlackKey(pitch)
-        notesOnPaintArray[pitchInScreen]!!.alpha = volume.coerceAtMost(Byte.MAX_VALUE).toInt() shl 1
-        if (color != null) {
-            // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
-            // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实
-            val handledColor = if (blackKey) Color.argb(
-                128, Color.red(color), Color.green(color), Color.blue(color)
-            ) else Color.argb(255, Color.red(color), Color.green(color), Color.blue(color))
-            var porterDuffColorFilter = colorFilterMap[color.toString() + blackKey]
-            if (porterDuffColorFilter == null) {
-                porterDuffColorFilter = PorterDuffColorFilter(
-                    handledColor,
-                    if (blackKey) PorterDuff.Mode.ADD else PorterDuff.Mode.MULTIPLY
-                )
-                colorFilterMap[color.toString() + blackKey] = porterDuffColorFilter
+        try {
+            if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+                return
             }
-            notesOnPaintArray[pitchInScreen]!!.colorFilter = porterDuffColorFilter
-        } else {
-            notesOnPaintArray[pitchInScreen]!!.colorFilter = null
+            val pitchInScreen = getPitchInScreen(pitch)
+            if (notesOnArray == null || pitchInScreen < 0 || notesOnPaintArray == null
+                || pitchInScreen >= notesOnArray!!.size || notesOnArray!![pitchInScreen]
+            ) {
+                return
+            }
+            notesOnArray!![pitchInScreen] = true
+            if (notesOnPaintArray!![pitchInScreen] == null) {
+                notesOnPaintArray!![pitchInScreen] = Paint(Paint.ANTI_ALIAS_FLAG)
+            }
+            val blackKey = isBlackKey(pitch)
+            notesOnPaintArray!![pitchInScreen]!!.alpha =
+                volume.coerceAtMost(Byte.MAX_VALUE).toInt() shl 1
+            if (color != null) {
+                // 对于黑键，使用PorterDuff.Mode.ADD模式 + 半透明叠加颜色
+                // 对于白键，使用PorterDuff.Mode.MULTIPLY模式 + 不透明叠加颜色，使绘制颜色叠加看起来更为真实
+                val handledColor = if (blackKey) Color.argb(
+                    128, Color.red(color), Color.green(color), Color.blue(color)
+                ) else Color.argb(255, Color.red(color), Color.green(color), Color.blue(color))
+                var porterDuffColorFilter = colorFilterMap[color.toString() + blackKey]
+                if (porterDuffColorFilter == null) {
+                    porterDuffColorFilter = PorterDuffColorFilter(
+                        handledColor,
+                        if (blackKey) PorterDuff.Mode.ADD else PorterDuff.Mode.MULTIPLY
+                    )
+                    colorFilterMap[color.toString() + blackKey] = porterDuffColorFilter
+                }
+                notesOnPaintArray!![pitchInScreen]!!.colorFilter = porterDuffColorFilter
+            } else {
+                notesOnPaintArray!![pitchInScreen]!!.colorFilter = null
+            }
+            postInvalidate()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        postInvalidate()
     }
 
     private fun fireKeyUpAndHandleListener(pitch: Byte) {
@@ -628,18 +648,21 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     fun fireKeyUp(pitch: Byte) {
-        if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
-            return
+        try {
+            if (pitch < MidiUtil.MIN_PIANO_MIDI_PITCH || pitch > MidiUtil.MAX_PIANO_MIDI_PITCH) {
+                return
+            }
+            val pitchInScreen = getPitchInScreen(pitch)
+            if (notesOnArray == null || pitchInScreen < 0 || pitchInScreen >= notesOnArray!!.size
+                || !notesOnArray!![pitchInScreen]
+            ) {
+                return
+            }
+            notesOnArray!![pitchInScreen] = false
+            postInvalidate()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        val pitchInScreen = getPitchInScreen(pitch)
-        if (pitchInScreen < 0 || pitchInScreen >= notesOnArray.size) {
-            return
-        }
-        if (!notesOnArray[pitchInScreen]) {
-            return
-        }
-        notesOnArray[pitchInScreen] = false
-        postInvalidate()
     }
 
     /**
@@ -661,16 +684,18 @@ class KeyboardView @JvmOverloads constructor(
 
     // Convert x to MIDI pitch, Ignores white keys
     private fun xyToBlackPitch(x: Float, y: Float): Byte {
-        for (i in blackKeyRectArray.indices) {
-            if (blackKeyRectArray[i].contains(x, y)) {
-                val pitch =
-                    (WHITE_KEY_OFFSET_0_MIDI_PITCH + BLACK_KEY_OFFSET[i % BLACK_NOTES_PER_OCTAVE]
-                            + (i / BLACK_NOTES_PER_OCTAVE + whiteKeyOffset / WHITE_NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE)
-                // 88键钢琴的最左侧和最右侧键（理应有以外的黑键的时候），特殊处理，不判断黑键
-                if (pitch == MidiUtil.MAX_PIANO_MIDI_PITCH + 1 || pitch == MidiUtil.MIN_PIANO_MIDI_PITCH - 1) {
-                    return -1
+        blackKeyRectArray?.let {
+            for (i in it.indices) {
+                if (it[i].contains(x, y)) {
+                    val pitch =
+                        (WHITE_KEY_OFFSET_0_MIDI_PITCH + BLACK_KEY_OFFSET[i % BLACK_NOTES_PER_OCTAVE]
+                                + (i / BLACK_NOTES_PER_OCTAVE + whiteKeyOffset / WHITE_NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE)
+                    // 88键钢琴的最左侧和最右侧键（理应有以外的黑键的时候），特殊处理，不判断黑键
+                    if (pitch == MidiUtil.MAX_PIANO_MIDI_PITCH + 1 || pitch == MidiUtil.MIN_PIANO_MIDI_PITCH - 1) {
+                        return -1
+                    }
+                    return pitch.toByte()
                 }
-                return pitch.toByte()
             }
         }
         return -1
@@ -785,7 +810,7 @@ class KeyboardView @JvmOverloads constructor(
      */
     private fun isBlackKey(pitch: Byte): Boolean {
         val pitchInOctave = pitch % NOTES_PER_OCTAVE
-        for (blackKeyOffsetInOctave in BLACK_KEY_OFFSET) {
+        BLACK_KEY_OFFSET.forEach { blackKeyOffsetInOctave ->
             if (pitchInOctave == blackKeyOffsetInOctave) {
                 return true
             }

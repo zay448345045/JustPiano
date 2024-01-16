@@ -1,5 +1,6 @@
 package ly.pp.justpiano3.activity.online;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -19,6 +20,9 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.protobuf.MessageLite;
 
@@ -44,11 +48,12 @@ import ly.pp.justpiano3.listener.AddFriendsClick;
 import ly.pp.justpiano3.listener.ChangeBlessingClick;
 import ly.pp.justpiano3.listener.tab.PlayHallRoomTabChange;
 import ly.pp.justpiano3.task.OLPlayHallRoomTask;
+import ly.pp.justpiano3.utils.BizUtil;
 import ly.pp.justpiano3.utils.ImageLoadUtil;
 import ly.pp.justpiano3.utils.JPStack;
 import ly.pp.justpiano3.utils.OnlineUtil;
 import ly.pp.justpiano3.utils.ThreadPoolUtil;
-import ly.pp.justpiano3.view.FamilyListView;
+import ly.pp.justpiano3.view.PullUpdateListView;
 import ly.pp.justpiano3.view.JPDialogBuilder;
 import ly.pp.justpiano3.view.JPProgressBar;
 import protobuf.dto.OnlineDailyDTO;
@@ -58,10 +63,9 @@ import protobuf.dto.OnlineLoadUserInfoDTO;
 import protobuf.dto.OnlineSetUserInfoDTO;
 
 public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListener {
-    public int cl;
     public int lv = 1;
     public TabHost tabHost;
-    public TextView userName;
+    public TextView userNameTextView;
     public TextView mailCountsView;
     public TextView userLevelView;
     public TextView userClassView;
@@ -88,9 +92,9 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public List<Bundle> friendList = new ArrayList<>();
     public ListView friendListView;
     public List<Map<String, Object>> familyList = new ArrayList<>();
-    public FamilyListView familyListView;
+    public PullUpdateListView pullUpdateListView;
     public int familyPageNum;
-    public int cp;
+    public int coupleType;
     public boolean pageIsEnd;
     public OLPlayHallRoomHandler olPlayHallRoomHandler = new OLPlayHallRoomHandler(this);
     public int pageNum;
@@ -122,6 +126,21 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     public String coupleSex;
     private LayoutInflater layoutinflater;
 
+    private final ActivityResultLauncher<Intent> dressRoomLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Bundle extras = result.getData().getExtras();
+                    userSex = extras.getString("S");
+                    userTrousersIndex = extras.getInt("T");
+                    userJacketIndex = extras.getInt("J");
+                    userHairIndex = extras.getInt("H");
+                    userEyeIndex = extras.getInt("E");
+                    userShoesIndex = extras.getInt("O");
+                    ImageLoadUtil.setUserDressImageBitmap(this, userSex, userTrousersIndex, userJacketIndex, userHairIndex, userEyeIndex, userShoesIndex,
+                            userModView, userTrousersView, userJacketsView, userHairView, userEyeView, userShoesView);
+                }
+            });
+
     public void sendMsg(int type, MessageLite message) {
         if (OnlineUtil.getConnectionService() != null) {
             OnlineUtil.getConnectionService().writeData(type, message);
@@ -130,11 +149,11 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         }
     }
 
-    public void showInfoDialog(Bundle b) {
+    public void showInfoDialog(Bundle bundle) {
         View inflate = getLayoutInflater().inflate(R.layout.ol_user_info_dialog, findViewById(R.id.dialog));
         try {
-            User user = new User(b.getString("U"), b.getInt("DR_H"), b.getInt("DR_E"), b.getInt("DR_J"),
-                    b.getInt("DR_T"), b.getInt("DR_S"), b.getString("S"), b.getInt("LV"), b.getInt("CL"));
+            User user = new User(bundle.getString("U"), bundle.getInt("DR_H"), bundle.getInt("DR_E"), bundle.getInt("DR_J"),
+                    bundle.getInt("DR_T"), bundle.getInt("DR_S"), bundle.getString("S"), bundle.getInt("LV"), bundle.getInt("CL"));
             ImageView imageView = inflate.findViewById(R.id.ol_user_mod);
             ImageView imageView2 = inflate.findViewById(R.id.ol_user_trousers);
             ImageView imageView3 = inflate.findViewById(R.id.ol_user_jacket);
@@ -144,17 +163,16 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             TextView textView = inflate.findViewById(R.id.user_info);
             TextView textView2 = inflate.findViewById(R.id.user_psign);
             ImageLoadUtil.setUserDressImageBitmap(this, user, imageView, imageView2, imageView3, imageView4, imageView4e, imageView5);
-            int lv = b.getInt("LV");
-            int targetExp = (int) ((0.5 * lv * lv * lv + 500 * lv) / 10) * 10;
-            textView.setText("用户名称:" + b.getString("U")
+            int lv = bundle.getInt("LV");
+            textView.setText("用户名称:" + bundle.getString("U")
                     + "\n用户等级:LV." + lv
-                    + "\n经验进度:" + b.getInt("E") + "/" + targetExp
-                    + "\n考级进度:CL." + b.getInt("CL")
-                    + "\n所在家族:" + b.getString("F")
-                    + "\n在线曲库冠军数:" + b.getInt("W")
-                    + "\n在线曲库弹奏总分:" + b.getInt("SC"));
-            textView2.setText("个性签名:\n" + (b.getString("P").isEmpty() ? "无" : b.getString("P")));
-            new JPDialogBuilder(this).setWidth(324).setTitle("个人资料").loadInflate(inflate)
+                    + "\n经验进度:" + bundle.getInt("E") + "/" + BizUtil.getTargetExp(lv)
+                    + "\n考级进度:CL." + bundle.getInt("CL")
+                    + "\n所在家族:" + bundle.getString("F")
+                    + "\n在线曲库冠军数:" + bundle.getInt("W")
+                    + "\n在线曲库弹奏总分:" + bundle.getInt("SC"));
+            textView2.setText("个性签名:\n" + (bundle.getString("P").isEmpty() ? "无" : bundle.getString("P")));
+            new JPDialogBuilder(this).setWidth(288).setTitle("个人资料").loadInflate(inflate)
                     .setFirstButton("加为好友", new AddFriendsClick(this, user.getPlayerName()))
                     .setSecondButton("确定", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
         } catch (Exception e) {
@@ -166,7 +184,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         listView.setAdapter(new FamilyAdapter(list, layoutinflater, this));
     }
 
-    public void updateFamilyListShow(FamilyAdapter familyAdapter, FamilyListView listView, List<Map<String, Object>> list) {
+    public void updateFamilyListShow(FamilyAdapter familyAdapter, PullUpdateListView listView, List<Map<String, Object>> list) {
         familyAdapter.upDateList(list);
         familyAdapter.notifyDataSetChanged();
         listView.loadComplete();
@@ -179,13 +197,13 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         saveMailToLocal();
     }
 
-    public void mo2841a(int i, String str, String str2) {
-        if (i == 3) {
+    public void buildDialog(int type, String title, String message) {
+        if (type == 3) {
             tabHost.setCurrentTab(1);
         }
         JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
-        jpDialogBuilder.setTitle(str);
-        jpDialogBuilder.setMessage(str2);
+        jpDialogBuilder.setTitle(title);
+        jpDialogBuilder.setMessage(message);
         jpDialogBuilder.setFirstButton("确定", (dialog, which) -> dialog.dismiss());
         jpDialogBuilder.buildAndShowDialog();
     }
@@ -212,27 +230,27 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         hallListAdapter.notifyDataSetChanged();
     }
 
-    public void sendMail(String str, int i) {
-        String str2;
-        String str3;
-        View inflate = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
-        TextView textView = inflate.findViewById(R.id.text_1);
-        TextView textView2 = inflate.findViewById(R.id.title_1);
-        inflate.findViewById(R.id.title_2).setVisibility(View.GONE);
-        inflate.findViewById(R.id.text_2).setVisibility(View.GONE);
+    public void sendMail(String userName, int type) {
+        View messageSendView = getLayoutInflater().inflate(R.layout.message_send, findViewById(R.id.dialog));
+        TextView textView = messageSendView.findViewById(R.id.text_1);
+        TextView textView2 = messageSendView.findViewById(R.id.title_1);
+        messageSendView.findViewById(R.id.title_2).setVisibility(View.GONE);
+        messageSendView.findViewById(R.id.text_2).setVisibility(View.GONE);
         textView2.setText("内容:");
-        if (i == 0) {
-            str2 = "发送";
-            str3 = "发送私信给:" + str;
-        } else if (i == 1) {
-            str3 = "设置祝语";
-            str2 = "修改";
+        String buttonText;
+        String title;
+        if (type == 0) {
+            buttonText = "发送";
+            title = "发送私信给:" + userName;
+        } else if (type == 1) {
+            title = "设置祝语";
+            buttonText = "修改";
             textView.setText(coupleBlessView.getText().toString().substring(4));
         } else {
             return;
         }
-        new JPDialogBuilder(this).setTitle(str3).loadInflate(inflate).
-                setFirstButton(str2, new ChangeBlessingClick(this, textView, i, str))
+        new JPDialogBuilder(this).setTitle(title).loadInflate(messageSendView).
+                setFirstButton(buttonText, new ChangeBlessingClick(this, textView, type, userName))
                 .setSecondButton("取消", (dialog, which) -> dialog.dismiss()).buildAndShowDialog();
     }
 
@@ -280,65 +298,44 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         mailListAdapter.notifyDataSetChanged();
     }
 
-    public void addFriends(String str) {
-        if (!str.isEmpty()) {
+    public void addFriends(String userName) {
+        if (!userName.isEmpty()) {
             JPDialogBuilder buildAndShowDialog = new JPDialogBuilder(this);
             buildAndShowDialog.setTitle("好友请求");
-            buildAndShowDialog.setMessage("[" + str + "]请求加您为好友，是否同意?");
+            buildAndShowDialog.setMessage("[" + userName + "]请求加您为好友，是否同意?");
             buildAndShowDialog.setFirstButton("同意", (dialog, which) -> {
                 dialog.dismiss();
                 JSONObject jSONObject = new JSONObject();
                 try {
                     jSONObject.put("H", 1);
-                    jSONObject.put("T", str);
+                    jSONObject.put("T", userName);
                     jSONObject.put("F", OLBaseActivity.getAccountName());
-                    new OLPlayHallRoomTask(this).execute(jSONObject.toString(), "");
+                    new OLPlayHallRoomTask(this).execute(jSONObject.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             });
-            buildAndShowDialog.setSecondButton("拒绝", (dialog, which) -> dialog.dismiss());
+            buildAndShowDialog.setSecondButton("取消", (dialog, which) -> dialog.dismiss());
             buildAndShowDialog.buildAndShowDialog();
         }
     }
 
     @Override
-    protected void onActivityResult(int i, int i2, Intent intent) {
-        super.onActivityResult(i, i2, intent);
-        if (i2 == -1) {
-            Bundle extras = intent.getExtras();
-            userSex = extras.getString("S");
-            userTrousersIndex = extras.getInt("T");
-            userJacketIndex = extras.getInt("J");
-            userHairIndex = extras.getInt("H");
-            userEyeIndex = extras.getInt("E");
-            userShoesIndex = extras.getInt("O");
-            ImageLoadUtil.setUserDressImageBitmap(this, userSex, userTrousersIndex, userJacketIndex, userHairIndex, userEyeIndex, userShoesIndex,
-                    userModView, userTrousersView, userJacketsView, userHairView, userEyeView, userShoesView);
-        }
-    }
-
-    @Override
     public void onBackPressed() {
-        try {
-            JPStack.clear();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        JPStack.clear();
         startActivity(new Intent(this, OLMainMode.class));
         finish();
     }
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent();
         int id = view.getId();
         if (id == R.id.ol_player_mod || id == R.id.ol_dress_button) {
             if (lv < 8) {
                 Toast.makeText(this, "您的等级未达到8级，不能进入换衣间", Toast.LENGTH_SHORT).show();
                 return;
             }
-            intent.setClass(this, OLPlayDressRoom.class);
+            Intent intent = new Intent(this, OLPlayDressRoom.class);
             intent.putExtra("T", userTrousersIndex - 1);
             intent.putExtra("J", userJacketIndex - 1);
             intent.putExtra("H", userHairIndex - 1);
@@ -346,7 +343,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             intent.putExtra("S", userSex);
             intent.putExtra("Lv", lv);
             intent.putExtra("O", userShoesIndex - 1);
-            startActivityForResult(intent, 0);
+            dressRoomLauncher.launch(intent);
         } else if (id == R.id.ol_bonus_button) {
             jpprogressBar.show();
             OnlineDailyDTO.Builder builder2 = OnlineDailyDTO.newBuilder();
@@ -386,13 +383,12 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         } else if (id == R.id.ol_breakup_button) {
             deleteCp(false);
         } else if (id == R.id.ol_setblessing_button) {
-            if (cp > 0) {
+            if (coupleType > 0) {
                 sendMail("", 1);
             }
         } else if (id == R.id.ol_myfamily_button) {
             if (familyID != null && !familyID.equals("0")) {
-                intent = new Intent();
-                intent.setClass(this, OLFamily.class);
+                Intent intent = new Intent(this, OLFamily.class);
                 intent.putExtra("familyID", familyID);
                 intent.putExtra("pageNum", familyPageNum);
                 intent.putExtra("position", 0);
@@ -409,7 +405,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
     }
 
     public void deleteCp(boolean flag) {
-        if (cp > 0) {
+        if (coupleType > 0) {
             JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
             jpDialogBuilder.setTitle("警告");
             jpDialogBuilder.setMessage("确定要解除搭档关系吗?");
@@ -432,23 +428,31 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         sendMsg(OnlineProtocolType.FAMILY, builder.build());
     }
 
+    public void letChangeFamilyLeader(String name) {
+        OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
+        builder.setType(11);
+        builder.setStatus(1);
+        builder.setUserName(name);
+        sendMsg(OnlineProtocolType.FAMILY, builder.build());
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         jpprogressBar = new JPProgressBar(this);
         layoutinflater = LayoutInflater.from(this);
         sharedPreferences = getSharedPreferences("mails_" + OLBaseActivity.getAccountName(), MODE_PRIVATE);
-        GlobalSetting.INSTANCE.loadSettings(this, true);
+        GlobalSetting.loadSettings(this, true);
         setContentView(R.layout.ol_hall_list);
-        GlobalSetting.INSTANCE.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
+        GlobalSetting.setLocalPlayMode(LocalPlayModeEnum.NORMAL);
         hallListView = findViewById(R.id.ol_hall_list);
         hallListView.setCacheColorHint(Color.TRANSPARENT);
         hallList.clear();
         friendListView = findViewById(R.id.ol_friend_list);
         friendListView.setCacheColorHint(Color.TRANSPARENT);
-        familyListView = findViewById(R.id.ol_family_list);
-        familyListView.setCacheColorHint(Color.TRANSPARENT);
-        familyListView.setLoadListener(() -> ThreadPoolUtil.execute(() -> {
+        pullUpdateListView = findViewById(R.id.ol_family_list);
+        pullUpdateListView.setCacheColorHint(Color.TRANSPARENT);
+        pullUpdateListView.setLoadListener(() -> ThreadPoolUtil.execute(() -> {
             familyPageNum++;
             OnlineFamilyDTO.Builder builder = OnlineFamilyDTO.newBuilder();
             builder.setType(2);
@@ -469,8 +473,8 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
         newTabSpec.setContent(R.id.infor_tab);
         newTabSpec.setIndicator("资料");
         tabHost.addTab(newTabSpec);
-        userName = findViewById(R.id.ol_player_name);
-        userName.setText("");
+        userNameTextView = findViewById(R.id.ol_player_name);
+        userNameTextView.setText("");
         findViewById(R.id.ol_dress_button).setOnClickListener(this);
         findViewById(R.id.ol_bonus_button).setOnClickListener(this);
         userLevelView = findViewById(R.id.ol_player_level);
@@ -546,7 +550,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
             TextView titleTextView = findViewById(R.id.ol_playhall_title);
             titleTextView.getLayoutParams().height = (displayMetrics.heightPixels * 45) / 480;
             TextView tv = tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            tv.setTextColor(0xffffffff);
+            tv.setTextColor(Color.WHITE);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
@@ -572,7 +576,7 @@ public final class OLPlayHallRoom extends OLBaseActivity implements OnClickListe
                 }
                 familyList = (List<Map<String, Object>>) getIntent().getSerializableExtra("familyList");
                 tabHost.setCurrentTab(4);
-                bindAdapter(familyListView, familyList);
+                bindAdapter(pullUpdateListView, familyList);
                 try {
                     Thread.sleep(320);
                 } catch (InterruptedException e) {

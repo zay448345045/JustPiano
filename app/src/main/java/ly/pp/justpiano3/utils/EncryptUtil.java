@@ -16,7 +16,7 @@ import javax.crypto.Cipher;
 /**
  * @author as
  */
-public class EncryptUtil {
+public final class EncryptUtil {
 
     /**
      * 密钥长度（bit）
@@ -64,6 +64,9 @@ public class EncryptUtil {
         serverTimeInterval = serverTime - System.currentTimeMillis();
     }
 
+    /**
+     * 仅做加密逻辑使用，暂且不要在界面展示这个时间
+     */
     public static Long getServerTime() {
         return serverTimeInterval + System.currentTimeMillis();
     }
