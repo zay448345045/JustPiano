@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +87,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     public byte hallId;
     public String hallName;
     private final List<Bundle> friendPlayerList = new ArrayList<>();
-    private boolean canNotNextPage;
+    private boolean friendCanNotNextPage;
     private EditText sendTextView;
     private List<Bundle> msgList = new ArrayList<>();
     public GridView playerGrid;
@@ -320,7 +321,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     protected void nextFriendPageClick() {
-        if (!canNotNextPage) {
+        if (!friendCanNotNextPage) {
             page += 20;
             if (page >= 0) {
                 OnlineLoadUserInfoDTO.Builder builder = OnlineLoadUserInfoDTO.newBuilder();
@@ -429,7 +430,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
                 String item = data.getString("I");
                 String songName = null;
                 String songDifficulty = null;
-                if (!item.isEmpty()) {
+                if (!TextUtils.isEmpty(item)) {
                     String path = "songs/" + item + ".pm";
                     List<Song> songByFilePath = JPApplication.getSongDatabase().songDao().getSongByFilePath(path);
                     for (Song song : songByFilePath) {
@@ -460,14 +461,14 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
     }
 
     public void handleFriendRequest(Message message) {
-        String string = message.getData().getString("F");
+        String userName = message.getData().getString("F");
         switch (message.getData().getInt("T")) {
             case 0 -> {
-                if (!string.isEmpty()) {
+                if (!TextUtils.isEmpty(userName)) {
                     JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                     jpDialogBuilder.setTitle("好友请求");
-                    jpDialogBuilder.setMessage("[" + string + "]请求加您为好友,同意吗?");
-                    String finalString = string;
+                    jpDialogBuilder.setMessage("[" + userName + "]请求加您为好友,同意吗?");
+                    String finalString = userName;
                     jpDialogBuilder.setFirstButton("同意", (dialog, which) -> {
                         OnlineSetUserInfoDTO.Builder builder = OnlineSetUserInfoDTO.newBuilder();
                         builder.setType(1);
@@ -489,12 +490,12 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             }
             case 1 -> {
                 DialogUtil.setShowDialog(false);
-                string = message.getData().getString("F");
+                userName = message.getData().getString("F");
                 int i = message.getData().getInt("I");
                 JPDialogBuilder jpDialogBuilder = new JPDialogBuilder(this);
                 jpDialogBuilder.setTitle("请求结果");
                 switch (i) {
-                    case 0 -> jpDialogBuilder.setMessage("[" + string + "]同意添加您为好友!");
+                    case 0 -> jpDialogBuilder.setMessage("[" + userName + "]同意添加您为好友!");
                     case 1 -> jpDialogBuilder.setMessage("对方拒绝了你的好友请求!");
                     case 2 -> jpDialogBuilder.setMessage("对方已经是你的好友!");
                     case 3 -> {
@@ -553,7 +554,7 @@ public class OLRoomActivity extends OLBaseActivity implements Handler.Callback, 
             }
             bindViewAdapter(friendsListView, friendPlayerList, 1);
         }
-        canNotNextPage = size < 20;
+        friendCanNotNextPage = size < 20;
     }
 
     public void handleRefreshFriendListWithoutPage(Message message) {
