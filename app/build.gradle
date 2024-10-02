@@ -58,8 +58,8 @@ android {
             storePassword 'as2134.@u'
             keyAlias 'as2134u'
             keyPassword 'as2134.@u'
-        }
-*/    }
+ */       }
+    }
 
     externalNativeBuild {
         cmake {
