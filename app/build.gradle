@@ -45,22 +45,22 @@ android {
         }
     }
 
- /*   signingConfigs {
+    signingConfigs {
         debug {
-            storeFile file('../key.jks')
+   /*         storeFile file('../key.jks')
             storePassword 'as2134.@u'
             keyAlias 'as2134u'
             keyPassword 'as2134.@u'
-        }
+*/        }
 
         release {
-            storeFile file('../key.jks')
+/*            storeFile file('../key.jks')
             storePassword 'as2134.@u'
             keyAlias 'as2134u'
             keyPassword 'as2134.@u'
         }
-    }
-*/
+*/    }
+
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
