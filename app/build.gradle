@@ -8,7 +8,7 @@ plugins {
 
 android {
     compileSdk 34
-    namespace "ly.pp.justpiano3"
+    namespace "ly.pp.justpiano3.debug"
 
     kotlinOptions {
         jvmTarget = '17'
@@ -45,7 +45,7 @@ android {
         }
     }
 
-    signingConfigs {
+ /*   signingConfigs {
         debug {
             storeFile file('../key.jks')
             storePassword 'as2134.@u'
@@ -60,7 +60,7 @@ android {
             keyPassword 'as2134.@u'
         }
     }
-
+*/
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
@@ -81,8 +81,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
